@@ -1,0 +1,12 @@
+probe base (tracked content, NO ledger entry, ledger at CHANGELOG.md) exit=1
+    leftover:  M .context-budget-history.jsonl
+    leftover:  M dashboard_history.jsonl
+probe base (tracked content WITH a ledger entry) exit=0
+probe ctrl (tracked content, NO ledger entry, ledger at CHANGELOG.md) exit=1
+probe ctrl (tracked content WITH a ledger entry) exit=0
+probe tall (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=0
+probe tall (tracked content WITH a ledger entry) exit=0
+probe tallh (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=1
+probe tallh (tracked content WITH a ledger entry) exit=0
+probe tallx (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=1
+probe tallx (tracked content WITH a ledger entry) exit=0

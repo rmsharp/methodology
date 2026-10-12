@@ -1,0 +1,186 @@
+migrate-layout: $SCRATCH/p16/tallh
+canonical: /Users/rmsharp/Development/methodology @ 59887b401cb0
+layout: legacy   tier: all   mode: apply
+
+moves (32):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv SESSION_NOTES.md methodology/SESSION_NOTES.md
+  git mv CHANGELOG.md methodology/CHANGELOG.md
+  git mv HANDOFFS.md methodology/HANDOFFS.md
+  git mv ROADMAP.md methodology/ROADMAP.md
+  git mv .context-budget.json methodology/.context-budget.json
+  git mv .quality-gates.json methodology/.quality-gates.json
+  git mv .gitattributes methodology/.gitattributes
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+  git mv dashboard_history.jsonl methodology/dashboard_history.jsonl
+  git mv .context-budget-history.jsonl methodology/.context-budget-history.jsonl
+
+rewrites (3 file(s)):
+  CLAUDE.md (14 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,14 +2,14 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +Read and follow `methodology/SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md → methodology/SESSION_NOTES.md → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP.
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+    @@ -73,7 +73,7 @@
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from the methodology repo, not project-owned — as is the reference table in `FRAMEWORK_LEARNINGS.md`). The base files govern unless explicitly overridden here.*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from the methodology repo, not project-owned — as is the reference table in `methodology/FRAMEWORK_LEARNINGS.md`). The base files govern unless explicitly overridden here.*
+     
+     ### Additional Phase 0 steps
+     
+    @@ -83,7 +83,7 @@
+     
+     No workstream document in `docs/methodology/workstreams/` covers this project's dominant work
+     types — they assume code, UI, or research papers. Both sessions that hit this fell back to
+    -`docs/methodology/ITERATIVE_METHODOLOGY.md` phases 1-6, per `SESSION_RUNNER.md:75`. Recorded so a
+    +`methodology/ITERATIVE_METHODOLOGY.md` phases 1-6, per `methodology/SESSION_RUNNER.md:75`. Recorded so a
+     third session does not repeat the lookup:
+     
+     | User says | Deliverable | Workstream document |
+    @@ -212,7 +212,7 @@
+     with `2 ≤ n_c < N` — reporting 28.6% at `N = 7, n_c = 5` where the truth is 14.3%. The author had
+     checked the single cell they cited (`N = 4, n_c = 3`, where it happens to agree) and generalized.
+     Implemented as written, it would have shipped a *worse* artifact than the defect it was fixing, with
+    -the ledger recording that the defect was closed. `SESSION_RUNNER.md` §3D already says forward-looking
+    +the ledger recording that the defect was closed. `methodology/SESSION_RUNNER.md` §3D already says forward-looking
+     claims must be derived or labelled a guess — **`BACKLOG.md` is where that rule matters most and where
+     it is not currently applied.** A handoff is read once by the next session; a backlog item is read as a
+     *specification* by whoever eventually picks it up, possibly several sessions later, with the
+    @@ -220,12 +220,12 @@
+     is why all five defects were real — and either compute the prescription or mark it as a hypothesis.
+     
+     **L13 — A staleness marker keyed on a bare phrase can be satisfied by prose that quotes the phrase,
+    -not just by the section it names.** (Session 8) Reconciling `CHANGELOG.md`/`HANDOFFS.md` against the
+    +not just by the section it names.** (Session 8) Reconciling `methodology/CHANGELOG.md`/`methodology/HANDOFFS.md` against the
+     newly-synced methodology, the Phase 1B claim commit's own prose named the missing doctrine —
+     *`"## Size, and when to archive"`* — in quotes, to explain what still needed adding. That commit
+     alone flipped `bin/status` from `present (stale format)` to `present`: the checker does a substring
+     scan for the marker text, not a structural check for the heading, so mentioning the phrase satisfied
+    -it as completely as writing the real section would have. This is `FRAMEWORK_LEARNINGS.md` #19's
+    +it as completely as writing the real section would have. This is `methodology/FRAMEWORK_LEARNINGS.md` #19's
+     exact failure (*"a version tripwire keyed to something that never changes... fails by reporting
+     current, which is worse than reporting nothing"*) showing up from the *consumer* side one line later
+     than the framework itself hit it: #19 is about the marker's design, this is about how trivially a
+  .context-budget.json (3 replacement(s))
+    --- .context-budget.json
+    +++ methodology/.context-budget.json
+    @@ -31,7 +31,7 @@
+           "_": "Auto-loaded in full by Claude Code. Wrap your project's statement of purpose in <!-- budget:protected --> ... <!-- /budget:protected --> and the tool will refuse to let a later compaction remove it. On the project this came from, 32.5% of this file was an index of past failures and 0.5% was what the software is for."
+         },
+         {
+    -      "path": "SESSION_NOTES.md",
+    +      "path": "methodology/SESSION_NOTES.md",
+           "class": "read-mandated",
+           "max_lines": 400,
+           "max_bytes": 120000,
+    @@ -49,12 +49,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked — an adopter may not edit this file, so a size finding would be unactionable. Adjust the canonical path to wherever your methodology checkout lives. Zero local edits means `git diff` in your project shows nothing, so drift is otherwise invisible: on the source project both synced files were 13 and 2 commits behind for 48 days without anyone noticing."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+  .quality-gates.json (1 replacement(s))
+    --- .quality-gates.json
+    +++ methodology/.quality-gates.json
+    @@ -1,7 +1,7 @@
+     {
+       "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear, held by quality_ratchet.py. STARTS EMPTY ON PURPOSE: a ratchet begins where the project IS, not where an article says it should be. Measure first, then declare each gate at its current value; `python3 quality_ratchet.py --run` reports every gate, and `install-hook` makes the pre-commit ratchet refuse any later commit that loosens one. Thresholds only tighten. Loosening one is a plan-mode decision made in its own commit with the reason in the ledger, committed with --no-verify — a recorded bypass, not an exemption (SAFEGUARDS.md Blast Radius Limits; SESSION_RUNNER.md failure mode #17; ITERATIVE_METHODOLOGY.md §Mechanical Gates Bind Every Actor).",
+       "version": 1,
+    -  "results_file": ".quality-gates-results.json",
+    +  "results_file": "methodology/.quality-gates-results.json",
+       "_results_file": "Where --run writes its results (gitignored by default — add it to .gitignore; the receipt cites the summary line, and the dashboard reads the file where it exists). Commit it instead if you want every clone to score the last run.",
+       "_gate_schema": "Each gate: `name` (unique; the ratchet keys on it), `direction` (`min`: measured >= threshold, or `max`: measured <= threshold), `threshold` (a number), and optionally `command` (run via the shell from the project root) plus `extract` (a regex whose FIRST capture group is the measured number; without `extract` the command's exit code is the measurement, so `max 0` means `must exit 0`). A gate with no command is declared, not measured: --run reports it UNMEASURED and exits 1 — never pass. `why` and `unit` are free text for the reader.",
+       "_example": {
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   15 mention(s) in 1 file(s)
+    .githooks/pre-commit:26  LEGACY=CHANGELOG.md                 # layout: ok -- the selftest builds the legacy layout's fixtures   (15 mentions, 8 on code lines)
+  tests:   0 mention(s) in 0 file(s)
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 0 mention(s) in 0 file(s)
+  config:  0 mention(s) in 0 file(s)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  317 mention(s) in 3 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   21 mention(s) in 4 file(s)
+    .gitignore:2  dashboard.html
+    .gitignore:3  # NOTE: dashboard_history.jsonl and .context-budget-history.jsonl are deliberately NOT
+    .gitignore:4  # ignored. Unlike dashboard.html (regenerated in full every run), both are append-only,
+    .gitignore:5  # non-regenerable history — the second also backs context_budget.py's growth-run trigger,
+    BACKLOG.md:3  Open, actionable work items only. Completed work moves to `CHANGELOG.md`; feature inventory and
+    BACKLOG.md:4  future plans live in `ROADMAP.md`. Keep this scannable — readable in under one minute.
+    BACKLOG.md:32  - [ ] BL-7 — Fill `ROADMAP.md` (Current Milestone / Planned) — still the empty bootstrap
+    BACKLOG.md:45  - [ ] BL-15 — **Split `SESSION_NOTES.md`.** Newly-adopted `context_budget.py` (S8, methodology sync
+    BACKLOG.md:48  `.context-budget.json` entry). The seed's own fix: one note per session record in a sibling
+    BACKLOG.md:49  directory, with an index kept in `SESSION_NOTES.md` itself. This is a structural change to how
+    CLAUDE.md:84  No workstream document in `docs/methodology/workstreams/` covers this project's dominant work
+    dry-run/packet-01.md:45  > A summary of `SAFEGUARDS.md` and `SESSION_RUNNER.md` for a new contributor.
+    dry-run/packet-01.md:75  [I1] ✓  SAFEGUARDS.md · 242 lines / 2,425 words · in the repository you hold
+    dry-run/packet-01.md:76  [I2] ✓  SESSION_RUNNER.md · 385 lines / 7,643 words · in the repository you hold
+    dry-run/packet-01.md:93  CP-1 · [I1] · read SAFEGUARDS.md in full; extracted the two-mode rule, the
+    dry-run/packet-01.md:97  CP-2 · [I2] · read SESSION_RUNNER.md in full; extracted Phase 0's eight
+    dry-run/packet-01.md:111  [I1] SAFEGUARDS.md — preamble + 8 sections
+    dry-run/packet-01.md:121  [I2] SESSION_RUNNER.md — preamble + 8 sections
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 0; 0 framework, 0 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 33 commit(s) reached by git log --follow -> 34 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 0a0adb9d7aa3

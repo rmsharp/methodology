@@ -1,0 +1,37 @@
+sync: $SCRATCH/p16/ctrl
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1748-g59887b4
+  layout:  legacy (found SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+  files:
+    SESSION_RUNNER.md: would write
+    FRAMEWORK_LEARNINGS.md: would write
+    SAFEGUARDS.md: would write
+    RECOMMENDED_SKILLS.md: would write
+    CONTEXT_TEMPLATE.md: unchanged
+    CLAUDE_TEMPLATE.md: would write
+    BOOTSTRAP.md: would write
+    methodology_dashboard.py: would write
+    methodology_trim.py: would write
+    context_budget.py: would write
+    quality_ratchet.py: would write
+    SESSION_NOTES.md: present (seed; left as-is)
+    CHANGELOG.md: present (seed; left as-is)
+    HANDOFFS.md: present (seed; left as-is)
+    ROADMAP.md: present (seed; left as-is)
+    .context-budget.json: present (seed; left as-is)
+    .quality-gates.json: would create
+    .gitattributes: would create
+    docs/methodology/ITERATIVE_METHODOLOGY.md: would write
+    docs/methodology/HOW_TO_USE.md: would write
+    docs/methodology/FRAMEWORK_APPARATUS.md: would write
+    docs/methodology/workstreams/DESIGN_WORKSTREAM.md: unchanged
+    docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: would write
+    docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: would write
+    docs/methodology/workstreams/AUDIT_WORKSTREAM.md: would write
+    docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: would write
+    docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md: would write
+    docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: would write
+    docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: would write
+    docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md: would write

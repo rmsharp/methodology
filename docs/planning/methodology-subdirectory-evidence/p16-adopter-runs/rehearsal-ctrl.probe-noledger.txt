@@ -1,0 +1,19 @@
+✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+
+This commit changes tracked content but does not update the authoritative
+ledger. Append one dated, source-tagged entry to CHANGELOG.md — exactly one of
+[issue #<N>] | [BL-<N>] | [ad hoc] — newest on top, then stage it and re-commit.
+
+  * Bypass this once:  git commit --no-verify
+      Phase 0 reconcile-on-read backfills anything bypassed, so the ledger is
+      true again on the next session's Orient. The hook is the fast path, not
+      the guarantee.
+  * Opt out for good:  delete CHANGELOG.md and record the decision in CLAUDE.md.
+
+The one exemption is the Phase 1B claim: a commit staging only HANDOFFS.md
+(SESSION_NOTES.md may ride along) whose diff ADDS a receipt block and whose every
+added `status:` line reads `pending`. If this was meant to be that commit, then
+one of those three is false — a file other than those two is staged, no receipt
+block was added, or an added `status:` line says something other than `pending`.
+
+"Too small to log" is the failure mode, not an exception (SESSION_RUNNER.md FM #27).

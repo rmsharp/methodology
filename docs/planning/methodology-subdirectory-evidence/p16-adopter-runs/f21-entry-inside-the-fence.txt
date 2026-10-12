@@ -1,0 +1,10 @@
+tall: methodology/CHANGELOG.md lines 44-52 after the tier-all move (the tool's entry is line 48):
+L1+43	executed the action — an agent-independent key with a concrete value, the same pattern
+L2+43	`key_files` already uses for paths. Single-tier work names one model:
+L3+43	
+L4+43	```
+L5+43	### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 32 files)
+L6+43	
+L7+43	`bin/migrate-layout` (KJ5HST/methodology @ 59887b4) moved them in one commit with `git mv`; paths were rewritten in `CLAUDE.md`, `methodolog
+L8+43	
+L9+43	### 2026-01-15 · [ad hoc] Ship the export-retry fix

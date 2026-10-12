@@ -1,0 +1,111 @@
+start Sun Oct 11 20:19:23 CDT 2026
+adopter HEAD b41fb8dd0ea2abd9b27f79fafad6a9ff07296e74
+source HEAD  59887b401cb07e3ecf12c4b94ea952e68d46d03e
+adopter core.hooksPath=[.githooks]; status: []
+tallx non-tracked files hashed: 2
+tallx status before sync: []
+dash base exit=0
+status base exit=0
+context_budget --status base exit=2
+check-ledger base exit=1  /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5df
+check-handoff base exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/tmp/claude-501/-Users
+probe base (tracked content, NO ledger entry, ledger at CHANGELOG.md) exit=1
+    leftover:  M .context-budget-history.jsonl
+    leftover:  M dashboard_history.jsonl
+probe base (tracked content WITH a ledger entry) exit=0
+sync --dry-run ctrl exit=0
+sync ctrl (no --force) exit=0
+commit ctrl (sync, OLD hook armed) exit=0
+  ctrl status after sync: []
+sync t1 (no --force) exit=0
+commit t1 (sync, OLD hook armed) exit=0
+  t1 status after sync: []
+sync tall (no --force) exit=0
+commit tall (sync, OLD hook armed) exit=0
+  tall status after sync: []
+sync tallh (no --force) exit=0
+commit tallh (sync, OLD hook armed) exit=0
+  tallh status after sync: []
+sync tallx (no --force) exit=0
+commit tallx (sync, OLD hook armed) exit=0
+  tallx status after sync: []
+context_budget --status ctrl exit=2
+check-ledger ctrl exit=1  /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5df
+check-handoff ctrl exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/tmp/claude-501/-Users
+probe ctrl (tracked content, NO ledger entry, ledger at CHANGELOG.md) exit=1
+probe ctrl (tracked content WITH a ledger entry) exit=0
+commit tallh (hook replaced) exit=0
+commit tallx (hook replaced) exit=0
+hook --selftest (tallh) exit=0  pre-commit selftest: OK (43 checks)
+migrate dry-run t1 exit=0
+migrate --apply t1 (tier 1) exit=0
+  t1 status after the move: []  HEAD 6929001 chore(methodology): move the methodology files under methodolo
+migrate dry-run tall exit=0
+migrate --apply tall (tier all) exit=0
+  tall status after the move: []  HEAD 8d58270 chore(methodology): move the methodology files under methodolo
+migrate dry-run tallh exit=0
+migrate --apply tallh (tier all) exit=0
+  tallh status after the move: []  HEAD 0a0adb9 chore(methodology): move the methodology files under methodolo
+migrate dry-run tallx exit=0
+migrate --apply tallx (tier all) exit=0
+  tallx status after the move: []  HEAD 1acb5cc chore(methodology): move the methodology files under methodolo
+tallx: dashboard.html intact at methodology/dashboard.html (d38207d96e8d)
+tallx: __pycache__/methodology_dashboard.cpython-310.pyc intact at __pycache__/methodology_dashboard.cpython-310.pyc (12c974e56261)
+tallx: git status --porcelain after the move: []
+context_budget --status t1 exit=2
+check-ledger t1 exit=1  /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5df
+check-handoff t1 exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/tmp/claude-501/-Users
+context_budget --status tall exit=2
+check-ledger tall exit=1  /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5df
+check-handoff tall exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/tmp/claude-501/-Users
+context_budget --status tallh exit=2
+check-ledger tallh exit=1  /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5df
+check-handoff tallh exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/tmp/claude-501/-Users
+context_budget --status tallx exit=2
+check-ledger tallx exit=1  /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5df
+check-handoff tallx exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/tmp/claude-501/-Users
+probe tall (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=0
+probe tall (tracked content WITH a ledger entry) exit=0
+probe tallh (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=1
+probe tallh (tracked content WITH a ledger entry) exit=0
+probe tallx (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=1
+probe tallx (tracked content WITH a ledger entry) exit=0
+ctrl: ledger CHANGELOG.md, first dated entries after the "Entries go below" line:
+    183: ### 2026-10-11 · [ad hoc] Methodology sync (rehearsal text)
+    188: ### 2026-10-11 · [ad hoc] Commit the one uncommitted dashboard snapshot line, so the tree is clean for the layout migration
+    194: ### 2026-08-13 · [BL-6] Claim session S9 (run the assembled spine@1.2 delivery packet through to a stakeholder verdict)
+    200: ### 2026-08-12 · [ad hoc] Close out session S8 — methodology sync complete, BL-15 opened, Learning L13
+tall: ledger methodology/CHANGELOG.md, first dated entries after the "Entries go below" line:
+    187: ### 2026-10-11 · [ad hoc] Methodology sync (rehearsal text)
+    192: ### 2026-10-11 · [ad hoc] Commit the one uncommitted dashboard snapshot line, so the tree is clean for the layout migration
+    198: ### 2026-08-13 · [BL-6] Claim session S9 (run the assembled spine@1.2 delivery packet through to a stakeholder verdict)
+    204: ### 2026-08-12 · [ad hoc] Close out session S8 — methodology sync complete, BL-15 opened, Learning L13
+tallh: ledger methodology/CHANGELOG.md, first dated entries after the "Entries go below" line:
+    187: ### 2026-10-11 · [ad hoc] Replaced the ledger hook with the layout-aware one
+    192: ### 2026-10-11 · [ad hoc] Methodology sync (rehearsal text)
+    197: ### 2026-10-11 · [ad hoc] Commit the one uncommitted dashboard snapshot line, so the tree is clean for the layout migration
+    203: ### 2026-08-13 · [BL-6] Claim session S9 (run the assembled spine@1.2 delivery packet through to a stakeholder verdict)
+ratchet ctrl exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+ratchet t1 exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+ratchet tall exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+ratchet tallh exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+ratchet tallx exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+status ctrl exit=0  layout: ctrl legacy
+status t1 exit=0  layout: t1 new
+status tall exit=0  layout: tall new
+status tallh exit=0  layout: tallh new
+status tallx exit=0  layout: tallx new
+check-links t1 exit=1
+check-links tallh exit=0
+dash ctrl exit=0
+dash t1 exit=0
+dash tall exit=0
+dash tallh exit=0
+dash tallx exit=0
+  dashboard base:  Health: 49/100 High+ Risk: 0 Commits: 34
+  dashboard ctrl:  Health: 49/100 High+ Risk: 1 Commits: 35
+  dashboard t1:  Health: 45/100 High+ Risk: 1 Commits: 36
+  dashboard tall:  Health: 45/100 High+ Risk: 1 Commits: 36
+  dashboard tallh:  Health: 45/100 High+ Risk: 1 Commits: 37
+  dashboard tallx:  Health: 45/100 High+ Risk: 1 Commits: 37
+done Sun Oct 11 20:20:28 CDT 2026

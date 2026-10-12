@@ -1,0 +1,48 @@
+adopter HEAD 0a8ef90cf40698920b87c7997ee6abc213268979
+control at a3174b3
+present methodology/SESSION_RUNNER.md
+present methodology/SAFEGUARDS.md
+present methodology/SESSION_NOTES.md
+present methodology/CHANGELOG.md
+present methodology/HANDOFFS.md
+SAFEGUARDS byte-identical to canonical
+SESSION_RUNNER byte-identical to canonical
+9:## ACTIVE TASK
+git status lines: 0
+0a8ef90 docs(ledger): move the layout-migration entry out of the example block in the ledger header
+ebbfabd chore(methodology): move the methodology files under methodology/ (tier all, 33 files)
+a3174b3 chore(hooks): replace the ledger hook with the layout-aware one
+ee28226 chore(methodology): sync the methodology files from the methodology repository (23 files)
+b41fb8d chore: commit the uncommitted dashboard_history.jsonl snapshot line (preparation for the layout migrat
+107cbed chore: claim session S9 (BL-6 — run the assembled delivery packet through to a stakeholder verdict)
+CHANGELOG frontier 0a8ef90; undocumented after it: 0
+HANDOFFS frontier ebbfabd; commits after: 1 (the S9 receipt there is still pending)
+merges since the frontier: 0
+ledger header (before the entries) identical to the control's: True
+the tool's entry is below the entries marker: True
+dashboard head exit=0
+dashboard ctrl exit=0
+  ctrl:  Health: 49/100 High+ Risk: 1 Commits: 36
+  head:  Health: 45/100 High+ Risk: 1 Commits: 38
+ratchet ctrl exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+ratchet head exit=0  0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+status head exit=0  layout: head new  tracked current: 23
+check-links head exit=0
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the tree at /private/tmp/claude-501/-Users-rmsharp-Development-methodology/0d36ac5b-b2aa-4724-9d39-5dffd6992813/
+context_budget ctrl exit=2
+context_budget head exit=2
+  ctrl:  context budget OVER resident 20,583 B ≈ 7,025 tok
+  head:  context budget OVER resident 20,734 B ≈ 7,076 tok
+check-ledger head exit=1  check-ledger: 83 finding
+check-handoff head exit=1  check-handoff: FAIL — 1 issue(s) in the newest receipt in /private/t
+hook --selftest (head) exit=0  pre-commit selftest: OK (43 checks)
+the committed hook is byte-identical to the canonical one
+LATER commit, tracked content, NO ledger entry: exit=1 (want 1)
+    hook said: quality-ratchet: first manifest commit (0 gate(s)) — nothing to compare against
+    hook said: ✗ methodology/CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+    hook said: 
+LATER commit, tracked content WITH a ledger entry at methodology/CHANGELOG.md: exit=0 (want 0)
+LATER commit, a committed ledger entry EDITED: exit=1 (want 1)
+    hook said: quality-ratchet: first manifest commit (0 gate(s)) — nothing to compare against
+    hook said: ✗ methodology/CHANGELOG.md: a committed entry was changed — 1 entry:
+    hook said:     removed  ### 2026-10-11 · [ad hoc] Sync the methodology files from the methodology repository (23 files), ahe

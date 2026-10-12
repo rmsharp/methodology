@@ -1,0 +1,117 @@
+1,2c1,2
+< CTRL — METHODOLOGY DASHBOARD
+< CTRL — METHODOLOGY DASHBOARD
+---
+> TALL — METHODOLOGY DASHBOARD
+> TALL — METHODOLOGY DASHBOARD
+4c4
+< 49
+---
+> 45
+10c10
+< 35
+---
+> 36
+48c48
+< 2/7d 2/30d
+---
+> 3/7d 3/30d
+109c109
+< 49
+---
+> 45
+118,119c118,119
+< 49
+< ▲ +49
+---
+> 45
+> ▲ +45
+128c128
+< Health: 49/100
+---
+> Health: 45/100
+131c131
+< 35 commits •
+---
+> 36 commits •
+133c133
+< 21,195 LOC •
+---
+> 21,199 LOC •
+142c142
+< 8/20
+---
+> 4/20
+158c158
+< CHANGELOG.md is 71,196 B (403 lines) — past the 56,750 B one-read budget for the agent read cap, but this is a CLASS A ledger and that is expected rather than a fault. Delivery is an ordered prefi
+---
+> CHANGELOG.md is 71,647 B (407 lines) — past the 56,750 B one-read budget for the agent read cap, but this is a CLASS A ledger and that is expected rather than a fault. Delivery is an ordered prefi
+163c163
+< 35
+---
+> 36
+165c165
+< 2
+---
+> 3
+167c167
+< 2
+---
+> 3
+176c176
+< cfb7ad72
+---
+> 8d582704
+177a178,180
+> chore(methodology): move the methodology files under  (tier all, 32
+> 1fa0b77b
+> 2026-10-11
+188,190d190
+< 9bb7e563
+< 2026-08-12
+< chore: sync methodology corpus to v3.7 (KJ5HST/methodology); adopt trim/budget t
+202c202
+< docs/ (29 files), CHANGELOG, ROADMAP
+---
+> CHANGELOG, ROADMAP
+204c204
+< 10,826
+---
+> 10,830
+225c225
+< Framework (installed)
+---
+> Framework (insNAMEed)
+233c233
+< 10,826
+---
+> 10,830
+244c244
+< 7
+---
+> 6
+247c247
+< 3
+---
+> 2
+253c253
+< 21,195
+---
+> 21,199
+276c276
+< docs/HOW_TO_USE.md
+---
+> HOW_TO_USE.md
+280,281d279
+< quality_ratchet.py
+< 741
+284c282,284
+< docs/ITERATIVE_METHODOLOGY.md
+---
+> quality_ratchet.py
+> 741
+> ITERATIVE_METHODOLOGY.md
+286c286
+< docs/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+---
+> workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
