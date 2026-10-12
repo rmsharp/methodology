@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S304
+date: 2026-10-12
+status: pending
+active_task: BL-105 build phase 3, the distributed prose (BL-101 backlog row, `docs/planning/BACKLOG.md:185`; plan D10; `docs/planning/methodology-subdirectory-evidence/bl105-rehearsal-record.md` section 7 item 2): `starter-kit/BOOTSTRAP.md` (lines 218, 220, 222, 439), `starter-kit/CLAUDE_TEMPLATE.md` (line 83) and `bin/check-links` (line 84) say where `PROJECT_LEARNINGS.md` lives in a way that holds in both layouts; fork only, resync and every sync channel simulated before the commit, nothing outward (D8: the pull request is a later, separate go-ahead).
+```
+
+```handoff
 session: S303
 date: 2026-10-12
 status: complete

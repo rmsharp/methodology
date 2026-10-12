@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S304 claim (in progress) — BL-105 build phase 3, the distributed prose
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 and he picked BL-105 phase 3 with two go-aheads, both done before this claim: the push of `2c62927` to the fork `origin` (`ed1bd64..2c62927`, `0 0`, `ls-remote` equal) and the HANDOFFS trim (`f40a8a7`) with its fold (`14ebfee`). The gate citation re-run (clean `--no-local` clone of `2c62927`): 17/18 pass, 0 fail, 1 unmeasured, the migrate-layout suite past the ratchet's 600 s under a load average of about 180 (BL-103); by hand it read 275 tests OK in 675.9 s. Deliverable: the prose in `starter-kit/BOOTSTRAP.md`, `starter-kit/CLAUDE_TEMPLATE.md` and `bin/check-links`; fork only, nothing outward. Phase 3F records the rest.
+
 ### 2026-10-12 · [ad hoc] S304 — fold the second 2026-10-12 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`f40a8a7`, 1 receipt, S301, to `HANDOFFS-through-2026-10-12-2.md`, the name S303 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S303, S302). The push of `2c62927` to the fork and the trim ran on his go-aheads at the S304 Phase 0 picker; `origin/main` read back equal.
