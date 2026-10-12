@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S298
+date: 2026-10-11
+status: pending
+active_task: P17 (BL-101, plan §7.4): the seventh adopter, `vscode_quarto_ext`, in its own repository (`~/Development/vscode_quarto_ext`, `master`, HEAD `507b9348` at the claim, level with its `origin/master` (0 0), legacy layout, no tracked hook, 11 framework files behind). His pick at the S298 Phase 0 (the picker's recommended option) with two go-aheads, both done before this claim: the push of `0a2921d` to the fork `origin` (read back `0 0`, `ls-remote` equal) and the owed HANDOFFS trim (trim `2c64088`, fold `c577437`). **The tier is his pick (plan §7.4); every adopter since P12 went at tier all; the clone rehearsal measures both and he chooses from the table.** Rechecked at the claim: no `claude` process with that cwd (`wsfct`, `mts-system` and `nprcgenekeepr` have one). The tree has one untracked path, `scratchpad/` (66 GB, not git-ignored), which `bin/migrate-layout`'s `dirty_paths` counts as dirt: how to prepare it is HIS call before any real run, and the session may close at the rehearsal if he has not given it. Read the findings register first (F2, F7, F18 to F21) and the P16 record sections 3 to 5; `bin/sync` first as its own commit; nothing pushed, nothing upstream.
+```
+
+```handoff
 session: S297
 date: 2026-10-11
 status: complete

@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [BL-101] S298 claim (in progress) — P17 on `vscode_quarto_ext`
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report named `vscode_quarto_ext` as the only free adopter, and he picked "P17 on vscode_quarto_ext" with the go-aheads "Trim HANDOFFS.md" and "Push 0a2921d to fork" (one picker answer). Checked at the claim with `pgrep -x claude` and `lsof -a -p <pid> -d cwd`: no session in `vscode_quarto_ext` (`wsfct`, `mts-system` and `nprcgenekeepr` each have one); its tracked tree is clean, HEAD `507b9348` on `master`, level with `origin/master`, one untracked path, `scratchpad/` (66 GB, not ignored), which the tool counts as dirt. The gate citation of S297 (results `791e005997ab`, manifest `e755389a69c7`) was re-run in a clean `--no-local` clone of `0a2921d` and confirmed (18/18, 0 unmeasured). The push (`0a2921d`), the owed HANDOFFS trim (`2c64088`) and its fold (`c577437`) were done before this claim. Deliverable: one adopter session in its own repository, tier his pick after the clone rehearsal; nothing pushed upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] S298 — fold the first 2026-10-11 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`2c64088`, 1 receipt, S295, 2026-10-11, to `HANDOFFS-through-2026-10-11.md`, the name S297 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S297, S296). The shard proof was run by name in the tree before the trim commit and from a `--no-local` clone of `2c64088`: `HANDOFFS-through-2026-10-11.md.verify.sh`, exit 0 both times (L1, L2/front-matter, L3). The trim ran on his go-ahead at the S298 Phase 0 (a picker answer: "Trim HANDOFFS.md"), after the push of `0a2921d` to the fork `origin`. Nothing went upstream. Model: Claude Sonnet 5.5.
@@ -260,6 +264,10 @@ Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-11.md`](docs/archive/HANDOFFS-through-2026-10-11.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 39,898 B → 28,465 B (−28.7%).
+
+### 2026-10-11 · [ad hoc] S298 — pushed `0a2921d` to the fork `origin` (push record)
+
+On his go-ahead at the S298 Phase 0 (a picker answer: "Push 0a2921d to fork"): `git push origin 0a2921d:refs/heads/main`, naming the commit and not `HEAD`; `origin` is `https://github.com/rmsharp/methodology.git`, the fork. Five commits went (`e6945f0`, `583e771`, `59887b4`, `2b65098`, `0a2921d`; `a61ec17..0a2921d`). Read back before the trim: `git rev-list --left-right --count origin/main...main` read `0 0` and `git ls-remote origin refs/heads/main` equalled `0a2921d`. Nothing went upstream (`KJ5HST/methodology`), no tag, no release. Model: Claude Sonnet 5.5.
 
 ### 2026-10-11 · [BL-101] S297 close-out — P16 on `chat_verification` at tier all (receipt complete)
 
