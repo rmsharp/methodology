@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S301 close-out — BL-105 decided (option B); the receipt is complete; the gate run read 18/18
+
+Phase 3 done: S300's handoff scored 9 (3A), this session 8 (3B); no fork learning row appended (3C: considered fork #34, #57, #23 and the distributed #12; the lesson is BL-106, a gate). The `HANDOFFS.md` receipt is `complete` and `check-handoff` exits 0; the gate run in a clean `--no-local` clone of `0b496b8` read 18/18, 0 fail, 0 unmeasured, results `8c209fa9806e`, manifest `440ab037cfe1` (equal to S300's, as no code, test or gate changed). A HANDOFFS trim is owed again after the next Phase 0 (3 receipts: S301, S300, S299). Pushed this session: `1dfc8b2` to the fork only; 7 commits ahead of `origin/main` after this one, a push is his call.
+
 ### 2026-10-12 · [BL-106] S301 — the plan's declared 60,000 B has no gate: a backlog row
 
 Found while amending the plan for D10: the declared budget is held by hand (S300 cut it back in `1dfc8b2` after a gate run that read 18/18 with the plan at 60,107 B). `BL-106` in `BACKLOG.md` and `BACKLOG-DETAIL.md` names the two shapes (a byte-count gate, or the file in `.context-budget.json`) and builds neither; the choice, and whether the figure is a limit or a price, is his. Not a fork learning row: a mechanical invariant is a gate (runner Phase 3C).
