@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: recorded in the plan and the backlog
+
+`methodology-subdirectory-plan.md` (status line and the P16 text now say the tool is fixed), `BACKLOG.md` (the BL-101 index row: F21 off the triage list), `BACKLOG-DETAIL.md` (Next action: F21 fixed, the clause that sent a session to read a ledger header for it removed, the S300 Phase 0 state of the adopters added: none free). Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 — F21: the record and the register row
 
 `f21-fenced-example-record.md` (the problem, the rule and the sibling readers it was read from, the change, what was measured, what it does not show, how to reproduce) and `findings-register.md`: row F21 now reads fixed with its evidence, a dated S300 line, and the read-at-next-session paragraph no longer sends a session to move an entry by hand. The row and the record state the test accounting as it was (ten tests before the code, six after). Model: Claude Sonnet 5.5.

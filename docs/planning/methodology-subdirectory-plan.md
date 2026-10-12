@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P17 are done (§7.1 to §7.4g, S274 to S298; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 fixed, S299), and tier 2 is open.**
+P0 to P17 are done (§7.1 to §7.4g, S274 to S298; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 fixed, S299; F21 fixed, S300), and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm.
@@ -533,7 +533,7 @@ a clean default branch** (its branch is active).
 
 ### 7.4f P16 — `chat_verification` (S297)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p16-chat-verification-record.md`). A doc-only repository: its modified tracked file committed first (F12), its older ledger hook replaced first (C5). 33 renames; **tier 2 cost:** 0 links. **The tool's ledger entry landed inside the header's example fence, unseen by its checks** (F21; moved by hand, open for the tool); dashboard 49 to 45, the §7.2d credit (F22). **Findings:** F21, F22.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p16-chat-verification-record.md`). A doc-only repository: its modified tracked file committed first (F12), its older ledger hook replaced first (C5). 33 renames; **tier 2 cost:** 0 links. **The tool's ledger entry landed inside the header's example fence, unseen by its checks** (F21; moved by hand there, and the tool fixed at S300: the entry goes above the first heading outside a fenced block, record `f21-fenced-example-record.md`); dashboard 49 to 45, the §7.2d credit (F22). **Findings:** F21, F22.
 
 ### 7.4g P17 — `vscode_quarto_ext` (S298)
 
