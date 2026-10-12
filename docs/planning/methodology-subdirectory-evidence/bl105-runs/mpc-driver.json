@@ -1,0 +1,1174 @@
+{
+ "scan": {
+  "mode": "scan",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/mpc-scan",
+  "layout": "new",
+  "file_bytes": 411884,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    ".context-budget.json"
+   ],
+   ".quality-gates.json": [
+    ".quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 5,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -68,7 +68,7 @@\n \n ### Third-party methodology attribution (decision D1, `docs/planning/enterprise-migration.md` \u00a73)\n \n-`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`methodology/FRAMEWORK_LEARNINGS.md`, `methodology/RECOMMENDED_SKILLS.md`, `methodology/CONTEXT_TEMPLATE.md`, `methodology/CLAUDE_TEMPLATE.md`, `methodology/BOOTSTRAP.md`, `methodology/methodology_dashboard.py`, `methodology/methodology_trim.py`, `methodology/context_budget.py`, `methodology/quality_ratchet.py`), the three files it seeded once from its templates (`HANDOFFS.md`, `.context-budget.json`, `.quality-gates.json`), the `PROJECT_LEARNINGS.md` seed rows, and `docs/architecture-history/methodology-pr2527-remediation-mpc.md` are the \"Iterative Session Methodology,\" copyright \u00a9 2025-2026 Terrell Deppe (KJ5HST). Session 259 (BL-57 P11) brought the nine root files, the three seeded files and `methodology/FRAMEWORK_APPARATUS.md`, and re-synced the rest of that set to canonical; everything else in the list predates it. `NOTICE` \u00a71 is the enumerated copy and this one follows it. Per the operator (2026-07-27), Terrell Deppe granted permission for this material to be used and redistributed under MIT terms. See `NOTICE` at the repository root for the full attribution and provenance record \u2014 this is the customization-seam location for that grant precisely because the synced files themselves must not be edited (rule above).\n+`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`methodology/FRAMEWORK_LEARNINGS.md`, `methodology/RECOMMENDED_SKILLS.md`, `methodology/CONTEXT_TEMPLATE.md`, `methodology/CLAUDE_TEMPLATE.md`, `methodology/BOOTSTRAP.md`, `methodology/methodology_dashboard.py`, `methodology/methodology_trim.py`, `methodology/context_budget.py`, `methodology/quality_ratchet.py`), the three files it seeded once from its templates (`HANDOFFS.md`, `.context-budget.json`, `.quality-gates.json`), the `methodology/PROJECT_LEARNINGS.md` seed rows, and `docs/architecture-history/methodology-pr2527-remediation-mpc.md` are the \"Iterative Session Methodology,\" copyright \u00a9 2025-2026 Terrell Deppe (KJ5HST). Session 259 (BL-57 P11) brought the nine root files, the three seeded files and `methodology/FRAMEWORK_APPARATUS.md`, and re-synced the rest of that set to canonical; everything else in the list predates it. `NOTICE` \u00a71 is the enumerated copy and this one follows it. Per the operator (2026-07-27), Terrell Deppe granted permission for this material to be used and redistributed under MIT terms. See `NOTICE` at the repository root for the full attribution and provenance record \u2014 this is the customization-seam location for that grant precisely because the synced files themselves must not be edited (rule above).\n \n ### Wiki sync \u2014 the runner's Commit step, for this project (moved here from `methodology/SESSION_RUNNER.md`, Session 259)\n \n@@ -88,7 +88,7 @@\n \n The live ledger holds only the newest sessions; retired records live in frozen shards, each with its own proof.\n \n-- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut back to **\u226498,304 B** (96 KiB); never retain fewer than **4** non-stub records (a stub's header still says `Session claimed`, or it has no body). Between trims, `tests/test_read_budget.py` holds against the working tree on every CI run: the front matter plus the **2** newest non-stub records must fit in **52,912 B** and inside the predicted page in lines \u2014 a page of **21,250 tokens** at **2.49 B/token**, both measured (\u00a75); front matter at most **8,192 B**; `BACKLOG.md`'s plain-language index must fit in **52,912 B**; and no mandated-read file may exceed **262,144 B**, past which a default `Read` returns nothing \u2014 except `PROJECT_LEARNINGS.md`, declared over it and filed for remediation. The read budget covers `SESSION_NOTES.md`, `BACKLOG.md` and `PROJECT_LEARNINGS.md`. **`CHANGELOG.md` is outside it** by the operator's ruling of 2026-09-14 (Session 257), which names that file alone: it is read only to find something, and what is found is not kept. **Every close-out runs `uv run pytest tests/test_read_budget.py --no-cov` before committing** \u2014 it is the commit that grows the newest record, and the guard reserves room for the next claim. **Remedies differ by arm:** a red BYTES arm means the newest records are too long (shorten them; a trim cannot help, since truncation starts at the top); a red LINES arm means a dense tail (reflow it \u2014 or, once the file is past the trigger, the trim) or a dense head (reflow long lines near the top). The line rule's numbers are retired, not re-tuned. Derivation, limits and the probe method: `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 \u2014 re-run the probe, never quote a figure.\n+- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut back to **\u226498,304 B** (96 KiB); never retain fewer than **4** non-stub records (a stub's header still says `Session claimed`, or it has no body). Between trims, `tests/test_read_budget.py` holds against the working tree on every CI run: the front matter plus the **2** newest non-stub records must fit in **52,912 B** and inside the predicted page in lines \u2014 a page of **21,250 tokens** at **2.49 B/token**, both measured (\u00a75); front matter at most **8,192 B**; `BACKLOG.md`'s plain-language index must fit in **52,912 B**; and no mandated-read file may exceed **262,144 B**, past which a default `Read` returns nothing \u2014 except `methodology/PROJECT_LEARNINGS.md`, declared over it and filed for remediation. The read budget covers `SESSION_NOTES.md`, `BACKLOG.md` and `methodology/PROJECT_LEARNINGS.md`. **`CHANGELOG.md` is outside it** by the operator's ruling of 2026-09-14 (Session 257), which names that file alone: it is read only to find something, and what is found is not kept. **Every close-out runs `uv run pytest tests/test_read_budget.py --no-cov` before committing** \u2014 it is the commit that grows the newest record, and the guard reserves room for the next claim. **Remedies differ by arm:** a red BYTES arm means the newest records are too long (shorten them; a trim cannot help, since truncation starts at the top); a red LINES arm means a dense tail (reflow it \u2014 or, once the file is past the trigger, the trim) or a dense head (reflow long lines near the top). The line rule's numbers are retired, not re-tuned. Derivation, limits and the probe method: `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 \u2014 re-run the probe, never quote a figure.\n - **Shards + proofs \u2014 there are ELEVEN, and a lookup must consult all of them.** `SESSION_NOTES-through-S216.md` (Sessions 216\u21921, 24,590 lines), `SESSION_NOTES-S220-through-S217.md` (220\u2192217, 804 lines), `SESSION_NOTES-S224-through-S221.md` (224\u2192221, 933 lines), `SESSION_NOTES-S227-through-S225.md` (227\u2192225, 790 lines), `SESSION_NOTES-S231-through-S228.md` (231\u2192228, 976 lines) `SESSION_NOTES-S235-through-S232.md` (235\u2192232, 1,057 lines) `SESSION_NOTES-S238-through-S236.md` (238\u2192236, 644 lines), `SESSION_NOTES-S241-through-S239.md` (241\u2192239, 792 lines), `SESSION_NOTES-S248-through-S242.md` (248\u2192242, 1,732 lines), `SESSION_NOTES-S257-through-S249.md` (257\u2192249, 1,498 lines) and `SESSION_NOTES-S269-through-S258.md` (269\u2192258, 1,754 lines), each beside its own `.verify.sh`. **Session N is in:** **N \u2264 216** \u2192 `SESSION_NOTES-through-S216.md`; **217 \u2264 N \u2264 220** \u2192 `SESSION_NOTES-S220-through-S217.md`; **221 \u2264 N \u2264 224** \u2192 `SESSION_NOTES-S224-through-S221.md`; **225 \u2264 N \u2264 227** \u2192 `SESSION_NOTES-S227-through-S225.md`; **228 \u2264 N \u2264 231** \u2192 `SESSION_NOTES-S231-through-S228.md`; **232 \u2264 N \u2264 235** \u2192 `SESSION_NOTES-S235-through-S232.md`; **236 \u2264 N \u2264 238** \u2192 `SESSION_NOTES-S238-through-S236.md`; **239 \u2264 N \u2264 241** \u2192 `SESSION_NOTES-S241-through-S239.md`; **242 \u2264 N \u2264 248** \u2192 `SESSION_NOTES-S248-through-S242.md`; **249 \u2264 N \u2264 257** \u2192 `SESSION_NOTES-S257-through-S249.md`; **258 \u2264 N \u2264 269** \u2192 `SESSION_NOTES-S269-through-S258.md`; **N \u2265 270** \u2192 `SESSION_NOTES.md`. **That table is written in the canonical clause form on purpose: the newest trim's L5 parses it out of THIS file and checks it \u2014 against the cut key, and against the record ids the named files actually contain. It is the one copy here that cannot silently go stale.** **`grep` them; never `Read` them** \u2014 and *nothing watches any of them*: the dashboard's `READ_CAP_WATCHED` is an exact-path set containing none of them (it holds `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md` and three `BACKLOG.md` locations \u2014 Session 248 read the elided form as claiming the set is empty and filed a defect against a true sentence). (Not all of the ten newer shards read whole under a default `Read` either \u2014 measured Session 249 by probing each one, Session 256 for the ninth, Session 266 for the tenth and Session 277 for the eleventh, never inferred from line counts; the count and the per-shard result live in `BACKLOG.md`'s read-cap item and are deliberately not restated here.) Shards are **write-once**: a new trim writes a new file with a new cut key and never appends to an existing one \u2014 which is why every shard after the first is named as a *range*, not the first's open-ended `-through-S216`. Since Session 231 that rule has enforcement across the whole lineage: **L9** compares every shard on disk against the blob committed at the commit that added it, where **L7** only ever guarded the shard it shipped with \u2014 and since Session 235 **L10** does the same for every ancestor **proof**, which L9 left unguarded. **L5 reads three copies \u2014 the live front-matter table, the shard banner and this bullet's routing table; Session 231's L8 reads four more**: `README.md`'s repo map, the shard-naming rule in `docs/methodology/PROJECT_CONVENTIONS.md`, `BACKLOG.md`'s read-cap item (a third copy no earlier trim had noticed), and **this bullet's surrounding prose** \u2014 its count words were read by nothing while its table was checked. All six copies are load-bearing: update them in the trim commit or a proof goes red. **Do not trust that list at the twelfth trim \u2014 re-derive it**, `git grep -l 'SESSION_NOTES-'` is the whole sweep. Session 235 did exactly that and found five further count-carrying strings inside those same four files that no assertion was reading \u2014 including one, three lines below, that was already false. Session 239 did it again and found **four files the fifth trim's sweep had never named** \u2014 and declared none of them: two match only on the phrase `SESSION_NOTES-as-rationale` (the sweep string over-matches; `git grep -l 'SESSION_NOTES-[A-Za-z0-9-]*\\.md'` drops both), and two cite shard filenames inside frozen historical statements that state no census, which `L8/set` would have failed for naming only part of the set. Session 242 re-derived it a third time, confirmed that prediction, and found **four** unread count-carrying strings inside the four declared files \u2014 this bullet's own newest-sessions count, `PROJECT_CONVENTIONS.md`'s trim-ordinal sentence, and two in `BACKLOG.md`'s read-cap item. **Three of the four were found only because an adversarial review reverted each one and watched all seven proofs stay green.** All four are declared now. Session 245 re-derived it a fourth time, found **no fifth file** \u2014 but an adversarial review's mechanical scan then found a 45th ancestor figure the hand enumeration had missed, an aside in `PROJECT_CONVENTIONS.md` nowhere near the list it belongs to, so \"no new unread string\" was wrong when first written. It executed the bequest: the ancestor span and size figures are `L14`'s, and the bequest's own count of them \u2014 *\"sixteen true statements\"* \u2014 was itself underived; the live pointer block states the measured figure, and states it once. What is still unread, deliberately, is the FILE CENSUS each block states about its own sweep: the seventh trim's *\"nineteen files\"* is its parent's measurement beside a post-shard enumeration that measures 21, and it stays unread by ruling: the operator's ruling F ends the assertion-per-trim convention, so the ninth trim deferred the bequeathed `L15` and published its sweep in its close-out record instead. **A sweep result is a deliverable; publish it rather than repeating the sweep sentence unchanged.** And note what no proof can help with: a copy inside a **write-once** shard banner is frozen the moment the next trim lands \u2014 the S220 shard's banner says `N \u2265 221` \u2192 the live file, the S224 shard's routes Sessions 225 and up to the live file, the S227 shard's routes Sessions 228 and up there too, the S231 shard's routes Sessions 232 and up, the S235 shard's routes Sessions 236 and up, and the S238 shard's \u2014 which predicted its own staleness \"at the eighth trim\" \u2014 now does the same for Sessions 239 and up; since the ninth trim the S241 banner does too, exactly as it predicted, and since the tenth the S248 banner does the same, and since the eleventh the S257 banner does too; all nine are falsified and none may be repaired. The S216 shard's banner is not among them and never will be: measured at the seventh trim, its own words are \"states no forward-looking rule\". A shard banner is a snapshot of its own cut; the front-matter table in `SESSION_NOTES.md` is the authority.\n - **Two commits, always.** The trim commit must contain **no** record edit \u2014 not the Phase 1B stub, not the close-out. Claim the session in its own commit first, trim second, close out third. A bundled record edit registers as an added record and holds the proof red forever with zero data loss; that is the shape 5 of the 20 proofs shipped across the project fleet exhibit. The proof treats a non-zero `added` count as a FAIL, which is a deliberate divergence from the canonical tool (v1.2.0 downgraded it to a note because the canonical repo bundles by practice).\n - **Declared grammar.** A record is a heading-delimited **byte span**, never a session: `/^### What Session \\S+ Did$/`, column-0, fence-aware, `footer_mode=none` (asserted, not assumed). `\\S+` not `\\d+` (else Sessions 20B+20A merge); `Did$` anchored (else seven `### What Session N should do` headings become phantom records). 16 sessions have a record but no heading at all; 5 headings are duplicate zero-body Phase-1B stubs. None of that is special-cased \u2014 it rides inside the byte spans.\n@@ -119,7 +119,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory (365 learnings, Sessions 9\u2013285) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) \u2014 extracted from the `methodology/SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **`grep` it, or `Read` it with `offset`/`limit`, when a task resembles earlier work; append new learnings there, not here.** A default `Read` of it is **refused outright** and returns nothing (411.9 KB against a 256 KB ceiling \u2014 re-measure with `wc -c`, never quote this figure; it has been re-derived at every session that appended to the file). Base methodology-level learnings live in the synced `methodology/FRAMEWORK_LEARNINGS.md` (in `methodology/SESSION_RUNNER.md`'s own table until the Session 259 sync).\n+Project institutional memory (365 learnings, Sessions 9\u2013285) lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) \u2014 extracted from the `methodology/SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **`grep` it, or `Read` it with `offset`/`limit`, when a task resembles earlier work; append new learnings there, not here.** A default `Read` of it is **refused outright** and returns nothing (411.9 KB against a 256 KB ceiling \u2014 re-measure with `wc -c`, never quote this figure; it has been re-derived at every session that appended to the file). Base methodology-level learnings live in the synced `methodology/FRAMEWORK_LEARNINGS.md` (in `methodology/SESSION_RUNNER.md`'s own table until the Session 259 sync).\n \n ### Project-specific Failure Modes\n \n"
+   }
+  ],
+  "scan_hits": {
+   "ci": {
+    "mentions": 1,
+    "files": 1,
+    "sites": [
+     {
+      "file": ".github/workflows/publish-tutorial.yml",
+      "line": 9,
+      "text": "# docs/architecture-history/, docs/methodology/ and docs/planning/ are",
+      "names": [
+       "docs/methodology/"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": ".github/workflows/publish-tutorial.yml",
+      "line": 9,
+      "text": "# docs/architecture-history/, docs/methodology/ and docs/planning/ are",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "docs/methodology/"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "hooks": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": [],
+    "runs_moved_tool": 0
+   },
+   "tests": {
+    "mentions": 5,
+    "files": 2,
+    "sites": [
+     {
+      "file": "tests/test_read_budget.py",
+      "line": 4,
+      "text": "widened; operator ruling 2026-09-10, recorded in docs/methodology/PROJECT_CONVENTIONS.md",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "tests/test_read_budget.py",
+      "line": 64,
+      "text": "LEARNINGS = \"PROJECT_LEARNINGS.md\"",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/test_read_budget.py",
+      "line": 66,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "tests/test_session_notes_census.py",
+      "line": 9,
+      "text": "``docs/methodology/PROJECT_CONVENTIONS.md`` -- against the shard set.",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "tests/test_session_notes_census.py",
+      "line": 130,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "tests/test_read_budget.py",
+      "line": 4,
+      "text": "widened; operator ruling 2026-09-10, recorded in docs/methodology/PROJECT_CONVENTIONS.md",
+      "mentions": 3,
+      "code_mentions": 3,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/test_session_notes_census.py",
+      "line": 9,
+      "text": "``docs/methodology/PROJECT_CONVENTIONS.md`` -- against the shard set.",
+      "mentions": 2,
+      "code_mentions": 2,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "proofs": {
+    "mentions": 38,
+    "files": 11,
+    "sites": [
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S224-through-S221.md.verify.sh",
+      "line": 153,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md` \u2014 and a trim that leaves either one alone ships a lie.",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 19,
+      "text": "#      \u2014 `README.md`'s repo map and the shard-naming rule in `docs/methodology/PROJECT_CONVENTIONS.md`",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 161,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 205,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md`, and `BACKLOG.md`'s read-cap item, which the third trim's",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 229,
+      "text": "no longer true is that `README.md` and `docs/methodology/PROJECT_CONVENTIONS.md` sit beyond every",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 284,
+      "text": "\u2014 `README.md`'s repo map, the shard-naming rule in `docs/methodology/PROJECT_CONVENTIONS.md`, and",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 325,
+      "text": "\"`docs/methodology/PROJECT_CONVENTIONS.md` \u2014 and a trim that leaves either one alone ships a lie.\\n\",",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 328,
+      "text": "\"rule in `docs/methodology/PROJECT_CONVENTIONS.md` \u2014 and a trim that left either alone shipped a lie.\\n\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S231-through-S228.md.verify.sh",
+      "line": 220,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S235-through-S232.md.verify.sh",
+      "line": 193,
+      "text": "#      fifth trim's sweep never named \u2014 CHANGELOG.md, PROJECT_LEARNINGS.md,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S235-through-S232.md.verify.sh",
+      "line": 200,
+      "text": "#        * PROJECT_LEARNINGS.md (rows 35, 39, 42, 126) and repository-rename.md (:211, :299, :1256)",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S235-through-S232.md.verify.sh",
+      "line": 209,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S235-through-S232.md.verify.sh",
+      "line": 363,
+      "text": "that are new since the fifth trim swept** \u2014 `CHANGELOG.md`, `PROJECT_LEARNINGS.md`,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 40,
+      "text": "#      THE HOLE WAS MEASURED, NOT SUSPECTED. `docs/methodology/PROJECT_CONVENTIONS.md` states the",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 242,
+      "text": "#        * PROJECT_LEARNINGS.md (rows 35, 39, 42) cites `SESSION_NOTES-through-S216.md` \u2014 one shard,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 258,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 423,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md` gives the rule that produces one \u2014",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 469,
+      "text": "returns nineteen files: the four **L8** reads, this one, `PROJECT_LEARNINGS.md`,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 1139,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md`'s naming rule requires from the ids inside the shard.",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S241-through-S239.md.verify.sh",
+      "line": 224,
+      "text": "#        * PROJECT_LEARNINGS.md cites `SESSION_NOTES-through-S216.md` inside frozen learning rows.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S241-through-S239.md.verify.sh",
+      "line": 236,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S241-through-S239.md.verify.sh",
+      "line": 486,
+      "text": "[#126](PROJECT_LEARNINGS.md) mechanised: *the list was written by someone who had not run it.*",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S241-through-S239.md.verify.sh",
+      "line": 506,
+      "text": "`PROJECT_LEARNINGS.md`, `docs/planning/repository-rename.md`, and the eight shards with their eight",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S248-through-S242.md.verify.sh",
+      "line": 153,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S248-through-S242.md.verify.sh",
+      "line": 380,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md` \u00a75. That size is final: a tenth trim creates a tenth file",
+      "names": [
+       "docs/methodology"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S224-through-S221.md.verify.sh",
+      "line": 153,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md` \u2014 and a trim that leaves either one alone ships a lie.",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh",
+      "line": 161,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 7,
+      "code_mentions": 6,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S231-through-S228.md.verify.sh",
+      "line": 220,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S235-through-S232.md.verify.sh",
+      "line": 209,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 4,
+      "code_mentions": 2,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh",
+      "line": 258,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 6,
+      "code_mentions": 4,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S241-through-S239.md.verify.sh",
+      "line": 236,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 4,
+      "code_mentions": 3,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S248-through-S242.md.verify.sh",
+      "line": 153,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 2,
+      "code_mentions": 2,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S257-through-S249.md.verify.sh",
+      "line": 157,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 2,
+      "code_mentions": 2,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S269-through-S258.md.verify.sh",
+      "line": 172,
+      "text": "CONVENTIONS = \"docs/methodology/PROJECT_CONVENTIONS.md\"",
+      "mentions": 2,
+      "code_mentions": 2,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh",
+      "line": 245,
+      "text": "[#126](PROJECT_LEARNINGS.md) mechanised: *the list was written by someone who had not run it.*",
+      "mentions": 6,
+      "code_mentions": 6,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/methodology"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-pointer-collapse.verify.sh",
+      "line": 352,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md`, and `BACKLOG.md`'s read-cap item, which the third trim's",
+      "mentions": 3,
+      "code_mentions": 3,
+      "names": [
+       "docs/methodology"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "scripts": {
+    "mentions": 41,
+    "files": 4,
+    "sites": [
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 206,
+      "text": "(\"docs/methodology\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 207,
+      "text": "(\"docs/methodology/workstreams\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 561,
+      "text": "TRIM_ARCHIVE_DIR = \"docs/archive\"  # layout: ok -- the legacy half of TRIM_ARCHIVE_DIRS: the shard directory beside a root ledger",
+      "names": [
+       "docs/archive"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 875,
+      "text": "# Only a path UNDER docs/methodology/ is self-evidencing. That directory is this framework's own",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 888,
+      "text": "\"docs/methodology/ITERATIVE_METHODOLOGY.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 889,
+      "text": "\"docs/methodology/FRAMEWORK_APPARATUS.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 890,
+      "text": "\"docs/methodology/HOW_TO_USE.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 891,
+      "text": "\"docs/methodology/workstreams/DESIGN_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 892,
+      "text": "\"docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 893,
+      "text": "\"docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 894,
+      "text": "\"docs/methodology/workstreams/AUDIT_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 895,
+      "text": "\"docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 896,
+      "text": "\"docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 897,
+      "text": "\"docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 898,
+      "text": "\"docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved ",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 899,
+      "text": "\"docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 919,
+      "text": "# How many of the seven ambiguous root names must co-occur to stand in for a docs/methodology/ path.",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 949,
+      "text": "# name in this scanner's tables stays the LEGACY name (SESSION_RUNNER.md, docs/methodology/...): the card,",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 964,
+      "text": "| frozenset((\"docs/methodology\", \"docs/methodology/workstreams\")))  # layout: ok -- the checklist's directory items, by their legacy names",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 969,
+      "text": "workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2).\"\"\"",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 970,
+      "text": "if rel == \"docs/methodology\":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology",
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 972,
+      "text": "if rel.startswith(\"docs/methodology/\"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 973,
+      "text": "rel = rel[len(\"docs/methodology/\"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 997,
+      "text": "# The directories a trim writes its shards and proofs into: docs/archive/ beside a root ledger, and",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 1129,
+      "text": "# executables PRODUCE. A single `--write` emits a fixed 220-line bash script into `docs/archive/`,",
+      "names": [
+       "docs/archive/"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 206,
+      "text": "(\"docs/methodology\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "mentions": 32,
+      "code_mentions": 26,
+      "names": [
+       "docs/archive",
+       "docs/archive/",
+       "docs/methodology",
+       "docs/methodology/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "methodology/methodology_trim.py",
+      "line": 5,
+      "text": "`docs/archive/`, and refuses to do it unless the move is provably lossless.",
+      "mentions": 7,
+      "code_mentions": 4,
+      "names": [
+       "docs/archive",
+       "docs/archive/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "scripts/run_pipeline.py",
+      "line": 111,
+      "text": "# when judging output (PROJECT_LEARNINGS.md #20, Session 24 \u2014 the operator",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "src/model_project_constructor/agents/website/_host_text.py",
+      "line": 377,
+      "text": "printed traceback) nor keeping it reachable is acceptable (``PROJECT_LEARNINGS.md`` #320).",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "config": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "harness": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "ledger": {
+    "mentions": 175,
+    "files": 3,
+    "sites": [],
+    "paths": []
+   },
+   "other": {
+    "mentions": 709,
+    "files": 35,
+    "sites": [
+     {
+      "file": "BACKLOG.md",
+      "line": 3,
+      "text": "**Open work only.** Completed items move to `CHANGELOG.md` (chronological, session-numbered). Milestone-grouped summaries live in `ROADMAP.md`. **Do not leave checked-off `[x]` items here** \u2014 remove t",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 80,
+      "text": "| Are the ledger budgets worth what they cost? | **Operator question, 2026-08-26.** The trim trigger (>1,500 lines), target (\u22641,050) and floor (4 records) were each derived as a fraction of an agent r",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 88,
+      "text": "| `PROJECT_LEARNINGS.md` is refused, and newest-last | A default `Read` of the project's learnings file returns nothing at all: it is past the 256 KiB size at which the agent's file reader refuses out",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1326,
+      "text": "### `PROJECT_LEARNINGS.md` is refused by a default `Read`, and its newest learnings are at the bottom",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1331,
+      "text": "and from the sentence in `CLAUDE.md` and `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 naming it.",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1423,
+      "text": "by a default `Read`: `PROJECT_LEARNINGS.md` (272.5 KB) and `CHANGELOG.md` (626.4 KB) are **refused",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1426,
+      "text": "to read `PROJECT_LEARNINGS.md` when a task resembles earlier work, and that instruction currently",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1433,
+      "text": "`PROJECT_LEARNINGS.md` is still declared; the other item now records only that file's order.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1455,
+      "text": "`docs/archive/**` and `docs/architecture-history/SESSION_NOTES-through-*.md` \u2014 generalises to every",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1459,
+      "text": "have shards under `docs/archive/`.",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1464,
+      "text": "for every non-first shard and ten trims have obeyed it \u2014 and `docs/archive/` does not exist in",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1527,
+      "text": "`docs/methodology/PROJECT_CONVENTIONS.md` \u00a73: active plans live at `docs/planning/`, and when a",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 1576,
+      "text": "1. `docs/methodology/README.md:361-369` still carries the superseded no-redistribution licence and",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "CLAUDE.md",
+      "line": 61,
+      "text": "- `docs/methodology/` \u2014 Framework reference (ITERATIVE_METHODOLOGY.md, HOW_TO_USE.md, workstreams/)",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "CLAUDE.md",
+      "line": 71,
+      "text": "`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`metho",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "CLAUDE.md",
+      "line": 81,
+      "text": "- **Where new entries go, and the rules.** Newest on top under the topmost `## YYYY-MM` heading, which sits **above** `## [0.3.0]` \u2014 never inside a release section. Format, tags, lifecycle and archivi",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "CLAUDE.md",
+      "line": 91,
+      "text": "- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut bac",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "CLAUDE.md",
+      "line": 92,
+      "text": "- **Shards + proofs \u2014 there are ELEVEN, and a lookup must consult all of them.** `SESSION_NOTES-through-S216.md` (Sessions 216\u21921, 24,590 lines), `SESSION_NOTES-S220-through-S217.md` (220\u2192217, 804 line",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "NOTICE",
+      "line": 16,
+      "text": "- `docs/methodology/` (13 files \u2014 every file there except `PROJECT_CONVENTIONS.md`, which is",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "NOTICE",
+      "line": 25,
+      "text": "- the seed rows in `PROJECT_LEARNINGS.md`, and",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "NOTICE",
+      "line": 41,
+      "text": "the `docs/methodology/` set \u2014 is synced verbatim from the canonical upstream methodology repository",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "README.md",
+      "line": 13,
+      "text": "Early implementation. Phases and session boundaries are tracked in `SESSION_NOTES.md`; the authoritative design document is `docs/architecture-history/architecture-plan.md` (archived concept-era plan ",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "ROADMAP.md",
+      "line": 77,
+      "text": "- Framework reference docs in `docs/methodology/`.",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S220-through-S217.md",
+      "line": 41,
+      "text": "**Workstream:** `docs/methodology/workstreams/AUDIT_WORKSTREAM.md` \u2014 measurement against a fixed standard,",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/architecture-history/SESSION_NOTES-S220-through-S217.md",
+      "line": 164,
+      "text": "**No CHANGELOG entry, deliberately.** `docs/methodology/PROJECT_CONVENTIONS.md` \u00a72 gates an entry on",
+      "names": [
+       "docs/methodology"
+      ]
+     }
+    ],
+    "paths": []
+   }
+  },
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 160 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 4
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 129
+   }
+  }
+ },
+ "move": {
+  "mode": "move",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/mpc-move",
+  "layout": "new",
+  "file_bytes": 411884,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    ".context-budget.json"
+   ],
+   ".quality-gates.json": [
+    ".quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 5,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -68,7 +68,7 @@\n \n ### Third-party methodology attribution (decision D1, `docs/planning/enterprise-migration.md` \u00a73)\n \n-`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`methodology/FRAMEWORK_LEARNINGS.md`, `methodology/RECOMMENDED_SKILLS.md`, `methodology/CONTEXT_TEMPLATE.md`, `methodology/CLAUDE_TEMPLATE.md`, `methodology/BOOTSTRAP.md`, `methodology/methodology_dashboard.py`, `methodology/methodology_trim.py`, `methodology/context_budget.py`, `methodology/quality_ratchet.py`), the three files it seeded once from its templates (`HANDOFFS.md`, `.context-budget.json`, `.quality-gates.json`), the `PROJECT_LEARNINGS.md` seed rows, and `docs/architecture-history/methodology-pr2527-remediation-mpc.md` are the \"Iterative Session Methodology,\" copyright \u00a9 2025-2026 Terrell Deppe (KJ5HST). Session 259 (BL-57 P11) brought the nine root files, the three seeded files and `methodology/FRAMEWORK_APPARATUS.md`, and re-synced the rest of that set to canonical; everything else in the list predates it. `NOTICE` \u00a71 is the enumerated copy and this one follows it. Per the operator (2026-07-27), Terrell Deppe granted permission for this material to be used and redistributed under MIT terms. See `NOTICE` at the repository root for the full attribution and provenance record \u2014 this is the customization-seam location for that grant precisely because the synced files themselves must not be edited (rule above).\n+`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`methodology/FRAMEWORK_LEARNINGS.md`, `methodology/RECOMMENDED_SKILLS.md`, `methodology/CONTEXT_TEMPLATE.md`, `methodology/CLAUDE_TEMPLATE.md`, `methodology/BOOTSTRAP.md`, `methodology/methodology_dashboard.py`, `methodology/methodology_trim.py`, `methodology/context_budget.py`, `methodology/quality_ratchet.py`), the three files it seeded once from its templates (`HANDOFFS.md`, `.context-budget.json`, `.quality-gates.json`), the `methodology/PROJECT_LEARNINGS.md` seed rows, and `docs/architecture-history/methodology-pr2527-remediation-mpc.md` are the \"Iterative Session Methodology,\" copyright \u00a9 2025-2026 Terrell Deppe (KJ5HST). Session 259 (BL-57 P11) brought the nine root files, the three seeded files and `methodology/FRAMEWORK_APPARATUS.md`, and re-synced the rest of that set to canonical; everything else in the list predates it. `NOTICE` \u00a71 is the enumerated copy and this one follows it. Per the operator (2026-07-27), Terrell Deppe granted permission for this material to be used and redistributed under MIT terms. See `NOTICE` at the repository root for the full attribution and provenance record \u2014 this is the customization-seam location for that grant precisely because the synced files themselves must not be edited (rule above).\n \n ### Wiki sync \u2014 the runner's Commit step, for this project (moved here from `methodology/SESSION_RUNNER.md`, Session 259)\n \n@@ -88,7 +88,7 @@\n \n The live ledger holds only the newest sessions; retired records live in frozen shards, each with its own proof.\n \n-- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut back to **\u226498,304 B** (96 KiB); never retain fewer than **4** non-stub records (a stub's header still says `Session claimed`, or it has no body). Between trims, `tests/test_read_budget.py` holds against the working tree on every CI run: the front matter plus the **2** newest non-stub records must fit in **52,912 B** and inside the predicted page in lines \u2014 a page of **21,250 tokens** at **2.49 B/token**, both measured (\u00a75); front matter at most **8,192 B**; `BACKLOG.md`'s plain-language index must fit in **52,912 B**; and no mandated-read file may exceed **262,144 B**, past which a default `Read` returns nothing \u2014 except `PROJECT_LEARNINGS.md`, declared over it and filed for remediation. The read budget covers `SESSION_NOTES.md`, `BACKLOG.md` and `PROJECT_LEARNINGS.md`. **`CHANGELOG.md` is outside it** by the operator's ruling of 2026-09-14 (Session 257), which names that file alone: it is read only to find something, and what is found is not kept. **Every close-out runs `uv run pytest tests/test_read_budget.py --no-cov` before committing** \u2014 it is the commit that grows the newest record, and the guard reserves room for the next claim. **Remedies differ by arm:** a red BYTES arm means the newest records are too long (shorten them; a trim cannot help, since truncation starts at the top); a red LINES arm means a dense tail (reflow it \u2014 or, once the file is past the trigger, the trim) or a dense head (reflow long lines near the top). The line rule's numbers are retired, not re-tuned. Derivation, limits and the probe method: `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 \u2014 re-run the probe, never quote a figure.\n+- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut back to **\u226498,304 B** (96 KiB); never retain fewer than **4** non-stub records (a stub's header still says `Session claimed`, or it has no body). Between trims, `tests/test_read_budget.py` holds against the working tree on every CI run: the front matter plus the **2** newest non-stub records must fit in **52,912 B** and inside the predicted page in lines \u2014 a page of **21,250 tokens** at **2.49 B/token**, both measured (\u00a75); front matter at most **8,192 B**; `BACKLOG.md`'s plain-language index must fit in **52,912 B**; and no mandated-read file may exceed **262,144 B**, past which a default `Read` returns nothing \u2014 except `methodology/PROJECT_LEARNINGS.md`, declared over it and filed for remediation. The read budget covers `SESSION_NOTES.md`, `BACKLOG.md` and `methodology/PROJECT_LEARNINGS.md`. **`CHANGELOG.md` is outside it** by the operator's ruling of 2026-09-14 (Session 257), which names that file alone: it is read only to find something, and what is found is not kept. **Every close-out runs `uv run pytest tests/test_read_budget.py --no-cov` before committing** \u2014 it is the commit that grows the newest record, and the guard reserves room for the next claim. **Remedies differ by arm:** a red BYTES arm means the newest records are too long (shorten them; a trim cannot help, since truncation starts at the top); a red LINES arm means a dense tail (reflow it \u2014 or, once the file is past the trigger, the trim) or a dense head (reflow long lines near the top). The line rule's numbers are retired, not re-tuned. Derivation, limits and the probe method: `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 \u2014 re-run the probe, never quote a figure.\n - **Shards + proofs \u2014 there are ELEVEN, and a lookup must consult all of them.** `SESSION_NOTES-through-S216.md` (Sessions 216\u21921, 24,590 lines), `SESSION_NOTES-S220-through-S217.md` (220\u2192217, 804 lines), `SESSION_NOTES-S224-through-S221.md` (224\u2192221, 933 lines), `SESSION_NOTES-S227-through-S225.md` (227\u2192225, 790 lines), `SESSION_NOTES-S231-through-S228.md` (231\u2192228, 976 lines) `SESSION_NOTES-S235-through-S232.md` (235\u2192232, 1,057 lines) `SESSION_NOTES-S238-through-S236.md` (238\u2192236, 644 lines), `SESSION_NOTES-S241-through-S239.md` (241\u2192239, 792 lines), `SESSION_NOTES-S248-through-S242.md` (248\u2192242, 1,732 lines), `SESSION_NOTES-S257-through-S249.md` (257\u2192249, 1,498 lines) and `SESSION_NOTES-S269-through-S258.md` (269\u2192258, 1,754 lines), each beside its own `.verify.sh`. **Session N is in:** **N \u2264 216** \u2192 `SESSION_NOTES-through-S216.md`; **217 \u2264 N \u2264 220** \u2192 `SESSION_NOTES-S220-through-S217.md`; **221 \u2264 N \u2264 224** \u2192 `SESSION_NOTES-S224-through-S221.md`; **225 \u2264 N \u2264 227** \u2192 `SESSION_NOTES-S227-through-S225.md`; **228 \u2264 N \u2264 231** \u2192 `SESSION_NOTES-S231-through-S228.md`; **232 \u2264 N \u2264 235** \u2192 `SESSION_NOTES-S235-through-S232.md`; **236 \u2264 N \u2264 238** \u2192 `SESSION_NOTES-S238-through-S236.md`; **239 \u2264 N \u2264 241** \u2192 `SESSION_NOTES-S241-through-S239.md`; **242 \u2264 N \u2264 248** \u2192 `SESSION_NOTES-S248-through-S242.md`; **249 \u2264 N \u2264 257** \u2192 `SESSION_NOTES-S257-through-S249.md`; **258 \u2264 N \u2264 269** \u2192 `SESSION_NOTES-S269-through-S258.md`; **N \u2265 270** \u2192 `SESSION_NOTES.md`. **That table is written in the canonical clause form on purpose: the newest trim's L5 parses it out of THIS file and checks it \u2014 against the cut key, and against the record ids the named files actually contain. It is the one copy here that cannot silently go stale.** **`grep` them; never `Read` them** \u2014 and *nothing watches any of them*: the dashboard's `READ_CAP_WATCHED` is an exact-path set containing none of them (it holds `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md` and three `BACKLOG.md` locations \u2014 Session 248 read the elided form as claiming the set is empty and filed a defect against a true sentence). (Not all of the ten newer shards read whole under a default `Read` either \u2014 measured Session 249 by probing each one, Session 256 for the ninth, Session 266 for the tenth and Session 277 for the eleventh, never inferred from line counts; the count and the per-shard result live in `BACKLOG.md`'s read-cap item and are deliberately not restated here.) Shards are **write-once**: a new trim writes a new file with a new cut key and never appends to an existing one \u2014 which is why every shard after the first is named as a *range*, not the first's open-ended `-through-S216`. Since Session 231 that rule has enforcement across the whole lineage: **L9** compares every shard on disk against the blob committed at the commit that added it, where **L7** only ever guarded the shard it shipped with \u2014 and since Session 235 **L10** does the same for every ancestor **proof**, which L9 left unguarded. **L5 reads three copies \u2014 the live front-matter table, the shard banner and this bullet's routing table; Session 231's L8 reads four more**: `README.md`'s repo map, the shard-naming rule in `docs/methodology/PROJECT_CONVENTIONS.md`, `BACKLOG.md`'s read-cap item (a third copy no earlier trim had noticed), and **this bullet's surrounding prose** \u2014 its count words were read by nothing while its table was checked. All six copies are load-bearing: update them in the trim commit or a proof goes red. **Do not trust that list at the twelfth trim \u2014 re-derive it**, `git grep -l 'SESSION_NOTES-'` is the whole sweep. Session 235 did exactly that and found five further count-carrying strings inside those same four files that no assertion was reading \u2014 including one, three lines below, that was already false. Session 239 did it again and found **four files the fifth trim's sweep had never named** \u2014 and declared none of them: two match only on the phrase `SESSION_NOTES-as-rationale` (the sweep string over-matches; `git grep -l 'SESSION_NOTES-[A-Za-z0-9-]*\\.md'` drops both), and two cite shard filenames inside frozen historical statements that state no census, which `L8/set` would have failed for naming only part of the set. Session 242 re-derived it a third time, confirmed that prediction, and found **four** unread count-carrying strings inside the four declared files \u2014 this bullet's own newest-sessions count, `PROJECT_CONVENTIONS.md`'s trim-ordinal sentence, and two in `BACKLOG.md`'s read-cap item. **Three of the four were found only because an adversarial review reverted each one and watched all seven proofs stay green.** All four are declared now. Session 245 re-derived it a fourth time, found **no fifth file** \u2014 but an adversarial review's mechanical scan then found a 45th ancestor figure the hand enumeration had missed, an aside in `PROJECT_CONVENTIONS.md` nowhere near the list it belongs to, so \"no new unread string\" was wrong when first written. It executed the bequest: the ancestor span and size figures are `L14`'s, and the bequest's own count of them \u2014 *\"sixteen true statements\"* \u2014 was itself underived; the live pointer block states the measured figure, and states it once. What is still unread, deliberately, is the FILE CENSUS each block states about its own sweep: the seventh trim's *\"nineteen files\"* is its parent's measurement beside a post-shard enumeration that measures 21, and it stays unread by ruling: the operator's ruling F ends the assertion-per-trim convention, so the ninth trim deferred the bequeathed `L15` and published its sweep in its close-out record instead. **A sweep result is a deliverable; publish it rather than repeating the sweep sentence unchanged.** And note what no proof can help with: a copy inside a **write-once** shard banner is frozen the moment the next trim lands \u2014 the S220 shard's banner says `N \u2265 221` \u2192 the live file, the S224 shard's routes Sessions 225 and up to the live file, the S227 shard's routes Sessions 228 and up there too, the S231 shard's routes Sessions 232 and up, the S235 shard's routes Sessions 236 and up, and the S238 shard's \u2014 which predicted its own staleness \"at the eighth trim\" \u2014 now does the same for Sessions 239 and up; since the ninth trim the S241 banner does too, exactly as it predicted, and since the tenth the S248 banner does the same, and since the eleventh the S257 banner does too; all nine are falsified and none may be repaired. The S216 shard's banner is not among them and never will be: measured at the seventh trim, its own words are \"states no forward-looking rule\". A shard banner is a snapshot of its own cut; the front-matter table in `SESSION_NOTES.md` is the authority.\n - **Two commits, always.** The trim commit must contain **no** record edit \u2014 not the Phase 1B stub, not the close-out. Claim the session in its own commit first, trim second, close out third. A bundled record edit registers as an added record and holds the proof red forever with zero data loss; that is the shape 5 of the 20 proofs shipped across the project fleet exhibit. The proof treats a non-zero `added` count as a FAIL, which is a deliberate divergence from the canonical tool (v1.2.0 downgraded it to a note because the canonical repo bundles by practice).\n - **Declared grammar.** A record is a heading-delimited **byte span**, never a session: `/^### What Session \\S+ Did$/`, column-0, fence-aware, `footer_mode=none` (asserted, not assumed). `\\S+` not `\\d+` (else Sessions 20B+20A merge); `Did$` anchored (else seven `### What Session N should do` headings become phantom records). 16 sessions have a record but no heading at all; 5 headings are duplicate zero-body Phase-1B stubs. None of that is special-cased \u2014 it rides inside the byte spans.\n@@ -119,7 +119,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory (365 learnings, Sessions 9\u2013285) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) \u2014 extracted from the `methodology/SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **`grep` it, or `Read` it with `offset`/`limit`, when a task resembles earlier work; append new learnings there, not here.** A default `Read` of it is **refused outright** and returns nothing (411.9 KB against a 256 KB ceiling \u2014 re-measure with `wc -c`, never quote this figure; it has been re-derived at every session that appended to the file). Base methodology-level learnings live in the synced `methodology/FRAMEWORK_LEARNINGS.md` (in `methodology/SESSION_RUNNER.md`'s own table until the Session 259 sync).\n+Project institutional memory (365 learnings, Sessions 9\u2013285) lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) \u2014 extracted from the `methodology/SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **`grep` it, or `Read` it with `offset`/`limit`, when a task resembles earlier work; append new learnings there, not here.** A default `Read` of it is **refused outright** and returns nothing (411.9 KB against a 256 KB ceiling \u2014 re-measure with `wc -c`, never quote this figure; it has been re-derived at every session that appended to the file). Base methodology-level learnings live in the synced `methodology/FRAMEWORK_LEARNINGS.md` (in `methodology/SESSION_RUNNER.md`'s own table until the Session 259 sync).\n \n ### Project-specific Failure Modes\n \n"
+   }
+  ],
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 160 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 4
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 129
+   }
+  },
+  "git_mv": {
+   "exit": 0,
+   "err": ""
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 160 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 4
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 0
+   }
+  },
+  "differences": [
+   "history"
+  ]
+ },
+ "edit": {
+  "mode": "move",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/mpc-edit",
+  "layout": "new",
+  "file_bytes": 411884,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    ".context-budget.json"
+   ],
+   ".quality-gates.json": [
+    ".quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 5,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -68,7 +68,7 @@\n \n ### Third-party methodology attribution (decision D1, `docs/planning/enterprise-migration.md` \u00a73)\n \n-`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`methodology/FRAMEWORK_LEARNINGS.md`, `methodology/RECOMMENDED_SKILLS.md`, `methodology/CONTEXT_TEMPLATE.md`, `methodology/CLAUDE_TEMPLATE.md`, `methodology/BOOTSTRAP.md`, `methodology/methodology_dashboard.py`, `methodology/methodology_trim.py`, `methodology/context_budget.py`, `methodology/quality_ratchet.py`), the three files it seeded once from its templates (`HANDOFFS.md`, `.context-budget.json`, `.quality-gates.json`), the `PROJECT_LEARNINGS.md` seed rows, and `docs/architecture-history/methodology-pr2527-remediation-mpc.md` are the \"Iterative Session Methodology,\" copyright \u00a9 2025-2026 Terrell Deppe (KJ5HST). Session 259 (BL-57 P11) brought the nine root files, the three seeded files and `methodology/FRAMEWORK_APPARATUS.md`, and re-synced the rest of that set to canonical; everything else in the list predates it. `NOTICE` \u00a71 is the enumerated copy and this one follows it. Per the operator (2026-07-27), Terrell Deppe granted permission for this material to be used and redistributed under MIT terms. See `NOTICE` at the repository root for the full attribution and provenance record \u2014 this is the customization-seam location for that grant precisely because the synced files themselves must not be edited (rule above).\n+`methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, `docs/methodology/` (13 files \u2014 all but the project-owned `PROJECT_CONVENTIONS.md`), the nine other root files `bin/sync` installs (`methodology/FRAMEWORK_LEARNINGS.md`, `methodology/RECOMMENDED_SKILLS.md`, `methodology/CONTEXT_TEMPLATE.md`, `methodology/CLAUDE_TEMPLATE.md`, `methodology/BOOTSTRAP.md`, `methodology/methodology_dashboard.py`, `methodology/methodology_trim.py`, `methodology/context_budget.py`, `methodology/quality_ratchet.py`), the three files it seeded once from its templates (`HANDOFFS.md`, `.context-budget.json`, `.quality-gates.json`), the `methodology/PROJECT_LEARNINGS.md` seed rows, and `docs/architecture-history/methodology-pr2527-remediation-mpc.md` are the \"Iterative Session Methodology,\" copyright \u00a9 2025-2026 Terrell Deppe (KJ5HST). Session 259 (BL-57 P11) brought the nine root files, the three seeded files and `methodology/FRAMEWORK_APPARATUS.md`, and re-synced the rest of that set to canonical; everything else in the list predates it. `NOTICE` \u00a71 is the enumerated copy and this one follows it. Per the operator (2026-07-27), Terrell Deppe granted permission for this material to be used and redistributed under MIT terms. See `NOTICE` at the repository root for the full attribution and provenance record \u2014 this is the customization-seam location for that grant precisely because the synced files themselves must not be edited (rule above).\n \n ### Wiki sync \u2014 the runner's Commit step, for this project (moved here from `methodology/SESSION_RUNNER.md`, Session 259)\n \n@@ -88,7 +88,7 @@\n \n The live ledger holds only the newest sessions; retired records live in frozen shards, each with its own proof.\n \n-- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut back to **\u226498,304 B** (96 KiB); never retain fewer than **4** non-stub records (a stub's header still says `Session claimed`, or it has no body). Between trims, `tests/test_read_budget.py` holds against the working tree on every CI run: the front matter plus the **2** newest non-stub records must fit in **52,912 B** and inside the predicted page in lines \u2014 a page of **21,250 tokens** at **2.49 B/token**, both measured (\u00a75); front matter at most **8,192 B**; `BACKLOG.md`'s plain-language index must fit in **52,912 B**; and no mandated-read file may exceed **262,144 B**, past which a default `Read` returns nothing \u2014 except `PROJECT_LEARNINGS.md`, declared over it and filed for remediation. The read budget covers `SESSION_NOTES.md`, `BACKLOG.md` and `PROJECT_LEARNINGS.md`. **`CHANGELOG.md` is outside it** by the operator's ruling of 2026-09-14 (Session 257), which names that file alone: it is read only to find something, and what is found is not kept. **Every close-out runs `uv run pytest tests/test_read_budget.py --no-cov` before committing** \u2014 it is the commit that grows the newest record, and the guard reserves room for the next claim. **Remedies differ by arm:** a red BYTES arm means the newest records are too long (shorten them; a trim cannot help, since truncation starts at the top); a red LINES arm means a dense tail (reflow it \u2014 or, once the file is past the trigger, the trim) or a dense head (reflow long lines near the top). The line rule's numbers are retired, not re-tuned. Derivation, limits and the probe method: `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 \u2014 re-run the probe, never quote a figure.\n+- **Retention rule \u2014 bytes, not lines (operator ruling 2026-09-10, Session 255; Option D widened).** For `SESSION_NOTES.md`: fire a new trim when the live file exceeds **196,608 B** (192 KiB); cut back to **\u226498,304 B** (96 KiB); never retain fewer than **4** non-stub records (a stub's header still says `Session claimed`, or it has no body). Between trims, `tests/test_read_budget.py` holds against the working tree on every CI run: the front matter plus the **2** newest non-stub records must fit in **52,912 B** and inside the predicted page in lines \u2014 a page of **21,250 tokens** at **2.49 B/token**, both measured (\u00a75); front matter at most **8,192 B**; `BACKLOG.md`'s plain-language index must fit in **52,912 B**; and no mandated-read file may exceed **262,144 B**, past which a default `Read` returns nothing \u2014 except `methodology/PROJECT_LEARNINGS.md`, declared over it and filed for remediation. The read budget covers `SESSION_NOTES.md`, `BACKLOG.md` and `methodology/PROJECT_LEARNINGS.md`. **`CHANGELOG.md` is outside it** by the operator's ruling of 2026-09-14 (Session 257), which names that file alone: it is read only to find something, and what is found is not kept. **Every close-out runs `uv run pytest tests/test_read_budget.py --no-cov` before committing** \u2014 it is the commit that grows the newest record, and the guard reserves room for the next claim. **Remedies differ by arm:** a red BYTES arm means the newest records are too long (shorten them; a trim cannot help, since truncation starts at the top); a red LINES arm means a dense tail (reflow it \u2014 or, once the file is past the trigger, the trim) or a dense head (reflow long lines near the top). The line rule's numbers are retired, not re-tuned. Derivation, limits and the probe method: `docs/methodology/PROJECT_CONVENTIONS.md` \u00a75 \u2014 re-run the probe, never quote a figure.\n - **Shards + proofs \u2014 there are ELEVEN, and a lookup must consult all of them.** `SESSION_NOTES-through-S216.md` (Sessions 216\u21921, 24,590 lines), `SESSION_NOTES-S220-through-S217.md` (220\u2192217, 804 lines), `SESSION_NOTES-S224-through-S221.md` (224\u2192221, 933 lines), `SESSION_NOTES-S227-through-S225.md` (227\u2192225, 790 lines), `SESSION_NOTES-S231-through-S228.md` (231\u2192228, 976 lines) `SESSION_NOTES-S235-through-S232.md` (235\u2192232, 1,057 lines) `SESSION_NOTES-S238-through-S236.md` (238\u2192236, 644 lines), `SESSION_NOTES-S241-through-S239.md` (241\u2192239, 792 lines), `SESSION_NOTES-S248-through-S242.md` (248\u2192242, 1,732 lines), `SESSION_NOTES-S257-through-S249.md` (257\u2192249, 1,498 lines) and `SESSION_NOTES-S269-through-S258.md` (269\u2192258, 1,754 lines), each beside its own `.verify.sh`. **Session N is in:** **N \u2264 216** \u2192 `SESSION_NOTES-through-S216.md`; **217 \u2264 N \u2264 220** \u2192 `SESSION_NOTES-S220-through-S217.md`; **221 \u2264 N \u2264 224** \u2192 `SESSION_NOTES-S224-through-S221.md`; **225 \u2264 N \u2264 227** \u2192 `SESSION_NOTES-S227-through-S225.md`; **228 \u2264 N \u2264 231** \u2192 `SESSION_NOTES-S231-through-S228.md`; **232 \u2264 N \u2264 235** \u2192 `SESSION_NOTES-S235-through-S232.md`; **236 \u2264 N \u2264 238** \u2192 `SESSION_NOTES-S238-through-S236.md`; **239 \u2264 N \u2264 241** \u2192 `SESSION_NOTES-S241-through-S239.md`; **242 \u2264 N \u2264 248** \u2192 `SESSION_NOTES-S248-through-S242.md`; **249 \u2264 N \u2264 257** \u2192 `SESSION_NOTES-S257-through-S249.md`; **258 \u2264 N \u2264 269** \u2192 `SESSION_NOTES-S269-through-S258.md`; **N \u2265 270** \u2192 `SESSION_NOTES.md`. **That table is written in the canonical clause form on purpose: the newest trim's L5 parses it out of THIS file and checks it \u2014 against the cut key, and against the record ids the named files actually contain. It is the one copy here that cannot silently go stale.** **`grep` them; never `Read` them** \u2014 and *nothing watches any of them*: the dashboard's `READ_CAP_WATCHED` is an exact-path set containing none of them (it holds `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md` and three `BACKLOG.md` locations \u2014 Session 248 read the elided form as claiming the set is empty and filed a defect against a true sentence). (Not all of the ten newer shards read whole under a default `Read` either \u2014 measured Session 249 by probing each one, Session 256 for the ninth, Session 266 for the tenth and Session 277 for the eleventh, never inferred from line counts; the count and the per-shard result live in `BACKLOG.md`'s read-cap item and are deliberately not restated here.) Shards are **write-once**: a new trim writes a new file with a new cut key and never appends to an existing one \u2014 which is why every shard after the first is named as a *range*, not the first's open-ended `-through-S216`. Since Session 231 that rule has enforcement across the whole lineage: **L9** compares every shard on disk against the blob committed at the commit that added it, where **L7** only ever guarded the shard it shipped with \u2014 and since Session 235 **L10** does the same for every ancestor **proof**, which L9 left unguarded. **L5 reads three copies \u2014 the live front-matter table, the shard banner and this bullet's routing table; Session 231's L8 reads four more**: `README.md`'s repo map, the shard-naming rule in `docs/methodology/PROJECT_CONVENTIONS.md`, `BACKLOG.md`'s read-cap item (a third copy no earlier trim had noticed), and **this bullet's surrounding prose** \u2014 its count words were read by nothing while its table was checked. All six copies are load-bearing: update them in the trim commit or a proof goes red. **Do not trust that list at the twelfth trim \u2014 re-derive it**, `git grep -l 'SESSION_NOTES-'` is the whole sweep. Session 235 did exactly that and found five further count-carrying strings inside those same four files that no assertion was reading \u2014 including one, three lines below, that was already false. Session 239 did it again and found **four files the fifth trim's sweep had never named** \u2014 and declared none of them: two match only on the phrase `SESSION_NOTES-as-rationale` (the sweep string over-matches; `git grep -l 'SESSION_NOTES-[A-Za-z0-9-]*\\.md'` drops both), and two cite shard filenames inside frozen historical statements that state no census, which `L8/set` would have failed for naming only part of the set. Session 242 re-derived it a third time, confirmed that prediction, and found **four** unread count-carrying strings inside the four declared files \u2014 this bullet's own newest-sessions count, `PROJECT_CONVENTIONS.md`'s trim-ordinal sentence, and two in `BACKLOG.md`'s read-cap item. **Three of the four were found only because an adversarial review reverted each one and watched all seven proofs stay green.** All four are declared now. Session 245 re-derived it a fourth time, found **no fifth file** \u2014 but an adversarial review's mechanical scan then found a 45th ancestor figure the hand enumeration had missed, an aside in `PROJECT_CONVENTIONS.md` nowhere near the list it belongs to, so \"no new unread string\" was wrong when first written. It executed the bequest: the ancestor span and size figures are `L14`'s, and the bequest's own count of them \u2014 *\"sixteen true statements\"* \u2014 was itself underived; the live pointer block states the measured figure, and states it once. What is still unread, deliberately, is the FILE CENSUS each block states about its own sweep: the seventh trim's *\"nineteen files\"* is its parent's measurement beside a post-shard enumeration that measures 21, and it stays unread by ruling: the operator's ruling F ends the assertion-per-trim convention, so the ninth trim deferred the bequeathed `L15` and published its sweep in its close-out record instead. **A sweep result is a deliverable; publish it rather than repeating the sweep sentence unchanged.** And note what no proof can help with: a copy inside a **write-once** shard banner is frozen the moment the next trim lands \u2014 the S220 shard's banner says `N \u2265 221` \u2192 the live file, the S224 shard's routes Sessions 225 and up to the live file, the S227 shard's routes Sessions 228 and up there too, the S231 shard's routes Sessions 232 and up, the S235 shard's routes Sessions 236 and up, and the S238 shard's \u2014 which predicted its own staleness \"at the eighth trim\" \u2014 now does the same for Sessions 239 and up; since the ninth trim the S241 banner does too, exactly as it predicted, and since the tenth the S248 banner does the same, and since the eleventh the S257 banner does too; all nine are falsified and none may be repaired. The S216 shard's banner is not among them and never will be: measured at the seventh trim, its own words are \"states no forward-looking rule\". A shard banner is a snapshot of its own cut; the front-matter table in `SESSION_NOTES.md` is the authority.\n - **Two commits, always.** The trim commit must contain **no** record edit \u2014 not the Phase 1B stub, not the close-out. Claim the session in its own commit first, trim second, close out third. A bundled record edit registers as an added record and holds the proof red forever with zero data loss; that is the shape 5 of the 20 proofs shipped across the project fleet exhibit. The proof treats a non-zero `added` count as a FAIL, which is a deliberate divergence from the canonical tool (v1.2.0 downgraded it to a note because the canonical repo bundles by practice).\n - **Declared grammar.** A record is a heading-delimited **byte span**, never a session: `/^### What Session \\S+ Did$/`, column-0, fence-aware, `footer_mode=none` (asserted, not assumed). `\\S+` not `\\d+` (else Sessions 20B+20A merge); `Did$` anchored (else seven `### What Session N should do` headings become phantom records). 16 sessions have a record but no heading at all; 5 headings are duplicate zero-body Phase-1B stubs. None of that is special-cased \u2014 it rides inside the byte spans.\n@@ -119,7 +119,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory (365 learnings, Sessions 9\u2013285) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) \u2014 extracted from the `methodology/SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **`grep` it, or `Read` it with `offset`/`limit`, when a task resembles earlier work; append new learnings there, not here.** A default `Read` of it is **refused outright** and returns nothing (411.9 KB against a 256 KB ceiling \u2014 re-measure with `wc -c`, never quote this figure; it has been re-derived at every session that appended to the file). Base methodology-level learnings live in the synced `methodology/FRAMEWORK_LEARNINGS.md` (in `methodology/SESSION_RUNNER.md`'s own table until the Session 259 sync).\n+Project institutional memory (365 learnings, Sessions 9\u2013285) lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) \u2014 extracted from the `methodology/SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **`grep` it, or `Read` it with `offset`/`limit`, when a task resembles earlier work; append new learnings there, not here.** A default `Read` of it is **refused outright** and returns nothing (411.9 KB against a 256 KB ceiling \u2014 re-measure with `wc -c`, never quote this figure; it has been re-derived at every session that appended to the file). Base methodology-level learnings live in the synced `methodology/FRAMEWORK_LEARNINGS.md` (in `methodology/SESSION_RUNNER.md`'s own table until the Session 259 sync).\n \n ### Project-specific Failure Modes\n \n"
+   }
+  ],
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 160 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 4
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 129
+   }
+  },
+  "git_mv": {
+   "exit": 0,
+   "err": ""
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 160 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 4
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 0
+   }
+  },
+  "differences": [
+   "history"
+  ]
+ }
+}

@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S302 — BL-105 rehearsal: the raw outputs and driver results of model_project_constructor
+
+`mpc-driver.json` and `mpc-raw.txt` in `bl105-runs/`, clones at `ec23bc7`. The `mpc-full-*` sections are the first full-suite attempts, aborted by `-x` on a missing `sqlalchemy` in the system Python (the same in base and edit); the `mpc-all-*` ones are the runs that count, with the project's own `.venv` and `PYTHONPATH` set to the clone's `src` (without it the venv imports the real tree).
+
 ### 2026-10-12 · [BL-101] S302 — BL-105 rehearsal: the raw outputs and driver results of nprcgenekeepr and mts-system
 
 Each adopter's driver run (the tool's own list for the move, the tool's checks before and after, the rewrites) is one JSON and its raw outputs (hand-edit patch, queue script, test and gate outputs) one text, in `bl105-runs/`: `npr-driver.json` and `npr-raw.txt`, `mts-driver.json` and `mts-raw.txt`. The clones were under `~/.cache/bl105-rehearsal` (F23), at `5cacf61` and `d1cf54f`; nothing in either real tree was touched.
