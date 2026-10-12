@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: the floor of `migrate-layout-unit-tests` 220 → 236
+
+`.quality-gates.json`: the suite reads `Ran 236 tests` (220 before; 16 new: 14 on the pure rule, 2 on the command), counted by loading the module and then taken from the gate run in a clean clone (cited in the receipt). A tightening: the hook accepts it. `tests-sh-passed` is not raised: `bin/tests.sh` runs two classes of this file as one pre-check test. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 — F21: recorded in the plan and the backlog
 
 `methodology-subdirectory-plan.md` (status line and the P16 text now say the tool is fixed), `BACKLOG.md` (the BL-101 index row: F21 off the triage list), `BACKLOG-DETAIL.md` (Next action: F21 fixed, the clause that sent a session to read a ledger header for it removed, the S300 Phase 0 state of the adopters added: none free). Model: Claude Sonnet 5.5.
