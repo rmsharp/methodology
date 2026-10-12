@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-11-3.md` (1 record(s), 39,344 B → 27,710 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-11-3.md`](docs/archive/HANDOFFS-through-2026-10-11-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,344 B → 27,710 B (−29.6%).
+
 ### 2026-10-12 · [BL-101] S299 close-out — F24 done and recorded (receipt complete)
 
 Receipt S299 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt, fork #57, #94 and #16). `CHANGELOG: pending` on the S299 claim entry is cleared by this statement (a committed entry is not edited). **The deliverable:** F24, `bin/migrate-layout` reads a tracked root `.vscodeignore` as vsce 3.9.2 reads it; the entries above this one have the figures. **Gate run:** `quality_ratchet.py --run` in a clean `--no-local` clone of `280f0ca`, 18/18 pass, 0 fail, 0 unmeasured, results `9926bd8b4a1b`, manifest `af0d6dc16337` (the manifest moved because the floor of `migrate-layout-unit-tests` rose to 220, which it reads); `tests-sh-passed` 483, failed 0. **Ledgers:** `HANDOFFS.md` holds 3 receipts (S299, S298, S297), so one trim is owed after the next Phase 0 (one record, S297); `CHANGELOG.md` is 148,817 B before this entry against its 196,608 B trigger. **Pushed at his go-ahead before the claim:** `0a3558c` to the fork `origin` and `vscode_quarto_ext`'s three commits to its own `origin/master`; **local commits here, not pushed:** `799ecc1`, `ffbfbc5`, `f2978a3`, `e00b2b2`, `e48a9f5`, `08349d8`, `4aaecd0`, `49880e1`, `15be71a`, `280f0ca` and this close-out; nothing went upstream, no tag. **Open and his:** BL-105, P18 (no free adopter; read `wsfct`'s `.vercelignore` dialect first), whether the tool should refuse, the F21 tool fix, F6, F8, F13, F14, F17, F19, D8. Model: Claude Sonnet 5.5.
