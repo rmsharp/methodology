@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S297
+date: 2026-10-11
+status: pending
+active_task: P16 (BL-101, plan §7.4): the sixth adopter, `chat_verification`, at tier all, in its own repository (`~/Development/chat_verification`, `main`, HEAD `107cbed` at the claim, no remote, no tests, no CI, 36 tracked files). His pick at the S297 Phase 0 with two go-aheads: the owed HANDOFFS trim (done before this claim: trim `e6945f0`, fold `583e771`) and the preparation of the adopter's tree (its one modified `dashboard_history.jsonl`, committed or restored as its own commit there; not yet done). Rechecked at the claim: no `claude` process with that cwd (`wsfct`, `vscode_quarto_ext` and `mts-system` each still have one). Read the findings register first; F2 (an older tracked ledger hook, `.githooks/pre-commit`, replaced before the move), F7 and F19 (match any file `bin/sync` refuses before `--force`) and F20 (rehearse the adopter's own checks); `bin/sync` first (S295: 11 framework files behind or missing); rehearse at each tier in `--no-local` clones with the hook armed.
+```
+
+```handoff
 session: S296
 date: 2026-10-11
 status: complete

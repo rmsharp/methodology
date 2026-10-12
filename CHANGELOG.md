@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [BL-101] S297 claim (in progress) — P16 on `chat_verification` at tier all
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no adopter that was both free and clean, and he picked "P16 on chat_verification" with the go-aheads "trim HANDOFFS" and "prepare the tree" (one picker answer, after asking what option 1 meant). Checked at the claim with `pgrep -x claude` and `lsof -a -p <pid> -d cwd`: no session in `chat_verification`; its tree has one modified file, `dashboard_history.jsonl` (one snapshot line, 2026-08-12), HEAD `107cbed` on `main`, no remote. The gate citation of S296 (results `791e005997ab`, manifest `e755389a69c7`) was re-run in a clean `--no-local` clone of `a61ec17` and confirmed (18/18, 0 unmeasured). The owed HANDOFFS trim (`e6945f0`, S294 to `HANDOFFS-through-2026-10-10-4.md`, the proof exit 0 in the tree and from a clone) and its fold (`583e771`) were done before this claim. Deliverable: one adopter session in its own repository, recorded here; nothing pushed, nothing upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] S297 — fold the fourth 2026-10-10 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`e6945f0`, 1 receipt, S294, 2026-10-10, to `HANDOFFS-through-2026-10-10-4.md`, the name the dry run chose because `-3` was taken) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S296, S295). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-10-4.md.verify.sh` at `e6945f0`, exit 0 (L1, L2/front-matter, L3). The trim ran on his go-ahead at the S297 Phase 0 (a picker answer: "trim HANDOFFS"); nothing was pushed and nothing went upstream. Model: Claude Sonnet 5.5.
