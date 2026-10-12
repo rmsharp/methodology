@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P17 are done (§7.1 to §7.4g, S274 to S298; P11 at tier 1, P12 to P17 at tier all); P18 is next, subject to §7.6 (F24 first unless he says otherwise), and tier 2 is open.**
+P0 to P17 are done (§7.1 to §7.4g, S274 to S298; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 fixed, S299), and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm.
@@ -537,7 +537,7 @@ a clean default branch** (its branch is active).
 
 ### 7.4g P17 — `vscode_quarto_ext` (S298)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p17-vscode-quarto-ext-record.md`). A VS Code extension (4,583 tests, no hook, no CI) with a 66 GB untracked `scratchpad/` it leaves unignored on purpose (a local exclude for the run, F12). **One line of its own `.vscodeignore` went in before the move** (F24): the tool alone turned its release gate red (78 files against 42) with every test and every check of the tool green. 36 renames, no `--force`. **Tier 2 cost:** 18 links. **Findings:** F23, F24.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p17-vscode-quarto-ext-record.md`). A VS Code extension (4,583 tests, no hook, no CI) with a 66 GB untracked `scratchpad/` it leaves unignored on purpose (a local exclude for the run, F12). **One line of its own `.vscodeignore` went in before the move** (F24): the tool alone turned its release gate red (78 files against 42) with every test and every check of the tool green. 36 renames, no `--force`. **Tier 2 cost:** 18 links. **Findings:** F23, F24 (fixed S299).
 
 ### 7.5 P23 and G-B
 

@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S299 — F24 recorded in the plan and the backlog
+
+Plan `docs/planning/methodology-subdirectory-plan.md`: the status line now says P18 is next and F24 is fixed (it said F24 first unless he said otherwise), §7.4g's findings line says F24 fixed; the plan is 59,973 of 60,000 B. `docs/planning/BACKLOG.md` BL-101 row: the P17 clause says F24 was found and is fixed (S299), a new clause says what the tool names (36 of 36 files at tier all, 23 at tier 1, none once the adopter's line is in, the same as real `vsce ls`), the Next clause says that at S299's Phase 0 no adopter was free (three had a session, three were dirty or empty) and that `vscode_quarto_ext`'s three commits were pushed; the file is 56,711 of 56,750 B. `docs/planning/BACKLOG-DETAIL.md`: a paragraph for F24 FIXED with the measurements, the Next action without F24 and without the push as a call of his, and without the F24 call. BL-101 stays open (P18 and the rest). Nothing in the tool changed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S299 — F24: the record, and the register row closed
 
 The record `docs/planning/methodology-subdirectory-evidence/f24-vscodeignore-record.md` (what vsce does, read and run; the change; what was measured; what the list cannot show; how to reproduce) and the register: row F24 now reads **fixed** (S299), a dated line says what the tool now names (36 of 36 at tier all, 23 of 23 at tier 1, 0 once the adopter's line is in) and what stays open, and the read-first paragraph lists F24 among the fixed rows. **What stays open, named in both:** the rule is for one repository (only `vscode_quarto_ext` tracks a root `.vscodeignore` here); `wsfct` tracks a `.vercelignore` that the tool lists and never judges, so the next adopter with a pattern list of its own is this finding's second instance unless its dialect is read first; a refusal was not built (F10 listed; changing that is his). Nothing in the tool changed. Model: Claude Sonnet 5.5.
