@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] BL-105 build phase 3: the record, the mutation script and the register
+
+`docs/planning/methodology-subdirectory-evidence/bl105-phase3-record.md` (the inventory and what each of the six sites became, the sync channels, what was not run), `mutate-bl105-phase3.py` (9 mutants of the `bin/check-links` change, 9 killed; refuses a path outside `~/.cache`) and the findings register: row F31 (`bin/check-links:84` was code), F29 and F30 set to fixed (S303 built them; the rows still read open), and the S304 log line. Gate run in a clean `--no-local` clone of `69fe69a`: 18/18, results `0ca51b2444cc`, manifest `5ba29f982c78`.
+
 ### 2026-10-12 · [BL-101] BL-105 build phase 3: the distributed prose says where `PROJECT_LEARNINGS.md` lives in either layout
 
 `starter-kit/BOOTSTRAP.md` (the Step 5 paragraph, lines 218 and 222) and `starter-kit/CLAUDE_TEMPLATE.md` (the comment at 83-84) said the file sits "at your project root" and "needs no tooling changes": both false for a project in the `methodology/` layout, where `bin/migrate-layout` moves it with the methodology files and rewrites the `CLAUDE.md` pointer (275 tests). They now say "beside `FRAMEWORK_LEARNINGS.md`" (the project root, or `methodology/`), that the pointer names the file where it lives, and what the tool does. No line count changes in either file. Lines 220 and 439 name the file bare and stay (the bare-name rule, `BOOTSTRAP.md:68`). Fork only; nothing sent to `KJ5HST/methodology`.
