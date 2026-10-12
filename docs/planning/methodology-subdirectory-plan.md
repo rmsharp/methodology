@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P17 are done (§7.1 to §7.4g, S274 to S298; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 and F21 fixed, S299 and S300), and tier 2 is open.**
+**Status: DECIDED (S273), ratified 2026-10-06 at S273's close-out picker, every one as recommended (§9).
+P0 to P17 are done (§7.1 to §7.4g; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 and F21 fixed, S299 and S300); tier 2 is open; BL-105 is decided (D10, S301).**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm.
@@ -25,27 +25,25 @@ Evidence for every number below is re-runnable from
    places: **18 at the project root** (11 that `bin/sync` keeps current, 7 it seeds once) and **12 under
    `docs/methodology/`** (`bin/_manifest.py:41-93`, 30 entries). The target merges both into
    `methodology/`.
-3. **Nobody proposed it before** (§2.3 names what was searched). The B1 plan's Decision 1b deferred a
-   canonical-side mirror as *"a possible future campaign"*; this plan is that campaign, aimed at a different layout.
+3. **Nobody proposed it before** (§2.3 names what was searched); the B1 plan's Decision 1b deferred a
+   canonical-side mirror as *"a possible future campaign"*, and this is that campaign.
 4. **What makes it hard is not the files; it is that the shipped tools, the hooks and every adopter's own files read these paths as literals** (17 couplings, §3).
-   In scratch clones of `bin/tests.sh`: baseline **452 / 0 / 0**; moving **only** the two ledgers gives **418 / 12 / 3**, and the
-   archive directory too **414 / 11 / 5** (§3.1). Worse than a red: **the ledger co-staging hook silently stops binding**: with the
-   ledger at `methodology/CHANGELOG.md` a commit with no ledger entry is **passed**, where the unmoved control is refused (§3, C5).
-   A green suite is therefore not evidence about a move; §8 names the criteria that are.
-5. **Two feared risks were measured and are not risks.** All **117** frozen `.verify.sh` losslessness
-   proofs give the same exit codes before and after moving the ledgers, and after moving the archive
-   directory as well (§3, C7). A nested `methodology/.gitattributes` carrying `merge=union` merges two
-   ledger edits cleanly, and the same merge without it conflicts (§4.2, E1).
+   Scratch clones of `bin/tests.sh` (§3.1): baseline **452 / 0 / 0**; moving **only** the two ledgers **418 / 12 / 3**. Worse than a
+   red: **the ledger co-staging hook silently stops binding**, passing a commit with no ledger entry (§3, C5). A green suite is
+   therefore not evidence about a move; §8 names the criteria that are.
+5. **Two feared risks were measured and are not risks:** all **117** frozen `.verify.sh` proofs give the
+   same exit codes before and after moving the ledgers and the archive directory (§3, C7); a nested
+   `methodology/.gitattributes` with `merge=union` merges two ledger edits cleanly, and without it they conflict (§4.2, E1).
 6. **Syncing is half the problem** (the operator's addition, §5A). `bin/sync` would write a blank ledger beside a real one; the dashboard
    is a **second** sync channel that writes at the project root; and **this repository's own resync with `upstream` changes shape once its
-   files move**: git pairs none of the moved ledgers or JSON files against the merge base, so one synthetic upstream edit gives 4 modify/delete
-   conflicts and a file-location conflict where the unmoved fork gives 3 text conflicts (§5A.4). The plan's answers: sync before migrate, `--layout auto` through the window, and **this repository's real files move only after
+   files move**: git pairs none of the moved ledgers or JSON files against the merge base, so 4 modify/delete conflicts and a file-location
+   one replace the unmoved fork's 3 text conflicts (§5A.4). The answers: sync before migrate, `--layout auto` through the window, and **this repository's real files move only after
    the upstream decision (D8)**; P8 is a rehearsal in a scratch clone.
 7. **Recommended shape:** *expand → migrate → contract* (§4.5), a layout resolver every shipped tool
    embeds (§4.3), two tiers (the framework's own files first, the project's state files second), the
    adopters one per session, and **a gate before** restructuring this repository's distributed source
    paths (§5).
-8. **Decisions** (all ratified, S273): §9. D8 is the fork first, then one pull request.
+8. **Decisions** (D1-D9 S273, D10 S301): §9. D8 is the fork first, then one pull request.
 9. **The adopter runs also test the route an adopter takes alone** (the operator's addition, 2026-10-09): every
    finding of a P11-P22 run becomes a fix with a test, an open row or a declined one, and the next session
    reads the register first (§7.6). D8's pull request carries it.
@@ -56,8 +54,8 @@ Evidence for every number below is re-runnable from
 
 - **"methodology files"** = every file in `bin/_manifest.py`'s `DISTRIBUTION`, plus what the tools
   generate beside them (`dashboard.html`, `dashboard_history.jsonl`, `.context-budget-history.jsonl`,
-  `.quality-gates-results.json`) and the ledger shards. Not: the project's own `BACKLOG.md`,
-  `CONTEXT.md`, `PROJECT_LEARNINGS.md`, `README.md`, `docs/` — no manifest entry creates them (D1).
+  `.quality-gates-results.json`), the ledger shards, and a project's `PROJECT_LEARNINGS.md` (D10). Not: the project's own `BACKLOG.md`,
+  `CONTEXT.md`, `README.md`, `docs/` — no manifest entry creates them (D1).
 - **"1 layer lower"** = directly under the root: `methodology/SESSION_RUNNER.md`, never
   `methodology/docs/...`. `workstreams/` stays the one subdirectory it already is (D2).
 - **Two targets:** Part A, the adopters (12 sibling projects here, and every external adopter); Part B,
@@ -594,6 +592,7 @@ D4, D5, D7 and D9 as written.
 | **D7** | Versions and sync order | expand minor, contract major; both layouts supported until every portfolio adopter has migrated; `bin/sync --layout auto` through the window; sync before migrate | as stated (§4.5, §5A.2); the number of the release is a later decision |
 | **D8** | Upstream | fork-side work and adopters first; then **one** vetted pull request carrying the expand stage, the evidence and the findings register (§7.6); or none | **as stated.** It is also what makes this repository's own layout sustainable (§5A.4): without it the fork carries the resolver edits over every maintainer change. Every outward action is his go-ahead each time; no part of this plan sends anything |
 | **D9** | Adopter order and batching | §7.4's order, one per session | **as stated** |
+| **D10** | `PROJECT_LEARNINGS.md` (BL-105) | (a) root; (b) a companion of the move, no manifest entry; (c) (b) and `BACKLOG.md` | **(b)**, his S301 pick; a rehearsal comes first and can withdraw it ([why](methodology-subdirectory-evidence/bl105-record.md)) |
 
 ## 10. Risks, stop conditions, rollback
 

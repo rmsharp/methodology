@@ -73,4 +73,16 @@ No move was rehearsed on any adopter. Not run: `model_project_constructor`'s `te
 
 ## 5. His answer
 
-*(Recorded after the S301 picker.)*
+**B: move it** (his pick at the S301 Phase 0 picker, 2026-10-12; the recommended option). `PROJECT_LEARNINGS.md` joins the `methodology/` set as a
+companion of the move, with no manifest entry (plan D10). Options A and C were not taken: `BACKLOG.md` and `CONTEXT.md` stay at the root.
+**What changed:** plan §1 (the file is inside the definition), §9 (D10) and the backlog row BL-105 (decided, build open). **What did not:** nothing
+is built; no tool, distributed document or adopter was touched; D8 and the release number are untouched.
+
+**The build, as phases, each its own session** (an estimate; none is in plan §7 yet):
+1. **Rehearsal, which can withdraw B.** `--no-local` clones of `nprcgenekeepr` and `mts-system`: move the file under `methodology/`, rewrite the
+   `CLAUDE.md` pointer and the config path as the tool would, edit the 5 sites, run each project's own checks (`test_workflowPathsIgnore.R`
+   and the R script; `scripts/test_learnings_archive.py`), and report what the tool's checks did not see (plan §7.6).
+2. **The tool, RED first:** a companion rule in `bin/migrate-layout` and a top-up mode for a tree it calls migrated; the gate floor rises.
+3. **The distributed prose:** `BOOTSTRAP.md:218,220,222,439`, `CLAUDE_TEMPLATE.md:83` and `bin/check-links:84` say "beside
+   `FRAMEWORK_LEARNINGS.md`" (layout-neutral): a distributed change, so fork first and one pull request later (D8), each outward step his go-ahead.
+4. **The adopters:** the three migrated ones as top-ups, `mts-system` and `wsfct` at their own migration; each one's hand-edit sites first.

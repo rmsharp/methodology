@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S301 — BL-105 decided: option B, `PROJECT_LEARNINGS.md` joins the `methodology/` set as a companion of the move (plan D10)
+
+His pick at the S301 Phase 0 picker, the recommended one; A (stay at the root) and C (also `BACKLOG.md`, `CONTEXT.md`) not taken. Plan §1 and a new D10 row say so, shortened elsewhere to stay under its declared 60,000 B (59,992 B); `bl105-record.md` §5 holds his answer and four build phases (a rehearsal first, which can withdraw B); the backlog row BL-105 reads DECIDED with the build open, and BL-101's row no longer calls BL-105 his open call. Nothing built; no tool, distributed document or adopter touched; D8 untouched; nothing outward.
+
 ### 2026-10-12 · [BL-101] S301 — BL-105 evidence record written (the answer is his, next)
 
 `docs/planning/methodology-subdirectory-evidence/bl105-record.md`: the census of `PROJECT_LEARNINGS.md` over the 12 adopters (5 carry it; 14 path literals: 3 config rewrites, 6 already hold, 5 hand edits), his two questions answered with evidence, four costed options (A keep, B companion of the move, B-manifest, C wider), and what was not run (no rehearsal). Read-only: no tool, distributed document or adopter changed. His answer is §5, recorded after the picker.

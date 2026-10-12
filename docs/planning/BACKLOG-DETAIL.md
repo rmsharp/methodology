@@ -4325,7 +4325,7 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 **Not started:** any of it.
 
 <a id="bl-105"></a>
-**BL-105 — Decide whether files the framework prescribes but no tool seeds join the `methodology/` set, `PROJECT_LEARNINGS.md` first. Raised 2026-10-11 (S298) by his questions after the P17 close-out; nothing is decided or built.**
+**BL-105 — Decide whether files the framework prescribes but no tool seeds join the `methodology/` set, `PROJECT_LEARNINGS.md` first. Raised 2026-10-11 (S298) by his questions after the P17 close-out; DECIDED S301 (below), nothing built.**
 
 **The questions, in his words (S298):** "why is nprcgenekeepr's file PROJECT_LEARNINGS.md not moved into /methodology?"; then "provide an argument other than it not being in the manifest for it not being part of the methodology file set. Is it a file that would typically be created in the non 'methodology' use of Claude CLI?"; then "raise it as a decision in the next picker in the next session".
 
@@ -4338,3 +4338,5 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 **Not measured:** how many of `nprcgenekeepr`'s 143 names are live references and how many sit in committed ledger entries; the other adopters' counts and contents; how `bin/sync` treats an optional manifest file an adopter lacks.
 
 **Next action:** raise it at the next Phase 0 picker among his calls (the S298 receipt's next_steps (d) and the BL-101 Next action name it); record his answer; if (b) or (c), a plan amendment to D1 (his ratification) comes before any tool session. **Not started:** any of it.
+
+**S301 — DECIDED: option B, his pick at the Phase 0 picker (2026-10-12), the recommended one.** `PROJECT_LEARNINGS.md` joins the `methodology/` set as a **companion of the move**: `bin/migrate-layout` moves a project-owned copy when present and rewrites the `CLAUDE.md` pointer, and there is **no manifest entry** (a manifest seed would create an empty file in every adopter, and an optional entry needs a third disposition). Options A (stay at the root) and C (also `BACKLOG.md`, `CONTEXT.md`) were not taken. Plan §1 and D10 say so; the evidence, his two questions answered, the census over the 12 adopters and the phases are in [`bl105-record.md`](methodology-subdirectory-evidence/bl105-record.md). **Measured, not rehearsed:** 14 path literals a program reads in 5 adopters: 3 config rewrites by the tool, 6 that already hold (`nprcgenekeepr`'s `.Rbuildignore` and four workflows ignore `methodology/`; `vscode_quarto_ext`'s `.vscodeignore`), 5 hand edits (`model_project_constructor` 1, `mts-system` 2, `nprcgenekeepr` 2); `bin/migrate-layout` on a migrated tree prints "nothing to migrate". **Next action:** phase 1 of the record's §5, a rehearsal on clones of `nprcgenekeepr` and `mts-system`, which can withdraw B; then the tool, the distributed prose, the adopters. **Not started:** any of it. D8 untouched; nothing outward.
