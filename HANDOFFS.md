@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S301
+date: 2026-10-12
+status: pending
+active_task: BL-105 (BL-101 backlog row; `docs/planning/BACKLOG-DETAIL.md#bl-105`): whether `PROJECT_LEARNINGS.md`, and the other files the framework prescribes but no tool seeds, join the `methodology/` set. The deliverable is ONE decision record: the items the row lists as not measured are measured read-only, the costed options go to him in one picker, his answer is recorded in plan §1 / D1 and the backlog. Nothing is built, and no tool, distributed document or adopter is touched.
+```
+
+```handoff
 session: S300
 date: 2026-10-12
 status: complete

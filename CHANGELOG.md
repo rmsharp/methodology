@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S301 claim (in progress) — BL-105, whether `PROJECT_LEARNINGS.md` joins the `methodology/` set
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (`wsfct`, `mts-system` and `nprcgenekeepr` have a live session; `Philippians` 4 dirty lines, `dalia_martinez_funeral` 6, `claude_work` no commit) and he picked the BL-105 decision with two go-aheads, both done before this claim: the push of `1dfc8b2` to the fork `origin` (`0 0`, `ls-remote` equal) and the HANDOFFS trim (`b578fd8`) with its fold (`c76af16`). S300's gate citation re-run in a clean `--no-local` clone of `608c7b9`: 18/18, results `8c209fa9806e`, manifest `440ab037cfe1`, the citation's own figures. Deliverable: one decision record, nothing built. Phase 3F records the rest.
+
 ### 2026-10-12 · [ad hoc] S301 — fold the fourth 2026-10-11 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`b578fd8`, 1 receipt, S298, to `HANDOFFS-through-2026-10-11-4.md`, the name S300's handoff guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S300, S299). Both ran on his go-ahead at the S301 Phase 0 picker; the push of `1dfc8b2` to the fork came first and was read back (`0 0`, `ls-remote` equal).
