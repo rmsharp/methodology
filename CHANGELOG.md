@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: the record and the register row
+
+`f21-fenced-example-record.md` (the problem, the rule and the sibling readers it was read from, the change, what was measured, what it does not show, how to reproduce) and `findings-register.md`: row F21 now reads fixed with its evidence, a dated S300 line, and the read-at-next-session paragraph no longer sends a session to move an entry by hand. The row and the record state the test accounting as it was (ten tests before the code, six after). Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 — F21: the red run and the outputs of two mutation rounds
 
 `f21-red-run-output.txt` (the first ten tests, run before the code: 9 red, 1 green by design), `f21-mutation-round-1.txt` (22 mutants of `first_heading` and `insert_entry` in a scratch clone of `72a5921`: 20 killed, 2 alive, F06 and C03 with one cause, a nested-fence fixture that closed its own fence by coincidence) and `f21-mutation-round-2.txt` (a scratch clone of `3b2390e`: the two re-run and four behaviours round 1 did not name, 6 of 6 killed). F05, the `^` of the fence pattern, is an equivalent mutant (`re.match` anchors) and was not run. Model: Claude Sonnet 5.5.
