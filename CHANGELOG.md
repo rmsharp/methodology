@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] S298 — the receipt's push count corrected from 6 to 7
+
+`HANDOFFS.md` S298 receipt `next_steps` (5) said `git rev-list --count origin/main..HEAD` reads 6 after the close-out; the BL-105 record (`76564bb`) made it 7 (the trim, its fold, the claim, the checkpoint, the work commit, the close-out and that record). The receipt now says 7, and its `key_files` section list is shortened to `§1 to §6` to stay under the 12,288 B record budget. No other claim changed; nothing pushed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [BL-105] S298 — a decision is recorded for the next picker: does `PROJECT_LEARNINGS.md` join the `methodology/` set?
 
 After the close-out he asked why `nprcgenekeepr`'s `PROJECT_LEARNINGS.md` was not moved, asked for an argument other than manifest membership and whether Claude Code creates such a file, and then asked that it be raised as a decision at the next session's picker. **Recorded, not decided and not built:** the item `BL-105` in `docs/planning/BACKLOG.md`, its section in `docs/planning/BACKLOG-DETAIL.md` (the facts checked, the arguments both ways, three options none of which has been executed, what was not measured), the BL-101 Next action there, and (d) in the S298 receipt's `next_steps` (a complete receipt corrected after its close-out, as S295 and S296 did). **The check changed the first answer:** BOOTSTRAP Step 5 and `CLAUDE_TEMPLATE.md:83` prescribe `PROJECT_LEARNINGS.md` at the project root, 5 adopters carry one and 3 of them are already moved, so the file is a methodology artifact no tool seeds, and the earlier statement that the framework never creates it was wrong. The BL-101 row was recomposed (its P7 tool description, which plan §4.7 holds, became a pointer; its P11 and P12 sentence was shortened, plan §7.4a and §7.4b hold the detail) to fit the new row under `BACKLOG.md`'s 56,750 B. No tool, plan or adopter changed; nothing was pushed or sent upstream. Model: Claude Sonnet 5.5.
