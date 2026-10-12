@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S303
+date: 2026-10-12
+status: pending
+active_task: BL-105 build phase 2, the tool, RED first (BL-101 backlog row, `docs/planning/BACKLOG.md:185`; plan D10; `docs/planning/methodology-subdirectory-evidence/bl105-rehearsal-record.md` section 7 item 1): `bin/migrate-layout` gains the companion rule that moves `PROJECT_LEARNINGS.md` under `methodology/` and a top-up mode for a tree it calls migrated (today `nothing to migrate`), reading the two configs where the layout puts them (F29); F30 answered LIST ONLY (the tool reports the live links the move breaks, rewrites none); tests written and seen RED first; the gate floor rises. Phases 3 and 4 (the distributed prose, the adopters) are NOT this session.
+```
+
+```handoff
 session: S302
 date: 2026-10-12
 status: complete
