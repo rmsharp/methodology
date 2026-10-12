@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] BL-105 build phase 3: `bin/check-links`' test, written RED first
+
+`tools/test_sync_layouts.py` gains `test_a_companion_of_the_move_is_allowed_absent_beside_the_runner_in_each_layout` (class `TestCheckLinksSimulatesBothLayouts`): a link to `PROJECT_LEARNINGS.md` beside the runner passes in the legacy layout and, per plan D10, in the new one, where a link up to the root does not. It fails today at the new-layout sibling link (exit 1, not 0): `bin/check-links` allows the file at the project root only. The floor `sync-layout-unit-tests` (81) rises with the fix, not here.
+
 ### 2026-10-12 · [ad hoc] S304 — reconcile S303's receipt `commit:` slot to a sha `check-handoff` accepts
 
 S303 wrote `6583022`, all decimal digits, which `bin/check-handoff` does not read as a sha (no hex letter). The check exempts the newest receipt, so Phase 0 read OK and the claim stub of S304 turned it red. The slot now reads `65830220967e`, the same commit (`git rev-parse --short=12`), as S254 did for S253 (`d45afa4`); `HANDOFFS.md` is the only file changed besides this entry.

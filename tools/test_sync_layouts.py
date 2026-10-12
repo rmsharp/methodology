@@ -871,6 +871,16 @@ class TestCheckLinksSimulatesBothLayouts(Scratch):
         self.assertEqual(run_check_links(up, "--layout", "new").returncode, 0)
         self.assertEqual(run_check_links(self.script("[a](CLAUDE.md)\n"), "--layout", "new").returncode, 1)
 
+    def test_a_companion_of_the_move_is_allowed_absent_beside_the_runner_in_each_layout(self):
+        """A project's PROJECT_LEARNINGS.md goes where its methodology files go (a companion of the move): the project
+        root in the legacy layout, methodology/ in the new one, so a link to it is as good as a link to a sibling of the
+        runner and a link up to the root is not (the file is not there once the project has moved)."""
+        sibling = self.script("[a](PROJECT_LEARNINGS.md)\n")
+        self.assertEqual(run_check_links(sibling).returncode, 0)
+        self.assertEqual(run_check_links(sibling, "--layout", "new").returncode, 0)
+        up = self.script("[a](../PROJECT_LEARNINGS.md)\n")
+        self.assertEqual(run_check_links(up, "--layout", "new").returncode, 1)
+
     def test_the_checker_never_writes_to_the_canonical_checkout_it_simulates_from(self):
         script = self.script(IN_BOTH)
         before = files_of(script.parent.parent)
