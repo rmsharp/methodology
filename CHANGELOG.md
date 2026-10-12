@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: `bin/migrate-layout` places its ledger entry above the first heading outside a fenced block
+
+`insert_entry` now takes its position from `first_heading`, which reads fences as `methodology_trim.py`'s `fence_scan` does (three or more backticks or tildes at the start of a line open one; only the same character, at least as long and bare, closes it), so an example heading in a ledger header's fence is no longer taken for the first entry (register row F21: `chat_verification`, entry at line 48 inside the fence). A fence that never closes before any heading outside one is refused as `rewrite-unsafe` (nothing written). Tests first: 15 new (13 on the pure rule, 2 on the command), 14 red before the code and 1 green by design. Not yet: the evidence scripts, the mutation rounds, the floor, the register row. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 claim (in progress) — F21, `bin/migrate-layout` skips fenced code when it places its ledger entry
 
 CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (`wsfct`, `mts-system` and `nprcgenekeepr` have a live session; `Philippians` has 4 dirty lines, `dalia_martinez_funeral` 6, `claude_work` 16), and he picked "F21 tool fix" with two go-aheads (one picker answer): "Run the owed HANDOFFS trim" and "Push ca2a653 to the fork"; both were done before this claim (trim `9b03629`, fold `973e366`, push below). The gate citation of S299 (results `9926bd8b4a1b`, manifest `af0d6dc16337`) was re-run in a clean `--no-local` clone of `ca2a653` and confirmed (18/18, 0 unmeasured). Deliverable: ONE change to `bin/migrate-layout` (canonical-only), tests first, following `workstreams/DEVELOPMENT_WORKSTREAM.md`: `insert_entry` places the tool's one ledger entry above the first dated heading outside a fenced code block (register row F21: chat_verification's ledger header holds an example heading in a fence and the entry landed inside it). Not in scope: P18, BL-105, F6, F8, F13, F14, F17, F19, anything upstream. Model: Claude Sonnet 5.5.

@@ -345,6 +345,90 @@ class TestThePureRules(unittest.TestCase):
         self.assertNotIn("SENTINEL", got)
         self.assertTrue(got.endswith("<!-- Entries go below. -->\n\n" + self.ENTRY), got)
 
+    # --- the entry never lands in a fenced example (F21) ---
+    SEEDED = ("# Changelog\n\nintro\n\n## How to add an entry\n\n"
+              "```\n### YYYY-MM-DD · [SOURCE] summary\n```\n\n"
+              "```\n### 2026-01-15 · [ad hoc] Ship the export-retry fix\n- **Change:** x\n```\n\n"
+              "<!-- Entries go below, newest on top. -->\n\n")
+
+    def test_an_example_heading_inside_a_fence_is_not_taken_for_the_first_entry(self):
+        text = self.SEEDED + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, self.SEEDED + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_month_heading_inside_a_fence_is_not_taken_for_the_first_month(self):
+        header = "front\n\n```\n## 2026-01\n\n### 2026-01-15 · [ad hoc] example\n```\n\n<!-- Entries go below. -->\n\n"
+        text = header + "## 2026-09\n\n### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + "## 2026-10\n\n" + self.ENTRY + "\n## 2026-09\n\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_the_current_months_heading_after_a_fenced_example_takes_the_entry_under_it(self):
+        header = "front\n\n```\n### 2026-01-15 · [ad hoc] example\n```\n\n"
+        text = header + "## 2026-10\n\n### 2026-10-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + "## 2026-10\n\n" + self.ENTRY + "\n### 2026-10-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_ledger_whose_only_dated_headings_are_fenced_examples_takes_the_entry_at_the_end(self):
+        text = ("front\n\n<!-- METHODOLOGY-SEED-SENTINEL: fresh ledger.\n     more. -->\n\n"
+                + self.SEEDED[self.SEEDED.index("## How"):])
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertNotIn("SENTINEL", got)
+        self.assertTrue(got.endswith("<!-- Entries go below, newest on top. -->\n\n" + self.ENTRY), got)
+        self.assertIn("```\n### 2026-01-15 · [ad hoc] Ship the export-retry fix\n- **Change:** x\n```\n", got)
+
+    def test_a_tilde_fence_is_a_fence(self):
+        header = "front\n\n~~~\n### 2026-01-15 · [ad hoc] example\n~~~\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_shorter_fence_inside_a_longer_one_does_not_close_it(self):
+        header = "front\n\n````\n```\nx\n```\n### 2026-01-15 · [ad hoc] example\n````\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_line_with_an_info_string_does_not_close_a_fence(self):
+        header = "front\n\n```\n```python\n### 2026-01-15 · [ad hoc] example\n```\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_closing_fence_longer_than_the_opening_one_closes_it(self):
+        header = "front\n\n```\n### 2026-01-15 · [ad hoc] example\n`````\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_line_of_the_other_fence_character_does_not_close_a_fence(self):
+        header = "front\n\n```\n~~~\n### 2026-01-15 · [ad hoc] example\n```\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_ledger_with_dos_line_endings_keeps_its_fence_and_its_place(self):
+        header = "front\r\n\r\n```\r\n### 2026-01-15 · [ad hoc] example\r\n```\r\n\r\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\r\n\r\nold body\r\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\r\n\r\nold body\r\n")
+
+    def test_a_line_of_two_backticks_is_not_a_fence(self):
+        header = "front\n\n``not a fence``\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_a_fence_that_never_closes_after_the_first_entry_is_not_this_tools_concern(self):
+        text = "front\n\n### 2026-09-01 · [ad hoc] old\n\n```\nnever closed\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, "front\n\n" + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\n```\nnever closed\n")
+
+    def test_a_fence_that_never_closes_before_any_entry_is_refused_not_guessed(self):
+        text = "front\n\n```\n### 2026-01-15 · [ad hoc] example\n\n### 2026-09-01 · [ad hoc] old\n"
+        with self.assertRaises(self.m.Unsafe) as cm:
+            self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertIn("never closes", str(cm.exception))
+
     def test_the_entry_text_names_the_tool_the_tier_the_count_and_what_was_edited(self):
         report = {"tier": "1", "canonical": {"sha": "abcdef0123456789", "modified": False}}
         text = self.m.ledger_entry_text(report, [{}] * 5, ["CLAUDE.md", ".gitignore"], "2026-10-07")
@@ -1423,6 +1507,37 @@ class TestTheLedgerEntry(Adopter):
         diff = git(self.project, "diff", "-M", "HEAD~1", "HEAD", "--", "methodology/CHANGELOG.md", "CHANGELOG.md")
         removed = [l for l in diff.splitlines() if l.startswith("-") and not l.startswith("---")]
         self.assertEqual(removed, [], "the migration removed or rewrote a line of the ledger")
+
+    def test_an_example_in_a_fenced_block_of_the_ledger_header_does_not_take_the_entry(self):
+        # F21: chat_verification's ledger kept the v3.7 seed text, whose 'How to add an entry' section shows an example
+        # heading in a fence; the tool's entry sat at line 48 of the moved ledger, inside that fence.
+        example = "```\n### 2026-01-15 · [ad hoc] Ship the export-retry fix\n- **Change:** exports retry once\n```\n\n"
+        marker = "<!-- Entries go below"
+        text = self.ledger("CHANGELOG.md")
+        self.assertEqual(text.count(marker), 1)
+        (self.project / "CHANGELOG.md").write_text(text.replace(marker, example + marker), encoding="utf-8")
+        self.commit("a fenced example in the ledger header")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        after = self.ledger()
+        self.assertIn(example, after, "the example block was edited")
+        self.assertEqual(after.count("Layout migration"), 1)
+        self.assertGreater(after.index("Layout migration"), after.index(marker))
+        self.assertEqual(after.count("```") % 2, 0)
+        self.assertLess(after.index("Layout migration"), after.index("### 2026-09-"))
+
+    def test_a_ledger_with_a_fence_that_never_closes_before_its_first_entry_is_refused_and_nothing_is_written(self):
+        marker = "<!-- Entries go below"
+        text = self.ledger("CHANGELOG.md")
+        (self.project / "CHANGELOG.md").write_text(text.replace(marker, "```\n### 2026-01-15 · [ad hoc] example\n\n" + marker), encoding="utf-8")
+        self.commit("a fence that never closes")
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertEqual(r.report["status"], "refused", r.out)
+        self.assertEqual([x["code"] for x in r.report["refusals"]], ["rewrite-unsafe"], r.out)
+        self.assertIn("never closes", r.report["refusals"][0]["message"])
+        self.assertEqual(tree_state(self.project), before)
 
     def test_the_entry_sits_above_the_first_entry_and_the_ledger_still_passes_check_ledger(self):
         run_migrate(self.project, "--apply")

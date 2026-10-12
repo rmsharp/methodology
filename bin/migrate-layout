@@ -357,22 +357,52 @@ def ledger_location(root, moves):
 SENTINEL_RE = re.compile(r"^[ \t]*<!--[ \t]*METHODOLOGY-SEED-SENTINEL.*?-->[ \t]*\n", re.S | re.M)
 
 
+HEADING_RE = re.compile(r"^(## \d{4}-\d{2})[ \t]*$|^### \d{4}-\d{2}-\d{2} · ")
+FENCE_RE = re.compile(r"^(`{3,}|~{3,})(.*)$")
+
+
+def first_heading(text):
+    """(offset, match) of the first month heading or dated entry heading that is not inside a fenced block, or None.
+    A fence is read as methodology_trim.py's fence_scan reads one: a line of three or more backticks or tildes at the
+    start of a line opens it, and only a line of the same character, at least as long and with nothing after it,
+    closes it. So the example heading in a ledger header's 'How to add an entry' fence is not an entry (F21). A fence
+    still open when the text ends, with no heading outside a fence before it, is Unsafe: whatever follows it is code."""
+    fence, offset = None, 0
+    for line in text.split("\n"):
+        f = FENCE_RE.match(line)
+        if fence is None:
+            if f:
+                fence = (f.group(1)[0], len(f.group(1)))
+            else:
+                m = HEADING_RE.match(line)
+                if m:
+                    return offset, m
+        elif f and f.group(1)[0] == fence[0] and len(f.group(1)) >= fence[1] and not f.group(2).strip():
+            fence = None
+        offset += len(line) + 1
+    if fence is not None:
+        raise Unsafe("the ledger has a code fence that never closes, so its entry cannot be placed outside it")
+    return None
+
+
 def insert_entry(text, entry, month):
     """The entry at the top of the records zone: under the current month's heading when the first heading is that
     one, with a new month heading above the older one when the month has turned, above the first entry when the
-    ledger has no month headings, and at the end (the seed sentinel dropped) when it has no entry yet."""
+    ledger has no month headings, and at the end (the seed sentinel dropped) when it has no entry yet. A heading
+    inside a fenced block is an example, not the first heading."""
     block = entry.rstrip("\n") + "\n\n"
-    m = re.search(r"^(## \d{4}-\d{2})[ \t]*$|^### \d{4}-\d{2}-\d{2} · ", text, re.M)
-    if m is None:
+    found = first_heading(text)
+    if found is None:
         return SENTINEL_RE.sub("", text).rstrip("\n") + "\n\n" + block.rstrip("\n") + "\n"
+    start, m = found
     if m.group(1) is None:
-        return text[:m.start()] + block + text[m.start():]
+        return text[:start] + block + text[start:]
     if m.group(1) == "## " + month:
-        i = text.index("\n", m.start()) + 1
+        i = text.index("\n", start) + 1
         while i < len(text) and text[i] == "\n":
             i += 1
         return text[:i] + block + text[i:]
-    return text[:m.start()] + "## " + month + "\n\n" + block + text[m.start():]
+    return text[:start] + "## " + month + "\n\n" + block + text[start:]
 
 
 def ledger_entry_text(report, moves, rewritten, today):
