@@ -2593,6 +2593,13 @@ class TestTheCompanionRule(WithALearningsFile):
         self.assertIn(LEARNINGS_DEST, found["paths"])
         self.assertEqual(tree_state(self.project), before)
 
+    def test_the_text_of_a_refused_run_is_printed_and_does_not_fail(self):
+        (self.project / "scratch.txt").write_text("x\n", encoding="utf-8")
+        r = run_migrate(self.project, json_out=False)
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("REFUSED", r.out)
+        self.assertNotIn("Traceback", r.out)
+
     def test_a_copy_git_does_not_track_stays_and_is_named(self):
         git(self.project, "rm", "-q", "--cached", LEARNINGS)
         gi = self.project / ".gitignore"
@@ -2662,7 +2669,7 @@ class TestATopUpOnAMigratedTree(WithALearningsFile):
         message = git(self.project, "log", "-1", "--format=%B")
         subject = message.splitlines()[0]
         self.assertIn("PROJECT_LEARNINGS.md", subject)
-        self.assertIn("top-up", subject)
+        self.assertIn("(top-up, tier all, 1 file)", subject)
         self.assertNotIn("the methodology files", subject)
         self.assertIn("1 file(s) with git mv", message)
         self.assertIn("Co-Authored-By: A Tester <a@example.com>", message)
@@ -2677,6 +2684,7 @@ class TestATopUpOnAMigratedTree(WithALearningsFile):
         self.assertRegex(entry_split(after)[0], r"^\d{4}-\d{2}-\d{2} · \[ad hoc\] Layout top-up: ")
         text = r.report["ledger_entry"]["text"]
         self.assertEqual(r.report["ledger_entry"]["path"], "methodology/CHANGELOG.md")
+        self.assertIn("(tier all, 1 file)", text)
         self.assertIn("`PROJECT_LEARNINGS.md`", text)
         self.assertIn("`bin/migrate-layout`", text)
         for path in ("CLAUDE.md", "methodology/.context-budget.json", "methodology/.quality-gates.json"):
@@ -2686,6 +2694,19 @@ class TestATopUpOnAMigratedTree(WithALearningsFile):
         check = subprocess.run([sys.executable, "-B", str(REPO / "bin" / "check-ledger"), "--file", "methodology/CHANGELOG.md"],
                                cwd=self.project, capture_output=True, text=True)
         self.assertEqual(check.returncode, 0, check.stdout + check.stderr)
+
+    def test_a_top_up_rewrites_the_names_of_the_companion_and_nothing_else(self):
+        """In a migrated tree the generated files are under methodology/ already: a bare mention of one in CLAUDE.md is
+        not a name the top-up moves."""
+        claude = self.project / "CLAUDE.md"
+        claude.write_text(claude.read_text(encoding="utf-8") + "The page is dashboard.html; the results are in .quality-gates-results.json.\n", encoding="utf-8")
+        self.commit("a bare mention of two generated files")
+        r = run_migrate(self.project)
+        rw = next(x for x in r.report["rewrites"] if x["path"] == "CLAUDE.md")
+        self.assertEqual(rw["replacements"], 1, rw["diff"])
+        added = [l for l in rw["diff"].splitlines() if l.startswith("+") and not l.startswith("+++")]
+        self.assertEqual(len(added), 1, added)
+        self.assertNotIn("dashboard.html", added[0])
 
     def test_a_second_run_finds_nothing_to_do_and_adds_no_commit(self):
         run_migrate(self.project, "--apply")
@@ -2741,12 +2762,12 @@ class TestTheLinkRules(unittest.TestCase):
         cls.m = _load_script("migrate_layout", MIGRATE)
 
     def test_inline_image_and_reference_links_are_read_and_a_fenced_example_is_not(self):
-        text = ("[a](x.md) and ![img](p/y.png \"t\") and [b](<z w.md>)\n"
+        text = ("[a](x.md) and ![img](p/y.png \"t\") and [b](<z w.md>) and [sp]( s.md )\n"
                 "[ref]: u.md \"title\"\n"
                 "```\n[no](f.md)\n```\n"
                 "~~~\n[no](g.md)\n~~~\n"
                 "[c](h_(1).md#top)\n")
-        self.assertEqual(self.m.link_targets(text), [(1, "x.md"), (1, "p/y.png"), (1, "z w.md"), (2, "u.md"), (9, "h_(1).md#top")])
+        self.assertEqual(self.m.link_targets(text), [(1, "x.md"), (1, "p/y.png"), (1, "z w.md"), (1, "s.md"), (2, "u.md"), (9, "h_(1).md#top")])
 
     def test_a_fence_that_never_closes_hides_the_rest_and_a_longer_fence_closes_only_on_its_own_length(self):
         self.assertEqual(self.m.link_targets("[a](a.md)\n```\n[b](b.md)\n"), [(1, "a.md")])
@@ -2793,8 +2814,9 @@ class TestTheLiveLinksAMoveBreaks(WithALearningsFile):
         self.give_the_project_a_learnings_file()
         (self.project / "docs" / "guide.md").write_text(DOC, encoding="utf-8")
         (self.project / "README.md").write_text("The learnings: [PROJECT_LEARNINGS.md](PROJECT_LEARNINGS.md).\n", encoding="utf-8")
+        (self.project / "docs" / "notes.md").write_text("Prose names PROJECT_LEARNINGS.md; the link is to [a sibling](PROJECT_LEARNINGS.md).\n", encoding="utf-8")
         shard = self.project / "docs" / "archive" / "HANDOFFS-through-2026-08-02.md"
-        shard.write_text("# shard\n\nSee [the learnings](../../PROJECT_LEARNINGS.md).\n", encoding="utf-8")
+        shard.write_text("# shard\n\nSee [the learnings](../../PROJECT_LEARNINGS.md) and [the guide](../methodology/HOW_TO_USE.md).\n", encoding="utf-8")
         self.commit("live documents that link to the files a move takes")
 
     def sites(self, report):
@@ -2810,6 +2832,9 @@ class TestTheLiveLinksAMoveBreaks(WithALearningsFile):
             ("docs/guide.md", 4, "methodology/HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md", "methodology/HOW_TO_USE.md"),
             ("docs/guide.md", 12, "../PROJECT_LEARNINGS.md", LEARNINGS, LEARNINGS_DEST)]))
         self.assertEqual((r.report["live_links"]["count"], r.report["live_links"]["files"]), (5, 2))
+        texts = {(s["file"], s["line"]): s["text"] for s in r.report["live_links"]["sites"]}
+        self.assertIn("[explained](methodology/HOW_TO_USE.md)", texts[("docs/guide.md", 4)])
+        self.assertEqual(texts[("README.md", 1)], "The learnings: [PROJECT_LEARNINGS.md](PROJECT_LEARNINGS.md).")
 
     def test_a_link_in_a_fence_an_external_link_a_sibling_a_ledger_a_shard_a_rewritten_file_and_a_moved_document_are_not_listed(self):
         r = run_migrate(self.project)
@@ -2818,6 +2843,16 @@ class TestTheLiveLinksAMoveBreaks(WithALearningsFile):
         self.assertNotIn(("docs/guide.md", 10), listed, "an external link, a sibling or an unmoved file was listed")
         self.assertFalse([f for f, _l in listed if f in ("CHANGELOG.md", "CLAUDE.md") or f.startswith("docs/archive/")], listed)
         self.assertFalse([f for f, _l in listed if f.startswith("docs/methodology/") or f in {m["src"] for m in r.report["moves"]}], listed)
+
+    def test_a_ledger_and_a_shard_that_stay_where_they_are_are_not_listed_either(self):
+        """Tier 1 moves the framework's documents and leaves the ledger and the shards at the root: a link in one of them
+        to a moved document is a committed entry's, counted with the ledger's and never listed."""
+        r = run_migrate(self.project, "--tier", "1")
+        self.assertEqual(r.returncode, 0, r.out)
+        listed = {s["file"] for s in r.report["live_links"]["sites"]}
+        self.assertEqual(listed, {"docs/guide.md"}, "a ledger, a shard or a moved document was listed")
+        self.assertEqual({s["target"] for s in r.report["live_links"]["sites"]}, {"methodology/HOW_TO_USE.md"})
+        self.assertGreater(r.report["not_rewritten"]["ledger"]["mentions"], 0)
 
     def test_the_apply_lists_the_links_and_edits_none_of_them(self):
         before = {rel: (self.project / rel).read_bytes() for rel in ("docs/guide.md", "README.md",
@@ -2846,7 +2881,7 @@ class TestTheLiveLinksAMoveBreaks(WithALearningsFile):
         self.assertNotRegex(run_migrate(self.project, json_out=False).out, r"(?i)live links")
 
     def test_every_link_is_in_the_json_and_the_text_shows_the_first_25_and_says_how_many_more(self):
-        many = "".join("Item %d: [x](PROJECT_LEARNINGS.md#row-%d)\n" % (i, i) for i in range(1, 31))
+        many = "".join("Item %d: [x](../PROJECT_LEARNINGS.md#row-%d)\n" % (i, i) for i in range(1, 31))
         (self.project / "docs" / "many.md").write_text(many, encoding="utf-8")
         self.commit("thirty links")
         r = run_migrate(self.project)
@@ -2861,6 +2896,14 @@ class TestTheLiveLinksAMoveBreaks(WithALearningsFile):
             section.append(l)
         self.assertEqual(len([l for l in section if re.match(r"^\s+\S+:\d+  ", l)]), 25)
         self.assertTrue(any("and 10 more" in l and "--json" in l for l in section), section)
+
+    def test_exactly_25_links_are_all_shown_and_the_text_does_not_say_there_are_more(self):
+        many = "".join("Item %d: [x](../PROJECT_LEARNINGS.md#row-%d)\n" % (i, i) for i in range(1, 21))
+        (self.project / "docs" / "many.md").write_text(many, encoding="utf-8")
+        self.commit("twenty links")
+        self.assertEqual(run_migrate(self.project).report["live_links"]["count"], 25)
+        text = run_migrate(self.project, json_out=False).out
+        self.assertNotRegex(text, r"and \d+ more \(every one")
 
     def test_a_second_run_after_the_move_has_nothing_to_do_and_an_empty_list(self):
         run_migrate(self.project, "--apply")
@@ -2886,6 +2929,9 @@ class TestTheCompanionOfAProjectThatHasNotAdoptedTheMethodology(unittest.TestCas
             self.assertEqual(r.report["status"], "nothing-to-do")
             self.assertEqual(r.report["moves"], [])
             self.assertEqual(tree_state(project), before)
+            text = run_migrate(project, "--apply", json_out=False)
+            self.assertEqual(text.returncode, 0, text.out)
+            self.assertIn("nothing to migrate", text.out)
 
 
 if __name__ == "__main__":

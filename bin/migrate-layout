@@ -16,7 +16,12 @@ file current: sync first (plan 5A.2), because a tool that cannot find the ledger
 refusal is reported together.
 
 Tiers (plan 4.6): tier 1 moves the framework's own files (the manifest's TRACKED rows); tier 2 the project's state
-(the SEED rows, the files the tools generate, the ledger shards the trimmer wrote). The default, all, is both.
+(the SEED rows, the files the tools generate, the ledger shards the trimmer wrote, and the companions: a file of the
+project's own that joins the move with no manifest entry, PROJECT_LEARNINGS.md, plan D10). The default, all, is both.
+
+A tree that is already migrated, with a companion still at its root, is topped up: the plan is the companion's move and
+the rewrites of the names that point at it (CLAUDE.md, and the two configs where the layout keeps them), one commit and
+one ledger entry (BL-105). Every link in a live document to a file the move takes is listed, none rewritten (F30).
 
 Exit: 0 a dry run or a migration done, or nothing to do · 1 refused · 2 usage or a failure · 3 an apply that was
 rolled back.
@@ -26,6 +31,7 @@ import datetime
 import difflib
 import json
 import os
+import posixpath
 import re
 import shutil
 import subprocess
@@ -33,6 +39,7 @@ import sys
 import tempfile
 import warnings
 from pathlib import Path
+from urllib.parse import unquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _manifest import DISTRIBUTION, TRACKED, SEED, NEW_LAYOUT  # noqa: E402  (bin/ on sys.path)
@@ -76,6 +83,11 @@ OLD_FRAMEWORK_DIR = "docs/methodology"  # layout: ok -- today's directory for th
 # directory is the project's own and stays.
 SHARD_RE = re.compile(r"^(?:CHANGELOG|HANDOFFS|SESSION_NOTES)-through-[^/]+\.md(?:\.verify\.sh)?$")  # layout: ok -- the shard names the trimmer writes
 GITATTRIBUTES = ".gitattributes"  # layout: ok -- the seed that moves, when it is only the seed's rules
+# BL-105 (plan D10): a file of the project's own that joins the move with no manifest entry. It is the project's state, so
+# tier 2's, and it moves only when git tracks it and the project has adopted the methodology (a runner, in either layout).
+COMPANIONS = ("PROJECT_LEARNINGS.md",)
+# The two configs whose path values the tool rewrites. BL-105 F29: they are read where the layout puts them.
+CONFIG_FILES = (".context-budget.json", ".quality-gates.json")  # layout: ok -- the two seeds the tool edits the values of
 
 HERE = Path(__file__).resolve().parent
 CANONICAL = HERE.parent
@@ -214,6 +226,16 @@ def plan_moves(project, tier, tracked, kind):
                     collisions.append(new)
                 else:
                     add(path, new, "shard")
+    if tier in ("2", "all") and kind in ("legacy", "new"):
+        for name in COMPANIONS:
+            new = NEW_DIR + "/" + name
+            old_here, new_here = (root / name).is_file(), (root / new).is_file()
+            if old_here and new_here:
+                collisions.append(new)
+            elif old_here and name in tracked:
+                add(name, new, "companion")
+            elif old_here:
+                left.append({"path": name, "reason": "not tracked by git: this tool moves files git tracks; it stays"})
     moved = {m["src"] for m in moves}
     for path in sorted(tracked):
         if path in moved:
@@ -261,11 +283,18 @@ class Unsafe(Exception):
     """A file the tool could not rewrite faithfully: the migration is refused rather than left half done."""
 
 
+def is_top_up(moves):
+    """BL-105: a run whose every move is a companion is a top-up of a tree that is already migrated: the framework files
+    and the generated ones are where they belong, so it rewrites the names of the companions and nothing else."""
+    return bool(moves) and all(m.get("kind") == "companion" for m in moves)
+
+
 def logical_map(moves, tier):
     """Where a name goes: every file this run moves, and the files the tools generate whether or not they are on disk
-    (a fresh clone has none, and the tools will write them beside the moved configs next time)."""
+    (a fresh clone has none, and the tools will write them beside the moved configs next time). A top-up adds none of
+    the generated names: in a tree that is migrated they are under methodology/ already."""
     mapping = {m["src"]: m["dest"] for m in moves}
-    if tier in ("2", "all"):
+    if tier in ("2", "all") and not is_top_up(moves):
         for name in GENERATED:
             mapping.setdefault(name, NEW_DIR + "/" + name)
     return mapping
@@ -354,6 +383,20 @@ def ledger_location(root, moves):
     return None, None
 
 
+def config_location(root, moves, name):
+    """(path now, path once the moves are done) of one of the two configs, or (None, None) when the project has none.
+    BL-105 F29: where the layout puts it, not at the root only. A config this run moves is read at its place before the
+    move; otherwise a tree whose runner is under methodology/ keeps it there (or still at the root, after a tier-1 run)."""
+    for m in moves:
+        if m["src"] == name:
+            return m["src"], m["dest"]
+    kind, _directory, _found = resolve_layout(root)
+    for rel in ((NEW_DIR + "/" + name, name) if kind == "new" else (name,)):
+        if (Path(root) / rel).is_file():
+            return rel, rel
+    return None, None
+
+
 SENTINEL_RE = re.compile(r"^[ \t]*<!--[ \t]*METHODOLOGY-SEED-SENTINEL.*?-->[ \t]*\n", re.S | re.M)
 
 
@@ -408,6 +451,12 @@ def insert_entry(text, entry, month):
 def ledger_entry_text(report, moves, rewritten, today):
     sha = (report["canonical"]["sha"] or "an unknown commit")[:7]
     edited = ", ".join("`%s`" % f for f in rewritten) if rewritten else "no file (none named a moved path)"
+    if is_top_up(moves):
+        names = ", ".join("`%s`" % m["src"] for m in moves)
+        return ("### %s · [ad hoc] Layout top-up: %s now lives under `methodology/` (tier %s, %d file%s)\n\n"
+                "`bin/migrate-layout` (KJ5HST/methodology @ %s) moved it in one commit with `git mv`; paths were rewritten in %s. "
+                "No older entry or shard was edited, so a link in an older entry is relative to the root, where the file sat "
+                "when it was written.\n" % (today, names, report["tier"], len(moves), "" if len(moves) == 1 else "s", sha, edited))
     return ("### %s · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier %s, %d files)\n\n"
             "`bin/migrate-layout` (KJ5HST/methodology @ %s) moved them in one commit with `git mv`; paths were rewritten in %s. "
             "No older entry or shard was edited, so a link in an older entry is relative to the root, where the ledger sat "
@@ -436,8 +485,10 @@ def plan_rewrites(root, moves, tier, report):
             rewrites.append(Rewrite(path, moved.get(path, path), old, new, n))
     add(".gitignore", lambda s: rewrite_gitignore(s, mapping))
     add("CLAUDE.md", tokens)
-    add(".context-budget.json", lambda s: rewrite_json(s, mapping))  # layout: ok -- a seed the tool edits the values of, read at its place before the move
-    add(".quality-gates.json", lambda s: rewrite_json(s, mapping))  # layout: ok -- same
+    for name in CONFIG_FILES:
+        where, _final = config_location(root, moves, name)
+        if where is not None:
+            add(where, lambda s: rewrite_json(s, mapping))
     ledger = None
     src, final = ledger_location(root, moves)
     if src is not None:
@@ -854,6 +905,82 @@ def scan_hits(root, moves, rewrites, tier):
     return out
 
 
+# BL-101 F30 (his call, S303: list only): a link from a project's live document to a file the move takes breaks, and the
+# tool's other lists name a moved path as text and never read a link as a link. Inline links, images and reference
+# definitions of the Markdown family are read; a fenced block is an example, not a link. Not seen: an HTML href, a link built
+# in code, a link in a document that is not Markdown (their paths are in the lists above when they name the file).
+LINK_EXT = (".md", ".qmd", ".rmd")
+INLINE_LINK_RE = re.compile(r"\]\(\s*(?:<([^<>]*)>|((?:[^()\s]|\([^()\s]*\))+))")
+REF_DEF_RE = re.compile(r"^ {0,3}\[[^\]]+\]:[ \t]*(?:<([^<>]*)>|(\S+))")
+
+
+def link_targets(text):
+    """[(line number, target as written)] of every link outside a fenced block; a fence is read as first_heading reads one."""
+    out, fence = [], None
+    for number, line in enumerate(text.splitlines(), 1):
+        f = FENCE_RE.match(line)
+        if fence is not None:
+            if f and f.group(1)[0] == fence[0] and len(f.group(1)) >= fence[1] and not f.group(2).strip():
+                fence = None
+            continue
+        if f:
+            fence = (f.group(1)[0], len(f.group(1)))
+            continue
+        ref = REF_DEF_RE.match(line)
+        if ref:
+            out.append((number, ref.group(1) if ref.group(1) is not None else ref.group(2)))
+        for m in INLINE_LINK_RE.finditer(line):
+            out.append((number, m.group(1) if m.group(1) is not None else m.group(2)))
+    return out
+
+
+def resolve_link(doc, target):
+    """The project-relative path a link in `doc` points at, or None when it is not a path in the project: a URL or
+    scheme, a protocol-relative address, a bare anchor, or a path that climbs out of the root."""
+    t = target.strip().split("#", 1)[0].split("?", 1)[0]
+    if not t or t.startswith("//") or re.match(r"[A-Za-z][A-Za-z0-9+.-]*:", t):
+        return None
+    t = unquote(t)
+    path = posixpath.normpath(t[1:] if t.startswith("/") else posixpath.join(posixpath.dirname(doc), t))
+    if path in (".", "..") or path.startswith("../"):
+        return None
+    return path
+
+
+def live_links(root, moves, rewrites):
+    """Every link in a live document that points at a file this run moves: the project's own Markdown, not a ledger or a
+    shard (a committed entry is never edited, and its links are counted with the ledger's), not a file the tool moves
+    unedited (the framework's documents are judged by check-links) and not a file the tool rewrites (its paths follow).
+    {"count", "files", "sites": [{file, line, text, target, resolves_to, moves_to}]}, every link, none rewritten."""
+    root = Path(root)
+    out = {"count": 0, "files": 0, "sites": []}
+    moved = {m["src"]: m["dest"] for m in moves}
+    if not moved:
+        return out
+    skip = set(moved) | {r.path for r in rewrites}
+    names = sorted({src.rsplit("/", 1)[-1] for src in moved})
+    for path in sorted(tracked_files(root)):
+        if path in skip or not path.lower().endswith(LINK_EXT) or hit_category(path) == "ledger":
+            continue
+        try:
+            text = (root / path).read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if not any(n in text for n in names):
+            continue
+        lines = text.splitlines()
+        found = 0
+        for number, target in link_targets(text):
+            resolved = resolve_link(path, target)
+            if resolved in moved:
+                out["sites"].append({"file": path, "line": number, "text": lines[number - 1].strip()[:200], "target": target,
+                                     "resolves_to": resolved, "moves_to": moved[resolved]})
+                found += 1
+        out["count"] += found
+        out["files"] += 1 if found else 0
+    return out
+
+
 def rehearse_shards(root, moves):
     """Move the shards in a throwaway clone and run each proof there, before and after: an older-format proof reads its
     shard by a working-tree path and exits 2 once the shard moves (vscode_quarto_ext), while the trimmer's current proofs
@@ -895,8 +1022,8 @@ def build_report(project, tier, apply_mode):
     root = Path(project)
     report = {"project": str(root), "canonical": canonical_info(), "layout": None, "tier": tier,
               "mode": "apply" if apply_mode else "dry-run", "status": "ok", "refusals": [], "moves": [],
-              "left_in_place": [], "rewrites": [], "not_rewritten": {}, "ledger_entry": None, "rehearsal": None, "commit": None,
-              "checks": None}
+              "left_in_place": [], "rewrites": [], "not_rewritten": {}, "live_links": {"count": 0, "files": 0, "sites": []},
+              "ledger_entry": None, "rehearsal": None, "commit": None, "checks": None}
     refusals = report["refusals"]
     top = run(root, "rev-parse", "--show-toplevel")
     if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
@@ -949,6 +1076,7 @@ def build_report(project, tier, apply_mode):
     report["_rewrites"] = rewrites + ([ledger] if ledger else [])
     if moves and not refusals:
         report["not_rewritten"] = scan_hits(root, moves, rewrites, tier)
+        report["live_links"] = live_links(root, moves, rewrites)
     if not refusals and not present:
         report["status"] = "nothing-to-do"
         return report
@@ -981,7 +1109,12 @@ def commit_message(report, moves):
     plain = [m for m in moves if not m["tracked"]]
     sha = report["canonical"]["sha"] or "an unknown commit"
     modified = " (plus uncommitted changes)" if report["canonical"].get("modified") else ""
-    lines = ["chore(methodology): move the methodology files under methodology/ (tier %s, %d files)" % (report["tier"], len(moves)),
+    if is_top_up(moves):
+        subject = "chore(methodology): move %s under methodology/ (top-up, tier %s, %d file%s)" % (
+            ", ".join(m["src"] for m in moves), report["tier"], len(moves), "" if len(moves) == 1 else "s")
+    else:
+        subject = "chore(methodology): move the methodology files under methodology/ (tier %s, %d files)" % (report["tier"], len(moves))
+    lines = [subject,
              "",
              "Moved by bin/migrate-layout of the KJ5HST/methodology checkout at %s%s (BL-101 P7)." % (sha, modified),
              "%d file(s) with git mv%s." % (len(tracked), (", %d without git (generated files that .gitignore keeps out of the repository)" % len(plain)) if plain else ""),
@@ -1246,6 +1379,14 @@ def render_text(report):
             if cat == "hooks" and c["runs_moved_tool"]:
                 out.append("    WARNING: %d hook line(s) run a moved tool: that hook will refuse the migration commit and the run will roll back;"
                            " update the hook first (hooks are per clone and not part of this plan)" % c["runs_moved_tool"])
+    ll = report["live_links"]
+    if ll["count"]:
+        out.append("")
+        out.append("live links the move breaks (%d in %d file(s); listed, not rewritten: a person decides):" % (ll["count"], ll["files"]))
+        for s in ll["sites"][:SITES_SHOWN]:
+            out.append("    %s:%d  %s -> %s" % (s["file"], s["line"], s["target"], s["moves_to"]))
+        if ll["count"] > SITES_SHOWN:
+            out.append("    and %d more (every one is in --json)" % (ll["count"] - SITES_SHOWN))
     ck = report["checks"]
     if ck and ck.get("ran"):
         out.append("")

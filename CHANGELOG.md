@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S303 — BL-105 build phase 2: `bin/migrate-layout` takes the companion, tops up a migrated tree, reads the configs where the layout puts them and lists the live links (F29, F30)
+
+`PROJECT_LEARNINGS.md` moves with tier 2 and `all` when git tracks it; a run whose only move is that file is a top-up (its own ledger heading and commit subject); the two configs are read under `methodology/` in a migrated tree; every link in a live Markdown document to a file the run moves is listed in `live_links` and none is rewritten (his call, F30). `tools/test_migrate_layout.py` reads 275 tests (236 before; the 39 new were written RED first) and passes in full; `.quality-gates.json` `migrate-layout-unit-tests` floor 236 to 275 (a tightening, `quality_ratchet.py --precommit` exits 0); `bin/check-layout-literals` reads 0 sites. A mutation round (32 distinct mutants): 31 killed on the first run, 1 after a tier-1 test. The built tool run in `--no-local` clones of the five adopters that track the file: all five apply, the tool's own checks read no difference. Record: `docs/planning/methodology-subdirectory-evidence/bl105-phase2-record.md` (next commit).
+
 ### 2026-10-12 · [BL-101] S303 — BL-105 build phase 2: the tests, written RED first
 
 `tools/test_migrate_layout.py` gains 35 tests in five classes (the companion rule, a top-up on a migrated tree, the pure link rules, F30's live-link list, a project with no methodology), seen failing for the intended reasons before any code: 27 red (no companion move, no `live_links` key, the configs not read under `methodology/`), 8 already green because they pin behavior that must stay (tier 1 leaves the file, a dirty tree refuses, nothing to do without the file). The tool is not yet changed.
