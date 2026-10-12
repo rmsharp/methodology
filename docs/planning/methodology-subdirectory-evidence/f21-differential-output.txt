@@ -1,0 +1,25 @@
+tool under test: 0010021 (/Users/rmsharp/.cache/f21-final/bin/migrate-layout)
+== A. every distinct committed version of the ledger: 6361 versions in 14 repositories (+ 6 versions of the seed), 4035 distinct header regions
+   Philippians                  versions   124   old rule inside a block:    0   new rule moves it:    0
+   airqino                      versions    76   old rule inside a block:    0   new rule moves it:    0
+   chat_verification            versions    35   old rule inside a block:   35   new rule moves it:   35
+   church_growth                versions    37   old rule inside a block:    0   new rule moves it:    0
+   claims-model-starter.wiki    versions     0   old rule inside a block:    0   new rule moves it:    0
+   claude_work                  versions     0   old rule inside a block:    0   new rule moves it:    0
+   dalia_martinez_funeral       versions    19   old rule inside a block:    0   new rule moves it:    0
+   feedback-loop-comparison     versions     7   old rule inside a block:    0   new rule moves it:    0
+   methodology                  versions  1861   old rule inside a block:    0   new rule moves it:    0
+   model_project_constructor    versions   335   old rule inside a block:    0   new rule moves it:    0
+   mts-system                   versions   446   old rule inside a block:    0   new rule moves it:    0
+   nprcgenekeepr                versions  2312   old rule inside a block:    0   new rule moves it:    0
+   vscode_quarto_ext            versions   484   old rule inside a block:    0   new rule moves it:    0
+   wsfct                        versions   625   old rule inside a block:  106   new rule moves it:  106
+   seed versions: 6   old rule inside a block: 1   new rule moves it: 1
+   what the new rule reads: a heading in 5679, no heading outside a block in 688 (the entry goes at the end), a fence that never closes in 0 (refused)
+   distinct versions whose header region (up to the first heading, or the whole text) holds: a tilde fence 0, a fence of four or more backticks 0, an indented fence (1 to 3 spaces) 0, a heading inside an HTML comment 0, a fence inside a quote or a list 0
+   disagreements with markdown-it (new rule): 0
+== B. 20000 random ledger-shaped texts (seed 21)
+   agree with markdown-it: 19465   disagree, text holds an out-of-scope construct: 535   disagree, in scope: 0
+   out-of-scope constructs present in those disagreeing texts (a text can hold several): {'comment-close': 176, 'comment-heading': 183, 'comment-open': 183, 'indented-fence': 343, 'indented-fence2': 342, 'indented-heading': 166, 'list-fence': 180, 'quote-fence': 181}
+   texts with no fence line: 512, giving the old rule's answer: 512
+RESULT: no row differs

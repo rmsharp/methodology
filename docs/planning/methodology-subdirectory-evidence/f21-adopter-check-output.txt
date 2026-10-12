@@ -1,0 +1,40 @@
+start Mon Oct 12 11:01:44 CDT 2026
+adopter HEAD 0a8ef90; base a3174b3; hand-corrected 0a8ef90
+tool under test 0010021; the tool before the fix ca2a653
+old: sync exit=0
+old: dry run exit=0
+old: apply exit=0
+old: the tool's entry at line [48]; the marker at line [185]; inside a fence: [True]
+old: against the adopter's hand-corrected ledger 0a8ef90: 14 differing line(s)
+    +### 2026-10-12 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 32 files)
+    +
+    +`bin/migrate-layout` (KJ5HST/methodology @ ca2a653) moved them in one commit with `git mv`; paths were rewritten in `CLAUDE.md`, `methodology/.contex
+    +
+    -### 2026-10-11 · [ad hoc] Move the layout-migration entry out of the ledger header's example block, to where the entries are
+    -- **Change:** `bin/migrate-layout` inserts its entry above the first dated `###` heading it finds, and in this ledger the first one is the "Ship the 
+    -- **Commit/PR:** this commit
+    -- **Session:** none of this project's own; run from the methodology repository's session S297 (BL-101 P16). **Verified:** the same move, made in a re
+    -- **Model:** Claude Sonnet 5.5
+    -
+    -### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 33 files)
+    -
+old: check-ledger on the moved ledger: check-ledger: 83 finding(s) in 1 file(s); on the adopter's hand-corrected one: check-ledger: 83 finding(s) in 1 file(s)
+new: sync exit=0
+new: dry run exit=0
+new: apply exit=0
+new: the tool's entry at line [183]; the marker at line [181]; inside a fence: [False]
+new: against the adopter's hand-corrected ledger 0a8ef90: 12 differing line(s)
+    -### 2026-10-11 · [ad hoc] Move the layout-migration entry out of the ledger header's example block, to where the entries are
+    -- **Change:** `bin/migrate-layout` inserts its entry above the first dated `###` heading it finds, and in this ledger the first one is the "Ship the 
+    -- **Commit/PR:** this commit
+    -- **Session:** none of this project's own; run from the methodology repository's session S297 (BL-101 P16). **Verified:** the same move, made in a re
+    -- **Model:** Claude Sonnet 5.5
+    -
+    -### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 33 files)
+    -
+    -`bin/migrate-layout` (KJ5HST/methodology @ 59887b4) moved them in one commit with `git mv`; paths were rewritten in `CLAUDE.md`, `methodology/.contex
+    +### 2026-10-12 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 32 files)
+    +
+    +`bin/migrate-layout` (KJ5HST/methodology @ 0010021) moved them in one commit with `git mv`; paths were rewritten in `CLAUDE.md`, `methodology/.contex
+new: check-ledger on the moved ledger: check-ledger: 83 finding(s) in 1 file(s); on the adopter's hand-corrected one: check-ledger: 83 finding(s) in 1 file(s)
+end Mon Oct 12 11:02:05 CDT 2026
