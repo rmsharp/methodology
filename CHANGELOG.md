@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12.md` (1 record(s), 39,402 B → 28,283 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-12.md`](docs/archive/HANDOFFS-through-2026-10-12.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,402 B → 28,283 B (−28.2%).
+
 ### 2026-10-12 · [BL-101] S302 close-out — BL-105 rehearsed (build phase 1): B stands; the receipt is complete; the gate run read 18/18
 
 The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S301 scored 9). Gate: `quality_ratchet.py --run` in a clean `--no-local` clone of `de05df7` read 18/18, results `8c209fa9806e`, manifest `440ab037cfe1`, S301's own figures (this session changed no code, test or gate). No fork learning row appended (D3: considered fork #57, #94, #16, #23). Nothing built; nothing pushed beyond the granted `e5d88a5`; BL-105 stays open at build phases 2 to 4; register rows F25 to F30 open.
