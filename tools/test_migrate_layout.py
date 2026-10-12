@@ -573,6 +573,7 @@ class TestThePureRules(unittest.TestCase):
         ("a/**/b", "a/b", True), ("a/**/b", "a/x/b", True), ("a/**/b", "a/x/y/b", True), ("a/**/b", "a/x/c", False),
         ("**/a", "a", True), ("**/a", "x/a", True), ("**/a", "x/ab", False), ("**/**", "a", True),
         ("a/*", "a/b", True), ("a/*", "a", False), ("a/*", "a/b/c", False), ("a b", "a b", True),
+        ("{a,b,c}.md", "c.md", True), ("{a,b,c}.md", "b.md", True), ("{a,b,c}.md", "d.md", False),
         ("{a,b/c}.md", "b/c.md", True), ("{a,{b,c}}.md", "c.md", True), ("x{,y}", "x", True), ("x{,y}", "xy", True),
         ("session_runner.md", "SESSION_RUNNER.md", False),
     ]
@@ -639,7 +640,8 @@ class TestThePureRules(unittest.TestCase):
     def test_a_line_written_the_gitignore_way_matches_nothing(self):
         """`/SESSION_RUNNER.md` and `./SESSION_RUNNER.md` are false against `SESSION_RUNNER.md` (measured): they cover it neither
         where it is nor where it goes, so they are not exposed, and a person who meant them as the root's is told nothing."""
-        self.assertEqual(self.vsce("/SESSION_RUNNER.md\n./CHANGELOG.md\n")["exposed"], [])
+        e = self.vsce("/SESSION_RUNNER.md\n./CHANGELOG.md\n")
+        self.assertEqual((e["exposed"], e["unread"]), ([], 0), "they are read, and cover nothing")
 
     def test_a_negation_brings_a_file_back_and_applies_to_a_directory_name_too(self):
         """vsce keeps a file when ANY negation matches it, whatever its place among the lines (`collectFiles`: `!ignore.some(...) ||
@@ -667,6 +669,7 @@ class TestThePureRules(unittest.TestCase):
         """Unlike R, vsce drops a line that starts with `#` after trimming it."""
         self.assertEqual(self.vsce("# SESSION_RUNNER.md\n   # CHANGELOG.md\n")["exposed"], [])
         self.assertEqual(self.vsce("   SESSION_RUNNER.md \t\n")["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual(self.vsce("  #note.md\n", {"#note.md": "methodology/#note.md"})["exposed"], [], "dropped before it is read as a pattern")
 
     def test_a_line_break_of_any_kind_and_a_byte_order_mark_are_read_as_vsce_reads_them(self):
         """vsce splits on `\\n` and on `\\r`, and `String.prototype.trim` removes a byte order mark; the number printed is the
@@ -1917,7 +1920,7 @@ class TestAPackagersIgnoreFileIsEvaluated(Adopter):
         self.put("src/**\n")
         row = self.row(self.report())
         self.assertEqual(row["patterns"]["exposed"], [".gitattributes"])
-        self.assertEqual((row["mentions"], row["names"], row["line"]), (0, [], 0))
+        self.assertEqual((row["mentions"], row["code_mentions"], row["names"], row["line"], row["untracked"]), (0, 0, [], 0, False))
 
     def test_tier_one_leaves_the_ledgers_in_place_so_their_lines_stay_covered(self):
         self.put("CHANGELOG.md\nSESSION_RUNNER.md\n")
@@ -1960,6 +1963,20 @@ class TestAPackagersIgnoreFileIsEvaluated(Adopter):
         out = run_migrate(self.project, json_out=False).out
         self.assertRegex(out, r"2 line\(s\) could not be read as a glob and were not evaluated")
         self.assertEqual(self.row(self.report())["patterns"]["unread"], 2)
+
+    def test_a_file_whose_only_other_lines_cannot_be_read_gets_no_row(self):
+        self.put("methodology/**\n@(a|b).md\n")
+        nr = self.report()
+        self.assertIsNone(self.row(nr))
+        self.assertEqual(nr["config"]["files"], 0)
+
+    def test_the_text_prints_the_counts_and_the_versions_the_json_holds(self):
+        self.put(self.LINES)
+        p = self.row(self.report())["patterns"]
+        out = run_migrate(self.project, json_out=False).out
+        self.assertNotEqual(len(p["lines"]), len(p["exposed"]))
+        self.assertIn("%d line(s) cover %d moved file(s)" % (len(p["lines"]), len(p["exposed"])), out)
+        self.assertIn("vsce 3.9.2, minimatch 10.2.5", out)
 
     def test_a_pattern_list_for_another_program_is_listed_and_never_judged(self):
         self.put("SESSION_RUNNER.md\n", rel=".npmignore")
