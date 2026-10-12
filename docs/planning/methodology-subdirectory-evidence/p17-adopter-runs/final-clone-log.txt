@@ -1,0 +1,51 @@
+adopter HEAD e35d16575abd856867324307099a03d00563df3b
+control at a5b0ed9
+present methodology/SESSION_RUNNER.md
+present methodology/SAFEGUARDS.md
+present methodology/SESSION_NOTES.md
+present methodology/CHANGELOG.md
+present methodology/HANDOFFS.md
+SAFEGUARDS byte-identical to canonical
+SESSION_RUNNER byte-identical to canonical
+10:## ACTIVE TASK
+git status lines: 0
+e35d165 chore(methodology): move the methodology files under methodology/ (tier all, 38 files)
+a5b0ed9 chore(methodology): sync the methodology files from the methodology repository (22 files)
+9a53b90 chore(vsix): deny methodology/ in .vscodeignore, before the methodology files move there
+507b934 docs(session): cite the Session 297 quality_ratchet run (2/2, with the timeout disclosure) in the receipt and th
+18f3196 docs(session): close out Session 297 -- the proof of the reader for the CommonMark run-to-the-end rules
+CHANGELOG frontier e35d165; undocumented after it: 0
+HANDOFFS frontier e35d165; commits after: 0
+merges since the frontier: 0
+tool entry in methodology/CHANGELOG.md: 20:### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 38 files)
+code fences before the first dated heading (F21 read): 0
+npm test ctrl exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)
+check-package ctrl exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configurat
+check-backlog ctrl exit=0
+check-types ctrl exit=0
+ratchet ctrl exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 8845021a4049
+context_budget ctrl exit=2   context budget OVER resident 22,524 B ≈ 7,687 tok
+check-ledger ctrl exit=1  check-ledger: 78 finding
+check-handoff ctrl exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in :
+npm test head exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)
+check-package head exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configurat
+check-backlog head exit=0
+check-types head exit=0
+ratchet head exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+context_budget head exit=2   context budget OVER resident 22,855 B ≈ 7,800 tok
+check-ledger head exit=1  check-ledger: 78 finding
+check-handoff head exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in :
+packaged set (vsce ls): ctrl 42 paths, head 42 paths, differ 0 lines
+vsce package head exit=0  1935373 B  44 entries
+status head exit=0  layout: head new  tracked current: 23
+check-links head exit=1  check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/p17-rehears
+  dashboard ctrl:  Health: 76/100 High+ Risk: 1 Commits: 1,731
+  dashboard head:  Health: 76/100 High+ Risk: 1 Commits: 1,732
+LATER commit, NO ledger entry (ctrl): exit=0
+  ledger-lag after it:  ledger-lag <= 0 1 fail
+LATER commit, WITH a ledger entry at CHANGELOG.md (ctrl): exit=0
+  ledger-lag after it:  ledger-lag <= 0 0 pass
+LATER commit, NO ledger entry (head): exit=0
+  ledger-lag after it:  ledger-lag <= 0 1 fail
+LATER commit, WITH a ledger entry at methodology/CHANGELOG.md (head): exit=0
+  ledger-lag after it:  ledger-lag <= 0 0 pass

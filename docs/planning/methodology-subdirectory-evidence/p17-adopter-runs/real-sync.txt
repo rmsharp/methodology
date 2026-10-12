@@ -1,0 +1,36 @@
+sync: /Users/rmsharp/Development/vscode_quarto_ext
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1754-g8df554b
+  layout:  legacy (found SESSION_RUNNER.md)
+  files:
+    SESSION_RUNNER.md: updated
+    FRAMEWORK_LEARNINGS.md: updated
+    SAFEGUARDS.md: updated
+    RECOMMENDED_SKILLS.md: updated
+    CONTEXT_TEMPLATE.md: unchanged
+    CLAUDE_TEMPLATE.md: updated
+    BOOTSTRAP.md: updated
+    methodology_dashboard.py: updated
+    methodology_trim.py: updated
+    context_budget.py: updated
+    quality_ratchet.py: updated
+    SESSION_NOTES.md: present (seed; left as-is)
+    CHANGELOG.md: present (seed; left as-is)
+    HANDOFFS.md: present (seed; left as-is)
+    ROADMAP.md: present (seed; left as-is)
+    .context-budget.json: present (seed; left as-is)
+    .quality-gates.json: present (seed; left as-is)
+    .gitattributes: created
+    docs/methodology/ITERATIVE_METHODOLOGY.md: updated
+    docs/methodology/HOW_TO_USE.md: updated
+    docs/methodology/FRAMEWORK_APPARATUS.md: updated
+    docs/methodology/workstreams/DESIGN_WORKSTREAM.md: unchanged
+    docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: updated
+    docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: updated
+    docs/methodology/workstreams/AUDIT_WORKSTREAM.md: updated
+    docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: updated
+    docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md: updated
+    docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: updated
+    docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: updated
+    docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md: updated

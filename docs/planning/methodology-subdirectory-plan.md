@@ -1,10 +1,10 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P16 are done (§7.1 to §7.4f, S274 to S297; P11 at tier 1, P12 to P16 at tier all); P17 is next, subject to §7.6, and tier 2 is open.**
+P0 to P17 are done (§7.1 to §7.4g, S274 to S298; P11 at tier 1, P12 to P17 at tier all); P18 is next, subject to §7.6 (F24 first unless he says otherwise), and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
-norm. This file is in the population of that plan's retirement rule like every other planning file.
+norm.
 
 > **The request** (the operator, 2026-10-06): *"analyze the following and if possible make a detailed
 > implementation plan: a movement of methodology files from the repos' root to a 'methodology'
@@ -39,15 +39,13 @@ Evidence for every number below is re-runnable from
 6. **Syncing is half the problem** (the operator's addition, §5A). `bin/sync` would write a blank ledger beside a real one; the dashboard
    is a **second** sync channel that writes at the project root; and **this repository's own resync with `upstream` changes shape once its
    files move**: git pairs none of the moved ledgers or JSON files against the merge base, so one synthetic upstream edit gives 4 modify/delete
-   conflicts and a file-location conflict where the unmoved fork gives 3 text conflicts (§5A.4; the maintainer made 142 of 234 root-ledger
-   commits). The plan's answers: sync before migrate, `--layout auto` through the window, and **this repository's real files move only after
+   conflicts and a file-location conflict where the unmoved fork gives 3 text conflicts (§5A.4). The plan's answers: sync before migrate, `--layout auto` through the window, and **this repository's real files move only after
    the upstream decision (D8)**; P8 is a rehearsal in a scratch clone.
 7. **Recommended shape:** *expand → migrate → contract* (§4.5), a layout resolver every shipped tool
    embeds (§4.3), two tiers (the framework's own files first, the project's state files second), the
    adopters one per session, and **a gate before** restructuring this repository's distributed source
    paths (§5).
-8. **Decisions** (all ratified, S273, §9): D1 all the files, in two tiers; D2 flat, `workstreams/` the only
-   subdirectory; D6 this repository rehearses only; D8 the fork first, then one pull request.
+8. **Decisions** (all ratified, S273): §9. D8 is the fork first, then one pull request.
 9. **The adopter runs also test the route an adopter takes alone** (the operator's addition, 2026-10-09): every
    finding of a P11-P22 run becomes a fix with a test, an open row or a declined one, and the next session
    reads the register first (§7.6). D8's pull request carries it.
@@ -392,17 +390,15 @@ merged into the fork gives:
 | unmoved (control) | 3 text conflicts (`.context-budget.json`, `.quality-gates.json`, `HANDOFFS.md`); `CHANGELOG.md` and the new shard merge cleanly |
 | instance files and archive moved | **4 modify/delete conflicts** (both ledgers, both JSON files), **1 file-location conflict** (the new shard, inside the moved `docs/archive/`), nothing auto-merged |
 
-Both are resolved by hand, but a modify/delete conflict shows no hunks: the upstream edit must be
-re-applied into the moved file. The cost is not confined to those files. The 31 code and config files a
-resolver touches are files upstream edits too (56 non-merge commits since 2026-09-01, 24 of them the
-maintainer's; 44 of 103 in all history, under his two author names), so each of his edits is a
-potential conflict with the fork's resolver edits for as long as upstream does not carry the same change.
+Both are resolved by hand, and a modify/delete conflict shows no hunks: the upstream edit is re-applied
+into the moved file. The 31 code and config files a resolver touches are also edited upstream (56
+non-merge commits since 2026-09-01, 24 of them the maintainer's), so each of his edits can conflict with
+the fork's resolver edits until upstream carries the same change.
 
 **So:**
 
 1. **P8 is a rehearsal in a scratch clone and ships nothing**; the real move is §5's decision (D6, D8).
-2. **D8 gains a second reason:** the upstream route is what makes the fork's own layout sustainable, not
-   only a courtesy.
+2. **D8 gains a second reason:** the upstream route is what makes the fork's own layout sustainable.
 3. **A resync goes first in any session that moves a file**, so no upstream edit is pending at the root
    path when the move lands; every move receipt names the `upstream/main` sha it was based on.
 4. Nothing in this plan pushes to `origin` or sends anything to `upstream`; each is the operator's
@@ -490,7 +486,7 @@ one-deliverable rule is the default.
 
 ### 7.3b P8 — what was measured (S281)
 
-**DONE** (§11; two `--no-local` clones). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved **445 / 11 / 4**, gates 18/18 against **16/18** (canonical-only tests reading root ledgers by path). **Also:** the tool refuses this repository (`[not-current]`); the dashboard reads the moved changelog as absent (76 to 74); the §5A.4 re-run gives 4 modify/delete conflicts. **Held:** 126 tracked proofs, both ledgers trim and prove in `methodology/archive/`, X2 is refused. **Not shown:** Phase 0 in the new layout (a real move, if D8 allows one, is its own phase with that Phase 0 as its check). B2's blockers are BL-104.
+**DONE** (§11; two `--no-local` clones). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved **445 / 11 / 4**, gates 18/18 against **16/18** (canonical-only tests reading root ledgers by path). **Also:** the tool refuses this repository (`[not-current]`); the dashboard reads the moved changelog as absent (76 to 74); the §5A.4 re-run gives 4 modify/delete conflicts. **Held:** 126 tracked proofs, both ledgers trim and prove in `methodology/archive/`, X2 is refused. **Not shown:** Phase 0 in the new layout (a real move is its own phase). B2's blockers are BL-104.
 
 ### 7.3c P9 — what was done (S282)
 
@@ -498,20 +494,20 @@ one-deliverable rule is the default.
 
 ### 7.3d P10 — the sha (S283)
 
-**DONE** (a record; nothing sent). **Adopters may sync from `add55f1`**, the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`. **Measured on 12 adopters in clones:** the stage changes no path, layout, health or `check-links` exit of one that only syncs. **D8 does not gate P11**; a pull request is a port (34 of 81 commits replay). Detail: `.../p10-expand-release-record.md`.
+**DONE** (a record; nothing sent). **Adopters may sync from `add55f1`**, the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`. **Measured on 12 adopters in clones:** the stage changes no path, layout, health or `check-links` exit of one that only syncs. **D8 does not gate P11**; a pull request is a port. Detail: `.../p10-expand-release-record.md`.
 
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
-Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (P11, §7.4a),
-`feedback-loop-comparison` (P12, §7.4b), `airqino` (P13, §7.4c; his pick, a nested copy), `church_growth` (P14, §7.4d;
-his pick, out of order: the next two had a session running), `nprcgenekeepr` (P15, §7.4e),
-`chat_verification` (P16, §7.4f; out of order), `mts-system`, `vscode_quarto_ext`, `Philippians`, `dalia_martinez_funeral`,
-`claude_work` (no history to move), `wsfct` **last and only on a clean default branch** (its branch is active).
+Done **in that repository** and recorded here. Order, by risk, and out of it by his picks when the next had a session
+running or a dirty tree: `model_project_constructor` (P11), `feedback-loop-comparison` (P12), `airqino` (P13; a nested
+copy), `church_growth` (P14), `nprcgenekeepr` (P15), `chat_verification` (P16), `vscode_quarto_ext` (P17), then
+`mts-system`, `Philippians`, `dalia_martinez_funeral`, `claude_work` (no history to move) and `wsfct` **last and only on
+a clean default branch** (its branch is active).
 
 - **DONE per adopter:** a clean tree (untracked files count, F12); `bin/status` before; **`bin/sync` first if any TRACKED file is not
   `current`, as its own commit (§5A.2)**; **an older ledger hook, or a per-clone hook that runs a moved tool, replaced first (its own commit where tracked; F2, F18)**; `bin/migrate-layout` dry run read; the apply as one commit;
   `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite, declared gates and CI
-  green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; **the tier is his pick** (1 at P11, all after); one full Phase 0 in the new layout; the sha of the checkout it synced
+  green (named in its receipt), rehearsed at each tier in clones first (under a path without the word `scratchpad`, F23), a rise in skips a failure; **the tier is his pick** (1 at P11, all after); one full Phase 0 in the new layout; the sha of the checkout it synced
   from; its findings in the register (§7.6); the project's push is **its own go-ahead**.
 - **Surface:** the adopter's repository and CI. **Cannot enforce:** another clone's hook arming; say so.
 
@@ -521,7 +517,7 @@ his pick, out of order: the next two had a session running), `nprcgenekeepr` (P1
 
 ### 7.4b P12 — `feedback-loop-comparison` (S287)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper. Synced with `--force` (two older canonical copies); 30 renames; health 59 and risk 0 before and after. **Tier 2 cost:** 23 links in its `SESSION_NOTES.md`.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper. Synced with `--force` (two older canonical copies); 30 renames. **Tier 2 cost:** 23 links in its `SESSION_NOTES.md`.
 
 ### 7.4c P13 — `airqino` (S291)
 
@@ -529,15 +525,19 @@ his pick, out of order: the next two had a session running), `nprcgenekeepr` (P1
 
 ### 7.4d P14 — `church_growth` (S292)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p14-church-growth-record.md`). A doc-only repository with an older ledger hook: after the move it passes a commit with no ledger entry (exit 0; the layout-aware hook refuses, C5), so it was replaced first. 30 renames; dashboard 49 and risk high before and after. **Tier 2 cost:** 0 links. **Findings:** F15, F16.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p14-church-growth-record.md`). A doc-only repository with an older ledger hook: after the move it passes a commit with no ledger entry (exit 0; the layout-aware hook refuses, C5), so it was replaced first. 30 renames; dashboard unchanged. **Tier 2 cost:** 0 links. **Findings:** F15, F16.
 
 ### 7.4e P15 — `nprcgenekeepr` (S296)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p15-nprcgenekeepr-record.md`). **9 of its own files were edited before the move** (F20): the tool alone took its tarball from 3.78 to 8.49 MB (gate: 5 MB) and made 2 tests skip. Its per-clone hook was rewritten first (F18); the sync's overlay dropped its 49-line trimmer addition (F7, F19). **Tier 2 cost:** 110 links. **Findings:** F17 to F20.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p15-nprcgenekeepr-record.md`). **9 of its own files were edited before the move** (F20): the tool alone took its tarball from 3.78 to 8.49 MB (gate: 5 MB) and made 2 tests skip. Its per-clone hook was rewritten first (F18); the sync dropped its 49-line trimmer addition (F7, F19). **Tier 2 cost:** 110 links. **Findings:** F17 to F20.
 
 ### 7.4f P16 — `chat_verification` (S297)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p16-chat-verification-record.md`). A doc-only repository with an older ledger hook; its one modified tracked file was committed first (F12), the hook replaced first (C5), no `--force`. 33 renames; **tier 2 cost:** 0 links. **The tool's ledger entry landed inside the header's example fence, unseen by its checks** (F21; moved by hand, open for the tool); dashboard 49 to 45, the §7.2d credit (F22). **Findings:** F21, F22.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p16-chat-verification-record.md`). A doc-only repository: its modified tracked file committed first (F12), its older ledger hook replaced first (C5). 33 renames; **tier 2 cost:** 0 links. **The tool's ledger entry landed inside the header's example fence, unseen by its checks** (F21; moved by hand, open for the tool); dashboard 49 to 45, the §7.2d credit (F22). **Findings:** F21, F22.
+
+### 7.4g P17 — `vscode_quarto_ext` (S298)
+
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p17-vscode-quarto-ext-record.md`). A VS Code extension (4,583 tests, no hook, no CI) with a 66 GB untracked `scratchpad/` it leaves unignored on purpose (a local exclude for the run, F12). **One line of its own `.vscodeignore` went in before the move** (F24): the tool alone turned its release gate red (78 files against 42) with every test and every check of the tool green. 36 renames, no `--force`. **Tier 2 cost:** 18 links. **Findings:** F23, F24.
 
 ### 7.5 P23 and G-B
 
