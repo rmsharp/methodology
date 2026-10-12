@@ -81,8 +81,15 @@ ADOPTER_LOCAL_FILES = [
     "CONTEXT.md",            # instance of CONTEXT_TEMPLATE.md (adopter-owned)
     "CLAUDE.md",             # instance of CLAUDE_TEMPLATE.md (adopter-owned)
     "BACKLOG.md",            # adopter-created task list
+]
+# A project's own file that goes where its methodology files go when the project moves (bin/migrate-layout's
+# COMPANIONS): the project root in the legacy layout, methodology/ in the new one, so it sits beside
+# FRAMEWORK_LEARNINGS.md in both. Allowed-absent at that place only: a link up to the root dangles once the project
+# has moved.
+COMPANION_FILES = [
     "PROJECT_LEARNINGS.md",  # CLAUDE.md overflow valve (BOOTSTRAP.md)
 ]
+COMPANION_NEIGHBOUR = "starter-kit/FRAMEWORK_LEARNINGS.md"
 # Template placeholder inside TEMPLATE_CAMPAIGN.md — the adopter replaces it with their actual
 # parent-workstream filename. It is a methodology file's neighbour, so it follows the template into
 # whichever layout is simulated: (the source of the template, the placeholder's name).
@@ -94,13 +101,23 @@ def dest_in(layout, src, dest):
     return dest if layout == "legacy" else NEW_LAYOUT[src]
 
 
+def beside_in(layout, neighbour, name):
+    """`name` as a neighbour of the distributed file `neighbour`, relative to the adopter tree, in `layout`."""
+    for src, dest, _disp in DISTRIBUTION:
+        if src == neighbour:
+            return os.path.join(os.path.dirname(dest_in(layout, src, dest)), name)
+    raise SystemExit("check-links: the manifest does not distribute %s" % neighbour)
+
+
 def placeholder_in(layout):
     """The placeholder's path, relative to the adopter tree, in `layout`."""
     template, name = PLACEHOLDER
-    for src, dest, _disp in DISTRIBUTION:
-        if src == template:
-            return os.path.join(os.path.dirname(dest_in(layout, src, dest)), name)
-    raise SystemExit("check-links: the manifest does not distribute %s" % template)
+    return beside_in(layout, template, name)
+
+
+def companions_in(layout):
+    """The companions' paths, relative to the adopter tree, in `layout`."""
+    return [beside_in(layout, COMPANION_NEIGHBOUR, name) for name in COMPANION_FILES]
 
 # Markdown inline link target: the (...) after ](. Targets in these docs contain
 # no ')'; an optional ' "title"' is stripped below.
@@ -131,7 +148,7 @@ def check(tree, layout="legacy"):
     # allowed to be absent: accept links to them without an existence check rather
     # than fabricating them, so validating a real tree never writes to it (#36).
     allowed_absent = {os.path.normpath(os.path.join(tree, rel))
-                      for rel in ADOPTER_LOCAL_FILES + [placeholder_in(layout)]}
+                      for rel in ADOPTER_LOCAL_FILES + companions_in(layout) + [placeholder_in(layout)]}
     md_files = [(s, dest_in(layout, s, d)) for s, d, _disp in DISTRIBUTION if d.endswith(".md")]
     for _src, dest in md_files:
         dpath = os.path.join(tree, dest)

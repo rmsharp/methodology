@@ -92,10 +92,10 @@
     {
       "name": "sync-layout-unit-tests",
       "direction": "min",
-      "threshold": 81,
+      "threshold": 82,
       "command": "python3 tools/test_sync_layouts.py",
       "extract": "Ran (\\d+) tests",
-      "why": "BL-101 P6 (S279): the manifest's second table (NEW_LAYOUT) and its reader, bin/sync --layout auto|legacy|new (the C1 guard, seeds not shadowed, ignore mode, --source=github), bin/status and bin/check-links in both layouts, each driven as a command in scratch projects, and the literal scanner over this repository. Count never drops; green/red is carried by tests-sh-passed. 81 is measured (Ran 81 tests, OK), after a mutation pass of 55 mutants, all killed by the final suite (six survived the first two rounds and became tests)."
+      "why": "BL-101 P6 (S279): the manifest's second table (NEW_LAYOUT) and its reader, bin/sync --layout auto|legacy|new (the C1 guard, seeds not shadowed, ignore mode, --source=github), bin/status and bin/check-links in both layouts, each driven as a command in scratch projects, and the literal scanner over this repository. Count never drops; green/red is carried by tests-sh-passed. 82 is measured (Ran 82 tests, OK; it was 81 before BL-105 phase 3 added the companion test), after a mutation pass of 55 mutants, all killed by the final suite (six survived the first two rounds and became tests)."
     },
     {
       "name": "migrate-layout-unit-tests",
