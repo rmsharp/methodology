@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] S299 — fold the second 2026-10-11 HANDOFFS shard pointer into the archive index
+
+The pointer block the trim (`799ecc1`, 1 receipt, S296, 2026-10-11, to `HANDOFFS-through-2026-10-11-2.md`, the name S298 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S298, S297). The shard proof was run by name in the tree before the trim commit and from a `--no-local` clone of `799ecc1`: `HANDOFFS-through-2026-10-11-2.md.verify.sh`, exit 0 both times (L1, L2/front-matter, L3). The trim ran on his go-ahead at the S299 Phase 0 (a picker answer: "Trim HANDOFFS.md"), after two pushes he also approved there: `0a3558c` to the fork `origin` (read back equal, 0 and 0) and `vscode_quarto_ext`'s three commits `9a53b909`, `a5b0ed9d` and `e35d1657` to its own `origin/master` (`https://github.com/rmsharp/vscode_quarto_ext.git`, read back equal, 0 and 0). Nothing went upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-11-2.md` (1 record(s), 40,202 B → 29,598 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
