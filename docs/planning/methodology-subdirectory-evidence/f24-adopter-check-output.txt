@@ -1,0 +1,24 @@
+start Mon Oct 12 01:40:28 CDT 2026
+adopter e35d1657 (base 507b9348)
+methodology HEAD e00b2b2
+vsce 3.9.2, minimatch 10.2.5
+sync t1 exit=0
+commit t1 (chore(methodology): sync) exit=0
+sync tall exit=0
+commit tall (chore(methodology): sync) exit=0
+commit tallA (chore(vsix): deny methodology/ in .vscodeignore, before the move) exit=0
+sync tallA exit=0
+commit tallA (chore(methodology): sync) exit=0
+t1 dry run (tier 1) exit=0
+t1 apply exit=0
+t1: vsce lists 42 paths before and 65 after; 23 moves; the tool says 23 exposed, vsce says 23 (lines not read: 0)
+t1: tool and vsce agree
+tall dry run (tier all) exit=0
+tall apply exit=0
+tall: vsce lists 42 paths before and 78 after; 36 moves; the tool says 36 exposed, vsce says 36 (lines not read: 0)
+tall: tool and vsce agree
+tallA dry run (tier all) exit=0
+tallA apply exit=0
+tallA: vsce lists 42 paths before and 42 after; 36 moves; the tool says 0 exposed, vsce says 0
+tallA: tool and vsce agree
+end Mon Oct 12 01:42:14 CDT 2026

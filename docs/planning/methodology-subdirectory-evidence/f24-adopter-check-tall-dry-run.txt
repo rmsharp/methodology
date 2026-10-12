@@ -1,0 +1,26 @@
+    .vscodeignore:43  SESSION_RUNNER.md   (26 mentions, 21 on code lines)
+      line 9: docs/**  stops covering docs/archive/CHANGELOG-through-2026-08-24.md, docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh, docs/archive/HANDOFFS-through-2026-08-24.md and 13 more
+      line 43: SESSION_RUNNER.md  stops covering SESSION_RUNNER.md
+      line 44: FRAMEWORK_LEARNINGS.md  stops covering FRAMEWORK_LEARNINGS.md
+      line 45: SAFEGUARDS.md  stops covering SAFEGUARDS.md
+      line 46: SESSION_NOTES.md  stops covering SESSION_NOTES.md
+      line 47: BOOTSTRAP.md  stops covering BOOTSTRAP.md
+      line 48: RECOMMENDED_SKILLS.md  stops covering RECOMMENDED_SKILLS.md
+      line 50: CLAUDE_TEMPLATE.md  stops covering CLAUDE_TEMPLATE.md
+      line 52: CONTEXT_TEMPLATE.md  stops covering CONTEXT_TEMPLATE.md
+      line 54: CHANGELOG.md  stops covering CHANGELOG.md
+      line 55: ROADMAP.md  stops covering ROADMAP.md
+      line 57: HANDOFFS.md  stops covering HANDOFFS.md
+      line 58: methodology_dashboard.py  stops covering methodology_dashboard.py
+      line 59: methodology_trim.py  stops covering methodology_trim.py
+      line 60: context_budget.py  stops covering context_budget.py
+      line 61: quality_ratchet.py  stops covering quality_ratchet.py
+      line 62: .context-budget.json  stops covering .context-budget.json
+      line 63: .context-budget-history.jsonl  stops covering .context-budget-history.jsonl
+      line 69: .quality-gates.json  stops covering .quality-gates.json
+      line 70: .quality-gates-results.json  stops covering .quality-gates-results.json
+      line 79: dashboard.html  stops covering dashboard.html
+      line 80: dashboard_history.jsonl  stops covering dashboard_history.jsonl
+      vsce's default list: .gitattributes  stops covering .gitattributes
+      23 line(s) cover 38 moved file(s) where they are now and no line covers them under methodology/; a line such as methodology/** would (vsce reads each line with minimatch, { dot: true } and no matchBase, so a bare name is the project root's; this tool's own translation of that, checked against vsce 3.9.2, minimatch 10.2.5: a candidate, not a verdict)
+  harness: 0 mention(s) in 0 file(s)
