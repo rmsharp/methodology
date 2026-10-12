@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P17 are done (§7.1 to §7.4g; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 and F21 fixed, S299 and S300); tier 2 is open; BL-105 is rehearsed, B stands (D10, S302).**
+P0 to P17 are done (§7.1 to §7.4g; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 and F21 fixed, S299 and S300); tier 2 is open; BL-105: B stands, tool built (D10, S303).**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm.

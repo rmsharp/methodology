@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S303 — BL-105's state in the plan, the backlog row and its detail: the tool is built (phase 2)
+
+The plan's status line reads "BL-105: B stands, tool built (D10, S303)" (59,994 of its declared 60,000 B, 1 B under); the BL-105 row and its detail gain the S303 paragraph (the tool, the 39 tests, the five clones, the one call left: a top-up at a tree with a locally modified TRACKED file). BL-105 stays open: phases 3 (the distributed prose) and 4 (the adopters) are not started.
+
 ### 2026-10-12 · [BL-101] S303 — BL-105 build phase 2: the record, the five adopters' results, the mutation script and the register line
 
 `docs/planning/methodology-subdirectory-evidence/bl105-phase2-record.md` (what was built, the five `--no-local` clones, what the run found, his one call), `bl105-phase2-runs.json` (the five results as data), `mutate-bl105-phase2.py` (32 distinct mutants; refuses to run in the tree it mutates) and a dated S303 line in `findings-register.md` (F29 fixed, F30 answered and built, F7 and F19 seen again at the live `nprcgenekeepr`).
