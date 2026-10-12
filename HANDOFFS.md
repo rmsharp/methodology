@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S299
+date: 2026-10-11
+status: pending
+active_task: F24 (BL-101, `docs/planning/methodology-subdirectory-evidence/findings-register.md` row F24): `bin/migrate-layout` evaluates a project's root `.vscodeignore` as vsce reads it, so a move that exposes files to the `.vsix` is reported by the tool and not only by the adopter's own gate; tests first, `workstreams/DEVELOPMENT_WORKSTREAM.md`. His pick at the S299 Phase 0 (the picker's recommended option; plan §7.6 puts a finding the tool's checks did not see before the next adopter). Done before this claim, on his go-ahead: the push of `0a3558c` to the fork `origin` and of `vscode_quarto_ext`'s three commits to its own `origin/master` (both read back `0 0`, `ls-remote` equal), the HANDOFFS trim `799ecc1` (shard `HANDOFFS-through-2026-10-11-2.md`, proof exit 0 in the tree and from a clone) and its fold `ffbfbc5`. Gate citation of S298 re-run in a clean `--no-local` clone of `0a3558c`: 18/18, results `791e005997ab`.
+```
+
+```handoff
 session: S298
 date: 2026-10-11
 status: complete

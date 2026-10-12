@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [BL-101] S299 claim (in progress) — F24, `bin/migrate-layout` evaluates a project's `.vscodeignore`
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (`wsfct`, `mts-system` and `nprcgenekeepr` have a live session; `Philippians` has 4 dirty lines, `dalia_martinez_funeral` 6, `claude_work` 16), and he picked "F24: make the tool read .vscodeignore" with three go-aheads (one picker answer): "Trim HANDOFFS.md now", "Push 0a3558c to the fork's origin" and "Push vscode_quarto_ext's 3 commits"; all three were done before this claim (pushes below, trim `799ecc1`, fold `ffbfbc5`). The gate citation of S298 (results `791e005997ab`, manifest `e755389a69c7`) was re-run in a clean `--no-local` clone of `0a3558c` and confirmed (18/18, 0 unmeasured). Deliverable: ONE change to `bin/migrate-layout` (canonical-only), tests first, following `workstreams/DEVELOPMENT_WORKSTREAM.md`: the tool evaluates a root `.vscodeignore` as vsce reads it, so a move that exposes files to the `.vsix` is reported by the tool and no longer only by the adopter's own gate (register row F24; the precedent is F10, `.Rbuildignore`). Nothing in any adopter changes; nothing goes upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] S299 — fold the second 2026-10-11 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`799ecc1`, 1 receipt, S296, 2026-10-11, to `HANDOFFS-through-2026-10-11-2.md`, the name S298 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S298, S297). The shard proof was run by name in the tree before the trim commit and from a `--no-local` clone of `799ecc1`: `HANDOFFS-through-2026-10-11-2.md.verify.sh`, exit 0 both times (L1, L2/front-matter, L3). The trim ran on his go-ahead at the S299 Phase 0 (a picker answer: "Trim HANDOFFS.md"), after two pushes he also approved there: `0a3558c` to the fork `origin` (read back equal, 0 and 0) and `vscode_quarto_ext`'s three commits `9a53b909`, `a5b0ed9d` and `e35d1657` to its own `origin/master` (`https://github.com/rmsharp/vscode_quarto_ext.git`, read back equal, 0 and 0). Nothing went upstream. Model: Claude Sonnet 5.5.
@@ -260,6 +264,14 @@ Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-11-2.md`](docs/archive/HANDOFFS-through-2026-10-11-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 40,202 B → 29,598 B (−26.4%).
+
+### 2026-10-11 · [ad hoc] S299 — pushed `vscode_quarto_ext`'s three commits to its own `origin/master` (push record)
+
+On his go-ahead at the S299 Phase 0 (a picker answer: "Push vscode_quarto_ext's 3 commits"): in `~/Development/vscode_quarto_ext`, `git push origin e35d1657:refs/heads/master`, naming the commit and not `HEAD`; `origin` is `https://github.com/rmsharp/vscode_quarto_ext.git`, his own repository. Three commits went (`9a53b909`, `a5b0ed9d`, `e35d1657`; `507b9348..e35d1657`). Checked first: those three were exactly `origin/master..master`, 0 behind after a fetch, 0 modified tracked files, no live session with that directory as its cwd. Read back after: `git rev-list --left-right --count origin/master...master` read `0 0` and `git ls-remote origin refs/heads/master` equalled `e35d16575abd856867324307099a03d00563df3b`. The project has no CI. Nothing went upstream (`KJ5HST/methodology`), no tag, no release. Model: Claude Sonnet 5.5.
+
+### 2026-10-11 · [ad hoc] S299 — pushed `0a3558c` to the fork `origin` (push record)
+
+On his go-ahead at the S299 Phase 0 (a picker answer: "Push 0a3558c to the fork's origin"): `git push origin 0a3558c:refs/heads/main`, naming the commit and not `HEAD`; `origin` is `https://github.com/rmsharp/methodology.git`, the fork. Eight commits went (`2c64088`, `c577437`, `5de6b7f`, `8df554b`, `8422215`, `321d634`, `76564bb`, `0a3558c`; `0a2921d..0a3558c`). Read back before the trim: `git rev-list --left-right --count origin/main...HEAD` read `0 0` and `git ls-remote origin refs/heads/main` equalled `0a3558c66b005f84a076ab1fde8910bc29ed3f69`. Nothing went upstream (`KJ5HST/methodology`), no tag, no release. Model: Claude Sonnet 5.5.
 
 ### 2026-10-11 · [ad hoc] S298 — the receipt's push count corrected from 6 to 7
 
