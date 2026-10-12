@@ -1,0 +1,17 @@
+baseline: rc=0 failing=[]
+L01   KILLED   by test_a_hash_line_is_a_comment_and_a_line_is_trimmed (named classes)
+R01   KILLED   by test_a_line_written_the_gitignore_way_matches_nothing (named classes)
+R02   KILLED   by test_a_file_whose_only_other_lines_cannot_be_read_gets_no_row (named classes)
+R03   KILLED   by test_the_text_prints_the_counts_and_the_versions_the_json_holds (named classes)
+R04   KILLED   by test_the_text_prints_the_counts_and_the_versions_the_json_holds (named classes)
+R05   KILLED   by test_a_bare_name_is_the_project_roots_and_not_the_new_directorys (named classes)
+R06   KILLED   by test_the_text_says_which_lines_stop_matching_and_what_would_cover_the_new_place (named classes)
+R07   KILLED   by test_a_file_that_names_nothing_moved_is_still_a_row_when_the_default_list_exposes_a_file (named classes)
+R08   KILLED   by test_a_negation_brings_a_file_back_and_applies_to_a_directory_name_too (named classes)
+R09   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+R10   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+R11   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+R12   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+R13   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+R14   KILLED   by test_the_lines_come_in_line_order_the_defaults_last_and_the_files_in_name_order (named classes)
+killed 15, survived 0

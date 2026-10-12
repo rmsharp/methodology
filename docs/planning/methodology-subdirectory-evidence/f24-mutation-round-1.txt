@@ -1,0 +1,72 @@
+# BL-101 F24 mutation round 1 (S299), run against a scratch --no-local clone of e00b2b2 with f24-mutants.py's MUTANTS.
+# The run was made in two parts. Part 1 (below, up to the line of dashes) was stopped by me after S08: B04 survived (no test of a
+# list of three options: a real gap, fixed with three rows in the test table) and S07 and S08 survived because they were EQUIVALENT
+# (a segment holds no '/', so `.*` and `.` read as `[^/]*` and `[^/]`): both were replaced by `[^/]+` and `[^/]?` and S09 (the run of
+# stars collapsed to one: equivalent, there only to stop back-tracking) was dropped. Part 2 re-ran B04 and everything after S08.
+# Part 2 survivors: L01 (a '#' line read as a pattern: no test used a file that such a line would cover; a case was added and L01 is
+# re-run in round 2) and L16 (EQUIVALENT: `search` with `[^/]*\*[^/]*\Z` already means 'the last segment has a star', so the
+# `(^|/)` copied from vsce's source changes nothing).
+# Tally of the final list of 49 mutants (f24-mutants.py MUTANTS): 47 killed in round 1 (B04, S07 and S08 in their corrected form; S10 in its own run, last lines), L01 survived (a real gap: killed in round 2, f24-mutation-round-2.txt, after a test was added), L16 survived and is equivalent.
+
+## part 1 (stopped after S08)
+B01   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+B02   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+B03   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+B04   SURVIVED bin/migrate-layout: 'cuts = [first] + commas + [end]' -> 'cuts = [first] + commas[:1] + [end]'
+B05   KILLED   by test_a_brace_list_is_one_line_that_covers_several_files (named classes)
+S01   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+S02   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+S03   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+S04   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+S05   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+S06   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+S07   SURVIVED bin/migrate-layout: 'out.append("[^/]*")' -> 'out.append(".*")'
+S08   SURVIVED bin/migrate-layout: 'out.append("[^/]")' -> 'out.append(".")'
+
+## part 2
+baseline: rc=0 failing=[]
+B04   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+S07   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+S08   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+G01   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+G02   KILLED   by test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not (named classes)
+G03   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+G04   KILLED   by test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not (named classes)
+G05   KILLED   by test_the_lines_come_in_line_order_the_defaults_last_and_the_files_in_name_order (named classes)
+G06   KILLED   by test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not (named classes)
+G07   KILLED   by test_a_glob_it_does_not_read_is_none_and_never_a_guess (named classes)
+L01   SURVIVED bin/migrate-layout: 'if not line or line.startswith("#"):\n            continue\n  ' -> 'if not line:\n            continue\n        negated'
+L02   KILLED   by test_a_line_break_of_any_kind_and_a_byte_order_mark_are_read_as_vsce_reads_them (named classes)
+L03   KILLED   by test_a_line_break_of_any_kind_and_a_byte_order_mark_are_read_as_vsce_reads_them (named classes)
+L04   KILLED   by test_a_line_break_of_any_kind_and_a_byte_order_mark_are_read_as_vsce_reads_them (named classes)
+L05   KILLED   by test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not (named classes)
+L06   KILLED   by test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not (named classes)
+L07   KILLED   by test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not (named classes)
+L08   KILLED   by test_a_bare_name_is_the_project_roots_and_not_the_new_directorys (named classes)
+L09   KILLED   by test_a_negation_brings_a_file_back_and_applies_to_a_directory_name_too (named classes)
+L10   KILLED   by test_the_lines_come_in_line_order_the_defaults_last_and_the_files_in_name_order (named classes)
+L11   KILLED   by test_a_file_vsce_never_ignores_stays_packaged_whatever_the_file_says (named classes)
+L12   KILLED   by test_a_file_vsce_never_ignores_stays_packaged_whatever_the_file_says (named classes)
+L13   KILLED   by test_a_file_vsce_never_ignores_stays_packaged_whatever_the_file_says (named classes)
+L14   KILLED   by test_vsces_own_default_list_is_part_of_the_answer (named classes)
+L15   KILLED   by test_a_line_that_is_not_read_is_counted_and_the_rest_are_read (named classes)
+L16   SURVIVED bin/migrate-layout: 'VSCE_LEAF_GLOB_RE = re.compile(r"(^|/)[^/]*\\*[^/]*\\Z")' -> 'VSCE_LEAF_GLOB_RE = re.compile(r"[^/]*\\*[^/]*\\Z")'
+E01   KILLED   by test_a_double_star_leaf_covers_the_file_at_any_depth_and_so_still_covers_it_after_the_move (named classes)
+E02   KILLED   by test_a_bare_name_is_the_project_roots_and_not_the_new_directorys (named classes)
+E03   KILLED   by test_a_bare_name_is_the_project_roots_and_not_the_new_directorys (named classes)
+E04   KILLED   by test_the_lines_come_in_line_order_the_defaults_last_and_the_files_in_name_order (named classes)
+E05   KILLED   by test_a_brace_list_is_one_line_that_covers_several_files (named classes)
+E06   KILLED   by test_a_brace_list_is_one_line_that_covers_several_files (named classes)
+W01   KILLED   by test_a_file_that_ignores_names_and_a_directory_is_listed_with_what_the_move_exposes (named classes)
+W02   KILLED   by test_only_the_file_at_the_root_is_read_and_only_when_git_tracks_it (named classes)
+W03   KILLED   by test_the_text_says_which_lines_stop_matching_and_what_would_cover_the_new_place (named classes)
+W04   KILLED   by test_a_line_that_cannot_be_read_is_said_in_the_text (named classes)
+W05   KILLED   by test_a_line_that_cannot_be_read_is_said_in_the_text (named classes)
+W06   KILLED   by test_a_file_that_ignores_names_and_a_directory_is_listed_with_what_the_move_exposes (named classes)
+killed 36, survived 2
+
+
+## S10 (left out of both id lists by mistake; run alone afterwards, the same baseline)
+baseline: rc=0 failing=[]
+S10   KILLED   by test_the_translation_of_a_glob_answers_as_minimatch_does (named classes)
+killed 1, survived 0
