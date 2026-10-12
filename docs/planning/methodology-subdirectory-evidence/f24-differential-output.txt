@@ -1,0 +1,30 @@
+A. glob matcher against minimatch 10.2.5, { dot: true }, seed 24
+   targeted paths: 41048 more pairs, 15452 of them matches
+   6121 patterns (6105 read, 16 not read), 260 paths; 1587300 pairs compared, 7990 of them matches; 0 differ
+   not read: 16; of them outside the named shapes (extended glob, range, backslash, POSIX class, lone brace, `//`, bad class): 0
+B. list handling against `vsce ls --no-dependencies` (@vscode/vsce 3.9.2), seed 24, 300 random .vscodeignore files over a 41-file tree, 87 s
+   0 differ (lines the tool does not read in these files: 0)
+C. vsce's default list against the tool's copy (@vscode/vsce 3.9.2): 32 entries in vsce, 32 in the tool; 2 appended negations in vsce, 2 in the tool
+   identical, in order
+RESULT: no row differs
+exit 0
+A. glob matcher against minimatch 10.2.5, { dot: true }, seed 7
+   targeted paths: 40686 more pairs, 15465 of them matches
+   6121 patterns (6105 read, 16 not read), 260 paths; 1587300 pairs compared, 8645 of them matches; 0 differ
+   not read: 16; of them outside the named shapes (extended glob, range, backslash, POSIX class, lone brace, `//`, bad class): 0
+B. list handling against `vsce ls --no-dependencies` (@vscode/vsce 3.9.2), seed 7, 300 random .vscodeignore files over a 41-file tree, 88 s
+   0 differ (lines the tool does not read in these files: 0)
+C. vsce's default list against the tool's copy (@vscode/vsce 3.9.2): 32 entries in vsce, 32 in the tool; 2 appended negations in vsce, 2 in the tool
+   identical, in order
+RESULT: no row differs
+exit 0
+A. glob matcher against minimatch 10.2.5, { dot: true }, seed 99
+   targeted paths: 41890 more pairs, 15974 of them matches
+   6124 patterns (6108 read, 16 not read), 260 paths; 1588080 pairs compared, 9072 of them matches; 0 differ
+   not read: 16; of them outside the named shapes (extended glob, range, backslash, POSIX class, lone brace, `//`, bad class): 0
+B. list handling against `vsce ls --no-dependencies` (@vscode/vsce 3.9.2), seed 99, 300 random .vscodeignore files over a 41-file tree, 88 s
+   0 differ (lines the tool does not read in these files: 0)
+C. vsce's default list against the tool's copy (@vscode/vsce 3.9.2): 32 entries in vsce, 32 in the tool; 2 appended negations in vsce, 2 in the tool
+   identical, in order
+RESULT: no row differs
+exit 0
