@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] BL-105 build phase 3: the distributed prose says where `PROJECT_LEARNINGS.md` lives in either layout
+
+`starter-kit/BOOTSTRAP.md` (the Step 5 paragraph, lines 218 and 222) and `starter-kit/CLAUDE_TEMPLATE.md` (the comment at 83-84) said the file sits "at your project root" and "needs no tooling changes": both false for a project in the `methodology/` layout, where `bin/migrate-layout` moves it with the methodology files and rewrites the `CLAUDE.md` pointer (275 tests). They now say "beside `FRAMEWORK_LEARNINGS.md`" (the project root, or `methodology/`), that the pointer names the file where it lives, and what the tool does. No line count changes in either file. Lines 220 and 439 name the file bare and stay (the bare-name rule, `BOOTSTRAP.md:68`). Fork only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-12 · [BL-101] BL-105 build phase 3: `bin/check-links` allows the companion where the layout keeps it
 
 `bin/check-links` listed `PROJECT_LEARNINGS.md` among the project's files at its root "in either layout", which plan D10 made false: the file moves with the project. It is now `COMPANION_FILES`, allowed-absent beside `FRAMEWORK_LEARNINGS.md` (`beside_in`, one helper that `placeholder_in` now shares), the root in the legacy layout and `methodology/` in the new one; a link up to the root dangles there. The RED test (`4ea9ce9`) is green, `tools/test_sync_layouts.py` reads 82 tests OK in 95 s, `check-links --layout both` and `check-layout-literals` exit 0, and the gate floor `sync-layout-unit-tests` rises 81 to 82. No link to the file exists in a distributed document today, so no output changed.
