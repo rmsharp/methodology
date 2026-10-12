@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: two tests after the first mutation round
+
+Round 1 (22 mutants of `first_heading` and `insert_entry`, run in a scratch clone of `72a5921`) killed 20 and left two alive, F06 (the opener's length forgotten) and C03 (any length closes): the nested-fence test closed its own fence by coincidence, because its inner pair of 3-backtick lines re-opened one over the heading. Its fixture now holds an unbalanced inner line, so a shorter line closing a longer fence is seen; one test added for an opener that carries an info string (round 2 names it). `test_migrate_layout.py`: 16 tests in the fence group. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 — F21: `bin/migrate-layout` places its ledger entry above the first heading outside a fenced block
 
 `insert_entry` now takes its position from `first_heading`, which reads fences as `methodology_trim.py`'s `fence_scan` does (three or more backticks or tildes at the start of a line open one; only the same character, at least as long and bare, closes it), so an example heading in a ledger header's fence is no longer taken for the first entry (register row F21: `chat_verification`, entry at line 48 inside the fence). A fence that never closes before any heading outside one is refused as `rewrite-unsafe` (nothing written). Tests first: 15 new (13 on the pure rule, 2 on the command), 14 red before the code and 1 green by design. Not yet: the evidence scripts, the mutation rounds, the floor, the register row. Model: Claude Sonnet 5.5.

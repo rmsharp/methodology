@@ -382,8 +382,14 @@ class TestThePureRules(unittest.TestCase):
         got = self.m.insert_entry(text, self.ENTRY, "2026-10")
         self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
 
+    def test_a_fence_with_an_info_string_opens_one(self):
+        header = "front\n\n```markdown\n### 2026-01-15 · [ad hoc] example\n```\n\n"
+        text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
     def test_a_shorter_fence_inside_a_longer_one_does_not_close_it(self):
-        header = "front\n\n````\n```\nx\n```\n### 2026-01-15 · [ad hoc] example\n````\n\n"
+        header = "front\n\n````\n```\n### 2026-01-15 · [ad hoc] example\n```\nx\n````\n\n"
         text = header + "### 2026-09-01 · [ad hoc] old\n\nold body\n"
         got = self.m.insert_entry(text, self.ENTRY, "2026-10")
         self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
