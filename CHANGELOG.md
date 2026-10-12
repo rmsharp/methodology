@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — the plan back under its declared budget
+
+`methodology-subdirectory-plan.md` declares 60,000 B (its header); the F21 edits of `c053cac` took it from 59,973 to 60,107 B. The two edits are shortened (the status line and the P16 text: F21 is fixed, the record is named in the register), 59,998 B. No gate reads this figure; the plan's own header does. Found by `context_budget.py --status` and a `wc`, after the close-out. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 close-out — F21 done and recorded; the receipt is complete; the gate run read 18/18
 
 The S300 receipt in `HANDOFFS.md` is `status: complete` (self 7, predecessor 9): F21 is fixed in `bin/migrate-layout` (`72a5921`), 16 tests and the floor at 236, the rule agrees with markdown-it over 6,367 committed ledger texts, the old tool put the entry inside the fence on the real adopter and the new one does not, two mutation rounds (28 runs of 26 mutants, none alive at the end). Gate run in a clean `--no-local` clone of `608c7b9`: 18/18, 0 unmeasured, results `8c209fa9806e`, manifest `440ab037cfe1`. Phase 3C appended no fork learning row (D3 not triggered; #16, #57 and #94 considered). The receipt owns three mistakes: the mutation runner pointed at the working repository, a wrong test count in `72a5921`'s entry, three runs of one script. Nothing went upstream; `origin/main` is `ca2a653`, 12 commits behind `HEAD`. Model: Claude Sonnet 5.5.
