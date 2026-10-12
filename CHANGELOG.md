@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] BL-105's state in the plan, the backlog row and its detail: the prose is written, phase 4 is not
+
+`methodology-subdirectory-plan.md` status line (same byte count, 59,994 of 60,000 B), `BACKLOG.md` row BL-105 and a new S304 paragraph in `BACKLOG-DETAIL.md`: build phase 3 done on the fork (`BOOTSTRAP.md` 218 and 222, `CLAUDE_TEMPLATE.md` 83-84, `bin/check-links` as code, F31), nothing sent; the next phase is the adopters (phase 4). The row stays open: phase 4 is not started.
+
 ### 2026-10-12 · [BL-101] BL-105 build phase 3: the record, the mutation script and the register
 
 `docs/planning/methodology-subdirectory-evidence/bl105-phase3-record.md` (the inventory and what each of the six sites became, the sync channels, what was not run), `mutate-bl105-phase3.py` (9 mutants of the `bin/check-links` change, 9 killed; refuses a path outside `~/.cache`) and the findings register: row F31 (`bin/check-links:84` was code), F29 and F30 set to fixed (S303 built them; the rows still read open), and the S304 log line. Gate run in a clean `--no-local` clone of `69fe69a`: 18/18, results `0ca51b2444cc`, manifest `5ba29f982c78`.
