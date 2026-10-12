@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S303 — BL-105 build phase 2: the tests, written RED first
+
+`tools/test_migrate_layout.py` gains 35 tests in five classes (the companion rule, a top-up on a migrated tree, the pure link rules, F30's live-link list, a project with no methodology), seen failing for the intended reasons before any code: 27 red (no companion move, no `live_links` key, the configs not read under `methodology/`), 8 already green because they pin behavior that must stay (tier 1 leaves the file, a dirty tree refuses, nothing to do without the file). The tool is not yet changed.
+
 ### 2026-10-12 · [BL-101] S303 claim (in progress) — BL-105 build phase 2, the tool
 
 CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (`wsfct` and `mts-system`, the two left, both have a live session) and he picked BL-105 phase 2 with F30 answered LIST ONLY and two go-aheads, both done before this claim: the push of `ed1bd64` to the fork `origin` (`e5d88a5..ed1bd64`, `0 0`, `ls-remote` equal) and the HANDOFFS trim (`882a7bd`) with its fold (`85ac33d`). The gate citation re-run (clean `--no-local` clone of `ed1bd64`, `~/.cache/s303-gate`) was still running at this claim: its result goes in the close-out receipt. Deliverable: the tool, tests first; nothing distributed, no adopter touched. Phase 3F records the rest.

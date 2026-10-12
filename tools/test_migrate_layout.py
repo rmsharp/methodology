@@ -2472,5 +2472,421 @@ class TestASmallLedgerIsRefusedWithAReason(Adopter):
         self.assertIn("%d bytes" % len(seed.encode("utf-8")), error)
 
 
+# --- BL-105 build phase 2: PROJECT_LEARNINGS.md joins the move as a companion (plan D10; the rehearsal record, section 7) ---
+
+LEARNINGS = "PROJECT_LEARNINGS.md"
+LEARNINGS_DEST = "methodology/PROJECT_LEARNINGS.md"
+LEARNINGS_TEXT = "# Project learnings\n\n| # | Learning |\n|---|---|\n" + "".join(
+    "| %d | Row %d. %s |\n" % (i, i, "What this project learned, in a sentence. " * 6) for i in range(1, 25))
+POINTER = "Project learnings are kept in `PROJECT_LEARNINGS.md`.\n"
+
+
+class WithALearningsFile(Adopter):
+    """An adopter that keeps a PROJECT_LEARNINGS.md of its own at the root, names it in CLAUDE.md, in the budget config
+    and in a gate: the three places the rehearsal (S302) found a project pointing at it."""
+
+    def config(self, name):
+        """A config where this tree keeps it: under methodology/ once migrated, at the root before."""
+        new = self.project / "methodology" / name
+        return new if new.is_file() else self.project / name
+
+    def give_the_project_a_learnings_file(self):
+        p = self.project
+        (p / LEARNINGS).write_text(LEARNINGS_TEXT, encoding="utf-8")
+        claude = p / "CLAUDE.md"
+        claude.write_text(claude.read_text(encoding="utf-8") + POINTER, encoding="utf-8")
+        budget = self.config(".context-budget.json")
+        text = budget.read_text(encoding="utf-8")
+        marker = '"files": ['
+        self.assertEqual(text.count(marker), 1)
+        budget.write_text(text.replace(marker, marker + '\n    {"path": "PROJECT_LEARNINGS.md", "class": "read-mandated", "max_bytes": 60000},'),
+                          encoding="utf-8")
+        gates_file = self.config(".quality-gates.json")
+        cfg = json.loads(gates_file.read_text(encoding="utf-8"))
+        cfg["gates"].append({"name": "learnings-size", "direction": "max", "threshold": 60000,
+                             "command": "wc -c < PROJECT_LEARNINGS.md", "why": "The file stays readable."})
+        gates_file.write_text(json.dumps(cfg, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        self.commit("the project keeps learnings of its own")
+
+    def migrate_then_give_the_file(self):
+        """A tree the tool calls migrated, with the file still at the root: nprcgenekeepr's state at P15."""
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.give_the_project_a_learnings_file()
+
+
+class TestTheCompanionRule(WithALearningsFile):
+    """Plan D10: the file joins the move with no manifest entry. It is the project's own state, so tier 2's."""
+
+    def setUp(self):
+        super().setUp()
+        self.give_the_project_a_learnings_file()
+
+    def test_the_file_is_planned_as_one_tracked_companion_move(self):
+        r = run_migrate(self.project)
+        self.assertEqual(r.returncode, 0, r.out)
+        move = next((m for m in r.report["moves"] if m["src"] == LEARNINGS), None)
+        self.assertIsNotNone(move, "no move planned for %s" % LEARNINGS)
+        self.assertEqual(move, {"src": LEARNINGS, "dest": LEARNINGS_DEST, "kind": "companion", "tracked": True})
+
+    def test_a_project_without_the_file_is_planned_as_it_always_was(self):
+        git(self.project, "rm", "-q", LEARNINGS)
+        self.commit("no learnings file")
+        r = run_migrate(self.project)
+        self.assertNotIn("companion", {m["kind"] for m in r.report["moves"]})
+        self.assertNotIn(LEARNINGS, [x["path"] for x in r.report["left_in_place"]])
+
+    def test_tier_1_leaves_it_at_the_root_and_names_nothing_of_it(self):
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertNotIn(LEARNINGS, [m["src"] for m in r.report["moves"]])
+        self.assertTrue((self.project / LEARNINGS).is_file())
+        self.assertFalse((self.project / LEARNINGS_DEST).exists())
+        self.assertTrue((self.project / "CLAUDE.md").read_text(encoding="utf-8").endswith(POINTER), "a pointer to a file that did not move was rewritten")
+
+    def test_tier_1_then_tier_2_reaches_the_same_tree_as_all_at_once(self):
+        a, b = self.project, Path(self._td.name) / "second"
+        shutil.copytree(a, b, symlinks=True)
+        self.assertEqual(run_migrate(a, "--apply", "--tier", "1").returncode, 0)
+        self.assertEqual(run_migrate(a, "--apply", "--tier", "2").returncode, 0)
+        self.assertEqual(run_migrate(b, "--apply").returncode, 0)
+        self.assertEqual(files_of(a), files_of(b))
+        self.assertIn(LEARNINGS_DEST, files_of(a))
+        for rel in sorted(files_of(a)):
+            if not configs_rewritten_by_layer_3(Path(rel).name):
+                self.assertEqual((a / rel).read_bytes(), (b / rel).read_bytes(), rel)
+
+    def test_it_arrives_unedited_as_a_rename_at_100_percent_in_one_commit(self):
+        before = git(self.project, "rev-parse", "HEAD").strip()
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(git(self.project, "rev-list", "--count", before + "..HEAD").strip(), "1")
+        self.assertFalse((self.project / LEARNINGS).exists())
+        self.assertEqual((self.project / LEARNINGS_DEST).read_text(encoding="utf-8"), LEARNINGS_TEXT)
+        self.assertEqual(name_status(self.project)[(LEARNINGS, LEARNINGS_DEST)], 100)
+        self.assertEqual(git(self.project, "status", "--porcelain"), "")
+
+    def test_the_claude_md_pointer_the_budget_path_and_the_gate_command_follow(self):
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue((self.project / "CLAUDE.md").read_text(encoding="utf-8").endswith(
+            "Project learnings are kept in `methodology/PROJECT_LEARNINGS.md`.\n"))
+        budget = json.loads((self.project / "methodology" / ".context-budget.json").read_text(encoding="utf-8"))
+        self.assertIn(LEARNINGS_DEST, [f["path"] for f in budget["files"]])
+        self.assertNotIn(LEARNINGS, [f["path"] for f in budget["files"]])
+        gates = json.loads((self.project / "methodology" / ".quality-gates.json").read_text(encoding="utf-8"))
+        self.assertEqual(gates["gates"][-1]["command"], "wc -c < methodology/PROJECT_LEARNINGS.md")
+
+    def test_the_ledger_entry_counts_it_among_the_files_it_moved(self):
+        r = run_migrate(self.project)
+        self.assertIn("39 files", r.report["ledger_entry"]["text"])
+        self.assertIn("Layout migration", r.report["ledger_entry"]["text"])
+
+    def test_a_copy_already_under_methodology_is_a_destination_that_exists(self):
+        (self.project / "methodology").mkdir()
+        (self.project / LEARNINGS_DEST).write_text("# someone else's\n", encoding="utf-8")
+        self.commit("a file where the companion would land")
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 1, r.out)
+        found = next(x for x in r.report["refusals"] if x["code"] == "destination-exists")
+        self.assertIn(LEARNINGS_DEST, found["paths"])
+        self.assertEqual(tree_state(self.project), before)
+
+    def test_a_copy_git_does_not_track_stays_and_is_named(self):
+        git(self.project, "rm", "-q", "--cached", LEARNINGS)
+        gi = self.project / ".gitignore"
+        gi.write_text(gi.read_text(encoding="utf-8") + "PROJECT_LEARNINGS.md\n", encoding="utf-8")
+        self.commit("the file is kept out of git")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertNotIn(LEARNINGS, [m["src"] for m in r.report["moves"]])
+        left = {x["path"]: x["reason"] for x in r.report["left_in_place"]}
+        self.assertIn(LEARNINGS, left)
+        self.assertIn("not tracked", left[LEARNINGS])
+        self.assertTrue((self.project / LEARNINGS).is_file())
+        self.assertTrue((self.project / "CLAUDE.md").read_text(encoding="utf-8").endswith(POINTER))
+
+    def test_the_text_a_person_reads_prints_the_git_mv(self):
+        r = run_migrate(self.project, json_out=False)
+        self.assertIn("git mv PROJECT_LEARNINGS.md methodology/PROJECT_LEARNINGS.md", r.out)
+
+
+class TestATopUpOnAMigratedTree(WithALearningsFile):
+    """Plan D10, record section 7: a tree the tool calls migrated has the file still at the root (nprcgenekeepr,
+    model_project_constructor, vscode_quarto_ext); today the tool says `nothing to migrate`. The configs are under
+    methodology/ there, and the rewrite reads them where the layout puts them (F29)."""
+
+    def setUp(self):
+        super().setUp()
+        self.migrate_then_give_the_file()
+
+    def test_the_plan_is_the_companion_move_alone_and_the_status_is_ok(self):
+        r = run_migrate(self.project)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["layout"], "new")
+        self.assertEqual(r.report["status"], "ok")
+        self.assertEqual(r.report["moves"], [{"src": LEARNINGS, "dest": LEARNINGS_DEST, "kind": "companion", "tracked": True}])
+
+    def test_the_configs_are_read_under_methodology_where_the_layout_puts_them(self):
+        r = run_migrate(self.project)
+        got = {x["path"]: (x["final"], x["replacements"]) for x in r.report["rewrites"]}
+        self.assertEqual(got["methodology/.context-budget.json"], ("methodology/.context-budget.json", 1))
+        self.assertEqual(got["methodology/.quality-gates.json"], ("methodology/.quality-gates.json", 1))
+        self.assertEqual(got["CLAUDE.md"], ("CLAUDE.md", 1))
+        self.assertNotIn(".context-budget.json", got, "a config was looked for at the root of a migrated tree")
+
+    def test_a_dry_run_writes_nothing(self):
+        before = tree_state(self.project)
+        run_migrate(self.project)
+        self.assertEqual(tree_state(self.project), before)
+
+    def test_the_apply_is_one_commit_a_rename_at_100_percent_and_the_paths_follow(self):
+        before = git(self.project, "rev-parse", "HEAD").strip()
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["status"], "applied")
+        self.assertEqual(git(self.project, "rev-list", "--count", before + "..HEAD").strip(), "1")
+        self.assertEqual(name_status(self.project)[(LEARNINGS, LEARNINGS_DEST)], 100)
+        self.assertEqual((self.project / LEARNINGS_DEST).read_text(encoding="utf-8"), LEARNINGS_TEXT)
+        self.assertTrue((self.project / "CLAUDE.md").read_text(encoding="utf-8").endswith(
+            "Project learnings are kept in `methodology/PROJECT_LEARNINGS.md`.\n"))
+        budget = json.loads((self.project / "methodology" / ".context-budget.json").read_text(encoding="utf-8"))
+        self.assertIn(LEARNINGS_DEST, [f["path"] for f in budget["files"]])
+        gates = json.loads((self.project / "methodology" / ".quality-gates.json").read_text(encoding="utf-8"))
+        self.assertEqual(gates["gates"][-1]["command"], "wc -c < methodology/PROJECT_LEARNINGS.md")
+        self.assertEqual(git(self.project, "status", "--porcelain"), "")
+
+    def test_the_commit_says_it_is_a_top_up_and_names_the_file(self):
+        r = run_migrate(self.project, "--apply", "--trailer", "Co-Authored-By: A Tester <a@example.com>")
+        message = git(self.project, "log", "-1", "--format=%B")
+        subject = message.splitlines()[0]
+        self.assertIn("PROJECT_LEARNINGS.md", subject)
+        self.assertIn("top-up", subject)
+        self.assertNotIn("the methodology files", subject)
+        self.assertIn("1 file(s) with git mv", message)
+        self.assertIn("Co-Authored-By: A Tester <a@example.com>", message)
+
+    def test_one_ledger_entry_is_added_where_the_ledger_is_and_no_older_line_changes(self):
+        ledger = self.project / "methodology" / "CHANGELOG.md"
+        before = ledger.read_text(encoding="utf-8")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        after = ledger.read_text(encoding="utf-8")
+        self.assertEqual(entry_split(after)[1:], entry_split(before))
+        self.assertRegex(entry_split(after)[0], r"^\d{4}-\d{2}-\d{2} · \[ad hoc\] Layout top-up: ")
+        text = r.report["ledger_entry"]["text"]
+        self.assertEqual(r.report["ledger_entry"]["path"], "methodology/CHANGELOG.md")
+        self.assertIn("`PROJECT_LEARNINGS.md`", text)
+        self.assertIn("`bin/migrate-layout`", text)
+        for path in ("CLAUDE.md", "methodology/.context-budget.json", "methodology/.quality-gates.json"):
+            self.assertIn("`%s`" % path, text)
+        diff = git(self.project, "diff", "HEAD~1", "HEAD", "--", "methodology/CHANGELOG.md")
+        self.assertEqual([l for l in diff.splitlines() if l.startswith("-") and not l.startswith("---")], [])
+        check = subprocess.run([sys.executable, "-B", str(REPO / "bin" / "check-ledger"), "--file", "methodology/CHANGELOG.md"],
+                               cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(check.returncode, 0, check.stdout + check.stderr)
+
+    def test_a_second_run_finds_nothing_to_do_and_adds_no_commit(self):
+        run_migrate(self.project, "--apply")
+        head = git(self.project, "rev-parse", "HEAD").strip()
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["status"], "nothing-to-do")
+        self.assertEqual(git(self.project, "rev-parse", "HEAD").strip(), head)
+
+    def test_tier_1_has_nothing_to_do_on_a_migrated_tree_with_the_file_at_the_root(self):
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        self.assertEqual(r.report["status"], "nothing-to-do")
+        self.assertTrue((self.project / LEARNINGS).is_file())
+
+    def test_a_dirty_tree_is_refused_as_it_is_for_any_migration(self):
+        (self.project / "scratch.txt").write_text("x\n", encoding="utf-8")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("dirty-tree", [x["code"] for x in r.report["refusals"]])
+
+    def test_a_copy_already_under_methodology_is_refused_and_named(self):
+        (self.project / LEARNINGS_DEST).write_text("# someone else's\n", encoding="utf-8")
+        self.commit("a file where the companion would land")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 1, r.out)
+        found = next(x for x in r.report["refusals"] if x["code"] == "destination-exists")
+        self.assertEqual(found["paths"], [LEARNINGS_DEST])
+
+    def test_the_checks_run_before_and_after_and_agree(self):
+        r = run_migrate(self.project, "--apply", checks=True)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue(r.report["checks"]["ran"])
+        self.assertEqual(r.report["checks"]["differences"], [], r.out)
+        self.assertTrue(r.report["checks"]["ok"])
+
+    def test_the_text_a_person_reads_does_not_say_nothing_to_migrate(self):
+        r = run_migrate(self.project, json_out=False)
+        self.assertNotIn("nothing to migrate", r.out)
+        self.assertIn("git mv PROJECT_LEARNINGS.md methodology/PROJECT_LEARNINGS.md", r.out)
+
+    def test_a_migrated_tree_with_no_file_at_the_root_still_has_nothing_to_do(self):
+        git(self.project, "rm", "-q", LEARNINGS)
+        self.commit("no learnings file")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["status"], "nothing-to-do")
+
+
+class TestTheLinkRules(unittest.TestCase):
+    """BL-101 F30: the links a move breaks are read as the pure rules say, before any project is involved."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.m = _load_script("migrate_layout", MIGRATE)
+
+    def test_inline_image_and_reference_links_are_read_and_a_fenced_example_is_not(self):
+        text = ("[a](x.md) and ![img](p/y.png \"t\") and [b](<z w.md>)\n"
+                "[ref]: u.md \"title\"\n"
+                "```\n[no](f.md)\n```\n"
+                "~~~\n[no](g.md)\n~~~\n"
+                "[c](h_(1).md#top)\n")
+        self.assertEqual(self.m.link_targets(text), [(1, "x.md"), (1, "p/y.png"), (1, "z w.md"), (2, "u.md"), (9, "h_(1).md#top")])
+
+    def test_a_fence_that_never_closes_hides_the_rest_and_a_longer_fence_closes_only_on_its_own_length(self):
+        self.assertEqual(self.m.link_targets("[a](a.md)\n```\n[b](b.md)\n"), [(1, "a.md")])
+        self.assertEqual(self.m.link_targets("````\n```\n[b](b.md)\n```\n````\n[c](c.md)\n"), [(6, "c.md")])
+
+    def test_a_target_is_resolved_against_the_directory_of_the_document_that_holds_it(self):
+        want = {("docs/g.md", "../PROJECT_LEARNINGS.md#row-3"): "PROJECT_LEARNINGS.md",
+                ("README.md", "./PROJECT_LEARNINGS.md"): "PROJECT_LEARNINGS.md",
+                ("docs/g.md", "/PROJECT_LEARNINGS.md"): "PROJECT_LEARNINGS.md",
+                ("docs/g.md", "a%20b.md?raw=1"): "docs/a b.md",
+                ("a/b/c.md", "../../d.md"): "d.md",
+                ("docs/g.md", "PROJECT_LEARNINGS.md"): "docs/PROJECT_LEARNINGS.md"}
+        for (doc, target), resolved in want.items():
+            self.assertEqual(self.m.resolve_link(doc, target), resolved, (doc, target))
+
+    def test_what_is_not_a_path_in_the_project_resolves_to_nothing(self):
+        for doc, target in (("docs/g.md", "https://example.org/PROJECT_LEARNINGS.md"), ("docs/g.md", "mailto:a@b.org"),
+                            ("docs/g.md", "//cdn.example.org/x.md"), ("docs/g.md", "#top"), ("docs/g.md", ""),
+                            ("docs/g.md", "../../x.md"), ("README.md", "../x.md")):
+            self.assertIsNone(self.m.resolve_link(doc, target), (doc, target))
+
+
+DOC = ("# Guide\n"                                                                                                  # 1
+       "\n"                                                                                                         # 2
+       "The file is [here](../PROJECT_LEARNINGS.md) and [row 3](../PROJECT_LEARNINGS.md#row-3 \"a title\").\n"      # 3
+       "The method is [explained](methodology/HOW_TO_USE.md).\n"                                                    # 4
+       "\n"                                                                                                         # 5
+       "```\n"                                                                                                      # 6
+       "[an example](../PROJECT_LEARNINGS.md)\n"                                                                    # 7
+       "```\n"                                                                                                      # 8
+       "\n"                                                                                                         # 9
+       "Not the project's file: [site](https://example.org/PROJECT_LEARNINGS.md), [a sibling](PROJECT_LEARNINGS.md)"  # 10
+       " and [other](other.md).\n"
+       "\n"                                                                                                         # 11
+       "[ref]: ../PROJECT_LEARNINGS.md\n")                                                                          # 12
+
+
+class TestTheLiveLinksAMoveBreaks(WithALearningsFile):
+    """BL-101 F30 (his call, S303: LIST ONLY). A link from a project's live document to a file the move takes breaks and
+    nothing read it: the tool lists each one, every one, and rewrites none."""
+
+    def setUp(self):
+        super().setUp()
+        self.give_the_project_a_learnings_file()
+        (self.project / "docs" / "guide.md").write_text(DOC, encoding="utf-8")
+        (self.project / "README.md").write_text("The learnings: [PROJECT_LEARNINGS.md](PROJECT_LEARNINGS.md).\n", encoding="utf-8")
+        shard = self.project / "docs" / "archive" / "HANDOFFS-through-2026-08-02.md"
+        shard.write_text("# shard\n\nSee [the learnings](../../PROJECT_LEARNINGS.md).\n", encoding="utf-8")
+        self.commit("live documents that link to the files a move takes")
+
+    def sites(self, report):
+        return sorted((s["file"], s["line"], s["target"], s["resolves_to"], s["moves_to"]) for s in report["live_links"]["sites"])
+
+    def test_every_live_link_to_a_moved_file_is_listed_with_where_it_goes(self):
+        r = run_migrate(self.project)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(self.sites(r.report), sorted([
+            ("README.md", 1, "PROJECT_LEARNINGS.md", LEARNINGS, LEARNINGS_DEST),
+            ("docs/guide.md", 3, "../PROJECT_LEARNINGS.md", LEARNINGS, LEARNINGS_DEST),
+            ("docs/guide.md", 3, "../PROJECT_LEARNINGS.md#row-3", LEARNINGS, LEARNINGS_DEST),
+            ("docs/guide.md", 4, "methodology/HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md", "methodology/HOW_TO_USE.md"),
+            ("docs/guide.md", 12, "../PROJECT_LEARNINGS.md", LEARNINGS, LEARNINGS_DEST)]))
+        self.assertEqual((r.report["live_links"]["count"], r.report["live_links"]["files"]), (5, 2))
+
+    def test_a_link_in_a_fence_an_external_link_a_sibling_a_ledger_a_shard_a_rewritten_file_and_a_moved_document_are_not_listed(self):
+        r = run_migrate(self.project)
+        listed = {(s["file"], s["line"]) for s in r.report["live_links"]["sites"]}
+        self.assertNotIn(("docs/guide.md", 7), listed, "a link in a fenced example was listed")
+        self.assertNotIn(("docs/guide.md", 10), listed, "an external link, a sibling or an unmoved file was listed")
+        self.assertFalse([f for f, _l in listed if f in ("CHANGELOG.md", "CLAUDE.md") or f.startswith("docs/archive/")], listed)
+        self.assertFalse([f for f, _l in listed if f.startswith("docs/methodology/") or f in {m["src"] for m in r.report["moves"]}], listed)
+
+    def test_the_apply_lists_the_links_and_edits_none_of_them(self):
+        before = {rel: (self.project / rel).read_bytes() for rel in ("docs/guide.md", "README.md",
+                                                                     "docs/archive/HANDOFFS-through-2026-08-02.md")}
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["live_links"]["count"], 5)
+        for rel, data in before.items():
+            moved = ("methodology/archive/" + rel.rsplit("/", 1)[-1]) if rel.startswith("docs/archive/") else rel
+            self.assertEqual((self.project / moved).read_bytes(), data, "%s was edited" % rel)
+
+    def test_the_text_a_person_reads_names_each_link_where_it_is(self):
+        r = run_migrate(self.project, json_out=False)
+        self.assertRegex(r.out, r"(?i)live links")
+        self.assertIn("docs/guide.md:3", r.out)
+        self.assertIn("docs/guide.md:4", r.out)
+        self.assertIn("README.md:1", r.out)
+        self.assertIn("methodology/PROJECT_LEARNINGS.md", r.out)
+
+    def test_a_project_with_no_such_link_has_an_empty_list(self):
+        git(self.project, "rm", "-q", "docs/guide.md")
+        (self.project / "README.md").write_text("No links here.\n", encoding="utf-8")
+        self.commit("no live links")
+        r = run_migrate(self.project, json_out=True)
+        self.assertEqual(r.report["live_links"], {"count": 0, "files": 0, "sites": []})
+        self.assertNotRegex(run_migrate(self.project, json_out=False).out, r"(?i)live links")
+
+    def test_every_link_is_in_the_json_and_the_text_shows_the_first_25_and_says_how_many_more(self):
+        many = "".join("Item %d: [x](PROJECT_LEARNINGS.md#row-%d)\n" % (i, i) for i in range(1, 31))
+        (self.project / "docs" / "many.md").write_text(many, encoding="utf-8")
+        self.commit("thirty links")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["live_links"]["count"], 5 + 30)
+        self.assertEqual(sum(1 for s in r.report["live_links"]["sites"] if s["file"] == "docs/many.md"), 30)
+        lines = run_migrate(self.project, json_out=False).out.splitlines()
+        head = next(i for i, l in enumerate(lines) if re.search(r"(?i)live links", l))
+        section = []
+        for l in lines[head + 1:]:
+            if not l.strip():
+                break
+            section.append(l)
+        self.assertEqual(len([l for l in section if re.match(r"^\s+\S+:\d+  ", l)]), 25)
+        self.assertTrue(any("and 10 more" in l and "--json" in l for l in section), section)
+
+    def test_a_second_run_after_the_move_has_nothing_to_do_and_an_empty_list(self):
+        run_migrate(self.project, "--apply")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["status"], "nothing-to-do")
+        self.assertEqual(r.report["live_links"], {"count": 0, "files": 0, "sites": []})
+
+
+class TestTheCompanionOfAProjectThatHasNotAdoptedTheMethodology(unittest.TestCase):
+    """A file named PROJECT_LEARNINGS.md in a repository with no methodology file is the project's, and there is no
+    methodology/ for it to join: the tool leaves it where it is, as it leaves the rest of such a project."""
+
+    def test_the_file_stays_and_there_is_nothing_to_do(self):
+        with tempfile.TemporaryDirectory(prefix="migrate-bare-") as td:
+            project = Path(td) / "bare"
+            project.mkdir()
+            git(project, "init", "-q")
+            (project / LEARNINGS).write_text(LEARNINGS_TEXT, encoding="utf-8")
+            commit_all(project, "a project with a learnings file and no methodology")
+            before = tree_state(project)
+            r = run_migrate(project, "--apply")
+            self.assertEqual(r.returncode, 0, r.out)
+            self.assertEqual(r.report["status"], "nothing-to-do")
+            self.assertEqual(r.report["moves"], [])
+            self.assertEqual(tree_state(project), before)
+
+
 if __name__ == "__main__":
     unittest.main()
