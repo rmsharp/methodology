@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S302 — BL-105 rehearsal: the two scratch drivers and the link count
+
+`bl105-companion.py` applies the one companion mapping (`PROJECT_LEARNINGS.md` to `methodology/PROJECT_LEARNINGS.md`) through `bin/migrate-layout`'s own rewrite and check functions in a clone it is given (it builds nothing in the tool and commits nothing); `bl105-links.py` counts the markdown links to the file by where each lands, which `check-links` does not (it read the same project-link count before and after in every arm). `links-by-arm.txt` is its output over the six control and move clones.
+
 ### 2026-10-12 · [BL-101] S302 claim (in progress) — BL-105 build phase 1, the rehearsal
 
 CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (four live sessions; `Philippians`, `dalia_martinez_funeral`, `claude_work` dirty) and he picked the BL-105 rehearsal with two go-aheads, both done before this claim: the push of `e5d88a5` to the fork `origin` (`1dfc8b2..e5d88a5`, `0 0`, `ls-remote` equal) and the HANDOFFS trim (`1edb038`) with its fold (`f00e563`). S301's gate citation re-run in a clean `--no-local` clone of `e5d88a5`: 18/18, results `8c209fa9806e`, manifest `440ab037cfe1`, the citation's own figures. Deliverable: one rehearsal record, nothing built. Phase 3F records the rest.

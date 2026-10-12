@@ -1,0 +1,19 @@
+npr-base: 1 link(s) to the file, 0 dangling
+   lands at root        file there: True  in a CLAUDE.md file:   1 link(s) in 1 file(s)
+npr-move: 1 link(s) to the file, 0 dangling
+   lands at methodology file there: True  in a CLAUDE.md file:   1 link(s) in 1 file(s)
+mts-mig: 2 link(s) to the file, 1 dangling
+   lands at elsewhere   file there: False in a live      file:   1 link(s) in 1 file(s)
+   lands at root        file there: True  in a CLAUDE.md file:   1 link(s) in 1 file(s)
+mts-move: 2 link(s) to the file, 1 dangling
+   lands at elsewhere   file there: False in a live      file:   1 link(s) in 1 file(s)
+   lands at methodology file there: True  in a CLAUDE.md file:   1 link(s) in 1 file(s)
+mpc-base: 115 link(s) to the file, 107 dangling
+   lands at elsewhere   file there: False in a live      file: 107 link(s) in 7 file(s)
+   lands at root        file there: True  in a CLAUDE.md file:   1 link(s) in 1 file(s)
+   lands at root        file there: True  in a live      file:   7 link(s) in 3 file(s)
+mpc-move: 115 link(s) to the file, 111 dangling
+   lands at elsewhere   file there: False in a live      file: 107 link(s) in 7 file(s)
+   lands at methodology file there: True  in a CLAUDE.md file:   1 link(s) in 1 file(s)
+   lands at methodology file there: True  in a live      file:   3 link(s) in 1 file(s)
+   lands at root        file there: False in a live      file:   4 link(s) in 2 file(s)
