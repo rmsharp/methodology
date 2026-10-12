@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S300
+date: 2026-10-12
+status: pending
+active_task: F21 (BL-101, `docs/planning/methodology-subdirectory-evidence/findings-register.md` row F21): `bin/migrate-layout` inserts its ledger entry above the first dated heading that is not inside a fenced code block, so an example heading in a ledger's header is never taken for an entry; tests first, `workstreams/DEVELOPMENT_WORKSTREAM.md`. His pick at the S300 Phase 0 (the picker's recommended option) with two go-aheads (the HANDOFFS trim and the push of `ca2a653` to the fork), both done before this claim. IN PROGRESS.
+```
+
+```handoff
 session: S299
 date: 2026-10-11
 status: complete

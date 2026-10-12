@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 claim (in progress) — F21, `bin/migrate-layout` skips fenced code when it places its ledger entry
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (`wsfct`, `mts-system` and `nprcgenekeepr` have a live session; `Philippians` has 4 dirty lines, `dalia_martinez_funeral` 6, `claude_work` 16), and he picked "F21 tool fix" with two go-aheads (one picker answer): "Run the owed HANDOFFS trim" and "Push ca2a653 to the fork"; both were done before this claim (trim `9b03629`, fold `973e366`, push below). The gate citation of S299 (results `9926bd8b4a1b`, manifest `af0d6dc16337`) was re-run in a clean `--no-local` clone of `ca2a653` and confirmed (18/18, 0 unmeasured). Deliverable: ONE change to `bin/migrate-layout` (canonical-only), tests first, following `workstreams/DEVELOPMENT_WORKSTREAM.md`: `insert_entry` places the tool's one ledger entry above the first dated heading outside a fenced code block (register row F21: chat_verification's ledger header holds an example heading in a fence and the entry landed inside it). Not in scope: P18, BL-105, F6, F8, F13, F14, F17, F19, anything upstream. Model: Claude Sonnet 5.5.
+
+### 2026-10-12 · [ad hoc] S300 — pushed `ca2a653` to the fork `origin` (push record)
+
+On his go-ahead at the S300 Phase 0 (a picker answer: "Push ca2a653 to the fork"): `git push origin ca2a653:refs/heads/main`, naming the commit and not `HEAD`; `origin` is `https://github.com/rmsharp/methodology.git`, the fork. Eleven commits went (`799ecc1`, `ffbfbc5`, `f2978a3`, `e00b2b2`, `e48a9f5`, `08349d8`, `4aaecd0`, `49880e1`, `15be71a`, `280f0ca`, `ca2a653`; `0a3558c..ca2a653`). Checked first: `ca2a653` is a fast-forward of `origin/main`. Read back after: `git rev-list --left-right --count origin/main...ca2a653` read `0 0` and `git ls-remote origin refs/heads/main` equalled `ca2a653`. The two later local commits (`9b03629` trim, `973e366` fold) were not pushed: the go-ahead named `ca2a653`. Nothing went upstream (`KJ5HST/methodology`), no tag, no release. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [ad hoc] S300 — fold the third 2026-10-11 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`9b03629`, 1 receipt, S297, to `HANDOFFS-through-2026-10-11-3.md`, the name S299's handoff guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S299, S298). The shard proof exits 0 in the tree and from a `--no-local` clone of `9b03629`.
