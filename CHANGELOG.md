@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: the scripts of the evidence (differential, mutants, adopter check)
+
+`f21-differential.py` (the rule against markdown-it over every committed ledger version on this machine and 20,000 random texts), `f21-mutants.py` (22 mutants of round 1; `F21_ROUND=2` selects round 2, six) and `f21-adopter-check.sh` (the tool before and after the change, a real `--apply`, in clones of `chat_verification`). **A correction to the entry of `72a5921` above:** it says "15 new, 14 red before the code"; ten tests were written before the code (9 red, 1 green by design) and six after it. The outputs follow in their own commits. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 — F21: two tests after the first mutation round
 
 Round 1 (22 mutants of `first_heading` and `insert_entry`, run in a scratch clone of `72a5921`) killed 20 and left two alive, F06 (the opener's length forgotten) and C03 (any length closes): the nested-fence test closed its own fence by coincidence, because its inner pair of 3-backtick lines re-opened one over the heading. Its fixture now holds an unbalanced inner line, so a shorter line closing a longer fence is seen; one test added for an opener that carries an info string (round 2 names it). `test_migrate_layout.py`: 16 tests in the fence group. Model: Claude Sonnet 5.5.
