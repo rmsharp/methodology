@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-11.md` (1 record(s), 39,898 B → 28,465 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-11.md`](docs/archive/HANDOFFS-through-2026-10-11.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,898 B → 28,465 B (−28.7%).
+
 ### 2026-10-11 · [BL-101] S297 close-out — P16 on `chat_verification` at tier all (receipt complete)
 
 Receipt S297 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt, fork #57, #80 and #39). `CHANGELOG: pending` on the S297 claim entry is cleared by this statement (a committed entry is not edited). **The deliverable:** P16, the sixth adopter, at tier all in `~/Development/chat_verification` (five local commits there, none pushed: it has no remote), recorded in `p16-chat-verification-record.md`, plan §7.4f and register rows F21 and F22; the two entries above this one have the figures. **Gate run:** `quality_ratchet.py --run` in a clean `--no-local` clone of `2b65098`, 18/18 pass, 0 fail, 0 unmeasured, results `791e005997ab`, manifest `e755389a69c7` (the same hashes as S296's citation: no gate threshold moved and none was loosened). **Ledgers:** `HANDOFFS.md` holds 3 receipts (S297, S296, S295), so one trim is owed after the next Phase 0 (one record, S295); `CHANGELOG.md` is far under its 196,608 B trigger. **Local commits here:** `e6945f0`, `583e771`, `59887b4`, `2b65098` and this close-out; nothing was pushed, nothing went upstream, no tag. **Open and his:** the F21 tool fix, P17, F6, F8, F13, F14, F17, F19, D8. Model: Claude Sonnet 5.5.
