@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-11-4.md` (1 record(s), 38,821 B → 27,092 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-11-4.md`](docs/archive/HANDOFFS-through-2026-10-11-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,821 B → 27,092 B (−30.2%).
+
 ### 2026-10-12 · [BL-101] S300 — the plan back under its declared budget
 
 `methodology-subdirectory-plan.md` declares 60,000 B (its header); the F21 edits of `c053cac` took it from 59,973 to 60,107 B. The two edits are shortened (the status line and the P16 text: F21 is fixed, the record is named in the register), 59,998 B. No gate reads this figure; the plan's own header does. Found by `context_budget.py --status` and a `wc`, after the close-out. Model: Claude Sonnet 5.5.
