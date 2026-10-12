@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S302 claim (in progress) — BL-105 build phase 1, the rehearsal
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for P18 (four live sessions; `Philippians`, `dalia_martinez_funeral`, `claude_work` dirty) and he picked the BL-105 rehearsal with two go-aheads, both done before this claim: the push of `e5d88a5` to the fork `origin` (`1dfc8b2..e5d88a5`, `0 0`, `ls-remote` equal) and the HANDOFFS trim (`1edb038`) with its fold (`f00e563`). S301's gate citation re-run in a clean `--no-local` clone of `e5d88a5`: 18/18, results `8c209fa9806e`, manifest `440ab037cfe1`, the citation's own figures. Deliverable: one rehearsal record, nothing built. Phase 3F records the rest.
+
 ### 2026-10-12 · [ad hoc] S302 — fold the fifth 2026-10-11 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`1edb038`, 1 receipt, S299, to `HANDOFFS-through-2026-10-11-5.md`, the name S301's handoff guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S301, S300). The trim ran on his go-ahead at the S302 Phase 0 picker.

@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S302
+date: 2026-10-12
+status: pending
+active_task: BL-105 build phase 1, the rehearsal (BL-101 backlog row; plan D10; `docs/planning/methodology-subdirectory-evidence/bl105-record.md` §5 item 1): `PROJECT_LEARNINGS.md` moved under `methodology/` in `--no-local` clones of `nprcgenekeepr` and `mts-system` (and `model_project_constructor` for the fifth hand-edit site), the `CLAUDE.md` pointer and the config path rewritten as the companion rule would, the hand-edit sites edited, each project's own checks and declared gates run, and what the tool's checks did not see reported (plan §7.6). The deliverable is ONE rehearsal record and its register rows; it can withdraw option B. Nothing is built, and no tool, distributed document, live adopter tree or upstream repository is touched.
+```
+
+```handoff
 session: S301
 date: 2026-10-12
 status: complete
