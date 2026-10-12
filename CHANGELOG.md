@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-106] S301 — the plan's declared 60,000 B has no gate: a backlog row
+
+Found while amending the plan for D10: the declared budget is held by hand (S300 cut it back in `1dfc8b2` after a gate run that read 18/18 with the plan at 60,107 B). `BL-106` in `BACKLOG.md` and `BACKLOG-DETAIL.md` names the two shapes (a byte-count gate, or the file in `.context-budget.json`) and builds neither; the choice, and whether the figure is a limit or a price, is his. Not a fork learning row: a mechanical invariant is a gate (runner Phase 3C).
+
 ### 2026-10-12 · [BL-101] S301 — BL-105 decided: option B, `PROJECT_LEARNINGS.md` joins the `methodology/` set as a companion of the move (plan D10)
 
 His pick at the S301 Phase 0 picker, the recommended one; A (stay at the root) and C (also `BACKLOG.md`, `CONTEXT.md`) not taken. Plan §1 and a new D10 row say so, shortened elsewhere to stay under its declared 60,000 B (59,992 B); `bl105-record.md` §5 holds his answer and four build phases (a rehearsal first, which can withdraw B); the backlog row BL-105 reads DECIDED with the build open, and BL-101's row no longer calls BL-105 his open call. Nothing built; no tool, distributed document or adopter touched; D8 untouched; nothing outward.
