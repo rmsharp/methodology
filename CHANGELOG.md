@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S302 — BL-105's state in the plan (D10, status line: 59,995 of its 60,000 B), the backlog row and its detail
+
+Plan status line and D10 row say rehearsed S302, B stands (net +3 B, so no cut was owed; no gate holds the budget, BL-106); `BACKLOG.md` row BL-105 and a new S302 paragraph in `BACKLOG-DETAIL.md`. BL-105 stays open: build phases 2 to 4 are not started.
+
 ### 2026-10-12 · [BL-101] S302 — BL-105 rehearsed (build phase 1): the record, and register rows F25 to F30
 
 `bl105-rehearsal-record.md`: the companion move simulated with `bin/migrate-layout`'s own rewrite and check functions in `--no-local` clones of `nprcgenekeepr`, `mts-system` and `model_project_constructor`; **B stands**. `nprcgenekeepr` unchanged (11,163 tests equal, tarball 3,784,543 B to 3,784,545 B) but for one uncovered script; `mts-system`'s archiver fails on the real tree with its tests green; `model_project_constructor` 2 tests red and 26 skipped until 3 lines are edited. 6 files edited in 3 adopters, against the census's 5. Register rows F25 to F30, all open, and a dated line. Nothing built, no real tree written, nothing outward.

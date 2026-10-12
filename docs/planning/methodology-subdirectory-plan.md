@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P17 are done (§7.1 to §7.4g; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 and F21 fixed, S299 and S300); tier 2 is open; BL-105 is decided (D10, S301).**
+P0 to P17 are done (§7.1 to §7.4g; P11 at tier 1, P12 to P17 at tier all); P18 is next (F24 and F21 fixed, S299 and S300); tier 2 is open; BL-105 is rehearsed, B stands (D10, S302).**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm.
@@ -592,7 +592,7 @@ D4, D5, D7 and D9 as written.
 | **D7** | Versions and sync order | expand minor, contract major; both layouts supported until every portfolio adopter has migrated; `bin/sync --layout auto` through the window; sync before migrate | as stated (§4.5, §5A.2); the number of the release is a later decision |
 | **D8** | Upstream | fork-side work and adopters first; then **one** vetted pull request carrying the expand stage, the evidence and the findings register (§7.6); or none | **as stated.** It is also what makes this repository's own layout sustainable (§5A.4): without it the fork carries the resolver edits over every maintainer change. Every outward action is his go-ahead each time; no part of this plan sends anything |
 | **D9** | Adopter order and batching | §7.4's order, one per session | **as stated** |
-| **D10** | `PROJECT_LEARNINGS.md` (BL-105) | (a) root; (b) a companion of the move, no manifest entry; (c) (b) and `BACKLOG.md` | **(b)**, his S301 pick; a rehearsal comes first and can withdraw it ([why](methodology-subdirectory-evidence/bl105-record.md)) |
+| **D10** | `PROJECT_LEARNINGS.md` (BL-105) | (a) root; (b) a companion of the move, no manifest entry; (c) (b) and `BACKLOG.md` | **(b)**, his S301 pick; rehearsed S302: B stands ([why](methodology-subdirectory-evidence/bl105-rehearsal-record.md)) |
 
 ## 10. Risks, stop conditions, rollback
 
