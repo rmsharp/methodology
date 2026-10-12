@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S300 — F21: the red run and the outputs of two mutation rounds
+
+`f21-red-run-output.txt` (the first ten tests, run before the code: 9 red, 1 green by design), `f21-mutation-round-1.txt` (22 mutants of `first_heading` and `insert_entry` in a scratch clone of `72a5921`: 20 killed, 2 alive, F06 and C03 with one cause, a nested-fence fixture that closed its own fence by coincidence) and `f21-mutation-round-2.txt` (a scratch clone of `3b2390e`: the two re-run and four behaviours round 1 did not name, 6 of 6 killed). F05, the `^` of the fence pattern, is an equivalent mutant (`re.match` anchors) and was not run. Model: Claude Sonnet 5.5.
+
 ### 2026-10-12 · [BL-101] S300 — F21: the output of the differential and of the adopter check, from a clean clone
 
 `f21-differential-output.txt` and `f21-adopter-check-output.txt`, both run from a `--no-local` clone of `0010021` (the tool under test). **Differential:** 6,361 distinct committed versions of a ledger in 14 repositories and 6 seed blobs, **0 disagreements with markdown-it**; the old rule landed inside a block in `chat_verification` (35 of 35 versions), `wsfct` (106 of 625, none at its `HEAD`) and 1 of the 6 seed blobs; no header region holds a tilde fence, a fence of four backticks, an indented fence, a fence in a quote or list, or a heading in an HTML comment, and none holds a fence that never closes; 20,000 random texts: 19,465 agree, 535 disagree and each holds an out-of-scope construct, 0 in scope, 512 of 512 fence-free texts give the old answer. **Adopter check:** `chat_verification` at `a3174b3`, the tool before the change (`ca2a653`): entry at line 48, inside a fence; the tool under test: line 183, marker at 181, outside; `check-ledger` 83 findings in both and in the hand-corrected ledger. Model: Claude Sonnet 5.5.

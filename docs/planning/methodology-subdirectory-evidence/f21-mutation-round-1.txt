@@ -1,0 +1,24 @@
+baseline: rc=0 failing=[]
+F01   KILLED   by test_a_tilde_fence_is_a_fence (named classes)
+F02   KILLED   by test_a_line_of_the_other_fence_character_does_not_close_a_fence (named classes)
+F03   KILLED   by test_a_line_of_two_backticks_is_not_a_fence (named classes)
+F04   KILLED   by test_a_tilde_fence_is_a_fence (named classes)
+F06   SURVIVED bin/migrate-layout: 'fence = (f.group(1)[0], len(f.group(1)))' -> 'fence = (f.group(1)[0], 3)'
+F07   KILLED   by test_a_tilde_fence_is_a_fence (named classes)
+C01   KILLED   by test_a_line_of_the_other_fence_character_does_not_close_a_fence (named classes)
+C02   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+C03   SURVIVED bin/migrate-layout: '        elif f and f.group(1)[0] == fence[0] and len(f.group' -> '        elif f and f.group(1)[0] == fence[0] and not f.group'
+C04   KILLED   by test_a_line_with_an_info_string_does_not_close_a_fence (named classes)
+C05   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+C06   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+H01   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+H02   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+H03   KILLED   by test_a_ledger_with_dos_line_endings_keeps_its_fence_and_its_place (named classes)
+R01   KILLED   by test_a_fence_that_never_closes_before_any_entry_is_refused_not_guessed (named classes)
+R02   KILLED   by test_a_ledger_whose_only_dated_headings_are_fenced_examples_takes_the_entry_at_the_end (named classes)
+R03   KILLED   by test_a_ledger_with_a_fence_that_never_closes_before_its_first_entry_is_refused_and_nothing_is_written (named classes)
+P01   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+P02   KILLED   by test_an_entry_goes_under_the_current_months_heading (named classes)
+P03   KILLED   by test_a_month_heading_inside_a_fence_is_not_taken_for_the_first_month (named classes)
+P04   KILLED   by test_a_ledger_whose_only_dated_headings_are_fenced_examples_takes_the_entry_at_the_end (named classes)
+killed 20, survived 2

@@ -1,0 +1,221 @@
+test_an_example_in_a_fenced_block_of_the_ledger_header_does_not_take_the_entry (__main__.TestTheLedgerEntry)
+F21: chat_verification's ledger kept the v3.7 seed text, whose 'How to add an entry' section shows an example ... FAIL
+test_a_fence_that_never_closes_after_the_first_entry_is_not_this_tools_concern (__main__.TestThePureRules) ... ok
+test_a_fence_that_never_closes_before_any_entry_is_refused_not_guessed (__main__.TestThePureRules) ... FAIL
+test_a_ledger_whose_only_dated_headings_are_fenced_examples_takes_the_entry_at_the_end (__main__.TestThePureRules) ... FAIL
+test_a_line_with_an_info_string_does_not_close_a_fence (__main__.TestThePureRules) ... FAIL
+test_a_month_heading_inside_a_fence_is_not_taken_for_the_first_month (__main__.TestThePureRules) ... FAIL
+test_a_shorter_fence_inside_a_longer_one_does_not_close_it (__main__.TestThePureRules) ... FAIL
+test_a_tilde_fence_is_a_fence (__main__.TestThePureRules) ... FAIL
+test_an_example_heading_inside_a_fence_is_not_taken_for_the_first_entry (__main__.TestThePureRules) ... FAIL
+test_the_current_months_heading_after_a_fenced_example_takes_the_entry_under_it (__main__.TestThePureRules) ... FAIL
+
+======================================================================
+FAIL: test_an_example_in_a_fenced_block_of_the_ledger_header_does_not_take_the_entry (__main__.TestTheLedgerEntry)
+F21: chat_verification's ledger kept the v3.7 seed text, whose 'How to add an entry' section shows an example
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 1499, in test_an_example_in_a_fenced_block_of_the_ledger_header_does_not_take_the_entry
+    self.assertIn(example, after, "the example block was edited")
+AssertionError: '```\n### 2026-01-15 · [ad hoc] Ship the export-retry fix\n- **Change:** exports retry once\n```\n\n' not found in '# Changelog — Authoritative Action Ledger\n\nThe cumulative, append-only record of **actions taken** in this repository — across backlog\nitems, repository issues, and ad-hoc work. It is the authoritative answer to *"what was done\nhere, ever?"* Every session records its actions here at close-out (`SESSION_RUNNER.md`\nPhase 3F); Phase 0 reconciles it against `git log` and backfills anything a crashed or\nout-of-band session missed. Taking an action — any commit, or any non-commit action — and\nnot recording it is failure mode #27. Old entries may be archived, never deleted.\n\n**The rules** — how to add an entry, source tags, reading and archiving — are in\n`FRAMEWORK_APPARATUS.md` §The Action Ledger, which `bin/sync`\nkeeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.\n\n\n---\n\n```\n### 2026-10-12 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 38 files)\n\n`bin/migrate-layout` (KJ5HST/methodology @ 5e12daf) moved them in one commit with `git mv`; paths were rewritten in `.gitignore`, `CLAUDE.md`, `methodology/.context-budget.json`, `methodology/.quality-gates.json`. No older entry or shard was edited, so a link in an older entry is relative to the root, where the ledger sat when it was written.\n\n### 2026-01-15 · [ad hoc] Ship the export-retry fix\n- **Change:** exports retry once\n```\n\n<!-- Entries go below, newest on top. Delete the seed-sentinel line near the top when you add the first one. -->\n\n### 2026-09-01 · [ad hoc] Entry 0\n\nBody of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. Body of entry 0. \n\n### 2026-09-02 · [ad hoc] Entry 1\n\nBody of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. Body of entry 1. \n\n### 2026-09-03 · [ad hoc] Entry 2\n\nBody of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. Body of entry 2. \n\n### 2026-09-04 · [ad hoc] Entry 3\n\nBody of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3. Body of entry 3.  See SESSION_RUNNER.md and [the guide](docs/methodology/HOW_TO_USE.md).\n\n### 2026-09-05 · [ad hoc] Entry 4\n\nBody of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. Body of entry 4. \n\n### 2026-09-06 · [ad hoc] Entry 5\n\nBody of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. Body of entry 5. \n\n### 2026-09-07 · [ad hoc] Entry 6\n\nBody of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. Body of entry 6. \n\n### 2026-09-08 · [ad hoc] Entry 7\n\nBody of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. Body of entry 7. \n\n### 2026-09-09 · [ad hoc] Entry 8\n\nBody of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. Body of entry 8. \n\n### 2026-09-10 · [ad hoc] Entry 9\n\nBody of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. Body of entry 9. \n\n### 2026-09-11 · [ad hoc] Entry 10\n\nBody of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. Body of entry 10. \n\n### 2026-09-12 · [ad hoc] Entry 11\n\nBody of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. Body of entry 11. \n\n### 2026-09-13 · [ad hoc] Entry 12\n\nBody of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. Body of entry 12. \n\n### 2026-09-14 · [ad hoc] Entry 13\n\nBody of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. Body of entry 13. \n\n### 2026-09-15 · [ad hoc] Entry 14\n\nBody of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. Body of entry 14. \n\n### 2026-09-16 · [ad hoc] Entry 15\n\nBody of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. Body of entry 15. \n\n### 2026-09-17 · [ad hoc] Entry 16\n\nBody of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. Body of entry 16. \n\n### 2026-09-18 · [ad hoc] Entry 17\n\nBody of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. Body of entry 17. \n\n### 2026-09-19 · [ad hoc] Entry 18\n\nBody of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. Body of entry 18. \n\n### 2026-09-20 · [ad hoc] Entry 19\n\nBody of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. Body of entry 19. \n\n### 2026-09-21 · [ad hoc] Entry 20\n\nBody of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. Body of entry 20. \n\n### 2026-09-22 · [ad hoc] Entry 21\n\nBody of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. Body of entry 21. \n\n### 2026-09-23 · [ad hoc] Entry 22\n\nBody of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. Body of entry 22. \n\n### 2026-09-24 · [ad hoc] Entry 23\n\nBody of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. Body of entry 23. \n\n### 2026-09-25 · [ad hoc] Entry 24\n\nBody of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. Body of entry 24. \n\n### 2026-09-26 · [ad hoc] Entry 25\n\nBody of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. Body of entry 25. \n\n### 2026-09-27 · [ad hoc] Entry 26\n\nBody of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. Body of entry 26. \n\n### 2026-09-28 · [ad hoc] Entry 27\n\nBody of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. Body of entry 27. \n\n### 2026-09-01 · [ad hoc] Entry 28\n\nBody of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. Body of entry 28. \n\n### 2026-09-02 · [ad hoc] Entry 29\n\nBody of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. Body of entry 29. \n\n### 2026-09-03 · [ad hoc] Entry 30\n\nBody of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. Body of entry 30. \n\n### 2026-09-04 · [ad hoc] Entry 31\n\nBody of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. Body of entry 31. \n\n### 2026-09-05 · [ad hoc] Entry 32\n\nBody of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. Body of entry 32. \n\n### 2026-09-06 · [ad hoc] Entry 33\n\nBody of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. Body of entry 33. \n\n### 2026-09-07 · [ad hoc] Entry 34\n\nBody of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. Body of entry 34. \n\n### 2026-09-08 · [ad hoc] Entry 35\n\nBody of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. Body of entry 35. \n\n### 2026-09-09 · [ad hoc] Entry 36\n\nBody of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. Body of entry 36. \n\n### 2026-09-10 · [ad hoc] Entry 37\n\nBody of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. Body of entry 37. \n\n### 2026-09-11 · [ad hoc] Entry 38\n\nBody of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. Body of entry 38. \n\n### 2026-09-12 · [ad hoc] Entry 39\n\nBody of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. Body of entry 39. \n\n' : the example block was edited
+
+======================================================================
+FAIL: test_a_fence_that_never_closes_before_any_entry_is_refused_not_guessed (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 404, in test_a_fence_that_never_closes_before_any_entry_is_refused_not_guessed
+    with self.assertRaises(self.m.Unsafe) as cm:
+AssertionError: Unsafe not raised
+
+======================================================================
+FAIL: test_a_ledger_whose_only_dated_headings_are_fenced_examples_takes_the_entry_at_the_end (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 375, in test_a_ledger_whose_only_dated_headings_are_fenced_examples_takes_the_entry_at_the_end
+    self.assertNotIn("SENTINEL", got)
+AssertionError: 'SENTINEL' unexpectedly found in 'front\n\n<!-- METHODOLOGY-SEED-SENTINEL: fresh ledger.\n     more. -->\n\n## How to add an entry\n\n```\n### YYYY-MM-DD · [SOURCE] summary\n```\n\n```\n### 2026-10-07 · [ad hoc] Layout migration: x\n\nbody\n\n### 2026-01-15 · [ad hoc] Ship the export-retry fix\n- **Change:** x\n```\n\n<!-- Entries go below, newest on top. -->\n\n'
+
+======================================================================
+FAIL: test_a_line_with_an_info_string_does_not_close_a_fence (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 395, in test_a_line_with_an_info_string_does_not_close_a_fence
+    self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+AssertionError: 'fron[25 chars]2026-10-07 · [ad hoc] Layout migration: x\n\nb[88 chars]dy\n' != 'fron[25 chars]2026-01-15 · [ad hoc] example\n```\n\n### 2026[88 chars]dy\n'
+  front
+  
+  ```
+  ```python
++ ### 2026-01-15 · [ad hoc] example
++ ```
++ 
+  ### 2026-10-07 · [ad hoc] Layout migration: x
+  
+  body
+  
+- ### 2026-01-15 · [ad hoc] example
+- ```
+- 
+  ### 2026-09-01 · [ad hoc] old
+  
+  old body
+
+
+======================================================================
+FAIL: test_a_month_heading_inside_a_fence_is_not_taken_for_the_first_month (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 363, in test_a_month_heading_inside_a_fence_is_not_taken_for_the_first_month
+    self.assertEqual(got, header + "## 2026-10\n\n" + self.ENTRY + "\n## 2026-09\n\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+AssertionError: 'fron[13 chars]2026-10\n\n### 2026-10-07 · [ad hoc] Layout mi[161 chars]dy\n' != 'fron[13 chars]2026-01\n\n### 2026-01-15 · [ad hoc] example\n[161 chars]dy\n'
+  front
+  
+  ```
+- ## 2026-10
+- 
+- ### 2026-10-07 · [ad hoc] Layout migration: x
+- 
+- body
+- 
+  ## 2026-01
+  
+  ### 2026-01-15 · [ad hoc] example
+  ```
+  
+  <!-- Entries go below. -->
+  
++ ## 2026-10
++ 
++ ### 2026-10-07 · [ad hoc] Layout migration: x
++ 
++ body
++ 
+  ## 2026-09
+  
+  ### 2026-09-01 · [ad hoc] old
+  
+  old body
+
+
+======================================================================
+FAIL: test_a_shorter_fence_inside_a_longer_one_does_not_close_it (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 389, in test_a_shorter_fence_inside_a_longer_one_does_not_close_it
+    self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+AssertionError: 'fron[28 chars]2026-10-07 · [ad hoc] Layout migration: x\n\nb[89 chars]dy\n' != 'fron[28 chars]2026-01-15 · [ad hoc] example\n````\n\n### 202[89 chars]dy\n'
+  front
+  
+  ````
+  ```
+  x
+  ```
++ ### 2026-01-15 · [ad hoc] example
++ ````
++ 
+  ### 2026-10-07 · [ad hoc] Layout migration: x
+  
+  body
+  
+- ### 2026-01-15 · [ad hoc] example
+- ````
+- 
+  ### 2026-09-01 · [ad hoc] old
+  
+  old body
+
+
+======================================================================
+FAIL: test_a_tilde_fence_is_a_fence (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 383, in test_a_tilde_fence_is_a_fence
+    self.assertEqual(got, header + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+AssertionError: 'fron[14 chars]2026-10-07 · [ad hoc] Layout migration: x\n\nb[88 chars]dy\n' != 'fron[14 chars]2026-01-15 · [ad hoc] example\n~~~\n\n### 2026[88 chars]dy\n'
+  front
+  
+  ~~~
++ ### 2026-01-15 · [ad hoc] example
++ ~~~
++ 
+  ### 2026-10-07 · [ad hoc] Layout migration: x
+  
+  body
+  
+- ### 2026-01-15 · [ad hoc] example
+- ~~~
+- 
+  ### 2026-09-01 · [ad hoc] old
+  
+  old body
+
+
+======================================================================
+FAIL: test_an_example_heading_inside_a_fence_is_not_taken_for_the_first_entry (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 357, in test_an_example_heading_inside_a_fence_is_not_taken_for_the_first_entry
+    self.assertEqual(got, self.SEEDED + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+AssertionError: '# Ch[102 chars]2026-10-07 · [ad hoc] Layout migration: x\n\nb[168 chars]dy\n' != '# Ch[102 chars]2026-01-15 · [ad hoc] Ship the export-retry fi[168 chars]dy\n'
+  # Changelog
+  
+  intro
+  
+  ## How to add an entry
+  
+  ```
+  ### YYYY-MM-DD · [SOURCE] summary
+  ```
+  
+  ```
+- ### 2026-10-07 · [ad hoc] Layout migration: x
+- 
+- body
+- 
+  ### 2026-01-15 · [ad hoc] Ship the export-retry fix
+  - **Change:** x
+  ```
+  
+  <!-- Entries go below, newest on top. -->
+  
++ ### 2026-10-07 · [ad hoc] Layout migration: x
++ 
++ body
++ 
+  ### 2026-09-01 · [ad hoc] old
+  
+  old body
+
+
+======================================================================
+FAIL: test_the_current_months_heading_after_a_fenced_example_takes_the_entry_under_it (__main__.TestThePureRules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_migrate_layout.py", line 369, in test_the_current_months_heading_after_a_fenced_example_takes_the_entry_under_it
+    self.assertEqual(got, header + "## 2026-10\n\n" + self.ENTRY + "\n### 2026-10-01 · [ad hoc] old\n\nold body\n")
+AssertionError: 'fron[14 chars]2026-10-07 · [ad hoc] Layout migration: x\n\nb[102 chars]dy\n' != 'fron[14 chars]2026-01-15 · [ad hoc] example\n```\n\n## 2026-[102 chars]dy\n'
+  front
+  
+  ```
+- ### 2026-10-07 · [ad hoc] Layout migration: x
+- 
+- body
+- 
+  ### 2026-01-15 · [ad hoc] example
+  ```
+  
+  ## 2026-10
+  
++ ### 2026-10-07 · [ad hoc] Layout migration: x
++ 
++ body
++ 
+  ### 2026-10-01 · [ad hoc] old
+  
+  old body
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.939s
+
+FAILED (failures=9)

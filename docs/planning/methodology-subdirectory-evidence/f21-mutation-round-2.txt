@@ -1,0 +1,8 @@
+baseline: rc=0 failing=[]
+F06   KILLED   by test_a_shorter_fence_inside_a_longer_one_does_not_close_it (named classes)
+C03   KILLED   by test_a_shorter_fence_inside_a_longer_one_does_not_close_it (named classes)
+S01   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+S02   KILLED   by test_a_ledger_with_dos_line_endings_keeps_its_fence_and_its_place (named classes)
+S06   KILLED   by test_a_closing_fence_longer_than_the_opening_one_closes_it (named classes)
+S11   KILLED   by test_a_fence_with_an_info_string_opens_one (named classes)
+killed 6, survived 0
