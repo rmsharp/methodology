@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-7.md` (1 record(s), 40,789 B → 29,022 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-12-7.md`](docs/archive/HANDOFFS-through-2026-10-12-7.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12-7.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12-7.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,789 B → 29,022 B (−28.8%).
+
 ### 2026-10-13 · [BL-101] S308 close-out — the plan for the one upstream pull request is written and decided; the gate run read 18/18
 
 The session's receipt is complete in `HANDOFFS.md` (S308, `status: complete`, self-score 8, predecessor S307 scored 9). **Deliverable (fork only, nothing outward beyond the push of `ec24116` to the fork):** `docs/planning/upstream-pr-composition-plan.md` and `docs/planning/pr-composition-evidence/` (five scripts and their outputs): the fork differs from `upstream/main` by 56 files, +25,804 / −1,409 outside `docs/` and the ledgers, about half from before the directory plan and never sent; upstream's tree with the fork's shipped files over it runs the shell suite to 484 passed, 14 failed, 2 skipped; D8's two gates and the two open pull requests stand in front of it. His four answers (build now, a two-part series, the whole dashboard lineage, the defaults) are recorded; PR2, the candidate build, is next. **The gate run on the last work commit `31025c0`, in a clean `--no-local` clone:** `quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results 076e9131026f · manifest e0f946c5bfe3`; S307's citation re-run at Phase 0 (`ec24116`) read the same. **Phase 3C:** no fork learning row appended, so the D3 retirement rule is not triggered; rows considered: fork #97, #71, #50. **His two messages at the end:** `vscode_quarto_ext` is ready for the BL-105 top-up and he is cleaning it up (its `scratchpad/` trimmed by that project's own session); ranked first for the next picker. **Next:** his picker (that top-up, PR2, BL-106, his triage, BL-94's third run, BL-103's three calls), the HANDOFFS trim offer (3 receipts), a push on his go-ahead (9 commits ahead of `origin/main`), watch #94, #92, #93. Model: Claude Sonnet 5.5.
