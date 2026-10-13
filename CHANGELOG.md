@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] tests: a cited gate run that reads unmeasured gates must name them, written RED first
+
+Ten rows added to the `check-handoff` gate-citation block of `bin/tests.sh` (`# D9:` / `# BL-103 repair 3`): a cited run with `U` unmeasured gates needs an `unmeasured: <gate>, ...` clause naming at least `U` (backticks allowed; only comma-separated names count), a citation with no unmeasured field is judged on its structure alone, `--all` judges the newest receipt the same way, and an older receipt is not re-judged. **RED:** the block run alone reads `PASS=10 FAIL=5`; the five that fail are the five "must be a finding" rows (an unnamed gate, two names for three, a clause naming none, the words after the names counted as a gate, and `--all`), each because `validate_gate_citation` reads only that a citation exists (`bin/check-handoff:851`); the five "must pass" rows already pass. The design, his answers at the S307 Phase 0 picker: the named exception is allowed (not refused outright, not report-only), and the rule goes in the runner and the seed. Fork only.
+
 ### 2026-10-12 · [BL-103] S307 claim (in progress) — a gate run that reads `unmeasured` can still be cited
 
 CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for BL-105 phase 4 and he picked BL-103 repair 3 with two go-aheads, each read back before this claim: the push of `e8188a3` (`a2a856f..e8188a3`, `0 0`, `ls-remote` equal) and the HANDOFFS trim `125c8aa` with its fold `03f1171`. The gate citation re-run (clean `--no-local` clone of `08f1ef6`) was still running at this claim: its result goes in the close-out receipt. Deliverable: research and a plan for repair 3 presented for his approval first; fork only, nothing outward. Phase 3F records the rest.

@@ -3465,6 +3465,56 @@ sed -i.bak 's|runtime_smoke: n/a — docs-only|runtime_smoke: quality_ratchet: 1
 "$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
     && pass "check-handoff: a cited gate run satisfies the lint" \
     || fail "check-handoff rejected a receipt that cites its gate run"
+# BL-103 repair 3 (S307): a cited run that reads unmeasured gates must NAME them, `unmeasured: <gate>, ...`,
+# at least as many as the citation counts. The lint reads the structure of the citation, never its truth.
+# Written RED first: the five "must be a finding" rows below passed silently before the lint existed.
+U1="quality_ratchet: 17/18 pass · 0 fail · 1 unmeasured · results abc123def456 · manifest 0123456789ab"
+U3="quality_ratchet: 15/18 pass · 0 fail · 3 unmeasured · results abc123def456 · manifest 0123456789ab"
+set_rs() {  # set_rs FILE TEXT — the first (newest) receipt's runtime_smoke line
+    python3 - "$1" "$2" <<'PY'
+import re, sys
+p, text = sys.argv[1], sys.argv[2]
+s = open(p, encoding="utf-8").read()
+s = re.sub(r"^runtime_smoke: .*$", lambda m: "runtime_smoke: " + text, s, count=1, flags=re.M)
+open(p, "w", encoding="utf-8").write(s)
+PY
+}
+unm_rc() { set_rs "$P/HANDOFFS.md" "$1"; "$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1; }
+unm_rc "$U1" \
+    && fail "check-handoff passed a cited run with 1 unmeasured gate that the receipt does not name" \
+    || pass "check-handoff: a cited run with an unnamed unmeasured gate is a finding"
+unm_rc "$U1 (unmeasured: tests-sh-passed — by hand: 483 passed)" \
+    && pass "check-handoff: one unmeasured gate, named with its by-hand result, satisfies the lint" \
+    || fail "check-handoff refused an unmeasured gate that the receipt names"
+unm_rc "$U3 (unmeasured: tests-sh-passed, tests-sh-failed — by hand: 483 passed, 0 failed)" \
+    && fail "check-handoff passed 3 unmeasured gates named by 2" \
+    || pass "check-handoff: fewer names than the citation counts is a finding"
+unm_rc "$U3 (unmeasured: \`tests-sh-passed\`, \`tests-sh-failed\`, \`migrate-layout-unit-tests\` — by hand: all 3 run)" \
+    && pass "check-handoff: three unmeasured gates, named in backticks, satisfy the lint" \
+    || fail "check-handoff refused three named unmeasured gates"
+unm_rc "$U1 (unmeasured: — by hand: 483 passed)" \
+    && fail "check-handoff passed an unmeasured clause that names no gate" \
+    || pass "check-handoff: a clause with no gate name is a finding"
+unm_rc "$U3 (unmeasured: tests-sh-passed, tests-sh-failed by hand: 483 passed, 0 failed)" \
+    && fail "check-handoff counted the words after the names as a third gate" \
+    || pass "check-handoff: only comma-separated names count, not the words after them"
+unm_rc "quality_ratchet: 1/1 pass · results abc123def456 · manifest 0123456789ab" \
+    && pass "check-handoff: a citation with no unmeasured field is judged on its structure alone" \
+    || fail "check-handoff refused a citation that states no unmeasured count"
+set_rs "$P/HANDOFFS.md" "$U1"
+"$BIN/check-handoff" --all --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && fail "check-handoff --all missed the unnamed unmeasured gate" \
+    || pass "check-handoff --all: the same finding on the newest receipt"
+set_rs "$P/HANDOFFS.md" "$U1 (unmeasured: tests-sh-passed — by hand: 483 passed)"
+"$BIN/check-handoff" --all --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && pass "check-handoff --all: the named exception satisfies the lint too" \
+    || fail "check-handoff --all refused the named unmeasured gate"
+# Only the newest receipt is judged: an older one that cites unnamed unmeasured gates stays as written.
+{ receipt S13 | sed "s|^runtime_smoke:.*|runtime_smoke: quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results abc123def456 · manifest 0123456789ab|"
+  receipt S12 | sed "s|^runtime_smoke:.*|runtime_smoke: $U3|"; } > "$P/two.md"
+"$BIN/check-handoff" --file "$P/two.md" --all >/dev/null 2>&1 \
+    && pass "check-handoff --all: an older receipt that cites unnamed unmeasured gates is not re-judged" \
+    || fail "check-handoff --all re-judged an older receipt's citation"
 rm -rf "$P"
 
 echo "== Test 41: status and sync recognise a version a merge hid from the default walk (RED-first) =="
