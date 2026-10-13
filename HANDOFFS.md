@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S307
+date: 2026-10-12
+status: pending
+active_task: BL-103 repair 3 (backlog row `docs/planning/BACKLOG.md:183`, detail `docs/planning/BACKLOG-DETAIL.md:4301`): nothing refuses a gate run that reads `unmeasured`, so a receipt can cite one (a rule that a cited run has `0 unmeasured`, or a check that counts them). His pick at the S307 Phase 0 picker, with two go-aheads done and read back before this claim: the push of `e8188a3` (`a2a856f..e8188a3`, `0 0`, `ls-remote` equal) and the HANDOFFS trim `125c8aa` with its fold `03f1171`. Deliverable: research the fix shapes, then a plan presented for his approval, then, if approved, tests first; fork only, nothing outward. The gate citation re-run (clean `--no-local` clone of `08f1ef6`) was still running at this claim.
+```
+
+```handoff
 session: S306
 date: 2026-10-12
 status: complete
