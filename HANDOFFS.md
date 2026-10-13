@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S306
+date: 2026-10-12
+status: pending
+active_task: BL-107, `quality_ratchet.py` leaves a timed-out gate's command running (backlog row `docs/planning/BACKLOG.md:187`, detail `docs/planning/BACKLOG-DETAIL.md:4359`): `subprocess.run(shell=True, timeout=t)` kills the shell, not its children, so a timed-out suite keeps running through the gates after it (failure mode #29). His pick at the S306 Phase 0 picker. Deliverable: research, then a plan presented for his approval (Ctrl-C, the Windows route and the version number are his calls), then, if approved, tests first and the fix in `starter-kit/quality_ratchet.py` `run_gate_command`; fork only, nothing outward. The Phase 0 go-aheads, each read back before this claim: the push of `a2a856f`, the HANDOFFS trim `c6abae0` with its fold `f0385b0`, the CHANGELOG trim `21cf425`. Phase 3D overwrites this block.
+```
+
+```handoff
 session: S305
 date: 2026-10-12
 status: complete

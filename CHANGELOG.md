@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] S306 claim (in progress) — the timed-out gate command that keeps running
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for BL-105 phase 4 and he picked BL-107 with three go-aheads, each read back before this claim: the push of `a2a856f` (`c80c5b5..a2a856f`, `0 0`, `ls-remote` equal), the HANDOFFS trim `c6abae0` with its fold `f0385b0`, and the CHANGELOG trim `21cf425` (not due: 190,194 B against 196,608 B; his go-ahead; 191,782 B to 77,005 B). The gate citation re-run (clean `--no-local` clone of `a2a856f`) was still running at this claim: its result goes in the close-out receipt. Deliverable: research and a plan for BL-107 presented for his approval first; fork only, nothing outward. Phase 3F records the rest.
+
 ### 2026-10-12 · [ad hoc] S306 — fold the fourth 2026-10-12 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`c6abae0`, 1 receipt, S303, to `HANDOFFS-through-2026-10-12-4.md`, the name S305 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit. `HANDOFFS.md` holds 2 receipts (S305, S304). The trim ran on his go-ahead at the S306 Phase 0 picker.
