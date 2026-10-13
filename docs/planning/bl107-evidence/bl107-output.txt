@@ -1,0 +1,31 @@
+# python3 bl107-harness.py   (S306, macOS, Python 3.10.12; each row is one run of one variant)
+# v0 = quality_ratchet.py 1.4.0; v1 = new session + killpg on a timeout only; v2 = v1 + cleanup on any exception and on SIGHUP/SIGTERM;
+# v2t = v2 with SIGTERM first (crashed with PermissionError on macOS: see bl107-record.md section 2)
+v0   timeout, plain command         runner rc=0     out=timeout              1.2s  survivors=1
+v1   timeout, plain command         runner rc=0     out=timeout              1.1s  survivors=0
+v2   timeout, plain command         runner rc=0     out=timeout              1.2s  survivors=0
+v2t  timeout, plain command         runner rc=1     out=-                    1.1s  survivors=0
+
+v0   timeout, ignores SIGTERM       runner rc=0     out=timeout              1.1s  survivors=1
+v1   timeout, ignores SIGTERM       runner rc=0     out=timeout              1.1s  survivors=0
+v2   timeout, ignores SIGTERM       runner rc=0     out=timeout              1.1s  survivors=0
+v2t  timeout, ignores SIGTERM       runner rc=0     out=timeout              3.2s  survivors=0
+
+v0   Ctrl-C (SIGINT to the group)   runner rc=130   out=KeyboardInterrupt    1.5s  survivors=0
+v1   Ctrl-C (SIGINT to the group)   runner rc=130   out=KeyboardInterrupt    1.8s  survivors=1
+v2   Ctrl-C (SIGINT to the group)   runner rc=130   out=KeyboardInterrupt    1.8s  survivors=0
+v2t  Ctrl-C (SIGINT to the group)   runner rc=1     out=-                    1.8s  survivors=0
+
+v0   hangup (SIGHUP to the group)   runner rc=-1    out=-                    1.5s  survivors=0
+v1   hangup (SIGHUP to the group)   runner rc=-1    out=-                    1.5s  survivors=1
+v2   hangup (SIGHUP to the group)   runner rc=129   out=-                    1.5s  survivors=0
+v2t  hangup (SIGHUP to the group)   runner rc=1     out=-                    1.6s  survivors=0
+
+v0   kill <runner pid> (SIGTERM)    runner rc=-15   out=-                    1.5s  survivors=1
+v1   kill <runner pid> (SIGTERM)    runner rc=-15   out=-                    1.5s  survivors=1
+v2   kill <runner pid> (SIGTERM)    runner rc=143   out=-                    1.5s  survivors=0
+v2t  kill <runner pid> (SIGTERM)    runner rc=1     out=-                    1.6s  survivors=0
+
+
+# python3 bl107-stress.py 60
+rounds=60  killpg raised=never  rounds with survivors=0
