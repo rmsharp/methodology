@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13.md` (1 record(s), 37,744 B → 26,629 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-13 → 2026-10-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-13.md`](docs/archive/HANDOFFS-through-2026-10-13.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-13.md.verify.sh)
+rather than trusting a digest printed here. Live file 37,744 B → 26,629 B (−29.4%).
+
 ### 2026-10-13 · [BL-101] S310 — after the close-out: his picker answers, the push, and the label scope decided
 
 At the S310 close-out picker he decided the `UNREHEARSED` label **stays on every refused list that has moves**, shard or not (simple and always true; the refinement that sets the marker only when a shard proof is in the list is declined, and F32 owes nothing more). He also gave the go-ahead to push `2d2fe53` to the fork's `main`: `origin/main` went `ee12007..2d2fe53` (6 commits), naming the commit and not `HEAD`; read back: `ls-remote` equals `2d2fe53`, `rev-list --left-right --count 2d2fe53...origin/main` read `0 0`. Fork only, nothing sent to `KJ5HST/methodology`.
