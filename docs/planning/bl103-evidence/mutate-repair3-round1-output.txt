@@ -1,0 +1,20 @@
+M1 >= instead of > KILLED by 6 row(s)
+M2 slack of one name KILLED by 5 row(s)
+M3 min over citations SURVIVED
+M4 min over clauses SURVIVED
+M6 \s across fields (clause) SURVIVED
+M7 drop the fail group KILLED by 5 row(s)
+M8 no backticks in names KILLED by 1 row(s)
+M12 any name satisfies KILLED by 2 row(s)
+M13 citation count from runtime_smoke only SURVIVED
+M14 first citation only SURVIVED
+M15 one-digit count SURVIVED
+M16 clause search in runtime_smoke only SURVIVED
+M17 name must start with a letter SURVIVED
+M18 pending receipt judged SURVIVED
+M20 declared guard off by one KILLED by 2 row(s)
+M21 a missing clause counts as one name KILLED by 3 row(s)
+M23 the lint is off KILLED by 5 row(s)
+M22 a clause always counts one name KILLED by 1 row(s)
+unmutated block at 5cb11a6: PASS=15 FAIL=0
+killed 9, survived 9, of 18

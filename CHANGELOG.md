@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] evidence: the mutation script and both rounds' output, regenerated from it
+
+`docs/planning/bl103-evidence/mutate-repair3.py <tests-ref>` (a ref, or `WORKTREE`) mutates a copy of `bin/check-handoff` and runs the gate-citation block of `bin/tests.sh` at that ref. Round 1 against the tests at `5cb11a6`: 18 mutants, 9 killed, 9 survived. Round 2 against `60b6412`: 18 of 18 killed. The first session run used 14 mutants; the script adds M20 to M23 (M23 turns the lint off and is killed by exactly the ten finding rows once they assert the message). Fork only.
+
 ### 2026-10-12 · [BL-103] evidence: the population survey and the counting-gate demonstration
 
 `docs/planning/bl103-evidence/survey-citations.py` (this repository: 342 receipts, 167 citations of a gate run, one reading unmeasured above 0, S287's; 13 sibling projects scanned, 4 with declared gates, 5 with citations, 246 citations, none above 0) and `counting-gate-demo.sh` (a gate that counts the unmeasured reads `0 pass` in a run with one, then the previous run's count: it cannot see its own run), each with its output beside it. **Correction to the Phase 4 text of this session:** it said "this repository and 9 adopters"; the figure is 13 sibling projects scanned, 5 carrying citations. Fork only.
