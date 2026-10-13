@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-4.md` (1 record(s), 41,280 B → 29,425 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-12-4.md`](docs/archive/HANDOFFS-through-2026-10-12-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,280 B → 29,425 B (−28.7%).
+
 ### 2026-10-12 · [BL-103] S305 close-out — BL-103 repairs 1 and 2 done: `quality_ratchet.py` 1.4.0; the receipt is complete; the gate run read 18/18
 
 A gate that outlives its budget reads `unmeasured` with `timeout (N s)` and may declare `timeout_seconds`; 1.3.0 read a timeout as `fail`, as `pass` or as a number read out of the timeout message. Done on the fork and sent nowhere. The gate in a clean `--no-local` clone of `3bcb63c`: 18/18, results `703856fabafb`, manifest `4ce1c4131646`. BL-107 opened (the timed-out command keeps running). `HANDOFFS.md` holds 3 receipts (S305, S304, S303) and `CHANGELOG.md` is near its trigger: offer both trims at the next Phase 0. The `HANDOFFS.md` receipt carries the rest; Phase 3C appended no fork learning row.
