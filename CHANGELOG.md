@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] S311 -- the push of `177dc79` to the fork, and the S311 HANDOFFS shard pointer folded into the archive index
+
+His go-aheads at the S311 Phase 0 picker, each read back. **The push:** `177dc79` (named, not `HEAD`) to the fork's `main`, `2d2fe53..177dc79`; `git rev-list --left-right --count origin/main...177dc79` read `0 0` and `ls-remote` equal. **The trim** (`77bb319`, the entry above): S308's receipt to `HANDOFFS-through-2026-10-13.md`, the shard name S310 guessed; dry run first, shard proof exit 0, `check-handoff` and `check-ledger` exit 0, 2 receipts left. **The fold,** in its own commit: the trimmer's three-line pointer block and its blank line out of `HANDOFFS.md`, one row into [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **A side effect in another repository, disclosed:** answering his mid-turn question whether `vscode_quarto_ext` is ready, I ran that project's own `methodology/methodology_dashboard.py` inside its tree, which appended one snapshot line to its `methodology/dashboard_history.jsonl` (1 insertion, 0 deletions, uncommitted there). Restoring it with `git checkout --` was refused by the auto-mode classifier and I did not work around that; the line is still there for him to keep or discard. Nothing sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
+
 ### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13.md` (1 record(s), 37,744 B → 26,629 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
