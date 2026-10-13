@@ -98,8 +98,9 @@ THEMES = collections.OrderedDict([
         "workstreams/DEVELOPMENT_WORKSTREAM.md", "workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",
         "workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md", "workstreams/TEMPLATE_CAMPAIGN.md",
         "workstreams/TEMPLATE_WORKSTREAM.md"]),
-    ("B  the quality ratchet 1.1 to 1.5", [
-        "starter-kit/quality_ratchet.py", "tools/test_quality_ratchet.py", "starter-kit/quality-gates.json"]),
+    ("B  the quality ratchet 1.1 to 1.5, and the seed that cites its run", [
+        "starter-kit/quality_ratchet.py", "tools/test_quality_ratchet.py", "starter-kit/quality-gates.json",
+        "starter-kit/HANDOFFS.md"]),
     ("C  the ledger trimmer 1.5 to 1.8", [
         "starter-kit/methodology_trim.py", "tools/test_methodology_trim.py", "tools/fixtures/trim-verify-template-1.7.0.sh",
         "tools/fixtures/handoff-ledger-2-records.md", "FRAMEWORK_APPARATUS.md"]),
@@ -108,7 +109,7 @@ THEMES = collections.OrderedDict([
     ("E  the close-out report generator (a new tool)", [
         "starter-kit/close_out_report.py", "tools/test_close_out_report.py"]),
     ("F  canonical-only checkers and reports (two of them new)", [
-        "bin/check-handoff", "bin/check-overhead", "bin/model-report", "bin/check-learnings", "starter-kit/HANDOFFS.md"]),
+        "bin/check-handoff", "bin/check-overhead", "bin/model-report", "bin/check-learnings"]),
     ("S  the shell suite and the runner (shared by every theme)", ["bin/tests.sh", "starter-kit/SESSION_RUNNER.md"]),
     ("G  this repository's own configuration and prose (mostly stays)", [
         ".context-budget.json", ".gitignore", ".quality-gates.json", "CLAUDE.md", "README.md"]),

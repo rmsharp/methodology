@@ -1,7 +1,7 @@
-tip           ffb0fd1
+tip           4bbed22
 upstream/main f34769f
 plan base     c8b9ddd (contains upstream/main: yes)
-commits upstream/main..HEAD: 1857 (merges 36); by ancestry, INFLATED by squash-merged pull requests
+commits upstream/main..HEAD: 1860 (merges 36); by ancestry, INFLATED by squash-merged pull requests
 commits HEAD..upstream/main: 0
 
 == before the methodology/ plan (upstream/main..c8b9ddd): 24 files, +13254 -847
@@ -19,7 +19,7 @@ commits HEAD..upstream/main: 0
    repository configuration and prose                         files=  6  +   666 -  177
    shipped (starter-kit, workstreams, the three manuals)      files= 23  +  3304 -  538
    tests                                                      files= 10  + 15632 -  222
-== docs/: 794 paths differ (792 added, 2 modified); fork-only planning and archives, never part of a pull request
+== docs/: 805 paths differ (803 added, 2 modified); fork-only planning and archives, never part of a pull request
 
 == files changed in BOTH halves (the second half builds on the first):
    .githooks/pre-commit                           before +15-17   from the plan on +231-46
@@ -45,11 +45,11 @@ commits HEAD..upstream/main: 0
 
 == by theme (tree diff upstream/main..HEAD, ledgers and docs/ left out; 56 files)
    A  the methodology/ directory (resolver, migrate-layout, sync layers, hook, prose)   files=31 +  8076 -  248  new files: 8
-   B  the quality ratchet 1.1 to 1.5                                                    files= 3 +  1276 -   61  new files: 0
+   B  the quality ratchet 1.1 to 1.5, and the seed that cites its run                   files= 4 +  1282 -   64  new files: 0
    C  the ledger trimmer 1.5 to 1.8                                                     files= 5 +  2747 -  106  new files: 2
    D  the dashboard 2.11 to 2.22 (and its twin)                                         files= 3 +  7229 -  687  new files: 0
    E  the close-out report generator (a new tool)                                       files= 2 +  1115 -    0  new files: 2
-   F  canonical-only checkers and reports (two of them new)                             files= 5 +  1594 -   75  new files: 2
+   F  canonical-only checkers and reports (two of them new)                             files= 4 +  1588 -   72  new files: 2
    S  the shell suite and the runner (shared by every theme)                            files= 2 +  3347 -  118  new files: 0
    G  this repository's own configuration and prose (mostly stays)                      files= 5 +   420 -  114  new files: 0
 

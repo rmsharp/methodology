@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] the plan for the one upstream pull request, DRAFT for his approval
+
+`docs/planning/upstream-pr-composition-plan.md` (22,692 B): the fork's tree differs from `upstream/main` by 56 files, +25,804 / −1,409 outside `docs/` and the ledgers, about half of it work from before the directory plan that was never sent; porting only the directory hunks is 52 hand-resolved conflicts in 16 files; upstream's tree with the shipped files laid over it runs the shell suite to 484 passed, 14 failed, 2 skipped, all 14 fixtures of this repository's own history or a stricter checker meeting upstream's ledger; D8's gates (5 adopters, 13 open register rows) and the two open pull requests (#94 in 3 files, #92 in 1) are in front of it. Recommends one pull request as a two-part series of commits, built fork-side now, the waiver decided at the final approval. Four decisions (D1 to D4) go to his picker. `inventory.py` moves the `HANDOFFS.md` seed from the checkers' theme to the ratchet's, which is where it ships. Nothing built, nothing sent.
+
 ### 2026-10-13 · [BL-101] evidence for the upstream pull request plan: upstream's tree with the fork's shipped files laid over it
 
 `candidate-probe.sh`, run twice (by hand, then the script): `bin/tests.sh` reads 484 passed, 14 failed, 2 skipped on `upstream/main` plus the overlay (upstream's own suite 261/0/0, the fork's 503/0/0); the 14 sit in 9 of 54 test blocks, all fixtures of this repository's own ledgers or a stricter checker meeting upstream's live ledger; the trimmer, context-budget, ratchet, layout, sync and `migrate-layout` unit suites passed. The two unit suites that fail inside it, run alone, are in `candidate-probe-unit-failures-output.txt`. Fork only, nothing sent.
