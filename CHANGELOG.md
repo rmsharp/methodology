@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] S307 — fold the fifth 2026-10-12 HANDOFFS shard pointer into the archive index
+
+The pointer block the trim (`125c8aa`, 1 receipt, S304, to `HANDOFFS-through-2026-10-12-5.md`, the name S306 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit. `HANDOFFS.md` holds 2 receipts (S306, S305). The trim ran on his go-ahead at the S307 Phase 0 picker.
+
 ### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-5.md` (1 record(s), 41,192 B → 29,692 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
@@ -260,6 +264,10 @@ Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-12-5.md`](docs/archive/HANDOFFS-through-2026-10-12-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12-5.md.verify.sh)
 rather than trusting a digest printed here. Live file 41,192 B → 29,692 B (−27.9%).
+
+### 2026-10-12 · [ad hoc] S307 — pushed `e8188a3` to the fork's `main`
+
+`origin/main` went `a2a856f..e8188a3` (15 commits) on his go-ahead at the S307 Phase 0 picker, naming the commit and not `HEAD`; read back: `ls-remote` equals `e8188a3`, `rev-list --left-right --count origin/main...e8188a3` read `0 0`. Fork only, nothing sent to `KJ5HST/methodology`.
 
 ### 2026-10-12 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-11.md` (101 record(s), 191,782 B → 77,005 B)
 
