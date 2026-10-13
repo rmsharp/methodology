@@ -19,13 +19,14 @@
   "_s275_tightening_bl101_p2": "FORK-ONLY TIGHTENING (S275, 2026-10-06, BL-101 P2): tests-sh-passed 447 -> 462, ratchet-unit-tests 45 -> 75, layout-unit-tests 62 -> 65. MEASURED, not derived: `quality_ratchet.py --run` in a --no-local clone of 6f85b46 (the S275 fold commit, whose HANDOFFS.md holds two receipts) with the session's code files overlaid read 75 and 65 for the two unit suites, and `bash bin/tests.sh` in the same clone, captured, read 462 passed, 0 failed, 6 skipped (the 447 of S274 plus the 15 assertions of Test 54; the six skips are Test 34's stated rows below three receipts, so 462 is the at-rest value and a three-receipt run reads 468). The first run of that clone read tests-sh-failed 1: the hook-chain assertion grepped for one literal line the hook no longer has; it was fixed in 6249ed9 before any floor was raised.",
   "_s305_bl103_timeout_seconds": "FORK-ONLY, NOT A THRESHOLD (S305, 2026-10-12, BL-103): timeout_seconds 3600 on the three gates that read unmeasured when the machine was loaded (tests-sh-passed and tests-sh-failed share one run of bin/tests.sh, and migrate-layout-unit-tests): S280 and S287 measured 1,835 s and 794 s, S304 676 s at a load of about 180, against the 600 s default. The price is the other edge: a suite that HANGS now holds a run for up to an hour before it reads timeout (3600 s). quality_ratchet.py 1.4.0 warns, never refuses, on a changed timeout_seconds.",
   "_s306_tightening_bl107": "FORK-ONLY TIGHTENING (S306, 2026-10-12, BL-107): ratchet-unit-tests 100 -> 118 -> 120, two commits. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: `python3 tools/test_quality_ratchet.py` read `Ran 118 tests` OK when 1.5.0 was built, and `Ran 120 tests` OK, in a clean --no-local clone, after mutation round 1 (26 mutants, 5 survived) added the two tests that were new (the other two survivor tests changed existing ones); the 20 added tests over 100 are BL-107's (a timed-out command is stopped, a signal to the tool stops it, a real pty Ctrl-C and hangup, the selftest labels, the seed phrase, the platform constant).",
+  "_s307_tightening_bl103_r3": "FORK-ONLY TIGHTENING (S307, 2026-10-13, BL-103 repair 3): tests-sh-passed 477 -> 503. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: `bash bin/tests.sh > file` in a clean --no-local clone of 8dab34f read `== Summary: 503 passed, 0 failed, 0 skipped ==` (483 at S306's last work commit); the 20 added are the rows of the gate-citation block of bin/tests.sh that BL-103 repair 3 wrote (10 written RED first, 10 for mutation round 1's survivors). The last commit that changes the block's rows is 8dab34f; 60b6412 only makes ten of them assert the lint's message and leaves the count.",
   "version": 1,
   "results_file": ".quality-gates-results.json",
   "gates": [
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 477,
+      "threshold": 503,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "timeout_seconds": 3600,

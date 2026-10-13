@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-103] `.quality-gates.json`: `tests-sh-passed` floor 477 to 503 (a tightening)
+
+Measured, not derived: `bash bin/tests.sh > file` in a clean `--no-local` clone of `8dab34f` (launched `nohup ... &`, at a load average of 35 to 212) read `== Summary: 503 passed, 0 failed, 0 skipped ==` (483 at S306's last work commit); the 20 added are the repair's rows in the gate-citation block. `60b6412` changed ten rows to assert the lint's message and left the count. The whole suite ran once, after layers 1 to 3 and the first mutation round, not after each layer as the plan said: the machine's load made each run 20 to 60 minutes. Fork only.
+
 ### 2026-10-12 · [BL-103] evidence: the mutation script and both rounds' output, regenerated from it
 
 `docs/planning/bl103-evidence/mutate-repair3.py <tests-ref>` (a ref, or `WORKTREE`) mutates a copy of `bin/check-handoff` and runs the gate-citation block of `bin/tests.sh` at that ref. Round 1 against the tests at `5cb11a6`: 18 mutants, 9 killed, 9 survived. Round 2 against `60b6412`: 18 of 18 killed. The first session run used 14 mutants; the script adds M20 to M23 (M23 turns the lint off and is killed by exactly the ten finding rows once they assert the message). Fork only.
