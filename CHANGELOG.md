@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-3.md` (1 record(s), 40,834 B → 29,590 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-12-3.md`](docs/archive/HANDOFFS-through-2026-10-12-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,834 B → 29,590 B (−27.5%).
+
 ### 2026-10-12 · [BL-101] S304 close-out — BL-105 build phase 3 done: the prose; the receipt is complete; the gate run read 18/18
 
 Phase 3 of BL-105 is done on the fork and sent nowhere: `BOOTSTRAP.md` 218 and 222 and `CLAUDE_TEMPLATE.md` 83-84 say where `PROJECT_LEARNINGS.md` lives in either layout, and `bin/check-links:84`, which was code (F31), allows it beside `FRAMEWORK_LEARNINGS.md`. The gate in a clean `--no-local` clone of `35459ca`: 18/18, results `0ca51b2444cc`, manifest `5ba29f982c78`. `HANDOFFS.md` holds 3 receipts (S304, S303, S302): one trim is owed after the next Phase 0 report. The `HANDOFFS.md` receipt carries the rest; Phase 3C appended no fork learning row.
