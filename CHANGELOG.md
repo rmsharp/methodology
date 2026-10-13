@@ -253,6 +253,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S310 — F32 fixed: `bin/migrate-layout` labels a refused run's move list UNREHEARSED
+
+The shard proofs run only on a run that can go on, so the list a REFUSED run printed was the plan before them: at `vscode_quarto_ext` 3 moves listed refused, 1 once the sync cleared the refusal. `build_report` now sets `rehearsal.skipped: "refused"` when a run has moves and a refusal stands (`ran` alone could not say so: it is also False when there was nothing to rehearse), and `render_text` heads the list `moves (N, UNREHEARSED):` with one line saying why, in both dry-run and `--apply`. A refusal that comes after the rehearsal (`rewrite-unsafe`) leaves the list unlabelled, because it was rehearsed; the JSON carries the marker for a consumer that reads `moves` as data. **Not chosen:** rehearsing before refusing would rehearse a tree the sync is about to change. Five tests written first (red first: the heading read `moves (38):`, the marker was absent), two of them pin the unlabelled cases; `tools/test_migrate_layout.py` reads 280 tests (275 before), 781 s, OK; `check-layout-literals` 0 sites. The `migrate-layout-unit-tests` floor in `.quality-gates.json` is tightened 275 to 280 (tightening needs no approval). Canonical-only; fork only; nothing sent to `KJ5HST/methodology`. Closing the F32 row in the register and the BL-105 row follows in its own commit.
+
+
 ### 2026-10-13 · [BL-101] S310 claim (in progress) — the F32 fix in `bin/migrate-layout`
 
 CHANGELOG: pending. Operator said `go`, picked F32 at the Phase 0 picker (his pick at the S309 close-out, confirmed), and gave three go-aheads there, each read back before this claim: the push of `ee12007` to the fork, the push of `82e6049e` to `rmsharp/vscode_quarto_ext`, and the HANDOFFS trim `f50216d` with its fold `a3a8e76` (entries below). The gate citation re-run at Phase 0 (clean `--no-local` clone of `ee12007`) read 18/18, results `076e9131026f`, manifest `e0f946c5bfe3`, equal to S309's. Deliverable: label a refused dry run's move list as unrehearsed (`bin/migrate-layout:1065`), test first, red first; canonical-only. Fork only, nothing outward to `KJ5HST/methodology`. Phase 3F records the rest.

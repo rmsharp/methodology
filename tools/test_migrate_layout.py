@@ -2328,6 +2328,61 @@ class TestTheShardRehearsal(Adopter):
         r = run_migrate(self.project)
         self.assertEqual(r.report["rehearsal"], {"ran": True, "proofs": 2, "excluded": []})
 
+    # --- F32 (BL-105 build phase 4, vscode_quarto_ext): the shard proofs run only on a run that can go on, so the list
+    # a REFUSED run prints is the plan before them (3 moves listed refused, 1 once the refusal cleared). It says so. ---
+
+    def test_a_refused_runs_moves_are_labelled_unrehearsed_in_both_modes(self):
+        (self.project / "scratch.txt").write_text("x\n", encoding="utf-8")
+        for mode in ((), ("--apply",)):
+            r = run_migrate(self.project, *mode, json_out=False)
+            self.assertEqual(r.returncode, 1, r.out)
+            self.assertIn("dirty-tree", r.stdout)
+            heading = [x for x in r.stdout.splitlines() if x.startswith("moves (")]
+            self.assertEqual(len(heading), 1, r.stdout)
+            self.assertIn("UNREHEARSED", heading[0], "mode %s" % (mode or "dry run"))
+            self.assertIn("the shard proofs did not run in a clone", r.stdout)
+
+    def test_a_refused_runs_report_says_in_data_that_the_rehearsal_was_skipped(self):
+        (self.project / "scratch.txt").write_text("x\n", encoding="utf-8")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["status"], "refused", r.out)
+        self.assertTrue(r.report["moves"], "the refused plan still lists its moves")
+        self.assertEqual(r.report["rehearsal"], {"ran": False, "proofs": 0, "excluded": [], "skipped": "refused"})
+
+    def test_the_same_project_with_the_refusal_cleared_is_rehearsed_and_not_labelled(self):
+        (self.project / "scratch.txt").write_text("x\n", encoding="utf-8")
+        (self.project / "scratch.txt").unlink()
+        r = run_migrate(self.project, json_out=False)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertNotIn("UNREHEARSED", r.stdout)
+        self.assertNotIn("the shard proofs did not run", r.stdout)
+        self.assertEqual(run_migrate(self.project).report["rehearsal"], {"ran": True, "proofs": 2, "excluded": []})
+
+    def test_a_refused_run_with_nothing_to_move_has_no_moves_section_and_no_skipped_marker(self):
+        applied = run_migrate(self.project, "--apply")
+        self.assertEqual(applied.returncode, 0, applied.out)
+        (self.project / "scratch.txt").write_text("x\n", encoding="utf-8")
+        r = run_migrate(self.project, json_out=False)
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("dirty-tree", r.stdout)
+        self.assertEqual([x for x in r.stdout.splitlines() if x.startswith("moves (")], [], r.stdout)
+        self.assertNotIn("UNREHEARSED", r.stdout)
+        self.assertEqual(run_migrate(self.project).report["rehearsal"], {"ran": False, "proofs": 0, "excluded": []})
+
+    def test_a_refusal_that_comes_after_the_rehearsal_does_not_label_a_list_that_was_rehearsed(self):
+        marker = "<!-- Entries go below"
+        text = (self.project / "CHANGELOG.md").read_text(encoding="utf-8")
+        (self.project / "CHANGELOG.md").write_text(text.replace(marker, "```\n### 2026-01-15 · [ad hoc] example\n\n" + marker), encoding="utf-8")
+        self.commit("a fence that never closes")
+        r = run_migrate(self.project, json_out=False)
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("rewrite-unsafe", r.stdout)
+        heading = [x for x in r.stdout.splitlines() if x.startswith("moves (")]
+        self.assertEqual(len(heading), 1, r.stdout)
+        self.assertNotIn("UNREHEARSED", heading[0])
+        report = run_migrate(self.project).report
+        self.assertEqual(report["rehearsal"], {"ran": True, "proofs": 2, "excluded": []})
+
 
 class TestWhatTheHitsSayAboutHooksAndDirectories(Adopter):
     """Real data: wsfct's pre-commit hook runs context_budget.py from the root, so it refuses the migration commit; and a

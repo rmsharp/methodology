@@ -1065,6 +1065,11 @@ def build_report(project, tier, apply_mode):
     if moves and not refusals:
         moves, more_left, report["rehearsal"] = rehearse_shards(root, moves)
         left += more_left
+    elif moves:
+        # F32: the shard proofs run only on a run that can go on, so a REFUSED run's lists are the plan before them. `ran`
+        # alone cannot say so (it is also False when there was nothing to rehearse), hence the marker; a refusal that comes
+        # later (rewrite-unsafe) leaves the lists rehearsed and leaves no marker.
+        report["rehearsal"]["skipped"] = "refused"
     report["moves"], report["left_in_place"] = moves, sorted(left, key=lambda x: x["path"])
     rewrites, ledger = [], None
     if moves and not refusals:
@@ -1321,7 +1326,12 @@ def render_text(report):
         out.append("nothing to migrate: no methodology file is left to move")
     if report["moves"]:
         out.append("")
-        out.append("moves (%d):" % len(report["moves"]))
+        if (report["rehearsal"] or {}).get("skipped"):
+            out.append("moves (%d, UNREHEARSED):" % len(report["moves"]))
+            out.append("  this run is refused, so the shard proofs did not run in a clone: this list and the left-in-place list are the plan"
+                       " before that rehearsal, and once the refusal clears a shard whose proof exits differently at the new place drops out of the moves")
+        else:
+            out.append("moves (%d):" % len(report["moves"]))
         for m in report["moves"]:
             out.append("  git mv %s %s%s" % (m["src"], m["dest"], "" if m["tracked"] else "   (not tracked: a plain move)"))
     if report["left_in_place"]:
