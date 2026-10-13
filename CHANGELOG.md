@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S310 close-out — F32 fixed in `bin/migrate-layout`, the HANDOFFS trim and both pushes done, and the gate run read 18/18
+
+The deliverable was F32: a refused run's move list is headed `moves (N, UNREHEARSED):` and carries `rehearsal.skipped` (`51e0259`, five tests first, 280 green, mutation round 7 of 8 killed, the floor 275 to 280; closed in the register and the BL-105 rows at `c50b6f6`). Smoked at the real refused `nprcgenekeepr`, which showed the one thing fixtures did not: the label also appears on a refused list that holds no shard, where it is true and idle (his call, asked at the close-out picker). Before the claim, on his three Phase 0 go-aheads: the fork push of `ee12007`, the push of `82e6049e` to `rmsharp/vscode_quarto_ext`, and the HANDOFFS trim `f50216d` with its fold `a3a8e76`. The `HANDOFFS.md` receipt is complete (`self_score` 8, `predecessor_score` 9); no fork learning row appended (D3 not triggered). Gate citation: 18/18 pass, results `d7576eaf9b5b`, manifest `a690abd884d4`, in a clean clone of `c50b6f6`. Fork only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-13 · [BL-101] S310 — F32 closed in the register and the BL-105 rows
 
 The register's F32 row reads **fixed** (`51e0259`, the five tests, the mutation round: 7 of 8 killed, the 8th equivalent because a report whose `rehearsal` is `None` has no moves) and carries a dated S310 line; the BL-105 row in `BACKLOG.md` and its paragraph in `BACKLOG-DETAIL.md` say F32 is fixed, not next (`BACKLOG.md` 58,198 B to 58,187 B). BL-105 itself stays open: phase 4 is done at one adopter of the five that carry the file.
