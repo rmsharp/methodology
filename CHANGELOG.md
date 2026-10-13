@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] `quality_ratchet.py` 1.4.0: a gate that outlives its budget is unmeasured, and a gate may declare `timeout_seconds`
+
+`starter-kit/quality_ratchet.py` (distributed) 1.3.0 to 1.4.0: gate commands run through `run_gate_command`, which reports a timeout apart from an exit code, so a gate that outlives its budget is `unmeasured`, `measured: null`, note `timeout (N s)` in every shape (it read fail or pass at 127, or a number out of the timeout message); `timeout_seconds` per gate (validated, default 600; gates sharing a command run it once under the largest); `compare` warns, never refuses, on a changed one; `--selftest` observes it (25 to 28 checks); the seed's `_gate_schema` names it. 95 tests OK (81 before), the 1.3.0 `results` hash pin unchanged, `ratchet-unit-tests` floor 81 to 95. Fork only, nothing sent upstream. Not done: the kill of the timed-out command (a new row), repair 3 of BL-103.
+
 ### 2026-10-12 · [BL-103] BL-103: the ratchet's timeout, tests written RED first
 
 `tools/test_quality_ratchet.py` gains 14 tests (81 to 95): 13 red for the intended reasons, one green pin by design (a five-gate run's `results` hash, `8498441c1165`, computed with the 1.3.0 tool). They show what the tool does today to a gate that outlives its budget: an exit-code floor of 100 reads **pass** at measured 127, a ceiling reads **fail** at 127, and an `extract` reads a number out of the timeout message (**pass**, measured 3, from the command line quoted in it); `ITERATIVE_METHODOLOGY.md:444` says checks never pass by timeout. His go-ahead at the S305 Phase 4 picker: repairs 1 and 2, orphan kill out (a new row), version 1.4.0, 3600 s on three of this repository's gates.

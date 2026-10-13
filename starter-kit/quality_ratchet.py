@@ -16,9 +16,12 @@ WHAT IT DOES NOT DO
 It ships no linter, coverage runner, or complexity tool: the methodology recommends,
 it does not reimplement. Which command produces each number is the project's choice
 (BOOTSTRAP.md Step 10 lists options per stack). It never edits code, never adjudicates
-a review finding, and a gate it cannot run reports UNMEASURED, never pass. It holds
-THRESHOLDS, not commands: a changed `command` or `extract` is printed as a warning and
-left to review — the results file will show the discontinuity.
+a review finding, and a gate it cannot run reports UNMEASURED, never pass. A command that
+outlives its budget (600 s, or the gate's own `timeout_seconds`) is one it could not finish:
+UNMEASURED with the note `timeout (N s)`, never an exit code and never a number read out of the
+timeout message. It holds THRESHOLDS, not commands: a changed `command`, `extract` or
+`timeout_seconds` is printed as a warning and left to review — the results file will show the
+discontinuity.
 
 There is deliberately no --force. Loosening a threshold is a decision, and the only
 way to take it is to edit .quality-gates.json under plan-mode approval and commit
@@ -47,12 +50,13 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
 SAFEGUARDS = "SAFEGUARDS.md"  # layout: ok -- a document cited by bare name in a message; names are relative to the runner's directory (plan 4.4)
 DIRECTIONS = ("min", "max")
+DEFAULT_TIMEOUT = 600   # seconds a gate's command may run unless the gate declares `timeout_seconds`
 
 R = "\033[0m"; B = "\033[1m"; D = "\033[2m"
 RED = "\033[31m"; YEL = "\033[33m"; GRN = "\033[32m"; CYN = "\033[36m"
@@ -93,13 +97,30 @@ RUNNER_NAME = "SESSION_RUNNER.md"  # layout: ok -- the framework anchor: where i
 
 # === PLUMBING ===
 
-def run(argv, cwd=None, timeout=None, shell=False):
+def run(argv, cwd=None):
+    """Run a short command (git). It takes no timeout on purpose: a gate's command goes through
+    run_gate_command, which keeps a timeout apart from an exit code."""
     try:
-        p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True,
-                           timeout=timeout, shell=shell)
-    except (OSError, subprocess.TimeoutExpired) as e:
+        p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True)
+    except OSError as e:
         return 127, "", str(e)
     return p.returncode, p.stdout, p.stderr
+
+
+def run_gate_command(cmd, cwd, timeout):
+    """(rc, out, err, timed_out) for a gate's shell command. A command that outlives `timeout` has NO
+    exit code: reporting it as one (it was 127) let it read as a measurement -- `fail` against a
+    ceiling, `pass` against a floor at or under 127, and an `extract` could read a number out of the
+    timeout MESSAGE, which quotes the command line (ITERATIVE_METHODOLOGY.md: checks never pass by
+    timeout). rc is None then, and out and err are empty: nothing a timed-out command printed is a
+    measurement."""
+    try:
+        p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, shell=True)
+    except subprocess.TimeoutExpired:
+        return None, "", "", True
+    except OSError as e:
+        return 127, "", str(e), False
+    return p.returncode, p.stdout, p.stderr, False
 
 
 def manifest_location(root):
@@ -188,6 +209,11 @@ def config_defects(cfg):
                 out.append(f"{tag}: `extract` is not a valid regex ({e})")
             if not g.get("command"):
                 out.append(f"{tag}: `extract` without `command` — nothing to extract from")
+        if "timeout_seconds" in g:
+            t = g["timeout_seconds"]
+            # A bool is an int in Python and `true` is not a budget; `0 < t < inf` also refuses NaN.
+            if isinstance(t, bool) or not isinstance(t, (int, float)) or not 0 < t < float("inf"):
+                out.append(f"{tag}: `timeout_seconds` must be a positive number of seconds (got {t!r})")
     return out
 
 
@@ -268,7 +294,9 @@ def compare(old_cfg, new_cfg):
     """Return (refusals, warnings) for the transition old -> new. Pure; no git.
 
     Refused: a gate removed; a direction changed; a `min` threshold lowered; a `max`
-    threshold raised. Warned: a command/extract changed (the ratchet cannot judge it).
+    threshold raised. Warned: a command/extract/timeout_seconds changed (the ratchet cannot
+    judge it: a command made easier, or a budget cut until the gate never measures, both
+    leave the threshold where it was).
     Adding a gate and tightening a threshold always pass."""
     refusals, warnings = [], []
     old, new = gate_map(old_cfg), gate_map(new_cfg)
@@ -290,7 +318,7 @@ def compare(old_cfg, new_cfg):
             refusals.append(f"gate {name!r}: floor lowered {ot:g} -> {nt:g}")
         elif og.get("direction") == "max" and nt > ot:
             refusals.append(f"gate {name!r}: ceiling raised {ot:g} -> {nt:g}")
-        for k in ("command", "extract"):
+        for k in ("command", "extract", "timeout_seconds"):
             if og.get(k) != ng.get(k):
                 warnings.append(f"gate {name!r}: `{k}` changed — the ratchet holds thresholds, "
                                 f"not commands; review the diff and the next results file")
@@ -367,8 +395,15 @@ def precommit(root):
 
 # === MEASUREMENT (--run) ===
 
-def measure_gate(root, g, timeout, memo=None):
-    """Run one gate. Returns a result dict; `status` is pass | fail | unmeasured. `memo` is a
+def gate_budget(g, default):
+    """Seconds this gate's command may run: its own `timeout_seconds`, else `default`."""
+    return g.get("timeout_seconds", default)
+
+
+def measure_gate(root, g, timeout, memo=None, budget=None):
+    """Run one gate. Returns a result dict; `status` is pass | fail | unmeasured. `timeout` is the
+    default budget in seconds, `budget` (run_gates passes it) overrides the gate's own. A command that
+    outlives its budget is `unmeasured`, note `timeout (N s)`: it measured nothing. `memo` is a
     per-run dict: two gates over the same command (a suite's passed count and its failed
     count) run it once — the same run, the same output, two numbers read from it."""
     res = {"name": g["name"], "direction": g["direction"], "threshold": float(g["threshold"]),
@@ -378,11 +413,15 @@ def measure_gate(root, g, timeout, memo=None):
         res["note"] = "declared, no command"
         return res
     if memo is not None and cmd in memo:
-        rc, out, err = memo[cmd]
+        rc, out, err, timed_out, used = memo[cmd]
     else:
-        rc, out, err = run(cmd, cwd=root, timeout=timeout, shell=True)
+        used = gate_budget(g, timeout) if budget is None else budget
+        rc, out, err, timed_out = run_gate_command(cmd, root, used)
         if memo is not None:
-            memo[cmd] = (rc, out, err)
+            memo[cmd] = (rc, out, err, timed_out, used)
+    if timed_out:
+        res["note"] = f"timeout ({used:g} s)"
+        return res
     text = out + err
     if g.get("extract"):
         m = re.search(g["extract"], text, re.MULTILINE)
@@ -402,9 +441,16 @@ def measure_gate(root, g, timeout, memo=None):
     return res
 
 
-def run_gates(root, cfg, timeout=600):
+def run_gates(root, cfg, timeout=DEFAULT_TIMEOUT):
     memo = {}
-    results = [measure_gate(root, g, timeout, memo) for g in cfg.get("gates", [])]
+    gates = cfg.get("gates", [])
+    # Gates over one command share one run (measure_gate), so that run gets the LARGEST budget any of
+    # them declares: neither gate is cut short by the other's smaller one.
+    budgets = {}
+    for g in gates:
+        if g.get("command"):
+            budgets[g["command"]] = max(budgets.get(g["command"], 0), gate_budget(g, timeout))
+    results = [measure_gate(root, g, timeout, memo, budgets.get(g.get("command"))) for g in gates]
     summary = {s: sum(1 for r in results if r["status"] == s)
                for s in ("pass", "fail", "unmeasured")}
     snapshot = {"gates": results, "summary": summary,
@@ -621,6 +667,32 @@ def selftest():
         rc, out, _ = run([py, TOOL, "--run"], cwd=d)
         check("a gate with no command is UNMEASURED (exit 1), never pass",
               rc == WARN and "1 unmeasured" in out)
+        # a command that outlives its budget measured nothing: unmeasured against a ceiling AND a floor
+        # (it used to read fail at 127, and pass against a floor at or under 127)
+        def sleeper(n):
+            return f'"{py}" -c "import time; time.sleep({n}); print(5)"'
+        timed = {"version": 1, "gates": [
+            {"name": "slow-ceiling", "direction": "max", "threshold": 0,
+             "command": sleeper(3), "timeout_seconds": 0.5},
+            {"name": "slow-floor", "direction": "min", "threshold": 100,
+             "command": sleeper(4), "timeout_seconds": 0.5}]}
+        json.dump(timed, open(os.path.join(d, CONFIG_NAME), "w"))
+        rc, out, _ = run([py, TOOL, "--run", "--json"], cwd=d)
+        try:
+            by = {r["name"]: r for r in json.loads(out)["gates"]}
+        except (ValueError, KeyError):
+            by = {}
+        ceiling, floor = by.get("slow-ceiling", {}), by.get("slow-floor", {})
+        check("a gate that outlives its timeout is UNMEASURED, never fail",
+              rc == WARN and ceiling.get("status") == "unmeasured" and ceiling.get("measured") is None
+              and ceiling.get("note") == "timeout (0.5 s)")
+        check("a floor on an exit code is UNMEASURED on a timeout, never pass",
+              floor.get("status") == "unmeasured" and floor.get("measured") is None)
+        longer = {"version": 1, "gates": [
+            {"name": "declared-longer", "direction": "min", "threshold": 5, "command": sleeper(1.5),
+             "extract": r"(\d+)", "timeout_seconds": 60}]}
+        check("a declared timeout_seconds outlasts the default budget",
+              run_gates(d, longer, timeout=0.5)["gates"][0]["status"] == "pass")
         # the ratchet through git: install the hook, stage a loosening, commit is refused
         run([py, TOOL, "install-hook"], cwd=d)
         json.dump(loosened, open(os.path.join(d, CONFIG_NAME), "w"))
