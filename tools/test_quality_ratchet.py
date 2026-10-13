@@ -38,6 +38,17 @@ def gate(name, direction="min", threshold=1, **kw):
     return g
 
 
+def slow(seconds, prints="''", marker=None):
+    """A gate command that outlives a short budget: it records its start in `marker` (so a test can
+    count runs), sleeps `seconds`, then prints the Python EXPRESSION `prints`. An expression, never the
+    literal text: a literal would sit in the command line, and the tool's old timeout message quoted the
+    command line, so an extract could read it back and a test would pass for the wrong reason. Tests that
+    expect a timeout give a budget well under `seconds`; tests that expect completion give one well over
+    it, so load cannot flip either."""
+    start = f"open({marker!r}, 'a').write('x'); " if marker else ""
+    return f'"{PY}" -c "{start}import time; time.sleep({seconds}); print({prints})"'
+
+
 class TestCompareIsTheRatchet(unittest.TestCase):
     """compare(old, new) is pure — no git — so every rule is testable without a repo."""
 
@@ -90,6 +101,21 @@ class TestCompareIsTheRatchet(unittest.TestCase):
         new = manifest(gate("cov", "min", "80"), gate("cc", "max", 10))
         self.assertEqual(qr.compare(self.base, new)[0], [])
 
+    def test_a_changed_timeout_seconds_warns_but_never_refuses(self):
+        # A budget cut far enough turns a gate into one that never measures: the same back door a
+        # changed `command` opens, held the same way (warned, left to review), never refused.
+        old = manifest(gate("suite", "min", 5, command="a"))
+        for new_budget in (1800, 1):
+            new = manifest(gate("suite", "min", 5, command="a", timeout_seconds=new_budget))
+            refusals, warnings = qr.compare(old, new)
+            self.assertEqual(refusals, [])
+            self.assertEqual(len(warnings), 1, warnings)
+            self.assertIn("`timeout_seconds` changed", warnings[0])
+        both = manifest(gate("suite", "min", 5, command="a", timeout_seconds=3600))
+        self.assertEqual(len(qr.compare(both, manifest(gate("suite", "min", 5, command="a",
+                                                             timeout_seconds=10)))[1]), 1)
+        self.assertEqual(qr.compare(both, json.loads(json.dumps(both))), ([], []))
+
 
 class TestConfigDefects(unittest.TestCase):
     def test_clean_manifest_has_no_defects(self):
@@ -113,6 +139,17 @@ class TestConfigDefects(unittest.TestCase):
     def test_gates_must_be_a_list(self):
         self.assertEqual(qr.config_defects({"gates": {}}), ["`gates` must be a list"])
         self.assertEqual(qr.config_defects("nope"), ["`gates` must be a list"])
+
+    def test_timeout_seconds_must_be_a_positive_finite_number(self):
+        for bad in (0, -5, "30", True, None, [], float("nan"), float("inf")):
+            d = qr.config_defects(manifest(gate("suite", command="x", timeout_seconds=bad)))
+            self.assertEqual(len(d), 1, (bad, d))
+            self.assertIn("`timeout_seconds` must be a positive number", d[0])
+            self.assertIn("'suite'", d[0])
+        for good in (30, 0.5, 1800, 3600.0):
+            self.assertEqual(qr.config_defects(manifest(gate("suite", command="x", timeout_seconds=good))),
+                             [], good)
+        self.assertEqual(qr.config_defects(manifest(gate("suite", command="x"))), [])
 
 
 class TestMeasureGate(unittest.TestCase):
@@ -146,6 +183,40 @@ class TestMeasureGate(unittest.TestCase):
         # the shell's 127 is the measurement, and 127 > 0.
         g = gate("ghost", "max", 0, command="definitely-not-a-real-command-xyz")
         self.assertEqual(qr.measure_gate(os.getcwd(), g, 30)["status"], "fail")
+
+
+class TestATimeoutIsNotAMeasurement(unittest.TestCase):
+    """ITERATIVE_METHODOLOGY.md: automated checks never pass by default or by timeout. Until 1.4.0 a
+    timeout was reported as exit 127: an exit-code gate read it as `fail` (`max 0`) or as `pass` (a floor
+    at or under 127), and an `extract` gate could read a number out of the timeout MESSAGE."""
+
+    def assert_timed_out(self, r, budget):
+        self.assertEqual((r["status"], r["measured"]), ("unmeasured", None), r)
+        self.assertEqual(r["note"], f"timeout ({budget} s)")
+
+    def test_an_exit_code_gate_with_a_ceiling_is_unmeasured_not_fail(self):
+        r = qr.measure_gate(os.getcwd(), gate("slow", "max", 0, command=slow(3)), 0.5)
+        self.assert_timed_out(r, "0.5")
+
+    def test_an_exit_code_gate_with_a_floor_is_unmeasured_not_pass(self):
+        # 127 clears a floor of 100: this one read PASS.
+        r = qr.measure_gate(os.getcwd(), gate("slow", "min", 100, command=slow(3)), 1)
+        self.assert_timed_out(r, "1")
+
+    def test_extract_never_reads_a_number_out_of_the_timeout_message(self):
+        # The old message carried the command line, `sleep(3)` and the interpreter's path among it:
+        # (\d+) matched a digit of it and the gate read PASS on a number nothing measured.
+        g = gate("slow", "min", 1, command=slow(3, "5"), extract=r"(\d+)")
+        self.assert_timed_out(qr.measure_gate(os.getcwd(), g, 1), "1")
+
+    def test_a_gate_declaring_timeout_seconds_uses_it_not_the_default(self):
+        g = gate("slow", "min", 1, command=slow(3, "5"), extract=r"(\d+)", timeout_seconds=0.5)
+        self.assert_timed_out(qr.measure_gate(os.getcwd(), g, 60), "0.5")
+
+    def test_a_command_inside_its_budget_is_measured_as_before(self):
+        g = gate("quick", "min", 1, command=slow(0.2, "5"), extract=r"(\d+)", timeout_seconds=60)
+        r = qr.measure_gate(os.getcwd(), g, 0.001)
+        self.assertEqual((r["measured"], r["status"], r["note"]), (5.0, "pass", ""))
 
 
 class TestRunStatusAndResultsFile(unittest.TestCase):
@@ -214,6 +285,63 @@ class TestRunStatusAndResultsFile(unittest.TestCase):
         self.assertEqual(qr.do_run(self.d, failing, as_json=True), qr.REFUSED)
         unm = manifest(gate("declared", "min", 1))
         self.assertEqual(qr.do_run(self.d, unm, as_json=True), qr.WARN)
+
+    def test_a_run_with_no_timeout_hashes_as_1_3_0_did(self):
+        # The `results` hash is what a receipt cites. This pin was computed with the 1.3.0 tool, over
+        # one gate of each outcome (pass, pass by exit code, fail, declared-only, extract found nothing):
+        # a tool that changes how a gate is measured must leave every run that did not time out equal.
+        cfg = manifest(
+            gate("three", "min", 3, command=f'"{PY}" -c "print(3)"', extract=r"(\d+)"),
+            gate("exit", "max", 0, command=f'"{PY}" -c "pass"'),
+            gate("short", "min", 4, command=f'"{PY}" -c "print(3)"', extract=r"(\d+)"),
+            gate("declared", "min", 1),
+            gate("nodigits", "min", 0, command=f'"{PY}" -c "print(\'none\')"', extract=r"(\d+)"))
+        snap = qr.run_gates(self.d, cfg)
+        self.assertEqual(snap["summary"], {"pass": 2, "fail": 1, "unmeasured": 2})
+        self.assertEqual(snap["results"], "8498441c1165")
+        self.assertEqual([r["note"] for r in snap["gates"]],
+                         ["", "", "", "declared, no command", "extract matched nothing (exit 0)"])
+
+    def test_a_declared_budget_lets_a_slow_gate_finish_and_an_undeclared_one_time_out(self):
+        cfg = manifest(
+            gate("declared", "min", 5, command=slow(1.5, "7"), extract=r"(\d+)", timeout_seconds=60),
+            gate("undeclared", "min", 5, command=slow(3, "7"), extract=r"(\d+)"))
+        snap = qr.run_gates(self.d, cfg, timeout=0.5)
+        a, b = snap["gates"]
+        self.assertEqual((a["status"], a["measured"], a["note"]), ("pass", 7.0, ""))
+        self.assertEqual((b["status"], b["measured"], b["note"]), ("unmeasured", None, "timeout (0.5 s)"))
+        self.assertEqual(snap["summary"], {"pass": 1, "fail": 0, "unmeasured": 1})
+
+    def test_a_timed_out_command_shared_by_two_gates_runs_once_and_leaves_both_unmeasured(self):
+        marker = os.path.join(self.d, "runs.txt")
+        cmd = slow(3, "f'{3+4} passed, {2-1} failed'", marker)
+        cfg = manifest(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed"),
+                       gate("failed", "max", 1, command=cmd, extract=r"passed, (\d+) failed"))
+        snap = qr.run_gates(self.d, cfg, timeout=0.5)
+        self.assertEqual([(r["status"], r["note"]) for r in snap["gates"]],
+                         [("unmeasured", "timeout (0.5 s)")] * 2)
+        self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+
+    def test_gates_sharing_a_command_run_it_once_under_the_largest_declared_budget(self):
+        # Neither gate may be cut short by the other's smaller budget: the run is one run.
+        marker = os.path.join(self.d, "runs.txt")
+        cmd = slow(1.5, "f'{3+4} passed, {2-1} failed'", marker)
+        cfg = manifest(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed", timeout_seconds=0.5),
+                       gate("failed", "max", 1, command=cmd, extract=r"passed, (\d+) failed",
+                            timeout_seconds=60))
+        snap = qr.run_gates(self.d, cfg, timeout=0.5)
+        self.assertEqual([r["status"] for r in snap["gates"]], ["pass", "pass"])
+        self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+
+    def test_a_timed_out_run_exits_warn_through_the_cli_and_says_why(self):
+        json.dump(manifest(gate("slow", "max", 0, command=slow(3), timeout_seconds=0.5)),
+                  open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+        p = subprocess.run([PY, str(STARTER), "--run"], cwd=self.d, capture_output=True, text=True)
+        self.assertEqual(p.returncode, qr.WARN, p.stdout + p.stderr)
+        self.assertIn("timeout (0.5 s)", p.stdout)
+        self.assertIn("0/1 pass · 0 fail · 1 unmeasured", p.stdout)
+        snap = json.load(open(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+        self.assertEqual((snap["gates"][0]["status"], snap["gates"][0]["measured"]), ("unmeasured", None))
 
 
 class TestPrecommitThroughGit(unittest.TestCase):
@@ -841,6 +969,19 @@ class TestToolInvariants(unittest.TestCase):
     def test_selftest_is_green(self):
         rc = subprocess.run([PY, str(STARTER), "--selftest"], capture_output=True, text=True)
         self.assertEqual(rc.returncode, 0, rc.stdout + rc.stderr)
+
+    def test_selftest_observes_a_timeout_in_both_directions(self):
+        # The selftest is what an adopter has instead of this suite: it must SEE a gate outlive its
+        # budget and read unmeasured, for the ceiling and for the floor that used to read pass.
+        p = subprocess.run([PY, str(STARTER), "--selftest"], capture_output=True, text=True)
+        for label in ("a gate that outlives its timeout is UNMEASURED, never fail",
+                      "a floor on an exit code is UNMEASURED on a timeout, never pass",
+                      "a declared timeout_seconds outlasts the default budget"):
+            self.assertRegex(p.stdout, r"PASS\x1b\[0m  " + label, p.stdout)
+
+    def test_the_seed_names_timeout_seconds_in_its_schema(self):
+        seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
+        self.assertIn("`timeout_seconds`", seed["_gate_schema"])
 
     def test_seed_manifest_is_valid_and_empty(self):
         seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))

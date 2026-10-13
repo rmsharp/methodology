@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] BL-103: the ratchet's timeout, tests written RED first
+
+`tools/test_quality_ratchet.py` gains 14 tests (81 to 95): 13 red for the intended reasons, one green pin by design (a five-gate run's `results` hash, `8498441c1165`, computed with the 1.3.0 tool). They show what the tool does today to a gate that outlives its budget: an exit-code floor of 100 reads **pass** at measured 127, a ceiling reads **fail** at 127, and an `extract` reads a number out of the timeout message (**pass**, measured 3, from the command line quoted in it); `ITERATIVE_METHODOLOGY.md:444` says checks never pass by timeout. His go-ahead at the S305 Phase 4 picker: repairs 1 and 2, orphan kill out (a new row), version 1.4.0, 3600 s on three of this repository's gates.
+
 ### 2026-10-12 · [BL-103] S305 claim (in progress) — the ratchet's timeout
 
 CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for BL-105 phase 4 and he picked BL-103 with two go-aheads, both done before this claim: the push of `c80c5b5` (`2c62927..c80c5b5`, `0 0`, `ls-remote` equal) and the HANDOFFS trim (`cd170f7`) with its fold (`c135916`). The gate citation re-run (clean `--no-local` clone of `c80c5b5`): 18/18, results `0ca51b2444cc`, manifest `5ba29f982c78`, equal to S304's. Deliverable: `quality_ratchet.py` reports a timeout as a timeout and a gate may declare `timeout_seconds` (repairs 1 and 2; repair 3 is not in it); fork only, nothing outward. Phase 3F records the rest.
