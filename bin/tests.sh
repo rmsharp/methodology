@@ -3481,31 +3481,36 @@ PY
 }
 set_rs() { set_field "$1" runtime_smoke "$2"; }
 unm_rc() { set_rs "$P/HANDOFFS.md" "$1"; "$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1; }
-unm_rc "$U1" \
-    && fail "check-handoff passed a cited run with 1 unmeasured gate that the receipt does not name" \
-    || pass "check-handoff: a cited run with an unnamed unmeasured gate is a finding"
+# A "must be a finding" row asserts the lint's OWN message and not only a nonzero exit: an exit code also
+# passes on a fixture the schema rejects, so a row could pass for the wrong reason (S307 found three that
+# would have). The output is captured first: under pipefail `| grep -q` reports the SIGPIPE it causes.
+unm_flag() { UNM_OUT="$("$BIN/check-handoff" "$@" 2>&1)"; [[ "$UNM_OUT" == *"the cited gate run reads"* ]]; }
+unm_finding() { set_rs "$P/HANDOFFS.md" "$1"; unm_flag --file "$P/HANDOFFS.md"; }
+unm_finding "$U1" \
+    && pass "check-handoff: a cited run with an unnamed unmeasured gate is a finding" \
+    || fail "check-handoff passed a cited run with 1 unmeasured gate that the receipt does not name"
 unm_rc "$U1 (unmeasured: tests-sh-passed — by hand: 483 passed)" \
     && pass "check-handoff: one unmeasured gate, named with its by-hand result, satisfies the lint" \
     || fail "check-handoff refused an unmeasured gate that the receipt names"
-unm_rc "$U3 (unmeasured: tests-sh-passed, tests-sh-failed — by hand: 483 passed, 0 failed)" \
-    && fail "check-handoff passed 3 unmeasured gates named by 2" \
-    || pass "check-handoff: fewer names than the citation counts is a finding"
+unm_finding "$U3 (unmeasured: tests-sh-passed, tests-sh-failed — by hand: 483 passed, 0 failed)" \
+    && pass "check-handoff: fewer names than the citation counts is a finding" \
+    || fail "check-handoff passed 3 unmeasured gates named by 2"
 unm_rc "$U3 (unmeasured: \`tests-sh-passed\`, \`tests-sh-failed\`, \`migrate-layout-unit-tests\` — by hand: all 3 run)" \
     && pass "check-handoff: three unmeasured gates, named in backticks, satisfy the lint" \
     || fail "check-handoff refused three named unmeasured gates"
-unm_rc "$U1 (unmeasured: — by hand: 483 passed)" \
-    && fail "check-handoff passed an unmeasured clause that names no gate" \
-    || pass "check-handoff: a clause with no gate name is a finding"
-unm_rc "$U3 (unmeasured: tests-sh-passed, tests-sh-failed by hand: 483 passed, 0 failed)" \
-    && fail "check-handoff counted the words after the names as a third gate" \
-    || pass "check-handoff: only comma-separated names count, not the words after them"
+unm_finding "$U1 (unmeasured: — by hand: 483 passed)" \
+    && pass "check-handoff: a clause with no gate name is a finding" \
+    || fail "check-handoff passed an unmeasured clause that names no gate"
+unm_finding "$U3 (unmeasured: tests-sh-passed, tests-sh-failed by hand: 483 passed, 0 failed)" \
+    && pass "check-handoff: only comma-separated names count, not the words after them" \
+    || fail "check-handoff counted the words after the names as a third gate"
 unm_rc "quality_ratchet: 1/1 pass · results abc123def456 · manifest 0123456789ab" \
     && pass "check-handoff: a citation with no unmeasured field is judged on its structure alone" \
     || fail "check-handoff refused a citation that states no unmeasured count"
 set_rs "$P/HANDOFFS.md" "$U1"
-"$BIN/check-handoff" --all --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
-    && fail "check-handoff --all missed the unnamed unmeasured gate" \
-    || pass "check-handoff --all: the same finding on the newest receipt"
+unm_flag --all --file "$P/HANDOFFS.md" \
+    && pass "check-handoff --all: the same finding on the newest receipt" \
+    || fail "check-handoff --all missed the unnamed unmeasured gate"
 set_rs "$P/HANDOFFS.md" "$U1 (unmeasured: tests-sh-passed — by hand: 483 passed)"
 "$BIN/check-handoff" --all --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
     && pass "check-handoff --all: the named exception satisfies the lint too" \
@@ -3519,28 +3524,28 @@ set_rs "$P/HANDOFFS.md" "$U1 (unmeasured: tests-sh-passed — by hand: 483 passe
 # Round 2 (S307): the behaviours the first mutation round found no test for.
 CLEAN1="quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results abc123def456 · manifest 0123456789ab"
 U12="quality_ratchet: 6/18 pass · 0 fail · 12 unmeasured · results abc123def456 · manifest 0123456789ab"
-unm_rc "first run clean: $CLEAN1, then $U1" \
-    && fail "check-handoff judged only the first citation in the receipt" \
-    || pass "check-handoff: every citation is judged, not only the first"
-unm_rc "$U3 (unmeasured: a-gate, b-gate — by hand: ok), then $U1 (unmeasured: c-gate — by hand: ok)" \
-    && fail "check-handoff took the fewest unmeasured across several citations" \
-    || pass "check-handoff: the most unmeasured in any citation is what the names must answer"
+unm_finding "first run clean: $CLEAN1, then $U1" \
+    && pass "check-handoff: every citation is judged, not only the first" \
+    || fail "check-handoff judged only the first citation in the receipt"
+unm_finding "$U3 (unmeasured: a-gate, b-gate — by hand: ok), then $U1 (unmeasured: c-gate — by hand: ok)" \
+    && pass "check-handoff: the most unmeasured in any citation is what the names must answer" \
+    || fail "check-handoff took the fewest unmeasured across several citations"
 unm_rc "$U3 (unmeasured: tests-sh-passed — by hand: ok) and, rerun, $U1 (unmeasured: a-gate, b-gate, c-gate — by hand: ok)" \
     && pass "check-handoff: the most names in any clause answer the most unmeasured in any citation" \
     || fail "check-handoff took the fewest names across several clauses"
-unm_rc "$U1 unmeasured:" \
-    && fail "check-handoff took the next field's first word for a gate name" \
-    || pass "check-handoff: an unmeasured: clause that ends its field names nothing"
-unm_rc "$U12 (unmeasured: tests-sh-passed, tests-sh-failed, migrate-layout-unit-tests — by hand: ok)" \
-    && fail "check-handoff read 12 unmeasured gates as 1" \
-    || pass "check-handoff: a two-digit unmeasured count is read whole"
+unm_finding "$U1 unmeasured:" \
+    && pass "check-handoff: an unmeasured: clause that ends its field names nothing" \
+    || fail "check-handoff took the next field's first word for a gate name"
+unm_finding "$U12 (unmeasured: tests-sh-passed, tests-sh-failed, migrate-layout-unit-tests — by hand: ok)" \
+    && pass "check-handoff: a two-digit unmeasured count is read whole" \
+    || fail "check-handoff read 12 unmeasured gates as 1"
 unm_rc "$U1 (unmeasured: 2fa-tests — by hand: ok)" \
     && pass "check-handoff: a gate name may start with a digit" \
     || fail "check-handoff refused a gate name that starts with a digit"
 set_rs "$P/HANDOFFS.md" "n/a"; set_field "$P/HANDOFFS.md" what_was_done "ran the gates, commit a1b2c3d: $U1"
-"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
-    && fail "check-handoff ignored a citation that sits in what_was_done" \
-    || pass "check-handoff: a citation in what_was_done is judged like one in runtime_smoke"
+unm_flag --file "$P/HANDOFFS.md" \
+    && pass "check-handoff: a citation in what_was_done is judged like one in runtime_smoke" \
+    || fail "check-handoff ignored a citation that sits in what_was_done"
 set_field "$P/HANDOFFS.md" what_was_done "ran the gates, commit a1b2c3d: $U1 (unmeasured: tests-sh-passed — by hand: ok)"
 "$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
     && pass "check-handoff: a citation and its clause in what_was_done satisfy the lint" \
