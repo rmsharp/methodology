@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] S305 claim (in progress) — the ratchet's timeout
+
+CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for BL-105 phase 4 and he picked BL-103 with two go-aheads, both done before this claim: the push of `c80c5b5` (`2c62927..c80c5b5`, `0 0`, `ls-remote` equal) and the HANDOFFS trim (`cd170f7`) with its fold (`c135916`). The gate citation re-run (clean `--no-local` clone of `c80c5b5`): 18/18, results `0ca51b2444cc`, manifest `5ba29f982c78`, equal to S304's. Deliverable: `quality_ratchet.py` reports a timeout as a timeout and a gate may declare `timeout_seconds` (repairs 1 and 2; repair 3 is not in it); fork only, nothing outward. Phase 3F records the rest.
+
 ### 2026-10-12 · [ad hoc] S305 — fold the third 2026-10-12 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`cd170f7`, 1 receipt, S302, to `HANDOFFS-through-2026-10-12-3.md`, the name S304 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S304, S303). The trim ran on his go-ahead at the S305 Phase 0 picker.

@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S305
+date: 2026-10-12
+status: pending
+active_task: BL-103, the ratchet's timeout (backlog row `docs/planning/BACKLOG.md:183`, detail `docs/planning/BACKLOG-DETAIL.md:4302`): `starter-kit/quality_ratchet.py:96` `run()` maps a `TimeoutExpired` to exit 127, so a gate that exceeds `run_gates`' 600 s (`:405`) reads `unmeasured (exit 127)` exactly as a missing command does. Deliverable: repair (1), report a timeout as `timeout (600 s)`, and repair (2), a gate may declare `timeout_seconds`; repair (3), a rule that a cited run has 0 unmeasured, is NOT in it. A distributed tool: fork first, the resync and every sync channel simulated before the commit, nothing outward (D8). DEVELOPMENT_WORKSTREAM: research, then a present-for-approval gate before any implementation.
+```
+
+```handoff
 session: S304
 date: 2026-10-12
 status: complete
