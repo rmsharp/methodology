@@ -1,0 +1,27 @@
+# The two unit suites the shell suite reports as failed, run alone in the probe tree (S308).
+# cd <probe dir>; python3 -B tools/test_close_out_report.py ; python3 -B tools/test_methodology_dashboard.py
+
+## tools/test_close_out_report.py
+................................................................F.................
+======================================================================
+FAIL: test_every_complete_receipt_renders_and_lints_clean (__main__.Property)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/.cache/pr-candidate-probe/tools/test_close_out_report.py", line 604, in test_every_complete_receipt_renders_and_lints_clean
+    self.assertGreaterEqual(len(rs), 100, "the archive should hold well over a hundred complete receipts")
+AssertionError: 38 not greater than or equal to 100 : the archive should hold well over a hundred complete receipts
+
+----------------------------------------------------------------------
+Ran 82 tests in 15.692s
+
+FAILED (failures=1)
+
+## tools/test_methodology_dashboard.py
+FAIL: test_the_fleet_facts_the_disposition_was_decided_on_are_stated_not_assumed (__main__.TestPhaseC1ReadCapClasses)
+AssertionError: False is not true : this repo's own Class B backlog is the worked example the disposition cites; if it moved, re-derive the decision rather than the path
+FAIL: test_backlog_is_watched_but_never_given_a_trim_row (__main__.TestS38TrimTriggerRow)
+AssertionError: 'docs/planning/BACKLOG.md' not found in {'HANDOFFS.md', 'CHANGELOG.md'} : fixture check: the backlog must be watched, or this proves nothing
+FAIL: test_record_counter_matches_the_trimmers_zoning_on_every_real_ledger (__main__.TestS38TrimTriggerRow)
+AssertionError: 5 not greater than or equal to 6 : fixture check: too few real ledgers compared (5)
+Ran 397 tests in 54.321s
+FAILED (failures=3)

@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] evidence for the upstream pull request plan: upstream's tree with the fork's shipped files laid over it
+
+`candidate-probe.sh`, run twice (by hand, then the script): `bin/tests.sh` reads 484 passed, 14 failed, 2 skipped on `upstream/main` plus the overlay (upstream's own suite 261/0/0, the fork's 503/0/0); the 14 sit in 9 of 54 test blocks, all fixtures of this repository's own ledgers or a stricter checker meeting upstream's live ledger; the trimmer, context-budget, ratchet, layout, sync and `migrate-layout` unit suites passed. The two unit suites that fail inside it, run alone, are in `candidate-probe-unit-failures-output.txt`. Fork only, nothing sent.
+
 ### 2026-10-13 · [BL-101] evidence for the upstream pull request plan: the two open pull requests and the fork-internal tokens
 
 `conflicts.sh` (#94 conflicts with the fork tip in 3 files, 15 regions; #92 in 1 file, 1 region, `CLAUDE.md`) and `fork-tokens.py` (282 backlog codes, 199 session numbers, 63 `docs/planning/` paths and 25 fork-learning citations on added lines; 14 plan documents they cite are not in `upstream/main`), each with its saved output. Fork only, nothing sent.
