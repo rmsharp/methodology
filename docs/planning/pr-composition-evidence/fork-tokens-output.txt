@@ -1,0 +1,38 @@
+ADDED lines in 51 changed shipped/tool/test/hook files that carry a token:
+  backlog code (BL-nnn)           282
+  session number (S###)           199
+  fork Learning citation           25
+  path under docs/planning/        63
+  plan-phase code (P1..P23)       130
+
+most affected files:
+  bin/tests.sh                                 backlog=77  session=84  plan-phase=17  fork=7  path=3
+  tools/test_methodology_dashboard.py          backlog=27  session=26  plan-phase=16  path=20  fork=11
+  starter-kit/methodology_dashboard.py         backlog=35  path=11  plan-phase=18  session=24  fork=3
+  tools/methodology_dashboard.py               backlog=35  path=11  plan-phase=18  session=24  fork=3
+  tools/test_migrate_layout.py                 backlog=12  plan-phase=6  path=1  session=8
+  bin/migrate-layout                           backlog=19  plan-phase=3  path=1  session=2
+  tools/test_layout_resolver.py                backlog=1  plan-phase=13  path=1  session=3
+  tools/test_quality_ratchet.py                session=5  backlog=7  plan-phase=3
+  .githooks/pre-commit                         backlog=9  plan-phase=3  session=2
+  bin/check-handoff                            session=10  path=2  backlog=2
+
+BASELINE, upstream/main's copies of the same files (lines): {'session number (S###)': 51, 'path under docs/planning/': 20, 'backlog code (BL-nnn)': 67, 'plan-phase code (P1..P23)': 9}
+
+31 distinct docs/ paths cited on added lines; 31 are not in upstream/main:
+  docs/planning/ documents a reader cannot open (14):
+    docs/planning/BACKLOG.md                                       <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test
+    docs/planning/close-out-receipt-durable-artifact-plan.md       <- bin/check-handoff
+    docs/planning/close-out-report-prototype/EVIDENCE.md           <- tools/test_close_out_report.py
+    docs/planning/dashboard-read-cap-class-adopter-drift-plan.md   <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test
+    docs/planning/framework-context-cost-plan.md                   <- tools/test_methodology_dashboard.py
+    docs/planning/issue67-fork-side-fix-plan.md                    <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test
+    docs/planning/methodology-subdirectory-plan.md                 <- bin/check-layout-literals, bin/migrate-layout, bin/status, bin/sync, starter-kit
+    docs/planning/model-use-provenance-plan.md                     <- bin/model-report
+    docs/planning/overhead-ratchet-plan.md                         <- bin/check-overhead, bin/tests.sh
+    docs/planning/read-cap-phase-c-plan.md                         <- tools/test_methodology_dashboard.py
+    docs/planning/read-cap-premise-correction-plan.md              <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+    docs/planning/record-budget-reduction-plan.md                  <- bin/check-handoff, bin/tests.sh
+    docs/planning/upstream-resync-2026-09-plan.md                  <- bin/tests.sh
+    docs/planning/upstream-resync-2026-10-plan.md                  <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/archive/ names (17), nearly all fixture names a test builds in a scratch repository, not real citations

@@ -1,0 +1,22 @@
+== PR #94 head 972eb2cd6263 (OPEN MERGEABLE), files: .quality-gates.json, CHANGELOG.md, FRAMEWORK_APPARATUS.md, starter-kit/methodology_trim.py, tools/test_methodology_trim.py
+   merge-tree exit 1 (0 clean, 1 conflicts)
+   conflicted: .quality-gates.json
+   conflicted: starter-kit/methodology_trim.py
+   conflicted: tools/test_methodology_trim.py
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+   PR files whose HEAD blob equals the PR head's blob:
+      differs  .quality-gates.json
+      differs  CHANGELOG.md
+      differs  FRAMEWORK_APPARATUS.md
+      differs  starter-kit/methodology_trim.py
+      differs  tools/test_methodology_trim.py
+== PR #92 head fa2bb5d464f9 (OPEN MERGEABLE), files: CHANGELOG.md, CLAUDE.md, README.md
+   merge-tree exit 1 (0 clean, 1 conflicts)
+   conflicted: CLAUDE.md
+   CLAUDE.md: 1 conflict region(s)
+   PR files whose HEAD blob equals the PR head's blob:
+      differs  CHANGELOG.md
+      differs  CLAUDE.md
+      differs  README.md

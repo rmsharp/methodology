@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] evidence for the upstream pull request plan: the two open pull requests and the fork-internal tokens
+
+`conflicts.sh` (#94 conflicts with the fork tip in 3 files, 15 regions; #92 in 1 file, 1 region, `CLAUDE.md`) and `fork-tokens.py` (282 backlog codes, 199 session numbers, 63 `docs/planning/` paths and 25 fork-learning citations on added lines; 14 plan documents they cite are not in `upstream/main`), each with its saved output. Fork only, nothing sent.
+
 ### 2026-10-13 · [BL-101] evidence for the upstream pull request plan: the difference and the register's open rows
 
 `docs/planning/pr-composition-evidence/inventory.py` (the fork's tree against `upstream/main`: 56 files, +25,804 / −1,409 outside `docs/` and the ledgers, split at the directory plan's base `c8b9ddd`, by theme, with the adopter impact and the tool versions) and `register-open-rows.py` (13 of the register's 31 rows open, the dated changes applied), each with its saved output. Read git only. Fork only, nothing sent.
