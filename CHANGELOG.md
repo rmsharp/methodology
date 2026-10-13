@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] S306 close-out — BL-107 done: `quality_ratchet.py` 1.5.0; the receipt is complete; the gate run read 18/18
+
+A gate's command runs in a session of its own and is stopped with its whole process group on a timeout, Ctrl-C, SIGHUP or SIGTERM; measured first, the row's own fix alone orphaned it on Ctrl-C and on a hangup. Done on the fork and sent nowhere. The gate in a clean `--no-local` clone of `08f1ef6`, launched as `nohup ... &`: 18/18, results `75a345496ff4`, manifest `18a872e7eb40`; S305's citation re-run at Phase 0 equal. `HANDOFFS.md` holds 3 receipts (S306, S305, S304): one trim is owed after the next Phase 0 report. `origin/main` is `a2a856f`, 15 commits behind `HEAD`. The `HANDOFFS.md` receipt carries the rest; Phase 3C appended no fork learning row.
+
 ### 2026-10-12 · [BL-107] BL-107 closed: `quality_ratchet.py` 1.5.0 stops a timed-out gate's command
 
 The index row is out of `BACKLOG.md` and the id is in its closed list, the completed row is in `BACKLOG-COMPLETED.md`, `BACKLOG-DETAIL.md` carries the closure, and BL-103's row now says 1.5.0 and that BL-107 is closed. Both `.verify.sh` proofs exit 0. `BACKLOG.md` 58,222 B to 57,796 B (still past the 56,750 B budget the dashboard flags). Fork only, nothing sent to `KJ5HST/methodology`.
