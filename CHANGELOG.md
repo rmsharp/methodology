@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-103] repair 3 recorded; the backlog row says repairs 1, 2 and 3 are done and keeps the three open calls
+
+The record [`docs/planning/bl103-evidence/bl103-repair3-record.md`](docs/planning/bl103-evidence/bl103-repair3-record.md) (what was found, what changed by commit, how it is held, the channels, what was not done, his calls). `docs/planning/BACKLOG.md` row BL-103 is **not closed**: three of his calls remain (the dashboard's mirror of `timeout_seconds`, whether 3600 s stays, whether `--run` should print the unmeasured names in the lint's form), so the row stays in the open table, shorter (57,796 B to 57,777 B; the standing flag is the dashboard's 56,750 B) and `docs/planning/BACKLOG-DETAIL.md` gains the S307 paragraph. Closing it would have dropped the three from the backlog. Fork only.
+
 ### 2026-10-13 · [BL-103] `.quality-gates.json`: `tests-sh-passed` floor 477 to 503 (a tightening)
 
 Measured, not derived: `bash bin/tests.sh > file` in a clean `--no-local` clone of `8dab34f` (launched `nohup ... &`, at a load average of 35 to 212) read `== Summary: 503 passed, 0 failed, 0 skipped ==` (483 at S306's last work commit); the 20 added are the repair's rows in the gate-citation block. `60b6412` changed ten rows to assert the lint's message and left the count. The whole suite ran once, after layers 1 to 3 and the first mutation round, not after each layer as the plan said: the machine's load made each run 20 to 60 minutes. Fork only.
