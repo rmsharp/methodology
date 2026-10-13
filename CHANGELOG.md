@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-8.md` (1 record(s), 39,979 B → 28,299 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-12-8.md`](docs/archive/HANDOFFS-through-2026-10-12-8.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12-8.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12-8.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,979 B → 28,299 B (−29.2%).
+
 ### 2026-10-13 · [BL-101] S309 — after the close-out: his picker answers, the two pushes, and the exclude removed in `vscode_quarto_ext`
 
 His answers at the S309 close-out picker, each action read back before the next. **Pushed (named commits, not `HEAD`):** `2057838c` to `rmsharp/vscode_quarto_ext` `master` (`e35d1657..2057838c`, `ls-remote` equal, `0 0`; the push carried that project's own 73 earlier commits since 2026-10-12, which the picker's option text said) and `146efb9` to this fork's `main` (`c7e89c0..146efb9`, `0 0`). Nothing to `KJ5HST/methodology`. **Non-commit action there:** the three lines Session 302 had appended to that clone's `.git/info/exclude` (the `scratchpad/` exclude) removed, as its own note asked after the migration; `git status` reads `?? scratchpad/` again; a copy of the file before is at `~/.cache/s309-exclude.before`; recorded by a ledger entry in that project (`82e6049e`, local, 1 ahead of `origin/master`, not pushed). **Decisions:** F32 is to be fixed as the NEXT deliverable (his pick); F16 stays declined (his). The receipt's `next_steps`, the BL-105 row and detail, and the register (a dated line) were corrected to say so. Fork only otherwise.
