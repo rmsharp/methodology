@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S310 — after the close-out: his picker answers, the push, and the label scope decided
+
+At the S310 close-out picker he decided the `UNREHEARSED` label **stays on every refused list that has moves**, shard or not (simple and always true; the refinement that sets the marker only when a shard proof is in the list is declined, and F32 owes nothing more). He also gave the go-ahead to push `2d2fe53` to the fork's `main`: `origin/main` went `ee12007..2d2fe53` (6 commits), naming the commit and not `HEAD`; read back: `ls-remote` equals `2d2fe53`, `rev-list --left-right --count 2d2fe53...origin/main` read `0 0`. Fork only, nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-13 · [BL-101] S310 close-out — F32 fixed in `bin/migrate-layout`, the HANDOFFS trim and both pushes done, and the gate run read 18/18
 
 The deliverable was F32: a refused run's move list is headed `moves (N, UNREHEARSED):` and carries `rehearsal.skipped` (`51e0259`, five tests first, 280 green, mutation round 7 of 8 killed, the floor 275 to 280; closed in the register and the BL-105 rows at `c50b6f6`). Smoked at the real refused `nprcgenekeepr`, which showed the one thing fixtures did not: the label also appears on a refused list that holds no shard, where it is true and idle (his call, asked at the close-out picker). Before the claim, on his three Phase 0 go-aheads: the fork push of `ee12007`, the push of `82e6049e` to `rmsharp/vscode_quarto_ext`, and the HANDOFFS trim `f50216d` with its fold `a3a8e76`. The `HANDOFFS.md` receipt is complete (`self_score` 8, `predecessor_score` 9); no fork learning row appended (D3 not triggered). Gate citation: 18/18 pass, results `d7576eaf9b5b`, manifest `a690abd884d4`, in a clean clone of `c50b6f6`. Fork only; nothing sent to `KJ5HST/methodology`.
