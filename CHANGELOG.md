@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] BL-107 closed: `quality_ratchet.py` 1.5.0 stops a timed-out gate's command
+
+The index row is out of `BACKLOG.md` and the id is in its closed list, the completed row is in `BACKLOG-COMPLETED.md`, `BACKLOG-DETAIL.md` carries the closure, and BL-103's row now says 1.5.0 and that BL-107 is closed. Both `.verify.sh` proofs exit 0. `BACKLOG.md` 58,222 B to 57,796 B (still past the 56,750 B budget the dashboard flags). Fork only, nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-12 · [BL-107] `docs/planning/bl107-evidence/`: the record and the mutation round
 
 `bl107-record.md` (what was measured, what changed, how it is held, the channels, what is not verified, his calls), `mutate-bl107.py` and `bl107-mutation-output.txt`: 29 mutants over `quality_ratchet.py` 1.5.0 in two rounds; round 1 killed 21 of 26, and its five survivors (each a weakness in a test) plus three new mutants were all killed in round 2. The suite kills 29 of 29, the selftest 11. Nothing outward.
