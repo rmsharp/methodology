@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S310
+date: 2026-10-13
+status: pending
+active_task: **F32 in `bin/migrate-layout`** (finding F32, `docs/planning/methodology-subdirectory-evidence/findings-register.md:42`): a REFUSED dry run prints a move list from before the shard-proof rehearsal (`bin/migrate-layout:1065`, `if moves and not refusals`), so the report reads 3 moves where the run after the refusal clears reads 1. The fix is to LABEL that list as unrehearsed while a refusal stands (rehearsing before refusing would rehearse a tree the sync is about to change); a test written first, red first. His pick at the S309 close-out picker, confirmed at the S310 Phase 0 picker. Canonical-only, fork only; nothing sent to `KJ5HST/methodology`. Phase 0 go-aheads, each read back before this claim: push of `ee12007` to the fork (`146efb9..ee12007`, `0 0`), push of `82e6049e` to `rmsharp/vscode_quarto_ext` (`2057838c..82e6049e`, `0 0`), the HANDOFFS trim `f50216d` and its fold `a3a8e76`.
+```
+
+```handoff
 session: S309
 date: 2026-10-13
 status: complete

@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S310 claim (in progress) — the F32 fix in `bin/migrate-layout`
+
+CHANGELOG: pending. Operator said `go`, picked F32 at the Phase 0 picker (his pick at the S309 close-out, confirmed), and gave three go-aheads there, each read back before this claim: the push of `ee12007` to the fork, the push of `82e6049e` to `rmsharp/vscode_quarto_ext`, and the HANDOFFS trim `f50216d` with its fold `a3a8e76` (entries below). The gate citation re-run at Phase 0 (clean `--no-local` clone of `ee12007`) read 18/18, results `076e9131026f`, manifest `e0f946c5bfe3`, equal to S309's. Deliverable: label a refused dry run's move list as unrehearsed (`bin/migrate-layout:1065`), test first, red first; canonical-only. Fork only, nothing outward to `KJ5HST/methodology`. Phase 3F records the rest.
+
 ### 2026-10-13 · [ad hoc] S310 — fold the eighth 2026-10-12 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`f50216d`, 1 receipt, S307, to `HANDOFFS-through-2026-10-12-8.md`, the name S309 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit. `HANDOFFS.md` holds 2 receipts (S309, S308). The trim ran on his go-ahead at the S310 Phase 0 picker: dry run first, proof exit 0, `check-handoff` and `check-ledger` exit 0.
