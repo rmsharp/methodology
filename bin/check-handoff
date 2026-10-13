@@ -264,6 +264,15 @@ BARE_PLACEHOLDERS = {"todo", "tbd", "done.", "fixed stuff", "..."}
 # receipts written before the manifest existed are not re-judged, so --all stays green on history.
 GATES_MANIFEST = ".quality-gates.json"  # layout: ok -- the file's own name, never a path: where it lives is resolved above
 GATE_CITATION_RE = re.compile(r"quality_ratchet:\s*\d+/\d+\s+pass")
+# BL-103 repair 3 (S307): a citation that reads `U unmeasured` is citable only when the receipt names
+# the gates, `unmeasured: <gate>, <gate>`, at least U of them (the shape S287's receipt wrote in prose).
+# Structure again, never truth: a name typed by hand proves nothing, and the reconcile is what compares
+# counts to results. Spaces and tabs only between the pieces, so a clause that ends a field cannot
+# borrow the next field's first word as a gate name. Names are comma-separated: the words after the last
+# comma-joined name (`by hand: ...`) are not names. A citation with no unmeasured field is judged above only.
+GATE_UNMEASURED_RE = re.compile(r"quality_ratchet:[ \t]*\d+/\d+[ \t]+pass(?:[ \t]*·[ \t]*\d+[ \t]+fail)?[ \t]*·[ \t]*(\d+)[ \t]+unmeasured")
+_GATE_NAME = r"`?[A-Za-z0-9][A-Za-z0-9_.-]*`?"
+UNMEASURED_CLAUSE_RE = re.compile(r"unmeasured:[ \t]*(" + _GATE_NAME + r"(?:[ \t]*,[ \t]*" + _GATE_NAME + r")*)")
 
 
 def scan(text: str):
@@ -849,15 +858,23 @@ def declared_gate_count(handoffs_path: Path) -> int:
 
 
 def validate_gate_citation(fields: dict, declared: int) -> list:
-    """D9 lint for the newest receipt: complete + gates declared => a citation must be present."""
+    """D9 lint for the newest receipt: complete + gates declared => a citation must be present, and a
+    citation that reads unmeasured gates must name them (BL-103 repair 3)."""
     if declared <= 0 or fields.get("status", "").strip() != "complete":
         return []
     haystack = fields.get("runtime_smoke", "") + "\n" + fields.get("what_was_done", "")
-    if GATE_CITATION_RE.search(haystack):
-        return []
-    return ["%d quality gate(s) are declared in %s but the receipt cites no gate run — paste the "
-            "`quality_ratchet: N/M pass …` summary line of `quality_ratchet.py --run` into "  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
-            "runtime_smoke" % (declared, GATES_MANIFEST)]
+    if not GATE_CITATION_RE.search(haystack):
+        return ["%d quality gate(s) are declared in %s but the receipt cites no gate run — paste the "
+                "`quality_ratchet: N/M pass …` summary line of `quality_ratchet.py --run` into "  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
+                "runtime_smoke" % (declared, GATES_MANIFEST)]
+    owed = max((int(n) for n in GATE_UNMEASURED_RE.findall(haystack)), default=0)
+    named = max((len(re.split(r"[ \t]*,[ \t]*", names)) for names in UNMEASURED_CLAUSE_RE.findall(haystack)),
+                default=0)
+    if owed > named:
+        return ["the cited gate run reads %d unmeasured gate(s) and the receipt names %d: repair the gate "
+                "and re-run, or name each in `runtime_smoke` as `unmeasured: <gate>, … — by hand: <result>`"
+                % (owed, named)]
+    return []
 
 
 def repo_root() -> Path:
