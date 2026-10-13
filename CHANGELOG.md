@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S309 claim (in progress) — BL-105 build phase 4 on `vscode_quarto_ext`
+
+CHANGELOG: pending. Operator said `go`, picked the BL-105 phase 4 move on `vscode_quarto_ext` at the Phase 0 picker, and gave two go-aheads there, each read back before this claim: the push of `c7e89c0` (`ec24116..c7e89c0`, `0 0`, `ls-remote` equal) and the HANDOFFS trim `aaa9d40` with its fold `debc793`. S308's gate citation re-run at Phase 0 (clean `--no-local` clone of `c7e89c0`) read 18/18, results `076e9131026f`, manifest `e0f946c5bfe3`, equal to S308's. Deliverable: `bin/sync` as its own commit in `vscode_quarto_ext`, then `bin/migrate-layout --apply` for the 3 companion moves, rehearsed in clones first; its project push is its own go-ahead. Fork-side only; nothing outward to `KJ5HST/methodology`.
+
 ### 2026-10-13 · [ad hoc] S309 — fold the seventh 2026-10-12 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`aaa9d40`, 1 receipt, S306, to `HANDOFFS-through-2026-10-12-7.md`, the name S308 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit. `HANDOFFS.md` holds 2 receipts (S308, S307). The trim ran on his go-ahead at the S309 Phase 0 picker.

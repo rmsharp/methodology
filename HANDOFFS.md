@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S309
+date: 2026-10-13
+status: pending
+active_task: BL-105 build phase 4 on ONE adopter, `vscode_quarto_ext` (already in the new layout, P17): `bin/sync` as its own commit there (5 tracked files behind: the runner, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `HOW_TO_USE.md`, `quality_ratchet.py` 3 versions), then `bin/migrate-layout --apply` for the 3 companion moves (`PROJECT_LEARNINGS.md`; `docs/archive/SESSION_NOTES-through-S253.md` and its `.verify.sh`; into `methodology/`), rehearsed in clones first. His pick at the S309 Phase 0 picker; his two go-aheads there (push `c7e89c0` to the fork, done and read back; the HANDOFFS trim `aaa9d40` and its fold `debc793`, done). Its project push is its own go-ahead. Fork-side only; nothing sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S308
 date: 2026-10-13
 status: complete
