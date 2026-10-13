@@ -253,6 +253,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] S310 — fold the eighth 2026-10-12 HANDOFFS shard pointer into the archive index
+
+The pointer block the trim (`f50216d`, 1 receipt, S307, to `HANDOFFS-through-2026-10-12-8.md`, the name S309 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit. `HANDOFFS.md` holds 2 receipts (S309, S308). The trim ran on his go-ahead at the S310 Phase 0 picker: dry run first, proof exit 0, `check-handoff` and `check-ledger` exit 0.
+
+### 2026-10-13 · [ad hoc] S310 — pushed `82e6049e` to `rmsharp/vscode_quarto_ext`'s `master`
+
+His own project's remote went `2057838c..82e6049e` (1 commit, the ledger line recording the exclude removed) on his go-ahead at the S310 Phase 0 picker, naming the commit and not `HEAD`; no session had its working directory in that project at the push. Read back: `ls-remote` equals `82e6049e`, `rev-list --left-right --count 82e6049e...origin/master` read `0 0`. Nothing sent to `KJ5HST/methodology`.
+
+### 2026-10-13 · [ad hoc] S310 — pushed `ee12007` to the fork's `main`
+
+`origin/main` went `146efb9..ee12007` (1 commit) on his go-ahead at the S310 Phase 0 picker, naming the commit and not `HEAD`; five files, so outside the CHANGELOG-only standing grant. Read back: `ls-remote` equals `ee12007`, `rev-list --left-right --count ee12007...origin/main` read `0 0`. Fork only, nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-8.md` (1 record(s), 39,979 B → 28,299 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
