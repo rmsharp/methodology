@@ -445,7 +445,7 @@ def run_gates(root, cfg, timeout=DEFAULT_TIMEOUT):
     memo = {}
     gates = cfg.get("gates", [])
     # Gates over one command share one run (measure_gate), so that run gets the LARGEST budget any of
-    # them declares: neither gate is cut short by the other's smaller one.
+    # them has (its own `timeout_seconds`, else the default): no gate is cut short by another's smaller one.
     budgets = {}
     for g in gates:
         if g.get("command"):

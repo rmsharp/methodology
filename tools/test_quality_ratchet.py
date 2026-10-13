@@ -115,6 +115,9 @@ class TestCompareIsTheRatchet(unittest.TestCase):
         self.assertEqual(len(qr.compare(both, manifest(gate("suite", "min", 5, command="a",
                                                              timeout_seconds=10)))[1]), 1)
         self.assertEqual(qr.compare(both, json.loads(json.dumps(both))), ([], []))
+        # Dropping the field falls back to the default budget, which may be a cut: it warns too.
+        removed = qr.compare(both, manifest(gate("suite", "min", 5, command="a")))
+        self.assertEqual((removed[0], len(removed[1])), ([], 1))
 
 
 class TestConfigDefects(unittest.TestCase):
@@ -212,6 +215,25 @@ class TestATimeoutIsNotAMeasurement(unittest.TestCase):
     def test_a_gate_declaring_timeout_seconds_uses_it_not_the_default(self):
         g = gate("slow", "min", 1, command=slow(3, "5"), extract=r"(\d+)", timeout_seconds=0.5)
         self.assert_timed_out(qr.measure_gate(os.getcwd(), g, 60), "0.5")
+
+    def test_the_note_prints_the_budget_the_way_a_person_wrote_it(self):
+        # `1.0` and `1` are the same budget; the note a receipt may quote must not say `1.0 s`.
+        g = gate("slow", "max", 0, command=slow(3), timeout_seconds=1.0)
+        self.assert_timed_out(qr.measure_gate(os.getcwd(), g, 60), "1")
+
+    def test_a_command_that_cannot_start_is_not_a_timeout(self):
+        # No such directory: the OS refuses before anything runs. That is exit 127 as it always was,
+        # and nothing the word `timeout` should describe.
+        g = gate("ghost", "max", 0, command=slow(0.1))
+        r = qr.measure_gate("/no/such/directory/for/a/gate", g, 30)
+        self.assertEqual((r["status"], r["measured"]), ("fail", 127.0))
+        self.assertNotIn("timeout", r["note"])
+
+    def test_the_default_budget_is_600_seconds(self):
+        # Documented in the module docstring and the seed's schema, so pinned.
+        import inspect
+        self.assertEqual(qr.DEFAULT_TIMEOUT, 600)
+        self.assertEqual(inspect.signature(qr.run_gates).parameters["timeout"].default, 600)
 
     def test_a_command_inside_its_budget_is_measured_as_before(self):
         g = gate("quick", "min", 1, command=slow(0.2, "5"), extract=r"(\d+)", timeout_seconds=60)
@@ -332,6 +354,26 @@ class TestRunStatusAndResultsFile(unittest.TestCase):
         snap = qr.run_gates(self.d, cfg, timeout=0.5)
         self.assertEqual([r["status"] for r in snap["gates"]], ["pass", "pass"])
         self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+
+    def test_a_shared_run_that_times_out_names_the_budget_it_had(self):
+        # One run, one budget (the larger): both gates must say the budget the run really had.
+        cmd = slow(3, "f'{3+4} passed, {2-1} failed'")
+        # The larger budget sits on the FIRST gate: the second reads the run from the memo, and must say
+        # the run's budget, not its own smaller one.
+        cfg = manifest(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed", timeout_seconds=0.8),
+                       gate("failed", "max", 1, command=cmd, extract=r"passed, (\d+) failed",
+                            timeout_seconds=0.5))
+        snap = qr.run_gates(self.d, cfg)
+        self.assertEqual([r["note"] for r in snap["gates"]], ["timeout (0.8 s)"] * 2)
+
+    def test_an_undeclared_gate_keeps_the_default_beside_a_shorter_declared_one(self):
+        # The default is the undeclared gate's budget, so the shared run is not cut at its sibling's
+        # smaller declared one: the largest budget any of them HAS wins, declared or not.
+        cmd = slow(1.5, "f'{3+4} passed, {2-1} failed'")
+        cfg = manifest(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed", timeout_seconds=0.5),
+                       gate("failed", "max", 1, command=cmd, extract=r"passed, (\d+) failed"))
+        snap = qr.run_gates(self.d, cfg, timeout=60)
+        self.assertEqual([r["status"] for r in snap["gates"]], ["pass", "pass"])
 
     def test_a_timed_out_run_exits_warn_through_the_cli_and_says_why(self):
         json.dump(manifest(gate("slow", "max", 0, command=slow(3), timeout_seconds=0.5)),

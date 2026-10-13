@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] BL-103: a mutation round over `quality_ratchet.py` 1.4.0 and the tests it asked for; `ratchet-unit-tests` floor 95 to 100
+
+22 mutants, `docs/planning/bl103-evidence/mutate-bl103.py` (run in a `--no-local` clone under `~/.cache`): 16 killed by the suite, 6 survived (the budget's `:g` format, a shared run's note, a command that cannot start, the 600 s default, an undeclared gate's default in a shared run, the memo's budget): each a behaviour no test named. Five tests added (100 OK, 95 before); round 2, with a 23rd mutant on a removed `timeout_seconds`, is recorded with the work.
+
 ### 2026-10-12 · [BL-103] `quality_ratchet.py` 1.4.0: a gate that outlives its budget is unmeasured, and a gate may declare `timeout_seconds`
 
 `starter-kit/quality_ratchet.py` (distributed) 1.3.0 to 1.4.0: gate commands run through `run_gate_command`, which reports a timeout apart from an exit code, so a gate that outlives its budget is `unmeasured`, `measured: null`, note `timeout (N s)` in every shape (it read fail or pass at 127, or a number out of the timeout message); `timeout_seconds` per gate (validated, default 600; gates sharing a command run it once under the largest); `compare` warns, never refuses, on a changed one; `--selftest` observes it (25 to 28 checks); the seed's `_gate_schema` names it. 95 tests OK (81 before), the 1.3.0 `results` hash pin unchanged, `ratchet-unit-tests` floor 81 to 95. Fork only, nothing sent upstream. Not done: the kill of the timed-out command (a new row), repair 3 of BL-103.
