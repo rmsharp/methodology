@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] `tools/test_quality_ratchet.py`: tests for a timed-out gate command that keeps running, written RED first
+
+After his approval at the S306 Phase 4 picker (build as planned; Windows unchanged and stated; `SIGKILL` at once). Twenty tests in three classes: nine fail on 1.4.0, each for its own reason, read: an orphaned child still running 5 s after a timeout (four tests), `-1 != 129` and `-15 != 143` (the tool itself dies of SIGHUP and SIGTERM), a missing `HAS_PROCESS_GROUPS`, two selftest labels and a seed phrase that are absent. The 11 that pass on 1.4.0 are parity and boundary guards (a real pty Ctrl-C and hangup, a finished command left alone, a refused `killpg`, a thread call, the stdlib set now admitting `signal`). Nothing outward.
+
 ### 2026-10-12 · [BL-107] S306 claim (in progress) — the timed-out gate command that keeps running
 
 CHANGELOG: pending. Operator said `go`; the Phase 0 report found no free adopter for BL-105 phase 4 and he picked BL-107 with three go-aheads, each read back before this claim: the push of `a2a856f` (`c80c5b5..a2a856f`, `0 0`, `ls-remote` equal), the HANDOFFS trim `c6abae0` with its fold `f0385b0`, and the CHANGELOG trim `21cf425` (not due: 190,194 B against 196,608 B; his go-ahead; 191,782 B to 77,005 B). The gate citation re-run (clean `--no-local` clone of `a2a856f`) was still running at this claim: its result goes in the close-out receipt. Deliverable: research and a plan for BL-107 presented for his approval first; fork only, nothing outward. Phase 3F records the rest.

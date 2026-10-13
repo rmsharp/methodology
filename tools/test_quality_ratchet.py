@@ -11,11 +11,16 @@ refusal was never seen to fire is a suggestion with a hook attached.
 import importlib.util
 import json
 import os
+import shlex
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
@@ -239,6 +244,230 @@ class TestATimeoutIsNotAMeasurement(unittest.TestCase):
         g = gate("quick", "min", 1, command=slow(0.2, "5"), extract=r"(\d+)", timeout_seconds=60)
         r = qr.measure_gate(os.getcwd(), g, 0.001)
         self.assertEqual((r["measured"], r["status"], r["note"]), (5.0, "pass", ""))
+
+
+# The tool as a child process: it prints what run_gate_command returned. Signals are aimed at THIS process,
+# never at the test runner, so a tool that fails to handle one fails the test instead of ending the suite.
+DRIVER = ("import importlib.util, sys\n"
+          "s = importlib.util.spec_from_file_location('qr', sys.argv[1])\n"
+          "m = importlib.util.module_from_spec(s); s.loader.exec_module(m)\n"
+          "print(m.run_gate_command(sys.argv[2], '.', float(sys.argv[3])), flush=True)\n")
+
+
+class _GateCommandChildren(unittest.TestCase):
+    """A gate command of the shape that matters: a shell that stays alive as the PARENT of a long-running
+    child and records the child's pid. A single simple command would not do: `sh -c 'prog'` execs prog, the
+    shell IS the program, and killing the shell kills it -- a test of that shape passes on the old tool for
+    the wrong reason. A test suite run under a shell is the shape here (BL-107)."""
+
+    def setUp(self):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        self.pidfile = os.path.join(td.name, "pid")
+        self.addCleanup(self.reap)
+
+    def command(self, before="", record=">"):
+        return f"sleep 600 & echo $! {record} {shlex.quote(self.pidfile)}; {before}wait"
+
+    def recorded(self):
+        try:
+            return int(open(self.pidfile).read().split()[0])
+        except (OSError, ValueError, IndexError):
+            return None
+
+    def wait_for_pid(self, within=30):
+        end = time.time() + within
+        while time.time() < end and self.recorded() is None:
+            time.sleep(0.02)
+        pid = self.recorded()
+        if pid is None:
+            self.fail(f"the gate command recorded no child pid in {within} s: it never started")
+        return pid
+
+    @staticmethod
+    def alive(pid):
+        try:
+            os.kill(pid, 0)
+        except (ProcessLookupError, PermissionError):   # macOS answers EPERM for a dead, unreaped process
+            return False
+        return True
+
+    def assert_stopped(self, pid, within=5):
+        end = time.time() + within
+        while time.time() < end and self.alive(pid):
+            time.sleep(0.05)
+        self.assertFalse(self.alive(pid), f"the gate command's child {pid} is still running "
+                                          f"{within} s after the tool stopped")
+
+    def reap(self):
+        pid = self.recorded()
+        if pid:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except OSError:
+                pass
+
+    def drive(self, command, budget=60):
+        return subprocess.run([PY, "-c", DRIVER, str(STARTER), command, str(budget)],
+                              capture_output=True, text=True, timeout=180)
+
+
+class TestATimedOutCommandIsStopped(_GateCommandChildren):
+    """BL-107. `subprocess.run(shell=True, timeout=t)` kills the shell, not the shell's children: a test
+    suite that outlived its budget ran on to its end, with its result discarded, through every gate after
+    it (failure mode #29). 1.4.0 reported the timeout truthfully and did not stop the command."""
+
+    def test_the_child_of_a_timed_out_command_is_stopped(self):
+        r = qr.run_gate_command(self.command(), os.getcwd(), 5)
+        self.assertEqual(r, (None, "", "", True))
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_two_gates_over_one_command_run_it_once_and_stop_it_once(self):
+        cfg = manifest(gate("passed", "min", 1, command=self.command(record=">>"), extract=r"(\d+)"),
+                       gate("failed", "max", 0, command=self.command(record=">>"), extract=r"(\d+)"))
+        snap = qr.run_gates(os.getcwd(), cfg, timeout=5)
+        self.assertEqual([(g["status"], g["note"]) for g in snap["gates"]], [("unmeasured", "timeout (5 s)")] * 2)
+        self.assertEqual(len(open(self.pidfile).read().split()), 1, "the shared command ran more than once")
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_a_command_that_exits_is_not_followed_by_a_group_kill(self):
+        # The boundary, pinned: only a command that outlives its budget (or a signal) stops its group. One that
+        # finishes and leaves a background child behind keeps doing exactly what it did in 1.4.0.
+        cmd = f"sleep 600 >/dev/null 2>&1 & echo $! > {shlex.quote(self.pidfile)}"
+        self.assertEqual(qr.run_gate_command(cmd, os.getcwd(), 30), (0, "", "", False))
+        self.assertTrue(self.alive(self.wait_for_pid()), "a finished command's background child was killed")
+
+    def test_a_refused_group_kill_does_not_escape(self):
+        # macOS raises PermissionError from killpg when a member of the group is already dead and unreaped
+        # (measured, S306); ProcessLookupError is a group already gone. Neither is a failure of the gate.
+        for exc in (ProcessLookupError, PermissionError):
+            with self.subTest(exc=exc.__name__), mock.patch.object(qr.os, "killpg", side_effect=exc):
+                t0 = time.time()
+                r = qr.run_gate_command(slow(40), os.getcwd(), 0.5)
+                self.assertEqual(r, (None, "", "", True))
+                self.assertLess(time.time() - t0, 20, "the shell itself was not stopped when killpg refused")
+
+    def test_where_there_are_no_process_groups_the_command_runs_as_it_did_in_1_4_0(self):
+        with mock.patch.object(qr, "HAS_PROCESS_GROUPS", False), \
+                mock.patch.object(qr.os, "killpg") as killpg, \
+                mock.patch.object(qr.subprocess, "Popen", wraps=subprocess.Popen) as popen:
+            done = qr.run_gate_command(f'"{PY}" -c "print(7)"', os.getcwd(), 30)
+            late = qr.run_gate_command(slow(3), os.getcwd(), 0.5)
+        self.assertEqual(done, (0, "7\n", "", False))
+        self.assertEqual(late, (None, "", "", True))
+        killpg.assert_not_called()
+        self.assertTrue(popen.called)
+        for call in popen.call_args_list:
+            self.assertNotIn("start_new_session", call.kwargs)
+
+
+@unittest.skipUnless(os.name == "posix", "process groups and POSIX signals")
+class TestASignalToTheToolStopsTheCommand(_GateCommandChildren):
+    """The command now runs in its own session, so the terminal's Ctrl-C and a closed terminal's hangup no
+    longer reach it: the tool must stop it itself, or the fix for a timeout orphans it the other way round
+    (measured, S306: one child left after SIGINT and after SIGHUP to the tool's group)."""
+
+    def test_sigterm_stops_the_child_and_the_tool_exits_143(self):
+        r = self.drive(self.command(before="kill -TERM $PPID; "))
+        self.assertEqual(r.returncode, 143, r.stderr)
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_sighup_stops_the_child_and_the_tool_exits_129(self):
+        r = self.drive(self.command(before="kill -HUP $PPID; "))
+        self.assertEqual(r.returncode, 129, r.stderr)
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_ctrl_c_stops_the_child_and_still_raises_keyboard_interrupt(self):
+        r = self.drive(self.command(before="kill -INT $PPID; "))
+        self.assertIn("KeyboardInterrupt", r.stderr)
+        self.assertIn(r.returncode, (130, -signal.SIGINT), r.stderr)
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_the_signal_handlers_are_put_back(self):
+        names = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
+        before = {s: signal.getsignal(s) for s in names}
+        qr.run_gate_command("exit 0", os.getcwd(), 30)
+        self.assertEqual({s: signal.getsignal(s) for s in names}, before, "after a command that finished")
+        qr.run_gate_command(slow(3), os.getcwd(), 0.5)
+        self.assertEqual({s: signal.getsignal(s) for s in names}, before, "after a timeout")
+
+        def boom(*a, **k):
+            self.wait_for_pid()
+            raise RuntimeError("boom")
+        with mock.patch.object(qr.subprocess.Popen, "communicate", side_effect=boom):
+            with self.assertRaises(RuntimeError):
+                qr.run_gate_command(self.command(), os.getcwd(), 30)
+        self.assertEqual({s: signal.getsignal(s) for s in names}, before, "after an exception")
+        self.assert_stopped(self.wait_for_pid())   # an exception out of the wait stops the group too
+
+    def test_a_call_from_another_thread_runs_and_leaves_the_signals_alone(self):
+        names = (signal.SIGHUP, signal.SIGTERM)
+        before = {s: signal.getsignal(s) for s in names}
+        got = []
+        t = threading.Thread(target=lambda: got.append(qr.run_gate_command(f'"{PY}" -c "print(3)"', os.getcwd(), 60)))
+        t.start()
+        t.join(90)
+        self.assertEqual(got, [(0, "3\n", "", False)])
+        self.assertEqual({s: signal.getsignal(s) for s in names}, before)
+
+
+@unittest.skipUnless(os.name == "posix", "a pty and POSIX signals")
+class TestARealTerminalStopsTheCommand(_GateCommandChildren):
+    """Ctrl-C and a closed terminal reach a program through the terminal DRIVER, not through kill(1): the
+    surface this has to be true on. Here the driver is a pty -- the tool is its session leader, ^C is written
+    to its master, and closing the master is the hangup."""
+
+    def in_a_terminal(self, act):
+        import pty
+        import select
+        try:
+            pid, fd = pty.fork()
+        except OSError as e:
+            self.skipTest(f"no pty here: {e}")
+        if pid == 0:
+            try:
+                os.execv(PY, [PY, "-c", DRIVER, str(STARTER), self.command(), "60"])
+            finally:
+                os._exit(127)
+        out, status = b"", None
+        try:
+            self.wait_for_pid()
+            fd = act(fd)
+            deadline = time.time() + 30
+            while status is None and time.time() < deadline:
+                done, st = os.waitpid(pid, os.WNOHANG)
+                if done:
+                    status = st
+                if fd is not None and select.select([fd], [], [], 0.05)[0]:
+                    try:
+                        out += os.read(fd, 65536)
+                    except OSError:
+                        fd = None
+            if status is None:
+                os.kill(pid, signal.SIGKILL)
+                os.waitpid(pid, 0)
+                self.fail("the tool was still running 30 s after the terminal signalled it")
+            return status, out.decode(errors="replace")
+        finally:
+            if fd is not None:
+                os.close(fd)
+
+    def test_ctrl_c_typed_at_the_terminal_stops_the_child(self):
+        def type_ctrl_c(fd):
+            os.write(fd, b"\x03")
+            return fd
+        status, out = self.in_a_terminal(type_ctrl_c)
+        self.assertIn("KeyboardInterrupt", out)
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_a_hangup_of_the_terminal_stops_the_child(self):
+        def close_the_terminal(fd):
+            os.close(fd)
+            return None
+        status, out = self.in_a_terminal(close_the_terminal)
+        self.assertTrue((os.WIFEXITED(status) and os.WEXITSTATUS(status) == 129)
+                        or (os.WIFSIGNALED(status) and os.WTERMSIG(status) == signal.SIGHUP), status)
+        self.assert_stopped(self.wait_for_pid())
 
 
 class TestRunStatusAndResultsFile(unittest.TestCase):
@@ -1004,7 +1233,7 @@ class TestToolInvariants(unittest.TestCase):
         # sys.stdlib_module_names is 3.10+; pin the allowed set so the test runs on older
         # interpreters too, which is where a stray third-party import would bite first.
         allowed = {"hashlib", "json", "os", "re", "subprocess", "sys", "tempfile", "datetime",
-                   "shutil",
+                   "shutil", "signal",   # signal: a gate's command is stopped when the tool is (BL-107)
                    "pathlib"}   # the embedded layout-resolver block (BL-101 P2) imports it
         self.assertTrue(names <= allowed, names - allowed)
 
@@ -1021,9 +1250,21 @@ class TestToolInvariants(unittest.TestCase):
                       "a declared timeout_seconds outlasts the default budget"):
             self.assertRegex(p.stdout, r"PASS\x1b\[0m  " + label, p.stdout)
 
+    def test_selftest_observes_a_command_being_stopped(self):
+        # An adopter has the selftest and not this suite: it must SEE the command stopped, on a timeout
+        # and on a signal to the tool (BL-107). Run only where the platform has process groups.
+        p = subprocess.run([PY, str(STARTER), "--selftest"], capture_output=True, text=True)
+        for label in ("a timed-out gate's command is stopped, not left running",
+                      "SIGTERM to the tool stops a gate's command and the tool exits 143"):
+            self.assertRegex(p.stdout, r"PASS\x1b\[0m  " + label, p.stdout)
+
     def test_the_seed_names_timeout_seconds_in_its_schema(self):
         seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
         self.assertIn("`timeout_seconds`", seed["_gate_schema"])
+
+    def test_the_seed_says_what_becomes_of_a_command_that_outlives_it(self):
+        seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
+        self.assertIn("process group", seed["_gate_schema"])
 
     def test_seed_manifest_is_valid_and_empty(self):
         seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
