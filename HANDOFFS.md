@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S308
+date: 2026-10-13
+status: pending
+active_task: Composing the one upstream pull request (D8, `CLAUDE.md` §Contributing upstream): a PLAN in `docs/planning/` for what the fork carries that upstream lacks, the conflicts with #94 and #92, the vetting owed, the adopter impact and the draft text, presented for his approval first. His pick at the S308 Phase 0 picker, with two go-aheads done and read back before this claim: the push of `ec24116` (`e8188a3..ec24116`, `0 0`, `ls-remote` equal) and the HANDOFFS trim `8e9eaf6` with its fold `2334f25`. S307's gate citation re-run in a clean `--no-local` clone of `ec24116`: 18/18, results `076e9131026f`, manifest `e0f946c5bfe3`, equal. Fork only; nothing is sent to `KJ5HST/methodology` without his go-ahead at each step.
+```
+
+```handoff
 session: S307
 date: 2026-10-12
 status: complete
