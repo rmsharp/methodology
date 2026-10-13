@@ -3470,15 +3470,16 @@ sed -i.bak 's|runtime_smoke: n/a — docs-only|runtime_smoke: quality_ratchet: 1
 # Written RED first: the five "must be a finding" rows below passed silently before the lint existed.
 U1="quality_ratchet: 17/18 pass · 0 fail · 1 unmeasured · results abc123def456 · manifest 0123456789ab"
 U3="quality_ratchet: 15/18 pass · 0 fail · 3 unmeasured · results abc123def456 · manifest 0123456789ab"
-set_rs() {  # set_rs FILE TEXT — the first (newest) receipt's runtime_smoke line
-    python3 - "$1" "$2" <<'PY'
+set_field() {  # set_field FILE KEY TEXT — the first (newest) receipt's KEY line
+    python3 - "$1" "$2" "$3" <<'PY'
 import re, sys
-p, text = sys.argv[1], sys.argv[2]
+p, key, text = sys.argv[1], sys.argv[2], sys.argv[3]
 s = open(p, encoding="utf-8").read()
-s = re.sub(r"^runtime_smoke: .*$", lambda m: "runtime_smoke: " + text, s, count=1, flags=re.M)
+s = re.sub(r"^" + key + r": .*$", lambda m: key + ": " + text, s, count=1, flags=re.M)
 open(p, "w", encoding="utf-8").write(s)
 PY
 }
+set_rs() { set_field "$1" runtime_smoke "$2"; }
 unm_rc() { set_rs "$P/HANDOFFS.md" "$1"; "$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1; }
 unm_rc "$U1" \
     && fail "check-handoff passed a cited run with 1 unmeasured gate that the receipt does not name" \
@@ -3515,6 +3516,44 @@ set_rs "$P/HANDOFFS.md" "$U1 (unmeasured: tests-sh-passed — by hand: 483 passe
 "$BIN/check-handoff" --file "$P/two.md" --all >/dev/null 2>&1 \
     && pass "check-handoff --all: an older receipt that cites unnamed unmeasured gates is not re-judged" \
     || fail "check-handoff --all re-judged an older receipt's citation"
+# Round 2 (S307): the behaviours the first mutation round found no test for.
+CLEAN1="quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results abc123def456 · manifest 0123456789ab"
+U12="quality_ratchet: 6/18 pass · 0 fail · 12 unmeasured · results abc123def456 · manifest 0123456789ab"
+unm_rc "first run clean: $CLEAN1, then $U1" \
+    && fail "check-handoff judged only the first citation in the receipt" \
+    || pass "check-handoff: every citation is judged, not only the first"
+unm_rc "$U3 (unmeasured: a-gate, b-gate — by hand: ok), then $U1 (unmeasured: c-gate — by hand: ok)" \
+    && fail "check-handoff took the fewest unmeasured across several citations" \
+    || pass "check-handoff: the most unmeasured in any citation is what the names must answer"
+unm_rc "$U3 (unmeasured: tests-sh-passed — by hand: ok) and, rerun, $U1 (unmeasured: a-gate, b-gate, c-gate — by hand: ok)" \
+    && pass "check-handoff: the most names in any clause answer the most unmeasured in any citation" \
+    || fail "check-handoff took the fewest names across several clauses"
+unm_rc "$U1 unmeasured:" \
+    && fail "check-handoff took the next field's first word for a gate name" \
+    || pass "check-handoff: an unmeasured: clause that ends its field names nothing"
+unm_rc "$U12 (unmeasured: tests-sh-passed, tests-sh-failed, migrate-layout-unit-tests — by hand: ok)" \
+    && fail "check-handoff read 12 unmeasured gates as 1" \
+    || pass "check-handoff: a two-digit unmeasured count is read whole"
+unm_rc "$U1 (unmeasured: 2fa-tests — by hand: ok)" \
+    && pass "check-handoff: a gate name may start with a digit" \
+    || fail "check-handoff refused a gate name that starts with a digit"
+set_rs "$P/HANDOFFS.md" "n/a"; set_field "$P/HANDOFFS.md" what_was_done "ran the gates, commit a1b2c3d: $U1"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && fail "check-handoff ignored a citation that sits in what_was_done" \
+    || pass "check-handoff: a citation in what_was_done is judged like one in runtime_smoke"
+set_field "$P/HANDOFFS.md" what_was_done "ran the gates, commit a1b2c3d: $U1 (unmeasured: tests-sh-passed — by hand: ok)"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && pass "check-handoff: a citation and its clause in what_was_done satisfy the lint" \
+    || fail "check-handoff refused a named gate whose citation and clause sit in what_was_done"
+set_rs "$P/HANDOFFS.md" "$U1"; set_field "$P/HANDOFFS.md" what_was_done "ran the gates, commit a1b2c3d; unmeasured: tests-sh-passed — by hand: ok"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && pass "check-handoff: the clause may sit in what_was_done while the citation is in runtime_smoke" \
+    || fail "check-handoff looked for the clause in runtime_smoke only"
+set_field "$P/HANDOFFS.md" what_was_done "did it, commit a1b2c3d"
+sed -i.bak 's|^status: complete|status: pending|' "$P/HANDOFFS.md"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" --allow-pending >/dev/null 2>&1 \
+    && pass "check-handoff: a pending receipt is not judged for its citation (the Phase 1B stub)" \
+    || fail "check-handoff judged the citation of a pending receipt"
 rm -rf "$P"
 
 echo "== Test 41: status and sync recognise a version a merge hid from the default walk (RED-first) =="
