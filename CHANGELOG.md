@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-6.md` (1 record(s), 41,372 B → 29,682 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-12 → 2026-10-12) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-12-6.md`](docs/archive/HANDOFFS-through-2026-10-12-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-12-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-12-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,372 B → 29,682 B (−28.3%).
+
 ### 2026-10-13 · [BL-103] S307 close-out — repair 3 done: a cited gate run that reads unmeasured gates must name them; the gate run read 18/18
 
 The session's receipt is complete in `HANDOFFS.md` (S307, `status: complete`, self-score 8, predecessor S306 scored 9). **Deliverable (fork only, nothing outward beyond the push of `e8188a3` to the fork):** `bin/check-handoff` refuses a newest complete receipt that cites `U` unmeasured gates unless an `unmeasured: <gate>, <gate>` clause names at least `U`; one sentence in the runner's 3E, the seed's §Citing the gate run and `HOW_TO_USE.md`; 20 new rows in the gate-citation block of `bin/tests.sh` (`tests-sh-passed` floor 477 to 503); 18 mutants in two rounds (9 survived round 1, 18 of 18 killed round 2). **The gate run on the last work commit `7f790b3`, in a clean `--no-local` clone:** `quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results 076e9131026f · manifest e0f946c5bfe3`; S306's citation re-run at Phase 0 (`08f1ef6`) read 18/18, results `75a345496ff4`, manifest `18a872e7eb40`, equal to S306's. **Phase 3C:** no fork learning row appended, so the D3 retirement rule is not triggered; rows considered: fork #16, #107, #62. **Two committed ledger sentences are wrong and not amended:** the lint's entry cites `:271` and `:273` (the regexes are at `:273` and `:275`; corrected in the prose-rule entry) and the floor's entry says each suite run took 20 to 60 minutes (the shell suite took 9 minutes, the ratchet 47 and 22). The plan's "9 adopters" was 13 sibling projects scanned, 5 with citations (corrected in the evidence entry). **Next:** his picker (the one pull request, BL-105 phase 4 if an adopter is free, BL-106, his triage, BL-94's third run, BL-103's three calls), the HANDOFFS trim offer (3 receipts), a push on his go-ahead. Model: Claude Sonnet 5.5.
