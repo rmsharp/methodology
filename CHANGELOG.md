@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] `.quality-gates.json`: `ratchet-unit-tests` floor 100 to 118
+
+A tightening, in its own commit and reverting alone. Measured, not derived: `tools/test_quality_ratchet.py` reads `Ran 118 tests`, OK, in the working tree (output captured) and in a clean `--no-local` clone of `76f0082`; the 18 added tests are BL-107's.
+
 ### 2026-10-12 · [BL-107] `quality_ratchet.py` 1.5.0 — a gate's command runs in a session of its own and is stopped with its whole group
 
 `run_gate_command` starts the command with `start_new_session=True` and `SIGKILL`s its process group on a timeout and on any exception out of the wait; SIGHUP and SIGTERM become `SystemExit(128+n)` while it runs (a signal the caller ignores stays ignored, as under `nohup`; off the main thread nothing is installed; handlers are put back); a refused `killpg` (macOS `PermissionError`, measured) is swallowed and the shell is killed directly; where there are no process groups (Windows) the 1.4.0 path runs unchanged. `--selftest` 28 to 30 checks; the seed's schema and the docstring say so. Held by 118 tests (100 before), the nine RED tests now green, a real-pty Ctrl-C and hangup. Fork only; the module is distributed, so a sync carries it.
