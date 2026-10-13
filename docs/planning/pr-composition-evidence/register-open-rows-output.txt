@@ -1,0 +1,43 @@
+31 rows; 6 carry a dated change of disposition
+
+F2   P7, S286                     seen, at least in part
+       Seen: the rollback yes; the fail-open is only a `hooks` count
+       Disposition: **open**: plan §7.4. Each adopter's hook is replaced with the layout-aware one in that adopter's session before tier 2; `wsfct` is last
+F4   S286                         seen, at least in part
+       Seen: n/a, a limit of static search
+       Disposition: **open**: an input to F5's design (the list says it is an upper bound)
+F6   P11                          NOT SEEN
+       Seen: not stated in the record
+       Disposition: **open**, untracked: triage owed (his)
+F7   P12 (S287)                   seen, at least in part
+       Seen: the refusal yes; the match was the session's
+       Disposition: **open**, untracked: the case that matters most for an adopter alone, since it has no session to do the match
+F8   P12                          NOT SEEN
+       Seen: no
+       Disposition: **open**, untracked: triage owed (his)
+F13  P13                          seen, at least in part
+       Seen: the count yes, its cause no
+       Disposition: **open**, untracked: tier 1 is not the default, and the row misleads whoever applies it
+F14  P13                          seen, at least in part
+       Seen: yes, listed
+       Disposition: **open**, untracked: the adopter's cleanup, its own commit there; whether the tool names a nested copy as such is his call
+F17  P15 (S296)                   not seen (its own warning is false / no check reads it)
+       Seen: the warning is the tool's own, and false
+       Disposition: **open**, untracked: his call; the fix is in the tool (read the installer's twin loop) or in the installer's text (a marker; distributed, so adopters receive it at their next sync)
+F19  P15                          seen, at least in part
+       Seen: the refusal yes; what the lines are and what dropping them does, no
+       Disposition: **open**, untracked: his call; the file's own comment says the design has no way for a project-local ledger entry to survive an overlay. F7 is the same refusal
+F25  BL-105 rehearsal (S302)      probably not seen
+       Seen: the test file listed; the second site counted in `other`, not shown; the red no
+       Disposition: **open**: BL-105 build phase 4, the adopter's own commit before the move; the general case (a project test that pins prose the tool rewrites, or reads a prose file as data) is F4's limit and F16's fam
+F26  BL-105 rehearsal (S302)      probably not seen
+       Seen: both files listed with code mentions; the effect no
+       Disposition: **open**: P18 (`mts-system`'s migration) makes the archiver edit in its own commit first; the rehearsed edit (+41 -4, 17 tests to 19) restores base's exit and output
+F27  BL-105 rehearsal (S302)      NOT SEEN
+       Seen: **no**
+       Disposition: **open**: closed by F26's edit (`LIVE_REL`); measured with `--write` on a copy of each: the shard is byte-identical to base's, the live file differs in line 9 only
+F28  BL-105 rehearsal (S302)      probably not seen
+       Seen: the file listed (a script, a code mention); the exit no
+       Disposition: **open**: BL-105 build phase 4, the adopter's own commit before the top-up
+
+13 open of 31; fixed or declined: F1 fixed, F3 fixed, F5 fixed, F9 declined, F10 fixed, F11 fixed, F12 declined, F15 fixed, F16 declined, F18 fixed, F20 fixed, F21 fixed, F22 declined, F23 fixed, F24 fixed, F29 fixed, F30 fixed, F31 fixed

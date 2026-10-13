@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] evidence for the upstream pull request plan: the difference and the register's open rows
+
+`docs/planning/pr-composition-evidence/inventory.py` (the fork's tree against `upstream/main`: 56 files, +25,804 / −1,409 outside `docs/` and the ledgers, split at the directory plan's base `c8b9ddd`, by theme, with the adopter impact and the tool versions) and `register-open-rows.py` (13 of the register's 31 rows open, the dated changes applied), each with its saved output. Read git only. Fork only, nothing sent.
+
 ### 2026-10-13 · [ad hoc] S308 claim (in progress) — composing the one upstream pull request
 
 CHANGELOG: pending. Operator said `go` and picked composing the one pull request with two go-aheads, each read back before this claim: the push of `ec24116` (`e8188a3..ec24116`, `0 0`, `ls-remote` equal) and the HANDOFFS trim `8e9eaf6` with its fold `2334f25`. S307's gate citation re-run at Phase 0 (clean `--no-local` clone of `ec24116`) read 18/18, results `076e9131026f`, manifest `e0f946c5bfe3`, equal to S307's. Deliverable: a plan in `docs/planning/` presented for his approval first; fork only, nothing sent to `KJ5HST/methodology`. Phase 3F records the rest.

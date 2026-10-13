@@ -1,0 +1,87 @@
+tip           ffb0fd1
+upstream/main f34769f
+plan base     c8b9ddd (contains upstream/main: yes)
+commits upstream/main..HEAD: 1857 (merges 36); by ancestry, INFLATED by squash-merged pull requests
+commits HEAD..upstream/main: 0
+
+== before the methodology/ plan (upstream/main..c8b9ddd): 24 files, +13254 -847
+   canonical-only tools and fixtures                          files=  7  +  2804 -  265
+   repository configuration and prose                         files=  6  +   373 -  129
+   shipped (starter-kit, workstreams, the three manuals)      files=  7  +  2063 -  237
+   tests                                                      files=  4  +  8014 -  216
+== from the plan on (c8b9ddd..HEAD): 52 files, +12679 -691
+   canonical-only tools and fixtures                          files= 15  +  3462 -  271
+   repository configuration and prose                         files=  4  +   299 -   54
+   shipped (starter-kit, workstreams, the three manuals)      files= 23  +  1294 -  354
+   tests                                                      files= 10  +  7624 -   12
+== total (upstream/main..HEAD), ledgers and docs/ left out: 56 files, +25804 -1409
+   canonical-only tools and fixtures                          files= 17  +  6202 -  472
+   repository configuration and prose                         files=  6  +   666 -  177
+   shipped (starter-kit, workstreams, the three manuals)      files= 23  +  3304 -  538
+   tests                                                      files= 10  + 15632 -  222
+== docs/: 794 paths differ (792 added, 2 modified); fork-only planning and archives, never part of a pull request
+
+== files changed in BOTH halves (the second half builds on the first):
+   .githooks/pre-commit                           before +15-17   from the plan on +231-46
+   .quality-gates.json                            before +20-5   from the plan on +60-6
+   CLAUDE.md                                      before +62-31   from the plan on +6-2
+   FRAMEWORK_APPARATUS.md                         before +11-0   from the plan on +4-0
+   HOW_TO_USE.md                                  before +1-1   from the plan on +5-4
+   README.md                                      before +165-2   from the plan on +2-0
+   bin/_manifest.py                               before +9-1   from the plan on +43-1
+   bin/check-handoff                              before +528-39   from the plan on +84-20
+   bin/check-overhead                             before +210-0   from the plan on +55-4
+   bin/model-report                               before +640-0   from the plan on +76-19
+   bin/tests.sh                                   before +2982-101   from the plan on +344-4
+   starter-kit/BOOTSTRAP.md                       before +2-2   from the plan on +30-12
+   starter-kit/SESSION_RUNNER.md                  before +8-2   from the plan on +14-12
+   starter-kit/close_out_report.py                before +258-0   from the plan on +62-5
+   starter-kit/methodology_dashboard.py           before +1353-210   from the plan on +370-115
+   starter-kit/methodology_trim.py                before +430-22   from the plan on +228-92
+   tools/methodology_dashboard.py                 before +1353-210   from the plan on +370-115
+   tools/test_close_out_report.py                 before +626-0   from the plan on +175-1
+   tools/test_methodology_dashboard.py            before +3270-115   from the plan on +595-4
+   tools/test_methodology_trim.py                 before +1136-0   from the plan on +497-1
+
+== by theme (tree diff upstream/main..HEAD, ledgers and docs/ left out; 56 files)
+   A  the methodology/ directory (resolver, migrate-layout, sync layers, hook, prose)   files=31 +  8076 -  248  new files: 8
+   B  the quality ratchet 1.1 to 1.5                                                    files= 3 +  1276 -   61  new files: 0
+   C  the ledger trimmer 1.5 to 1.8                                                     files= 5 +  2747 -  106  new files: 2
+   D  the dashboard 2.11 to 2.22 (and its twin)                                         files= 3 +  7229 -  687  new files: 0
+   E  the close-out report generator (a new tool)                                       files= 2 +  1115 -    0  new files: 2
+   F  canonical-only checkers and reports (two of them new)                             files= 5 +  1594 -   75  new files: 2
+   S  the shell suite and the runner (shared by every theme)                            files= 2 +  3347 -  118  new files: 0
+   G  this repository's own configuration and prose (mostly stays)                      files= 5 +   420 -  114  new files: 0
+
+== adopter impact: DISTRIBUTION entries (30) whose source differs upstream/main -> HEAD
+   tracked: 19 of 23 differ
+      starter-kit/SESSION_RUNNER.md                                +22/-14
+      starter-kit/SAFEGUARDS.md                                    +1/-1
+      starter-kit/RECOMMENDED_SKILLS.md                            +14/-14
+      starter-kit/CLAUDE_TEMPLATE.md                               +3/-2
+      starter-kit/BOOTSTRAP.md                                     +32/-14
+      starter-kit/methodology_dashboard.py                         +1684/-286
+      starter-kit/methodology_trim.py                              +649/-105
+      starter-kit/context_budget.py                                +146/-18
+      starter-kit/quality_ratchet.py                               +394/-59
+      ITERATIVE_METHODOLOGY.md                                     +7/-7
+      HOW_TO_USE.md                                                +6/-5
+      FRAMEWORK_APPARATUS.md                                       +15/-0
+      workstreams/ARCHITECTURE_WORKSTREAM.md                       +2/-2
+      workstreams/DEVELOPMENT_WORKSTREAM.md                        +1/-1
+      workstreams/AUDIT_WORKSTREAM.md                              +1/-1
+      workstreams/TEMPLATE_WORKSTREAM.md                           +1/-1
+      workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md     +1/-1
+      workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md   +1/-1
+      workstreams/TEMPLATE_CAMPAIGN.md                             +1/-1
+   seed: 3 of 7 differ
+      starter-kit/CHANGELOG.md                                     +1/-1
+      starter-kit/HANDOFFS.md                                      +6/-3
+      starter-kit/quality-gates.json                               +1/-1
+
+== tool versions (upstream/main -> HEAD)
+   starter-kit/quality_ratchet.py           1.1.0     -> 1.5.0
+   starter-kit/methodology_dashboard.py     2.11.3    -> 2.22.0
+   starter-kit/context_budget.py            1.3.1     -> 1.4.0
+   starter-kit/methodology_trim.py          1.5.0     -> 1.8.0
+   starter-kit/close_out_report.py          (no file) -> 1.2.0
