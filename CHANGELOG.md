@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] `.quality-gates.json`: `ratchet-unit-tests` floor 118 to 120
+
+A tightening, in its own commit. Measured: `Ran 120 tests`, OK, in a clean `--no-local` clone after round 1 (the same count the mutation baseline printed in round 2). Mutation round 2 killed 8 of 8: the five survivors of round 1 and three new mutants aimed at behaviours no test named (a partial restore of the handlers, an `OSError` message, `SystemExit` against `KeyboardInterrupt`).
+
 ### 2026-10-12 · [BL-107] `tools/test_quality_ratchet.py`: four tests for the five survivors of mutation round 1
 
 Round 1, 26 mutants over `quality_ratchet.py` 1.5.0: 21 killed, 5 survived. M17 (a finished command's group killed too) survived a test that looked at the child the instant after the kill; it now watches 1.5 s. M6 and M22 (the shell not reaped, the pipes not closed) were unobservable outside the Popen object; a spy keeps it and asserts `returncode` and closed pipes. M23 (a handler the caller installed is replaced by the default) had no test. M21 (`HAS_PROCESS_GROUPS = True`) is true of POSIX either way; the module is now read as each platform would read it (`os.name` patched), which kills it here. Round 2 (the five and three new mutants) follows.
