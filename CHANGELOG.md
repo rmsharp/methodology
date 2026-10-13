@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] `BACKLOG.md`: BL-103 rewritten to what is open (repair 3); BL-107 opened, the timed-out command keeps running
+
+Measured S305: the timeout kills the shell, not its children (`sleep 6`, `7` and `8` survive `run_gates` on both tools). `BACKLOG-DETAIL.md` carries both sections. Nothing sent upstream.
+
 ### 2026-10-12 · [BL-103] BL-103's record and the measurement script, with its output on the 1.3.0 and the 1.4.0 tool
 
 `docs/planning/bl103-evidence/`: `bl103-record.md`, `measure-timeout.py` and `measure-timeout-output.txt`. The defect read `fail`, `pass` or a number read out of the timeout message, not only `exit 127`; the sync channels simulated (one file, byte-identical, legacy and `--layout new`); the old and the new tool equal over one manifest; the mutation rounds. Nothing sent upstream.
