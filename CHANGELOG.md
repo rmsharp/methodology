@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] the upstream pull request plan is DECIDED: his four answers
+
+His picker at the S308 close-out, each as recommended: D1 build the candidate now and decide the `methodology-subdirectory-plan.md` §7.6 waiver at the final approval; D2 one pull request as a two-part series of commits (themes A to D); D3 send the whole dashboard lineage, which overrides the hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md` now says so at its top); D4 the defaults (wait for #94 and #92, scrub tokens and dangling paths in a separate commit, carry the register, plan and records, tighten gates by what is added). `BACKLOG.md` BL-101 row and its detail say PR2, the candidate build, is next; `BACKLOG.md` is 57,933 B (+156 B on the standing flag). Nothing built, nothing sent.
+
 ### 2026-10-13 · [BL-101] the plan for the one upstream pull request, DRAFT for his approval
 
 `docs/planning/upstream-pr-composition-plan.md` (22,692 B): the fork's tree differs from `upstream/main` by 56 files, +25,804 / −1,409 outside `docs/` and the ledgers, about half of it work from before the directory plan that was never sent; porting only the directory hunks is 52 hand-resolved conflicts in 16 files; upstream's tree with the shipped files laid over it runs the shell suite to 484 passed, 14 failed, 2 skipped, all 14 fixtures of this repository's own history or a stricter checker meeting upstream's ledger; D8's gates (5 adopters, 13 open register rows) and the two open pull requests (#94 in 3 files, #92 in 1) are in front of it. Recommends one pull request as a two-part series of commits, built fork-side now, the waiver decided at the final approval. Four decisions (D1 to D4) go to his picker. `inventory.py` moves the `HANDOFFS.md` seed from the checkers' theme to the ratchet's, which is where it ships. Nothing built, nothing sent.

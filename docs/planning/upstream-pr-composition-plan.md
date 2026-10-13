@@ -1,6 +1,8 @@
 # The one upstream pull request: what it carries, what stands in front of it, how to build it
 
-**Status: DRAFT for approval (2026-10-13).** Nothing is built, nothing is sent; the fork was pushed to its own `origin` only.
+**Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7).** Nothing is built, nothing is sent; the fork was pushed to
+its own `origin` only. **PR2 is next.** D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
+carries a pointer back here).
 Measured at fork `main` = `ffb0fd1` against `upstream/main` = `f34769f` (0 commits behind). Every figure below is printed by a
 script in [`pr-composition-evidence/`](pr-composition-evidence/) (§9) or by a command named beside it.
 **Declared budget: 30,000 B**, one read.
@@ -202,6 +204,9 @@ measured gap. Only a clean clone of the candidate speaks for the pull request.
 ---
 
 ## 7. Decisions for him
+
+**Answered 2026-10-13 at the S308 close-out picker: D1 (a) build now, D2 (a) S2, D3 (a) the whole lineage, D4 the defaults. Each was the
+recommended option; the options below are kept as asked.**
 
 1. **D1 — may the candidate be built before the adopters and the open rows are done?** (a) **Yes: build now, fork-side; the §7.6 waiver is
    decided at PR4 with the then-open rows listed** *(recommended: building sends nothing, four of the five remaining adopters are not free,

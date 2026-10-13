@@ -1,5 +1,9 @@
 # Which of the fork's dashboard rows go upstream, and in what order
 
+> **Superseded in part, 2026-10-13 (his picker):** [`upstream-pr-composition-plan.md`](upstream-pr-composition-plan.md) D3 sends the whole
+> dashboard lineage inside the one pull request, so Option C's *hold* no longer stands; the three policy pieces are named as policy in that
+> pull request's text, not kept out of it. This document's measurements are unchanged.
+
 **Status:** **D1 RATIFIED — Option C** (the operator, 2026-09-27, S231's close-out picker): the small
 correctness pull request goes first, the read-cap/trim stack is prepared fork-side and **held** until it
 merges, and the three policy pieces stay out of both. **D2–D6 remain open** and none of them blocks P1.
