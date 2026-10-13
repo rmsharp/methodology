@@ -337,6 +337,21 @@ class TestATimedOutCommandIsStopped(_GateCommandChildren):
         self.assertEqual(len(open(self.pidfile).read().split()), 1, "the shared command ran more than once")
         self.assert_stopped(self.wait_for_pid())
 
+    def test_a_timed_out_command_leaves_its_shell_reaped_and_its_pipes_closed(self):
+        # Observed on the Popen object itself, kept by a spy: CPython closes a dropped object's pipes and a later
+        # Popen reaps a zombie, so nothing outside the object shows either lapse for long.
+        made, real = [], subprocess.Popen
+
+        def spy(*a, **k):
+            made.append(real(*a, **k))
+            return made[-1]
+        with mock.patch.object(qr.subprocess, "Popen", side_effect=spy):
+            self.assertEqual(qr.run_gate_command(self.command(), os.getcwd(), 5), (None, "", "", True))
+        proc = made[0]
+        self.assertIsNotNone(proc.returncode, "the shell of a timed-out command was left unreaped")
+        self.assertTrue(proc.stdout.closed and proc.stderr.closed, "the pipes of a timed-out command were left open")
+        self.assert_stopped(self.wait_for_pid())
+
     def test_a_child_that_ignores_sigterm_is_stopped_too(self):
         # Ignored signals are inherited: the child of this shell cannot be asked to stop, only made to.
         self.assertEqual(qr.run_gate_command(self.command(first="trap '' TERM; "), os.getcwd(), 5),
@@ -357,7 +372,11 @@ class TestATimedOutCommandIsStopped(_GateCommandChildren):
         # finishes and leaves a background child behind keeps doing exactly what it did in 1.4.0.
         cmd = f"sleep 600 >/dev/null 2>&1 & echo $! > {shlex.quote(self.pidfile)}"
         self.assertEqual(qr.run_gate_command(cmd, os.getcwd(), 30), (0, "", "", False))
-        self.assertTrue(self.alive(self.wait_for_pid()), "a finished command's background child was killed")
+        pid = self.wait_for_pid()
+        end = time.time() + 1.5   # a SIGKILL lands in milliseconds: look right after it AND for long enough to see it
+        while time.time() < end:
+            self.assertTrue(self.alive(pid), "a finished command's background child was killed")
+            time.sleep(0.05)
 
     def test_a_refused_group_kill_does_not_escape(self):
         # macOS raises PermissionError from killpg when a member of the group is already dead and unreaped
@@ -404,6 +423,14 @@ class TestASignalToTheToolStopsTheCommand(_GateCommandChildren):
         self.assertIn("KeyboardInterrupt", r.stderr)
         self.assertIn(r.returncode, (130, -signal.SIGINT), r.stderr)
         self.assert_stopped(self.wait_for_pid())
+
+    def test_a_handler_the_caller_installed_is_put_back(self):
+        mine = {s: (lambda signum, frame: None) for s in (signal.SIGHUP, signal.SIGTERM)}
+        old = {s: signal.signal(s, h) for s, h in mine.items()}
+        self.addCleanup(lambda: [signal.signal(s, h) for s, h in old.items()])
+        qr.run_gate_command("exit 0", os.getcwd(), 30)
+        for s, h in mine.items():
+            self.assertIs(signal.getsignal(s), h, f"{signal.Signals(s).name}: the caller's handler was not put back")
 
     def test_a_hangup_the_caller_ignores_stays_ignored(self):
         # `nohup` sets SIGHUP to ignore on purpose, so a run survives its terminal: the tool must not turn it
@@ -1252,6 +1279,13 @@ class TestToolInvariants(unittest.TestCase):
 
     def test_a_gate_command_gets_its_own_session_wherever_there_are_process_groups(self):
         self.assertEqual(qr.HAS_PROCESS_GROUPS, os.name == "posix")
+        # On a POSIX machine that alone cannot tell the constant from a literal True: read the module as each platform would.
+        for name, want in (("posix", True), ("nt", False)):
+            with mock.patch.object(os, "name", name):
+                spec = importlib.util.spec_from_file_location(f"quality_ratchet_as_{name}", STARTER)
+                m = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(m)
+            self.assertEqual(m.HAS_PROCESS_GROUPS, want, name)
 
     def test_stdlib_only(self):
         import ast

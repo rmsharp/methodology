@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] `tools/test_quality_ratchet.py`: four tests for the five survivors of mutation round 1
+
+Round 1, 26 mutants over `quality_ratchet.py` 1.5.0: 21 killed, 5 survived. M17 (a finished command's group killed too) survived a test that looked at the child the instant after the kill; it now watches 1.5 s. M6 and M22 (the shell not reaped, the pipes not closed) were unobservable outside the Popen object; a spy keeps it and asserts `returncode` and closed pipes. M23 (a handler the caller installed is replaced by the default) had no test. M21 (`HAS_PROCESS_GROUPS = True`) is true of POSIX either way; the module is now read as each platform would read it (`os.name` patched), which kills it here. Round 2 (the five and three new mutants) follows.
+
 ### 2026-10-12 · [BL-107] `tools/test_quality_ratchet.py`: the driver sets SIGINT too; the Ctrl-C tests failed in a backgrounded run
 
 The same cause as the SIGHUP entry below, one signal further, found by the rerun of the mutation round's baseline (`Ran 2 tests in 30.167s`): a command started with `&` from a non-interactive shell has SIGINT ignored, `nohup` adds SIGHUP, both survive fork and exec (measured: `nohup bash -c 'python3 -c ...' &` prints `SIG_IGN` for both), and Python installs no `KeyboardInterrupt` when it starts with SIGINT ignored, so the two Ctrl-C tests waited 30 s and failed. The driver now installs `signal.default_int_handler` and sets SIGHUP itself. Verified in the launch pattern this repository uses for long runs (`nohup bash -c '...' &`): the whole suite reads 118 OK and the selftest 30/30; the eight signal tests read OK in the foreground and there.
