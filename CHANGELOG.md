@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] S305 close-out — BL-103 repairs 1 and 2 done: `quality_ratchet.py` 1.4.0; the receipt is complete; the gate run read 18/18
+
+A gate that outlives its budget reads `unmeasured` with `timeout (N s)` and may declare `timeout_seconds`; 1.3.0 read a timeout as `fail`, as `pass` or as a number read out of the timeout message. Done on the fork and sent nowhere. The gate in a clean `--no-local` clone of `3bcb63c`: 18/18, results `703856fabafb`, manifest `4ce1c4131646`. BL-107 opened (the timed-out command keeps running). `HANDOFFS.md` holds 3 receipts (S305, S304, S303) and `CHANGELOG.md` is near its trigger: offer both trims at the next Phase 0. The `HANDOFFS.md` receipt carries the rest; Phase 3C appended no fork learning row.
+
 ### 2026-10-12 · [BL-103] `BACKLOG.md`: BL-103 rewritten to what is open (repair 3); BL-107 opened, the timed-out command keeps running
 
 Measured S305: the timeout kills the shell, not its children (`sleep 6`, `7` and `8` survive `run_gates` on both tools). `BACKLOG-DETAIL.md` carries both sections. Nothing sent upstream.
