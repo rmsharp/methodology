@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] `docs/planning/bl107-evidence/`: the record and the mutation round
+
+`bl107-record.md` (what was measured, what changed, how it is held, the channels, what is not verified, his calls), `mutate-bl107.py` and `bl107-mutation-output.txt`: 29 mutants over `quality_ratchet.py` 1.5.0 in two rounds; round 1 killed 21 of 26, and its five survivors (each a weakness in a test) plus three new mutants were all killed in round 2. The suite kills 29 of 29, the selftest 11. Nothing outward.
+
 ### 2026-10-12 · [BL-107] `docs/planning/bl107-evidence/`: the measurement scripts and their output
 
 `bl107-runner.py` (four variants of the command runner, each a process a signal can be aimed at), `bl107-harness.py` (five scenarios by four variants, survivors counted with `ps`), `bl107-stress.py` (60 rounds of `killpg`) and `bl107-output.txt`. Measured before the plan, S306: the fix the row proposed alone orphans the command on Ctrl-C and on a hangup; macOS raises `PermissionError` from `killpg` for a group with a dead, unreaped member. Nothing outward.

@@ -1,0 +1,66 @@
+# python3 mutate-bl107.py ~/.cache/bl107-clone   (S306; round 1 = the 26 M mutants, clone at 5a50de9, suite 118 tests)
+baseline suite: exit 0, Ran 118 tests in 61.930s
+M1 the command gets no session of its own                                            KILLED by the suite (first: test_ctrl_c_stops_the_child_and_still_raises_keyboard_interrupt); selftest kills it
+M2 the group is never signalled                                                      KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest kills it
+M3 SIGTERM, not SIGKILL, to the group                                                KILLED by the suite (first: test_a_child_that_ignores_sigterm_is_stopped_too); selftest passes it
+M4 the shell is not killed directly after the group call                             KILLED by the suite (first: test_a_refused_group_kill_does_not_escape); selftest passes it
+M5 a refused killpg other than ProcessLookupError escapes                            KILLED by the suite (first: test_a_refused_group_kill_does_not_escape); selftest passes it
+M6 the shell is never reaped                                                         SURVIVED the suite; selftest passes it
+M7 a timeout does not stop the group                                                 KILLED by the suite (first: test_a_child_that_ignores_sigterm_is_stopped_too); selftest kills it
+M8 an exception out of the wait does not stop the group                              KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest kills it
+M9 KeyboardInterrupt and SystemExit are not caught                                   KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest kills it
+M10 an OSError while waiting does not stop the group                                 KILLED by the suite (first: test_an_oserror_while_waiting_reads_as_127_and_still_stops_the_command); selftest passes it
+M11 the signal handlers are not put back                                             KILLED by the suite (first: test_the_signal_handlers_are_put_back); selftest passes it
+M12 a hangup the caller ignores is overridden                                        KILLED by the suite (first: test_a_hangup_the_caller_ignores_stays_ignored); selftest passes it
+M13 a call off the main thread raises                                                KILLED by the suite (first: test_a_call_from_another_thread_runs_and_leaves_the_signals_alone); selftest passes it
+M14 the exit status is the bare signal number                                        KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest kills it
+M15 SIGHUP is not handled                                                            KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest passes it
+M16 SIGTERM is not handled                                                           KILLED by the suite (first: test_sigterm_stops_the_child_and_the_tool_exits_143); selftest kills it
+M17 a command that finished has its group killed too                                 SURVIVED the suite; selftest passes it
+M18 stdout is not captured                                                           KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest kills it
+M19 output comes back as bytes                                                       KILLED by the suite (first: test_a_call_from_another_thread_runs_and_leaves_the_signals_alone); selftest kills it
+M20 the working directory is ignored                                                 KILLED by the suite (first: test_a_command_that_cannot_start_is_not_a_timeout); selftest passes it
+M21 HAS_PROCESS_GROUPS ignores the platform                                          SURVIVED the suite; selftest passes it
+M22 the pipes are not closed                                                         SURVIVED the suite; selftest passes it
+M23 a handler the caller installed is replaced by the default on the way out         SURVIVED the suite; selftest passes it
+M24 SIGINT is handled like SIGHUP (Ctrl-C stops raising KeyboardInterrupt)           KILLED by the suite (first: test_ctrl_c_typed_at_the_terminal_stops_the_child); selftest passes it
+M25 the platform switch is inverted                                                  KILLED by the suite (first: test_ctrl_c_stops_the_child_and_still_raises_keyboard_interrupt); selftest kills it
+M26 the no-process-group path reports a timeout as exit 127                          KILLED by the suite (first: test_where_there_are_no_process_groups_the_command_runs_as_it_did_in_1_4_0); selftest passes it
+survivors of the suite: 5 of 26 run
+  survivor: M6 the shell is never reaped
+  survivor: M17 a command that finished has its group killed too
+  survivor: M21 HAS_PROCESS_GROUPS ignores the platform
+  survivor: M22 the pipes are not closed
+  survivor: M23 a handler the caller installed is replaced by the default on the way out
+killed by the suite but not the selftest: 11
+  suite-only: M3 SIGTERM, not SIGKILL, to the group
+  suite-only: M4 the shell is not killed directly after the group call
+  suite-only: M5 a refused killpg other than ProcessLookupError escapes
+  suite-only: M10 an OSError while waiting does not stop the group
+  suite-only: M11 the signal handlers are not put back
+  suite-only: M12 a hangup the caller ignores is overridden
+  suite-only: M13 a call off the main thread raises
+  suite-only: M15 SIGHUP is not handled
+  suite-only: M20 the working directory is ignored
+  suite-only: M24 SIGINT is handled like SIGHUP (Ctrl-C stops raising KeyboardInterrupt)
+  suite-only: M26 the no-process-group path reports a timeout as exit 127
+
+# round 2: python3 mutate-bl107.py ~/.cache/bl107-clone --only M6,M17,M21,M22,M23,R1,R2,R3   (clone at 1c78a78, suite 120 tests)
+baseline suite: exit 0, Ran 120 tests in 68.714s
+M6 the shell is never reaped                                                         KILLED by the suite (first: test_a_timed_out_command_leaves_its_shell_reaped_and_its_pipes_closed); selftest passes it
+M17 a command that finished has its group killed too                                 KILLED by the suite (first: test_a_command_that_exits_is_not_followed_by_a_group_kill); selftest passes it
+M21 HAS_PROCESS_GROUPS ignores the platform                                          KILLED by the suite (first: test_a_gate_command_gets_its_own_session_wherever_there_are_process_groups); selftest passes it
+M22 the pipes are not closed                                                         KILLED by the suite (first: test_a_timed_out_command_leaves_its_shell_reaped_and_its_pipes_closed); selftest passes it
+M23 a handler the caller installed is replaced by the default on the way out         KILLED by the suite (first: test_a_handler_the_caller_installed_is_put_back); selftest passes it
+R1 only the first replaced handler is put back                                       KILLED by the suite (first: test_a_handler_the_caller_installed_is_put_back); selftest passes it
+R2 an OSError while waiting reports the exception's class, not its message           KILLED by the suite (first: test_an_oserror_while_waiting_reads_as_127_and_still_stops_the_command); selftest passes it
+R3 a hangup or SIGTERM raises KeyboardInterrupt instead of SystemExit                KILLED by the suite (first: test_a_hangup_of_the_terminal_stops_the_child); selftest kills it
+survivors of the suite: 0 of 8 run
+killed by the suite but not the selftest: 7
+  suite-only: M6 the shell is never reaped
+  suite-only: M17 a command that finished has its group killed too
+  suite-only: M21 HAS_PROCESS_GROUPS ignores the platform
+  suite-only: M22 the pipes are not closed
+  suite-only: M23 a handler the caller installed is replaced by the default on the way out
+  suite-only: R1 only the first replaced handler is put back
+  suite-only: R2 an OSError while waiting reports the exception's class, not its message
