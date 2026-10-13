@@ -1,0 +1,15 @@
+this repository: 342 receipts in 132 files, 167 citations of a gate run
+  unmeasured field: {'0': 166, '3': 1}
+  citations with unmeasured above 0: [('HANDOFFS-through-2026-10-08-6.md', 'S287', '15', '18', '0', '3')]
+  citations with fail above 0 (out of scope for repair 3): 4
+  Philippians: gates=2 receipts=26 citations=25 unmeasured>0=[]
+  airqino: gates=2 receipts=17 citations=10 unmeasured>0=[]
+  chat_verification: gates=0 receipts=11 citations=0 unmeasured>0=[]
+  church_growth: gates=0 receipts=20 citations=0 unmeasured>0=[]
+  feedback-loop-comparison: gates=0 receipts=1 citations=0 unmeasured>0=[]
+  model_project_constructor: gates=0 receipts=28 citations=0 unmeasured>0=[]
+  mts-system: gates=0 receipts=140 citations=12 unmeasured>0=[]
+  nprcgenekeepr: gates=1 receipts=655 citations=166 unmeasured>0=[]
+  vscode_quarto_ext: gates=2 receipts=264 citations=33 unmeasured>0=[]
+  wsfct: gates=0 receipts=182 citations=0 unmeasured>0=[]
+sibling projects: 13 scanned, 4 with declared gates, 246 citations

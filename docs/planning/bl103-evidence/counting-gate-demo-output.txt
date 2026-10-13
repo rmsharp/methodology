@@ -1,0 +1,12 @@
+--- run 1
+  no-command-gate                         <= 0           —  unmeasured  declared, no command
+  unmeasured-count                        <= 0           0  pass
+  cite in the receipt: quality_ratchet: 1/2 pass · 0 fail · 1 unmeasured · results 1026389c4ad0 · manifest 9c3377726197
+--- run 2
+  no-command-gate                         <= 0           —  unmeasured  declared, no command
+  unmeasured-count                        <= 0           1  fail
+  cite in the receipt: quality_ratchet: 0/2 pass · 1 fail · 1 unmeasured · results 3f46a4c99596 · manifest 9c3377726197
+--- run 3
+  no-command-gate                         <= 0           —  unmeasured  declared, no command
+  unmeasured-count                        <= 0           1  fail
+  cite in the receipt: quality_ratchet: 0/2 pass · 1 fail · 1 unmeasured · results 3f46a4c99596 · manifest 9c3377726197

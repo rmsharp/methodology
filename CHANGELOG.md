@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] evidence: the population survey and the counting-gate demonstration
+
+`docs/planning/bl103-evidence/survey-citations.py` (this repository: 342 receipts, 167 citations of a gate run, one reading unmeasured above 0, S287's; 13 sibling projects scanned, 4 with declared gates, 5 with citations, 246 citations, none above 0) and `counting-gate-demo.sh` (a gate that counts the unmeasured reads `0 pass` in a run with one, then the previous run's count: it cannot see its own run), each with its output beside it. **Correction to the Phase 4 text of this session:** it said "this repository and 9 adopters"; the figure is 13 sibling projects scanned, 5 carrying citations. Fork only.
+
 ### 2026-10-12 · [BL-103] the ten "must be a finding" rows assert the lint's own message, not only a nonzero exit
 
 An exit code also passes on a fixture the schema rejects, which is how three of round 2's `what_was_done` rows would have passed for the wrong reason (no commit sha). `unm_flag` captures the output first (under pipefail `| grep -q` reports the SIGPIPE it causes) and the ten finding rows now require `the cited gate run reads` in it; the 15 "must pass" rows are unchanged (exit 0 means no finding at all). The row count is unchanged (the block reads `PASS=25 FAIL=0`), so the `tests-sh-passed` figure measured at `8dab34f` still holds. **Mutation, re-run on the edited block:** 18 of 18 killed (a mutant that turns the lint off, M23, is killed by exactly the ten finding rows). This is the S307 learning held mechanically, so no fork learning row is appended for it. Fork only.
