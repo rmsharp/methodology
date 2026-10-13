@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] `.quality-gates.json`: `timeout_seconds` 3600 on `tests-sh-passed`, `tests-sh-failed` and `migrate-layout-unit-tests`
+
+Not a threshold (none moved; `quality_ratchet.py` 1.4.0 warns on the three, refuses none, and `config_defects` reads none): the three gates that read `unmeasured` under load (S280, S287, S304) get an hour instead of the 600 s default. S287 measured 1,835 s (shell suite) and 794 s (migration suite); the price is that a suite that HANGS now holds a run for up to an hour. His figure, picked at the S305 Phase 4 picker. A separate commit so it reverts alone.
+
 ### 2026-10-12 · [BL-103] BL-103: a mutation round over `quality_ratchet.py` 1.4.0 and the tests it asked for; `ratchet-unit-tests` floor 95 to 100
 
 22 mutants, `docs/planning/bl103-evidence/mutate-bl103.py` (run in a `--no-local` clone under `~/.cache`): 16 killed by the suite, 6 survived (the budget's `:g` format, a shared run's note, a command that cannot start, the 600 s default, an undeclared gate's default in a shared run, the memo's budget): each a behaviour no test named. Five tests added (100 OK, 95 before); round 2, with a 23rd mutant on a removed `timeout_seconds`, is recorded with the work.

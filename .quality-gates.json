@@ -17,6 +17,7 @@
   "_s277_tightening_bl101_p4": "FORK-ONLY TIGHTENING (S277, 2026-10-07, BL-101 P4): tests-sh-passed 468 -> 474, context-budget-unit-tests 148 -> 163, ratchet-unit-tests 75 -> 81, layout-unit-tests 72 -> 74, and a new gate checker-layout-unit-tests >= 13 (raised to 15 the same day, after the fix that added two regression tests). Tightening needs no approval and the hook accepts it. tests-sh-passed is MEASURED at the at-rest state, not derived: a --no-local clone of 616db8a with the S277 claim stub removed, where HANDOFFS.md holds the TWO receipts, read `474 passed, 0 failed, 6 skipped` (Test 34's six stated SKIPs), output captured to a file; the tree with three receipts reads six more passes and no skips. The four unit counts are each measured by running the suite (Ran 163, 81, 74 and 13 tests, OK).",
   "_s276_tightening_bl101_p3": "FORK-ONLY TIGHTENING (S276, 2026-10-07, BL-101 P3): tests-sh-passed 462 -> 468, trimmer-unit-tests 181 -> 218, close-out-report-unit-tests 68 -> 82, layout-unit-tests 65 -> 72. Tightening needs no approval and the hook accepts it. tests-sh-passed is MEASURED at the at-rest state, not derived from the +6 (Test 54 gained three real-hook assertions and three controls): a --no-local clone of the S276 fold commit 837a254, where HANDOFFS.md holds the TWO receipts, with this session's code files overlaid, read `468 passed, 0 failed, 6 skipped` (Test 34's six stated SKIPs), output captured to a file; at three receipts Test 34's six assertions run instead of printing SKIP rows (fork Learning #70), so the passed count reads higher there: never take this floor from a three-receipt run. The three unit floors are the counts `Ran N tests` reads at the commit that raises them: the trimmer gained its new-layout classes (RED first, 22 mutants), close_out_report.py its layout classes (RED against the old tool, 8 mutants), the layout suite its tiebreak row (7 mutants).",
   "_s275_tightening_bl101_p2": "FORK-ONLY TIGHTENING (S275, 2026-10-06, BL-101 P2): tests-sh-passed 447 -> 462, ratchet-unit-tests 45 -> 75, layout-unit-tests 62 -> 65. MEASURED, not derived: `quality_ratchet.py --run` in a --no-local clone of 6f85b46 (the S275 fold commit, whose HANDOFFS.md holds two receipts) with the session's code files overlaid read 75 and 65 for the two unit suites, and `bash bin/tests.sh` in the same clone, captured, read 462 passed, 0 failed, 6 skipped (the 447 of S274 plus the 15 assertions of Test 54; the six skips are Test 34's stated rows below three receipts, so 462 is the at-rest value and a three-receipt run reads 468). The first run of that clone read tests-sh-failed 1: the hook-chain assertion grepped for one literal line the hook no longer has; it was fixed in 6249ed9 before any floor was raised.",
+  "_s305_bl103_timeout_seconds": "FORK-ONLY, NOT A THRESHOLD (S305, 2026-10-12, BL-103): timeout_seconds 3600 on the three gates that read unmeasured when the machine was loaded (tests-sh-passed and tests-sh-failed share one run of bin/tests.sh, and migrate-layout-unit-tests): S280 and S287 measured 1,835 s and 794 s, S304 676 s at a load of about 180, against the 600 s default. The price is the other edge: a suite that HANGS now holds a run for up to an hour before it reads timeout (3600 s). quality_ratchet.py 1.4.0 warns, never refuses, on a changed timeout_seconds.",
   "version": 1,
   "results_file": ".quality-gates-results.json",
   "gates": [
@@ -26,6 +27,7 @@
       "threshold": 477,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
+      "timeout_seconds": 3600,
       "why": "the framework's build equivalent; the passed count is a ratchet — every suite it wires in (dashboard, trim, budget, ratchet units) reports through it"
     },
     {
@@ -34,6 +36,7 @@
       "threshold": 0,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: \\d+ passed, (\\d+) failed",
+      "timeout_seconds": 3600,
       "why": "the suite's colour: a count gate passes over a red test (it still ran); this one does not. 0 since the PR #82 merge (Test 9 was the branch-only failure)"
     },
     {
@@ -103,6 +106,7 @@
       "threshold": 275,
       "command": "python3 tools/test_migrate_layout.py",
       "extract": "Ran (\\d+) tests",
+      "timeout_seconds": 3600,
       "why": "BL-101 P7 (S280): bin/migrate-layout run as a command in scratch git projects the real bin/sync wrote (the plan, the refusals, the one commit and its rollback, the rewrites of CLAUDE.md, .gitignore and the two configs, the one ledger entry, the hits it leaves, the shard rehearsal, the checks before and after) and its rules as functions. Count never drops; green/red is carried by tests-sh-failed."
     },
     {
