@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S310 — F32 closed in the register and the BL-105 rows
+
+The register's F32 row reads **fixed** (`51e0259`, the five tests, the mutation round: 7 of 8 killed, the 8th equivalent because a report whose `rehearsal` is `None` has no moves) and carries a dated S310 line; the BL-105 row in `BACKLOG.md` and its paragraph in `BACKLOG-DETAIL.md` say F32 is fixed, not next (`BACKLOG.md` 58,198 B to 58,187 B). BL-105 itself stays open: phase 4 is done at one adopter of the five that carry the file.
+
 ### 2026-10-13 · [BL-101] S310 — F32 fixed: `bin/migrate-layout` labels a refused run's move list UNREHEARSED
 
 The shard proofs run only on a run that can go on, so the list a REFUSED run printed was the plan before them: at `vscode_quarto_ext` 3 moves listed refused, 1 once the sync cleared the refusal. `build_report` now sets `rehearsal.skipped: "refused"` when a run has moves and a refusal stands (`ran` alone could not say so: it is also False when there was nothing to rehearse), and `render_text` heads the list `moves (N, UNREHEARSED):` with one line saying why, in both dry-run and `--apply`. A refusal that comes after the rehearsal (`rewrite-unsafe`) leaves the list unlabelled, because it was rehearsed; the JSON carries the marker for a consumer that reads `moves` as data. **Not chosen:** rehearsing before refusing would rehearse a tree the sync is about to change. Five tests written first (red first: the heading read `moves (38):`, the marker was absent), two of them pin the unlabelled cases; `tools/test_migrate_layout.py` reads 280 tests (275 before), 781 s, OK; `check-layout-literals` 0 sites. The `migrate-layout-unit-tests` floor in `.quality-gates.json` is tightened 275 to 280 (tightening needs no approval). Canonical-only; fork only; nothing sent to `KJ5HST/methodology`. Closing the F32 row in the register and the BL-105 row follows in its own commit.
