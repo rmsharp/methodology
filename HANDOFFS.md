@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S311
+date: 2026-10-13
+status: pending
+active_task: **PR2, Part 1 only** (`docs/planning/upstream-pr-composition-plan.md` §3 and §5; the plan says PR2 is two to four sessions, so this session takes its first checkpoint): the earlier lineage (the 24 files and +13,254 / -847 of §3, at `c8b9ddd`) as ONE commit on a local branch in a `--no-local` scratch clone of `upstream/main` `f34769f` under `~/.cache`, with `bash bin/tests.sh` run on it and the result stated; un-pushed. His pick at the S311 Phase 0 picker (PR2, as recommended), with two go-aheads there (push `177dc79`, done and read back; the HANDOFFS trim `77bb319` and its fold `d51d315`, done). NOT in this session: Part 2's layers, PR3, PR4, PR5, anything outward.
+```
+
+```handoff
 session: S310
 date: 2026-10-13
 status: complete
