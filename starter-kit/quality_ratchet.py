@@ -19,9 +19,11 @@ it does not reimplement. Which command produces each number is the project's cho
 a review finding, and a gate it cannot run reports UNMEASURED, never pass. A command that
 outlives its budget (600 s, or the gate's own `timeout_seconds`) is one it could not finish:
 UNMEASURED with the note `timeout (N s)`, never an exit code and never a number read out of the
-timeout message. It holds THRESHOLDS, not commands: a changed `command`, `extract` or
-`timeout_seconds` is printed as a warning and left to review — the results file will show the
-discontinuity.
+timeout message. It is also STOPPED: where the platform has process groups the command runs in a
+session of its own, and a timeout, an interrupt, a hangup or a SIGTERM kills its whole group, not only
+the shell (BL-107; on Windows a timed-out command may keep running). It holds THRESHOLDS, not
+commands: a changed `command`, `extract` or `timeout_seconds` is printed as a warning and left to
+review — the results file will show the discontinuity.
 
 There is deliberately no --force. Loosening a threshold is a decision, and the only
 way to take it is to edit .quality-gates.json under plan-mode approval and commit
@@ -45,18 +47,21 @@ import hashlib
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import datetime, timezone
 
-VERSION = "1.4.0"
+VERSION = "1.5.0"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
 SAFEGUARDS = "SAFEGUARDS.md"  # layout: ok -- a document cited by bare name in a message; names are relative to the runner's directory (plan 4.4)
 DIRECTIONS = ("min", "max")
 DEFAULT_TIMEOUT = 600   # seconds a gate's command may run unless the gate declares `timeout_seconds`
+HAS_PROCESS_GROUPS = os.name == "posix"   # a gate's command gets a session of its own, and is stopped with its whole group (BL-107)
 
 R = "\033[0m"; B = "\033[1m"; D = "\033[2m"
 RED = "\033[31m"; YEL = "\033[33m"; GRN = "\033[32m"; CYN = "\033[36m"
@@ -107,20 +112,95 @@ def run(argv, cwd=None):
     return p.returncode, p.stdout, p.stderr
 
 
+def _stop_group(proc):
+    """Stop a gate's command: SIGKILL its whole process group (it leads one: it was started with
+    `start_new_session`), then the shell itself whatever the group call said, then reap the shell.
+    A refusal is not a failure to stop. macOS raises PermissionError from killpg when a member of the
+    group is already dead and not yet reaped (measured, BL-107), and ProcessLookupError is a group that
+    is already gone: the command is stopped either way."""
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except OSError:
+        pass
+    try:
+        proc.kill()
+    except OSError:
+        pass
+    proc.wait()
+
+
+def _stop_on_signals():
+    """While a gate's command runs, SIGHUP and SIGTERM raise SystemExit(128 + n) in the tool instead of
+    ending it where it stands, so run_gate_command's cleanup stops the command first. They have to: the
+    command is in a session of its own, so a closed terminal's hangup no longer reaches it and `kill` of
+    the tool never did. A signal the caller IGNORES stays ignored (`nohup` sets SIGHUP to ignore on
+    purpose, and the command inherits it). Off the main thread signal.signal raises ValueError: the
+    caller owns the signals there, and nothing is installed. Returns a function that puts back what
+    was there."""
+    def bail(signum, frame):
+        raise SystemExit(128 + signum)
+    saved = []
+    for s in (signal.SIGHUP, signal.SIGTERM):
+        if signal.getsignal(s) == signal.SIG_IGN:
+            continue
+        try:
+            saved.append((s, signal.signal(s, bail)))
+        except ValueError:
+            break
+
+    def restore():
+        for s, previous in saved:
+            signal.signal(s, previous if previous is not None else signal.SIG_DFL)
+    return restore
+
+
 def run_gate_command(cmd, cwd, timeout):
     """(rc, out, err, timed_out) for a gate's shell command. A command that outlives `timeout` has NO
     exit code: reporting it as one (it was 127) let it read as a measurement -- `fail` against a
     ceiling, `pass` against a floor at or under 127, and an `extract` could read a number out of the
     timeout MESSAGE, which quotes the command line (ITERATIVE_METHODOLOGY.md: checks never pass by
     timeout). rc is None then, and out and err are empty: nothing a timed-out command printed is a
-    measurement."""
+    measurement.
+
+    Where the platform has process groups (HAS_PROCESS_GROUPS) the command also STOPS: it runs in a
+    session of its own, and a timeout, an interrupt (Ctrl-C), a hangup or a SIGTERM kills its whole
+    group, not only the shell. `subprocess.run(shell=True, timeout=...)` killed the shell and left the
+    shell's children running, so a test suite that outlived its budget ran on to its end, result
+    discarded, through every gate after it (BL-107; failure mode #29). A command that FINISHES is left
+    alone, background children and all. Escapes: a command that calls setsid itself leaves the group.
+    Elsewhere (Windows) the command runs as it did in 1.4.0 and a timed-out one may keep running."""
+    if not HAS_PROCESS_GROUPS:
+        try:
+            p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, shell=True)
+        except subprocess.TimeoutExpired:
+            return None, "", "", True
+        except OSError as e:
+            return 127, "", str(e), False
+        return p.returncode, p.stdout, p.stderr, False
+    restore = _stop_on_signals()
+    proc = None
     try:
-        p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, shell=True)
-    except subprocess.TimeoutExpired:
-        return None, "", "", True
+        proc = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                                shell=True, start_new_session=True)
+        try:
+            out, err = proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            _stop_group(proc)
+            return None, "", "", True
+        return proc.returncode, out, err, False
     except OSError as e:
+        if proc is not None:
+            _stop_group(proc)
         return 127, "", str(e), False
-    return p.returncode, p.stdout, p.stderr, False
+    except BaseException:
+        if proc is not None:
+            _stop_group(proc)
+        raise
+    finally:
+        restore()
+        if proc is not None:
+            for f in (proc.stdout, proc.stderr):
+                f.close()
 
 
 def manifest_location(root):
@@ -693,6 +773,40 @@ def selftest():
              "extract": r"(\d+)", "timeout_seconds": 60}]}
         check("a declared timeout_seconds outlasts the default budget",
               run_gates(d, longer, timeout=0.5)["gates"][0]["status"] == "pass")
+        # a command that outlives its budget is STOPPED, not only reported (BL-107): its shell's child is gone,
+        # and so is it when the tool is sent SIGTERM mid-gate. Where the platform has process groups.
+        if HAS_PROCESS_GROUPS:
+            pidfile = os.path.join(d, "child.pid")
+
+            def child_gone():
+                try:
+                    pid = int(open(pidfile).read().split()[0])
+                except (OSError, ValueError, IndexError):
+                    return False
+                for _ in range(100):
+                    try:
+                        os.kill(pid, 0)
+                    except OSError:   # gone (macOS answers EPERM for a dead, unreaped process)
+                        return True
+                    time.sleep(0.05)
+                os.kill(pid, signal.SIGKILL)   # leave nothing running behind a failed check
+                return False
+            stuck = {"version": 1, "gates": [
+                {"name": "stuck", "direction": "max", "threshold": 0, "timeout_seconds": 3,
+                 "command": f'sleep 600 & echo $! > "{pidfile}"; wait'}]}
+            check("a timed-out gate's command is stopped, not left running",
+                  run_gates(d, stuck)["gates"][0]["status"] == "unmeasured" and child_gone())
+            os.remove(pidfile)
+            termed = {"version": 1, "gates": [
+                {"name": "termed", "direction": "max", "threshold": 0, "timeout_seconds": 60,
+                 "command": f'sleep 600 & echo $! > "{pidfile}"; kill -TERM $PPID; wait'}]}
+            try:
+                run_gates(d, termed)
+                code = None
+            except SystemExit as e:
+                code = e.code
+            check("SIGTERM to the tool stops a gate's command and the tool exits 143",
+                  code == 143 and child_gone())
         # the ratchet through git: install the hook, stage a loosening, commit is refused
         run([py, TOOL, "install-hook"], cwd=d)
         json.dump(loosened, open(os.path.join(d, CONFIG_NAME), "w"))

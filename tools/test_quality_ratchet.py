@@ -251,6 +251,7 @@ class TestATimeoutIsNotAMeasurement(unittest.TestCase):
 DRIVER = ("import importlib.util, sys\n"
           "s = importlib.util.spec_from_file_location('qr', sys.argv[1])\n"
           "m = importlib.util.module_from_spec(s); s.loader.exec_module(m)\n"
+          "if len(sys.argv) > 4: import signal; signal.signal(signal.SIGHUP, signal.SIG_IGN)   # as under nohup\n"
           "print(m.run_gate_command(sys.argv[2], '.', float(sys.argv[3])), flush=True)\n")
 
 
@@ -266,8 +267,8 @@ class _GateCommandChildren(unittest.TestCase):
         self.pidfile = os.path.join(td.name, "pid")
         self.addCleanup(self.reap)
 
-    def command(self, before="", record=">"):
-        return f"sleep 600 & echo $! {record} {shlex.quote(self.pidfile)}; {before}wait"
+    def command(self, before="", record=">", first=""):
+        return f"{first}sleep 600 & echo $! {record} {shlex.quote(self.pidfile)}; {before}wait"
 
     def recorded(self):
         try:
@@ -330,6 +331,21 @@ class TestATimedOutCommandIsStopped(_GateCommandChildren):
         self.assertEqual(len(open(self.pidfile).read().split()), 1, "the shared command ran more than once")
         self.assert_stopped(self.wait_for_pid())
 
+    def test_a_child_that_ignores_sigterm_is_stopped_too(self):
+        # Ignored signals are inherited: the child of this shell cannot be asked to stop, only made to.
+        self.assertEqual(qr.run_gate_command(self.command(first="trap '' TERM; "), os.getcwd(), 5),
+                         (None, "", "", True))
+        self.assert_stopped(self.wait_for_pid())
+
+    def test_an_oserror_while_waiting_reads_as_127_and_still_stops_the_command(self):
+        def boom(*a, **k):
+            self.wait_for_pid()
+            raise OSError("the pipe went away")
+        with mock.patch.object(qr.subprocess.Popen, "communicate", side_effect=boom):
+            r = qr.run_gate_command(self.command(), os.getcwd(), 30)
+        self.assertEqual(r, (127, "", "the pipe went away", False))
+        self.assert_stopped(self.wait_for_pid())
+
     def test_a_command_that_exits_is_not_followed_by_a_group_kill(self):
         # The boundary, pinned: only a command that outlives its budget (or a signal) stops its group. One that
         # finishes and leaves a background child behind keeps doing exactly what it did in 1.4.0.
@@ -382,6 +398,13 @@ class TestASignalToTheToolStopsTheCommand(_GateCommandChildren):
         self.assertIn("KeyboardInterrupt", r.stderr)
         self.assertIn(r.returncode, (130, -signal.SIGINT), r.stderr)
         self.assert_stopped(self.wait_for_pid())
+
+    def test_a_hangup_the_caller_ignores_stays_ignored(self):
+        # `nohup` sets SIGHUP to ignore on purpose, so a run survives its terminal: the tool must not turn it
+        # into an exit. The command inherits the ignore, so it survives too -- as it always did.
+        r = subprocess.run([PY, "-c", DRIVER, str(STARTER), "kill -HUP $PPID; echo survived", "60", "nohup"],
+                           capture_output=True, text=True, timeout=180)
+        self.assertEqual((r.returncode, r.stdout.strip()), (0, "(0, 'survived\\n', '', False)"), r.stderr)
 
     def test_the_signal_handlers_are_put_back(self):
         names = (signal.SIGHUP, signal.SIGTERM, signal.SIGINT)
@@ -1221,6 +1244,9 @@ class TestToolInvariants(unittest.TestCase):
         self.assertEqual(rc.returncode, qr.USAGE)
         self.assertIn("no --force", rc.stdout)
 
+    def test_a_gate_command_gets_its_own_session_wherever_there_are_process_groups(self):
+        self.assertEqual(qr.HAS_PROCESS_GROUPS, os.name == "posix")
+
     def test_stdlib_only(self):
         import ast
         tree = ast.parse(STARTER.read_text(encoding="utf-8"))
@@ -1233,7 +1259,7 @@ class TestToolInvariants(unittest.TestCase):
         # sys.stdlib_module_names is 3.10+; pin the allowed set so the test runs on older
         # interpreters too, which is where a stray third-party import would bite first.
         allowed = {"hashlib", "json", "os", "re", "subprocess", "sys", "tempfile", "datetime",
-                   "shutil", "signal",   # signal: a gate's command is stopped when the tool is (BL-107)
+                   "shutil", "signal", "time",   # signal, time: a gate's command is stopped when the tool is (BL-107)
                    "pathlib"}   # the embedded layout-resolver block (BL-101 P2) imports it
         self.assertTrue(names <= allowed, names - allowed)
 
