@@ -1,0 +1,100 @@
+start Tue Oct 13 14:58:24 CDT 2026
+adopter HEAD 0c8d9669aaf31ede4a0fe44aafc90590a5640ff6
+source HEAD  a9e550f083ff55a3e0efcc810d88a3b8d7a49300
+adopter core.hooksPath=[]; tracked status: []
+cloned 3 arms, status of each: 0 0 0 
+npm test base exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)  (5 s)
+check-package base exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls base: 42 paths
+check-backlog base exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types base exit=0
+ratchet base exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status base exit=2
+      context budget  OVER   resident 22,855 B ≈ 7,800 tok
+      PROJECT_LEARNINGS.md               1,139,759 B    65,536 B  over
+      PROJECT_LEARNINGS.md — 1,139,759 B exceeds the 65,536 B ceiling by 1,074,223
+check-ledger base exit=1  /Users/rmsharp/.cache/s309-rehearsal/p4/base/methodology/CHANGELOG.md:28: 0 source tags (w
+check-handoff base exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/s309-reh
+git status base: []
+shard proof base (docs/archive/SESSION_NOTES-through-S253.md.verify.sh): exit=0  OK: C0-C6 hold for docs/archive/SESSION_NOTES-through-S253.md
+status base exit=0
+migrate dry-run base (expected: REFUSED not-current) exit=1
+sync --dry-run ctrl exit=0
+sync ctrl (no --force) exit=0
+ctrl untracked after the sync: []
+commit ctrl (chore(methodology): sync) exit=0
+npm test ctrl exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)  (5 s)
+check-package ctrl exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls ctrl: 42 paths
+check-backlog ctrl exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types ctrl exit=0
+ratchet ctrl exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status ctrl exit=2
+      context budget  OVER   resident 22,855 B ≈ 7,800 tok
+      PROJECT_LEARNINGS.md               1,139,759 B    65,536 B  over
+      PROJECT_LEARNINGS.md — 1,139,759 B exceeds the 65,536 B ceiling by 1,074,223
+check-ledger ctrl exit=1  /Users/rmsharp/.cache/s309-rehearsal/p4/ctrl/methodology/CHANGELOG.md:32: 0 source tags (w
+check-handoff ctrl exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/s309-reh
+git status ctrl: []
+status ctrl exit=0  tracked current: 23
+sync topup (no --force) exit=0
+commit topup (chore(methodology): sync) exit=0
+migrate dry-run topup exit=0
+migrate --apply topup exit=0
+  topup status after the move: []  HEAD 9f3da6f chore(methodology): move PROJECT_LEARNINGS.md under methodology/ (top-up, tier all
+     CLAUDE.md                                                | 10 +++++-----
+     methodology/.context-budget.json                         |  2 +-
+     methodology/CHANGELOG.md                                 |  4 ++++
+     PROJECT_LEARNINGS.md => methodology/PROJECT_LEARNINGS.md |  0
+     4 files changed, 10 insertions(+), 6 deletions(-)
+npm test topup exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)  (5 s)
+check-package topup exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls topup: 42 paths
+check-backlog topup exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types topup exit=0
+ratchet topup exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status topup exit=2
+      context budget  OVER   resident 22,927 B ≈ 7,825 tok
+      methodology/PROJECT_LEARNINGS.md   1,139,759 B    65,536 B  over
+      methodology/PROJECT_LEARNINGS.md — 1,139,759 B exceeds the 65,536 B ceiling by 1,074,223
+check-ledger topup exit=1  /Users/rmsharp/.cache/s309-rehearsal/p4/topup/methodology/CHANGELOG.md:36: 0 source tags (
+check-handoff topup exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/s309-reh
+git status topup: []
+shard proof topup (methodology/archive/SESSION_NOTES-through-S253.md.verify.sh): exit=127  bash: methodology/archive/SESSION_NOTES-through-S253.md.verify.sh: No such file or directory
+status topup exit=0  layout: topup new  tracked current: 23
+diff base vs ctrl  packaged set: 0 lines differ
+diff base vs topup packaged set: 0 lines differ
+vsce package base exit=0  1940709 B  44 entries
+vsce package topup exit=0  1940709 B  44 entries
+vsix entry lists differ: 0 lines
+topup: first dated entries of methodology/CHANGELOG.md (line: heading):
+    18: ## 2026-10
+    20: ### 2026-10-13 · [ad hoc] Layout top-up: `PROJECT_LEARNINGS.md` now lives under `methodology/` (tier all, 1 file)
+    24: ### 2026-10-13 · [ad hoc] Methodology sync (rehearsal text)
+    28: ### 2026-10-13 · [ad hoc] Session 302: `scratchpad/` trimmed (31 heavy entries, 63.7 GB and 1,459,530 files, deleted) and `git status` made
+topup: ledger lines inside a code fence before the first dated heading: 0
+-  forward in `PROJECT_LEARNINGS.md` **first**, then delete. ⚠ Verify per block — Session 195 found
++  forward in `methodology/PROJECT_LEARNINGS.md` **first**, then delete. ⚠ Verify per block — Session 195 found
+-See [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) (project root, committed) — extracted there on
++See [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) (project root, committed) — extracted there on
+-CLAUDE.md's 164 KB) and CLAUDE.md is loaded in full into every session's context; PROJECT_LEARNINGS.md
+-is not. **At Phase 3C (Document Learnings), append new rows to PROJECT_LEARNINGS.md, not here.**
+-Before starting work in an area with prior sessions, grep PROJECT_LEARNINGS.md for relevant keywords
++CLAUDE.md's 164 KB) and CLAUDE.md is loaded in full into every session's context; methodology/PROJECT_LEARNINGS.md
++is not. **At Phase 3C (Document Learnings), append new rows to methodology/PROJECT_LEARNINGS.md, not here.**
++Before starting work in an area with prior sessions, grep methodology/PROJECT_LEARNINGS.md for relevant keywords
+-      "path": "PROJECT_LEARNINGS.md",
++      "path": "methodology/PROJECT_LEARNINGS.md",
+check-links ctrl exit=1  check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/s309-rehearsal/p4/ctrl (new lay
+check-links topup exit=1  check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/s309-rehearsal/p4/topup (new la
+check-links: 20 lines differ between ctrl and topup
+dash base exit=0   Health: 76/100 High+ Risk: 1 Commits: 1,805
+dash ctrl exit=0   Health: 76/100 High+ Risk: 1 Commits: 1,806
+dash topup exit=0   Health: 76/100 High+ Risk: 1 Commits: 1,807
+done Tue Oct 13 15:00:22 CDT 2026

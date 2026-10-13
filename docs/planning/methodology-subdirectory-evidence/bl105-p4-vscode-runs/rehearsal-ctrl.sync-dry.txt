@@ -1,0 +1,37 @@
+sync: /Users/rmsharp/.cache/s309-rehearsal/p4/ctrl
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1866-ga9e550f
+  layout:  new (found methodology/SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+  files:
+    methodology/SESSION_RUNNER.md: would write
+    methodology/FRAMEWORK_LEARNINGS.md: unchanged
+    methodology/SAFEGUARDS.md: unchanged
+    methodology/RECOMMENDED_SKILLS.md: unchanged
+    methodology/CONTEXT_TEMPLATE.md: unchanged
+    methodology/CLAUDE_TEMPLATE.md: would write
+    methodology/BOOTSTRAP.md: would write
+    methodology/methodology_dashboard.py: unchanged
+    methodology/methodology_trim.py: unchanged
+    methodology/context_budget.py: unchanged
+    methodology/quality_ratchet.py: would write
+    methodology/SESSION_NOTES.md: present (seed; left as-is)
+    methodology/CHANGELOG.md: present (seed; left as-is)
+    methodology/HANDOFFS.md: present (seed; left as-is)
+    methodology/ROADMAP.md: present (seed; left as-is)
+    methodology/.context-budget.json: present (seed; left as-is)
+    methodology/.quality-gates.json: present (seed; left as-is)
+    methodology/.gitattributes: present (seed; left as-is)
+    methodology/ITERATIVE_METHODOLOGY.md: unchanged
+    methodology/HOW_TO_USE.md: would write
+    methodology/FRAMEWORK_APPARATUS.md: unchanged
+    methodology/workstreams/DESIGN_WORKSTREAM.md: unchanged
+    methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: unchanged
+    methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: unchanged
+    methodology/workstreams/AUDIT_WORKSTREAM.md: unchanged
+    methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: unchanged
+    methodology/workstreams/TEMPLATE_WORKSTREAM.md: unchanged
+    methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: unchanged
+    methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: unchanged
+    methodology/workstreams/TEMPLATE_CAMPAIGN.md: unchanged

@@ -1,0 +1,30 @@
+start Tue Oct 13 15:01:25 CDT 2026
+adopter HEAD 0c8d9669aaf31ede4a0fe44aafc90590a5640ff6
+sync exit=0
+commit (chore(methodology): sync) exit=0
+commit (docs(claude): the learnings pointer no longer says the file is at the project root, before the layout move) exit=0
+     CLAUDE.md                | 2 +-
+     methodology/CHANGELOG.md | 4 ++++
+     2 files changed, 5 insertions(+), 1 deletion(-)
+migrate dry-run exit=0  moves: 1
+migrate --apply exit=0
+status after: []  HEAD 59cb4ff chore(methodology): move PROJECT_LEARNINGS.md under methodology/ (top-up, tier all
+CLAUDE.md pointer after the move:
+    263:See [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) (committed) — extracted there on
+    264-2026-07-09 (Session 39). This table had grown to ~97% of this file's size (45 rows, 159 KB of
+CLAUDE.md "project root" mentions of the file after: 0
+npm test exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)
+check-package exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE READ
+vsce ls: 42 paths; differ from base: 0 lines
+check-backlog exit=0
+check-types exit=0
+ratchet exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+context_budget exit=2   context budget OVER resident 22,913 B ≈ 7,820 tok
+tracked files, edit vs topup: 0 lines differ in the file list
+    Files edit/CLAUDE.md and topup/CLAUDE.md differ
+    Files edit/methodology/CHANGELOG.md and topup/methodology/CHANGELOG.md differ
+    CLAUDE.md edit-vs-topup: 263c263
+    CLAUDE.md edit-vs-topup: < See [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) (committed) — extracted there on
+    CLAUDE.md edit-vs-topup: ---
+    CLAUDE.md edit-vs-topup: > See [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) (project root, committed) — extracted there on
+done Tue Oct 13 15:02:12 CDT 2026

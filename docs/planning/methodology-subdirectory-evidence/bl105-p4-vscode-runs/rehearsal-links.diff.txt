@@ -1,0 +1,28 @@
+3,9c3,6
+<   methodology/CHANGELOG.md:1370  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+<   methodology/CHANGELOG.md:1371  ->  docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh
+<   methodology/CHANGELOG.md:1378  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+<   methodology/CHANGELOG.md:1379  ->  docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+<   methodology/CHANGELOG.md:1396  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+<   methodology/CHANGELOG.md:1397  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+<   methodology/CHANGELOG.md:1399  ->  docs/archive/README.md
+---
+>   methodology/CHANGELOG.md:1374  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+>   methodology/CHANGELOG.md:1375  ->  docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh
+>   methodology/CHANGELOG.md:1382  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+>   methodology/CHANGELOG.md:1383  ->  docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+11c8,11
+<   methodology/CHANGELOG.md:1405  ->  docs/archive/README.md
+---
+>   methodology/CHANGELOG.md:1400  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+>   methodology/CHANGELOG.md:1401  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+>   methodology/CHANGELOG.md:1403  ->  docs/archive/README.md
+>   methodology/CHANGELOG.md:1409  ->  docs/archive/README.md
+13c13
+<   methodology/CHANGELOG.md:952  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+---
+>   methodology/CHANGELOG.md:956  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+20c20
+< check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/s309-rehearsal/p4/ctrl (new layout):
+---
+> check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/s309-rehearsal/p4/topup (new layout):

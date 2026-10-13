@@ -1,0 +1,100 @@
+migrate-layout: /Users/rmsharp/.cache/s309-rehearsal/p4/topup
+canonical: /Users/rmsharp/Development/methodology @ a9e550f083ff
+layout: new   tier: all   mode: dry run (nothing written; add --apply to migrate)
+
+moves (1):
+  git mv PROJECT_LEARNINGS.md methodology/PROJECT_LEARNINGS.md
+
+left in place (3):
+  docs/archive/README.md -- not a ledger shard the trimmer wrote: the project's own; it stays
+  docs/archive/SESSION_NOTES-through-S253.md -- its proof exits 2 at the new place (0 here): the proof reads its shard by a path that moves; the shard and its proof stay
+  docs/archive/SESSION_NOTES-through-S253.md.verify.sh -- its proof exits 2 at the new place (0 here): the proof reads its shard by a path that moves; the shard and its proof stay
+
+rewrites (2 file(s)):
+  CLAUDE.md (6 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -100,7 +100,7 @@
+       Extension Development Host window. Get the operator's explicit go-ahead before running either.
+     - **A red `check-backlog` is not fixed by deleting the block.** It means a completed record is
+       sitting in an open-work file: record the outcome in `methodology/CHANGELOG.md` and anything worth carrying
+    -  forward in `PROJECT_LEARNINGS.md` **first**, then delete. ⚠ Verify per block — Session 195 found
+    +  forward in `methodology/PROJECT_LEARNINGS.md` **first**, then delete. ⚠ Verify per block — Session 195 found
+       an OPEN, operator-pending decision (the lone `+` gate suspension, 2 recovered against 32 new
+       phantoms) buried inside a tombstone, recorded in no other tracked file.
+     
+    @@ -260,11 +260,11 @@
+     
+     ### Project-specific Learnings
+     
+    -See [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) (project root, committed) — extracted there on
+    +See [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) (project root, committed) — extracted there on
+     2026-07-09 (Session 39). This table had grown to ~97% of this file's size (45 rows, 159 KB of
+    -CLAUDE.md's 164 KB) and CLAUDE.md is loaded in full into every session's context; PROJECT_LEARNINGS.md
+    -is not. **At Phase 3C (Document Learnings), append new rows to PROJECT_LEARNINGS.md, not here.**
+    -Before starting work in an area with prior sessions, grep PROJECT_LEARNINGS.md for relevant keywords
+    +CLAUDE.md's 164 KB) and CLAUDE.md is loaded in full into every session's context; methodology/PROJECT_LEARNINGS.md
+    +is not. **At Phase 3C (Document Learnings), append new rows to methodology/PROJECT_LEARNINGS.md, not here.**
+    +Before starting work in an area with prior sessions, grep methodology/PROJECT_LEARNINGS.md for relevant keywords
+     (a phase name, a file path, a feature name) — it is not auto-loaded, so read/grep it explicitly, and
+     prefer targeted greps over reading it in full as it keeps growing.
+     
+  methodology/.context-budget.json (1 replacement(s))
+    --- methodology/.context-budget.json
+    +++ methodology/.context-budget.json
+    @@ -58,7 +58,7 @@
+           "_": "Phase 0 step 3 mandates reading this when there is no GitHub repo, which is this project's case -- so it is read every session. 284,130 B / 193 open items at Session 255. No trimmer governs it; open items are not archivable the way records are, so over-budget here means CLOSE or DOWNGRADE items, not shard them."
+         },
+         {
+    -      "path": "PROJECT_LEARNINGS.md",
+    +      "path": "methodology/PROJECT_LEARNINGS.md",
+           "class": "on-demand",
+           "max_bytes": 65536,
+           "_": "This project's learnings live here, not in CLAUDE.md (moved at Session 39). CLAUDE.md instructs sessions to GREP it rather than read it whole, so it is on-demand -- but a file a pointer sends you to still has a budget. 950,857 B at Session 255, 502 rows. Ceiling matches canonical's for its own FRAMEWORK_LEARNINGS.md."
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  tests:   2 mention(s) in 2 file(s)
+    test/unit/backlog-hygiene-gate.test.ts:95  "belongs in PROJECT_LEARNINGS.md",
+    test/unit/grammar-embedded-breadth.test.ts:113  * exempt"); this project's convention (PROJECT_LEARNINGS.md Learning #58/#61)   [comment lines only]
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 41 mention(s) in 4 file(s)
+    check-backlog.js:133  `\n  PROJECT_LEARNINGS.md. Record it there, then delete the block here.`,
+    methodology/methodology_dashboard.py:206  ("docs/methodology", 10, "dir"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the car   (32 mentions, 26 on code lines)
+    methodology/methodology_trim.py:5  `docs/archive/`, and refuses to do it unless the move is provably lossless.   (7 mentions, 4 on code lines)
+    src/core/qmd/model.ts:3582  * `PROJECT_LEARNINGS.md` hold what they measured, and `git show 54a4a1c6^:src/core/qmd/model.ts`   [comment lines only]
+  config:  1 mention(s) in 1 file(s)
+    .vscodeignore:56  PROJECT_LEARNINGS.md
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  913 mention(s) in 9 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   156 mention(s) in 36 file(s)
+    BACKLOG.md:17  > **append-only history** (`SESSION_NOTES.md`, `HANDOFFS.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`)
+    BACKLOG.md:80  file twice. The correction belongs in `PROJECT_LEARNINGS.md`; see #283.)*
+    BACKLOG.md:107  - [ ] **Stacked block enders in the free case — what Session 298's rule still leaves, every row measured** (Session 298;
+    BACKLOG.md:200  - [ ] **⚠ RECORD-HYGIENE FINDING, verified firsthand but NOT acted on: the `rawTexMacroLineIsBlock` item below is a COMP
+    BACKLOG.md:210  - [ ] **The raw-TeX TAIL family behind the paragraph bail — ~50 residual phantoms, and the obvious fix is MEASURED DELET
+    BACKLOG.md:461  - [ ] **The two quarto-owned productions — display math and table captions — keep the unvalidated scan, so five measured
+    CLAUDE.md:134  > **Why this file and not a synced one:** `methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, and everything u
+    CLAUDE.md:203  [`docs/archive/SESSION_NOTES-through-S253.md`](docs/archive/SESSION_NOTES-through-S253.md). The
+    CLAUDE.md:223  `docs/archive/SESSION_NOTES-through-S253.md.verify.sh` does.
+    CLAUDE.md:249  `cat methodology/CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep '^### ' | grep -vE '^### [0-9]{4}-[0-
+    docs/MODEL-DIVERGENCE-FAMILIES.md:4  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`.
+    docs/POSIT-COMPARISON.md:15  See `PROJECT_LEARNINGS.md` Learning #1.
+    docs/POSIT-COMPARISON.md:642  Quarto CLI's own bundled `.typ` template files and typst.app's own docs — `PROJECT_LEARNINGS.md`
+    docs/POSIT-COMPARISON.md:914  not `.typst` as this row previously said — corrected Session 77, `PROJECT_LEARNINGS.md` Learning #85).
+    docs/POSIT-COMPARISON.md:936  overrides a mostly-correct incumbent rather than filling a void. See `PROJECT_LEARNINGS.md` #99/#100.
+    docs/REAL-DOCUMENT-RESCORE.md:4  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`. Prior audit in this series:
+    docs/REAL-DOCUMENT-TRIAGE.md:4  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`.
+    docs/archive/README.md:45  repository root, not against `docs/archive/`.
+    docs/archive/README.md:76  $ bash docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+    docs/archive/README.md:79  OK: L1, L2/front-matter, L3 hold for docs/archive/CHANGELOG-through-2026-08-24.md
+    docs/archive/README.md:81  $ bash docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh
+    docs/archive/README.md:84  OK: L1, L2/front-matter, L3 hold for docs/archive/HANDOFFS-through-2026-08-24.md
+    docs/planning/2026-06-27-extension-architecture-plan.md:8  **Workstream:** `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
+    docs/planning/2026-07-09-graphviz-dot-rendering-plan.md:12  Grounded firsthand, not from memory or the prior sessions' own carried-forward assumption. The BACKLOG/`NOTICE`/`PROJECT
+    docs/planning/2026-07-09-image-paste-plan.md:88  **D1 (disclosed, structural — read before implementing).** Unlike every prior Phase 6/7 slice, **the core paste mechanis

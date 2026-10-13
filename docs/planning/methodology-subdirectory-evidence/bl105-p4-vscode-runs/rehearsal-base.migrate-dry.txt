@@ -1,0 +1,14 @@
+migrate-layout: /Users/rmsharp/.cache/s309-rehearsal/p4/base
+canonical: /Users/rmsharp/Development/methodology @ a9e550f083ff
+layout: new   tier: all   mode: dry run (nothing written; add --apply to migrate)
+
+REFUSED:
+  - [not-current] bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): methodology/SESSION_RUNNER.md (1 version behind), methodology/CLAUDE_TEMPLATE.md (1 version behind), methodology/BOOTSTRAP.md (1 version behind), methodology/quality_ratchet.py (3 versions behind), methodology/HOW_TO_USE.md (1 version behind)
+
+moves (3):
+  git mv docs/archive/SESSION_NOTES-through-S253.md methodology/archive/SESSION_NOTES-through-S253.md
+  git mv docs/archive/SESSION_NOTES-through-S253.md.verify.sh methodology/archive/SESSION_NOTES-through-S253.md.verify.sh
+  git mv PROJECT_LEARNINGS.md methodology/PROJECT_LEARNINGS.md
+
+left in place (1):
+  docs/archive/README.md -- not a ledger shard the trimmer wrote: the project's own; it stays

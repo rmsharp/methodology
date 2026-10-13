@@ -1,0 +1,83 @@
+adopter HEAD 2057838cdb32532d602c52d06c0990ea3a86a4e3
+control at 741f8aa, base at 0c8d966
+present methodology/SESSION_RUNNER.md
+present methodology/SAFEGUARDS.md
+present methodology/SESSION_NOTES.md
+present methodology/CHANGELOG.md
+present methodology/HANDOFFS.md
+present methodology/PROJECT_LEARNINGS.md
+gone from the old place: PROJECT_LEARNINGS.md
+stays, as the tool said: docs/archive/SESSION_NOTES-through-S253.md
+stays, as the tool said: docs/archive/SESSION_NOTES-through-S253.md.verify.sh
+SAFEGUARDS byte-identical to canonical
+SESSION_RUNNER byte-identical to canonical
+BOOTSTRAP byte-identical to canonical
+10:## ACTIVE TASK
+git status lines: 0
+2057838 chore(methodology): move PROJECT_LEARNINGS.md under methodology/ (top-up, tier all, 1 file)
+741f8aa docs(claude): the learnings pointer no longer says PROJECT_LEARNINGS.md is at the project root, before the layou
+f89ac40 chore(methodology): sync the methodology files from the methodology repository (5 files)
+0c8d966 docs(session): cite the Session 302 quality_ratchet run (2/2) and the release gate (npm run package, exit 0, 1:0
+afc26f3 docs(changelog): Session 302 ledger entry records the close-out and trim commits; append the dashboard and conte
+CHANGELOG frontier 2057838; undocumented after it: 0
+HANDOFFS frontier 0c8d966; commits after: 3
+merges since the frontier: 0
+tool entry in methodology/CHANGELOG.md: 20:### 2026-10-13 · [ad hoc] Layout top-up: `PROJECT_LEARNINGS.md` now lives under `methodology/` (tier all, 1 file)
+code fences before the first dated heading (F21 read): 0
+follow: PROJECT_LEARNINGS.md commits before 308, after 309
+2057838 chore(methodology): move PROJECT_LEARNINGS.md under methodology/ (top-up, tier all, 1 file)
+
+ CLAUDE.md                                                | 10 +++++-----
+ methodology/.context-budget.json                         |  2 +-
+ methodology/CHANGELOG.md                                 |  4 ++++
+ PROJECT_LEARNINGS.md => methodology/PROJECT_LEARNINGS.md |  0
+ 4 files changed, 10 insertions(+), 6 deletions(-)
+npm test base exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)
+check-package base exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configurat
+check-backlog base exit=0
+check-types base exit=0
+ratchet base exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+context_budget base exit=2
+      context budget  OVER   resident 22,855 B ≈ 7,800 tok
+      PROJECT_LEARNINGS.md               1,139,759 B    65,536 B  over
+      PROJECT_LEARNINGS.md — 1,139,759 B exceeds the 65,536 B ceiling by 1,074,223
+check-ledger base exit=1  check-ledger: 84 finding
+check-handoff base exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in :
+npm test ctrl exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)
+check-package ctrl exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configurat
+check-backlog ctrl exit=0
+check-types ctrl exit=0
+ratchet ctrl exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+context_budget ctrl exit=2
+      context budget  OVER   resident 22,841 B ≈ 7,796 tok
+      PROJECT_LEARNINGS.md               1,139,759 B    65,536 B  over
+      PROJECT_LEARNINGS.md — 1,139,759 B exceeds the 65,536 B ceiling by 1,074,223
+check-ledger ctrl exit=1  check-ledger: 84 finding
+check-handoff ctrl exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in :
+npm test head exit=0   Test Files 70 passed (70)   Tests 5155 passed (5155)
+check-package head exit=0  check-package: OK — 42 files, 5.68 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configurat
+check-backlog head exit=0
+check-types head exit=0
+ratchet head exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+context_budget head exit=2
+      context budget  OVER   resident 22,913 B ≈ 7,820 tok
+      methodology/PROJECT_LEARNINGS.md   1,139,759 B    65,536 B  over
+      methodology/PROJECT_LEARNINGS.md — 1,139,759 B exceeds the 65,536 B ceiling by 1,074,223
+check-ledger head exit=1  check-ledger: 84 finding
+check-handoff head exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in :
+packaged set (vsce ls): base 42 paths, ctrl 42, head 42; head differs from base by 0 lines, from ctrl by 0
+vsce package base exit=0  1940709 B  44 entries
+vsce package head exit=0  1940709 B  44 entries
+vsix entry lists differ (base vs head): 0 lines
+shard proof ctrl (old place): exit=0  OK: C0-C6 hold for docs/archive/SESSION_NOTES-through-S253.md
+shard proof head (it stays at the old place): exit=0  OK: C0-C6 hold for docs/archive/SESSION_NOTES-through-S253.md
+status head exit=0  layout: head new  tracked current: 23  not current: 0
+check-links ctrl exit=1  check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/s309-rehear
+check-links head exit=1  check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/s309-rehear
+check-links: 20 lines differ between ctrl and head
+  dashboard ctrl:  Health: 76/100 High+ Risk: 1 Commits: 1,807
+  dashboard head:  Health: 76/100 High+ Risk: 1 Commits: 1,808
+LATER commit, NO ledger entry (head): exit=0
+  ledger-lag after it:  ledger-lag <= 0 1 fail
+LATER commit, WITH a ledger entry at methodology/CHANGELOG.md (head): exit=0
+  ledger-lag after it:  ledger-lag <= 0 0 pass
