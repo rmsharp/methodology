@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] S309 — fold the seventh 2026-10-12 HANDOFFS shard pointer into the archive index
+
+The pointer block the trim (`aaa9d40`, 1 receipt, S306, to `HANDOFFS-through-2026-10-12-7.md`, the name S308 guessed and the dry run chose) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit. `HANDOFFS.md` holds 2 receipts (S308, S307). The trim ran on his go-ahead at the S309 Phase 0 picker.
+
+### 2026-10-13 · [ad hoc] S309 — pushed `c7e89c0` to the fork's `main`
+
+`origin/main` went `ec24116..c7e89c0` (9 commits) on his go-ahead at the S309 Phase 0 picker, naming the commit and not `HEAD`; read back: `ls-remote` equals `c7e89c0`, `rev-list --left-right --count origin/main...c7e89c0` read `0 0`. Fork only, nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-12-7.md` (1 record(s), 40,789 B → 29,022 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
