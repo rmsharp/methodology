@@ -261,6 +261,10 @@ Moved the oldest **101** record(s) (2026-10-08 → 2026-10-11) out of [`CHANGELO
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh`](docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh)
 rather than trusting a digest printed here. Live file 191,782 B → 77,005 B (−59.8%).
 
+### 2026-10-12 · [BL-107] `tools/test_quality_ratchet.py`: the signal tests set SIGHUP themselves; two of them failed under `nohup`
+
+Found when the mutation round's baseline read red (`Ran 1 test in 30.070s`, fail-fast) and the same suite read 118 OK from a shell. `nohup` sets SIGHUP to ignore and ignored signals survive fork and exec, so the child driver inherited the ignore: the tool correctly left it ignored (by design, `nohup` is why) and `test_a_hangup_of_the_terminal_stops_the_child` and `test_sighup_stops_the_child_and_the_tool_exits_129` failed (`still running 30 s after`, `0 != 129`). Reproduced with `nohup python3 tools/test_quality_ratchet.py <the two classes>`: exactly those two red. The driver now sets SIGHUP default or ignore explicitly; the eight signal tests read OK with and without `nohup`. This repository starts its long runs under `nohup`, so a suite that failed there would have read red in the very runs that cite it.
+
 ### 2026-10-12 · [BL-107] `.quality-gates.json`: `ratchet-unit-tests` floor 100 to 118
 
 A tightening, in its own commit and reverting alone. Measured, not derived: `tools/test_quality_ratchet.py` reads `Ran 118 tests`, OK, in the working tree (output captured) and in a clean `--no-local` clone of `76f0082`; the 18 added tests are BL-107's.

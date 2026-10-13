@@ -248,10 +248,13 @@ class TestATimeoutIsNotAMeasurement(unittest.TestCase):
 
 # The tool as a child process: it prints what run_gate_command returned. Signals are aimed at THIS process,
 # never at the test runner, so a tool that fails to handle one fails the test instead of ending the suite.
-DRIVER = ("import importlib.util, sys\n"
+# SIGHUP is set here, never inherited: `nohup` sets it to ignore, ignored signals survive fork and exec, and this
+# repository starts its long runs (a gate, a mutation round) under nohup -- a driver that took the disposition it
+# was given failed the two hangup tests there (S306). A fourth argument asks for ignore, as `nohup` would.
+DRIVER = ("import importlib.util, signal, sys\n"
           "s = importlib.util.spec_from_file_location('qr', sys.argv[1])\n"
           "m = importlib.util.module_from_spec(s); s.loader.exec_module(m)\n"
-          "if len(sys.argv) > 4: import signal; signal.signal(signal.SIGHUP, signal.SIG_IGN)   # as under nohup\n"
+          "signal.signal(signal.SIGHUP, signal.SIG_IGN if len(sys.argv) > 4 else signal.SIG_DFL)\n"
           "print(m.run_gate_command(sys.argv[2], '.', float(sys.argv[3])), flush=True)\n")
 
 
