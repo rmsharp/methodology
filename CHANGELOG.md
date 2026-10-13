@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-103] BL-103's record and the measurement script, with its output on the 1.3.0 and the 1.4.0 tool
+
+`docs/planning/bl103-evidence/`: `bl103-record.md`, `measure-timeout.py` and `measure-timeout-output.txt`. The defect read `fail`, `pass` or a number read out of the timeout message, not only `exit 127`; the sync channels simulated (one file, byte-identical, legacy and `--layout new`); the old and the new tool equal over one manifest; the mutation rounds. Nothing sent upstream.
+
 ### 2026-10-12 · [BL-103] `.quality-gates.json`: `timeout_seconds` 3600 on `tests-sh-passed`, `tests-sh-failed` and `migrate-layout-unit-tests`
 
 Not a threshold (none moved; `quality_ratchet.py` 1.4.0 warns on the three, refuses none, and `config_defects` reads none): the three gates that read `unmeasured` under load (S280, S287, S304) get an hour instead of the 600 s default. S287 measured 1,835 s (shell suite) and 794 s (migration suite); the price is that a suite that HANGS now holds a run for up to an hour. His figure, picked at the S305 Phase 4 picker. A separate commit so it reverts alone.

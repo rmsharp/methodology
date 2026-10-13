@@ -1,0 +1,15 @@
+tool <scratch>/qr-1.3.0.py, version 1.3.0; budget 1 s; run_gates returned after 3.0 s
+gate                 status      measured  note
+exit-code-ceiling    fail        127.0     ''
+exit-code-floor      pass        127.0     ''
+extract              pass        8.0       ''
+summary: {"fail": 1, "pass": 2, "unmeasured": 0}
+commands still running after run_gates returned: ['sleep 6', 'sleep 7', 'sleep 8']
+
+tool starter-kit/quality_ratchet.py, version 1.4.0; budget 1 s; run_gates returned after 3.0 s
+gate                 status      measured  note
+exit-code-ceiling    unmeasured  None      'timeout (1 s)'
+exit-code-floor      unmeasured  None      'timeout (1 s)'
+extract              unmeasured  None      'timeout (1 s)'
+summary: {"fail": 0, "pass": 0, "unmeasured": 3}
+commands still running after run_gates returned: ['sleep 6', 'sleep 7', 'sleep 8']
