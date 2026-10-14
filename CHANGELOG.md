@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] S316 -- the HANDOFFS trim (`ef5984c`) at his Phase 0 go-ahead, and its shard pointer folded into the archive index
+
+His answer to the S316 Phase 0 picker ticked `Gate re-run first` and `HANDOFFS trim` and picked PR2 layer 4, the context-budget gate, as the deliverable. **The gate re-run, first, as the S315 handoff required:** `python3 starter-kit/quality_ratchet.py --run` in a clean `--no-local` clone of `990cf34` under `~/.cache/s316-gate`, launched `nohup ... &` with a done-file at 09:29:53, finished 09:52:07 (1,334 s, exit 0): **18/18 pass, 0 fail, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`**, equal to S315's citation, so the Phase 0 check of the newest receipt's `quality_ratchet:` line is discharged. **The trim:** a dry run first, which named `docs/archive/HANDOFFS-through-2026-10-13-6.md` as S315 had guessed; then `--cut 2 --force --write`: S313's receipt moved, 3 receipts to 2, 40,494 B to 28,769 B, the shard's `.verify.sh` exit 0, `bin/check-handoff` and `bin/check-ledger` exit 0 (the tool wrote its own entry below). **The fold,** in its own commit as the file's note requires: the tool's pointer block and its blank line out of `HANDOFFS.md`, one row for the `-6` shard added to `docs/HANDOFFS_ARCHIVE_INDEX.md`. No session is claimed at this entry; the claim follows.
+
 ### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-6.md` (1 record(s), 40,494 B → 28,769 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
