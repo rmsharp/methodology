@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] S315 -- the HANDOFFS trim (`8dc3cb1`) at his Phase 0 go-ahead, and its shard pointer folded into the archive index
+
+His answer to the S315 Phase 0 picker ticked `Trim HANDOFFS` and `Re-run the gate citation` and picked PR2 layer 3, the trimmer, as the deliverable. **The trim:** a dry run first, which named `docs/archive/HANDOFFS-through-2026-10-13-5.md` as S314 had guessed; then `--cut 2 --force --write`: S312's receipt moved, 3 receipts to 2, 38,264 B to 28,999 B, the shard's `.verify.sh` exit 0 (the tool wrote its own entry below). **The fold,** in its own commit as the file's note requires: the tool's pointer block and its blank line out of `HANDOFFS.md`, one row for the `-5` shard added to `docs/HANDOFFS_ARCHIVE_INDEX.md`. No session is claimed at this entry; the gate re-run and the claim follow.
+
 ### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-5.md` (1 record(s), 38,264 B → 28,999 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
