@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] S318 -- the Phase 0 go-aheads: the fork push (`324e947..3dd4bc0`), the gate re-run, the HANDOFFS trim (`2971180`) and its shard pointer folded into the archive index
+
+His answer to the S318 Phase 0 picker ticked all three go-aheads (the gate re-run, the HANDOFFS trim then fold, the push of `3dd4bc0`) and picked PR2's sync layers as the deliverable. **The push, first (it touches no tree):** `git push origin "${SHA}:refs/heads/main"`, a fast-forward `324e947..3dd4bc0`, read back with `ls-remote` (equal) and `rev-list --left-right --count origin/main...HEAD` (`0 0`); the fork only, nothing sent to `KJ5HST/methodology`. **The gate re-run:** `python3 starter-kit/quality_ratchet.py --run` in a clean `--no-local` clone of `3dd4bc0` under `~/.cache/s318-gate`, launched `nohup ... &` with a done-file at 13:40:00, finished 14:01:21 (1,281 s, exit 0): **18/18 pass, 0 fail, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`**, equal to S317's citation, so the Phase 0 check of the newest receipt's `quality_ratchet:` line is discharged (3 receipts in the clone: `tests-sh-passed` read 503). **The trim:** the dry run named `docs/archive/HANDOFFS-through-2026-10-14-2.md` as S317 had guessed; `--cut 2 --force --write` moved S315's receipt (3 receipts to 2, 40,239 B to 28,744 B), the shard's `.verify.sh` exit 0, `bin/check-handoff` and `bin/check-ledger` exit 0, committed as `2971180` (the tool wrote its own entry below this one). **The fold,** in its own commit as the file's note requires: the tool's pointer block and its blank line out of `HANDOFFS.md`, one row for the shard added to `docs/HANDOFFS_ARCHIVE_INDEX.md`. No session is claimed at this entry; the claim follows. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-2.md` (1 record(s), 40,239 B → 28,744 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
