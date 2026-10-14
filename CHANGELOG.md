@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14.md` (1 record(s), 39,486 B → 28,439 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-14 → 2026-10-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-14.md`](docs/archive/HANDOFFS-through-2026-10-14.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-14.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,486 B → 28,439 B (−28.0%).
+
 ### 2026-10-14 · [BL-101] S316 close-out -- PR2 layer 4 (the context-budget gate 1.4.0) built and verified on pr2/candidate (e9c5cb8), un-pushed; the HANDOFFS receipt complete
 
 The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S315 scored 9). The deliverable was PR2's sixth checkpoint: the budget gate 1.4.0 and its 163 tests as one commit on `98ca7fc` (4 files, +356 / -22), green in a clean clone (ratchet 13/13, 0 unmeasured; suite 298/0/0 in 289 s), its builder reproducing the tree and refusing on drift, its 15 added tests shown red on the 1.3.1 tool (10 of 15, five by design on both), #94 still at 3 files and 15 regions. **Gate:** `quality_ratchet.py --run` in a clean `--no-local` clone of `a95a1f0`, the last work commit, read 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4` (1,275 s), equal to the Phase 0 run on `990cf34` and to S315's citation; the close-out commit adds only this entry and the receipt. **Phase 3C: no fork learning row appended** (D3 not triggered, no retirement owed); rows considered: #70, #62, #98. The one new lesson (write `+X / -Y` from `--numstat`, not the stat total, which S314 and S316 each got wrong in a commit message) went to the operator's memory, not to a framework row. **Scratch:** the session's files under `~/.cache` (`s316-*`) were deleted after looking; the older `s310-*` and `s311-*` are not mine and were left. **Nothing sent upstream**; `origin/main` is `990cf34` and 7 commits are unpushed after this one (a push only on his go-ahead). **Offered next:** the HANDOFFS trim (3 receipts: S316, S315, S314; ONE record, S314) as its own action at the next Phase 0, with any gate re-run before it or after the claim. Model: Claude Sonnet 5.5.
