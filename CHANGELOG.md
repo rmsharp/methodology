@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] S314 -- the HANDOFFS trim (`a47cf37`) at his Phase 0 go-ahead, and its shard pointer folded into the archive index
+
+His answer to the S314 Phase 0 picker ticked `HANDOFFS trim`, `Gate re-run` and `Push ee48ace to fork` and picked PR2 layer 2b as the deliverable. **The trim:** a dry run first, which named `docs/archive/HANDOFFS-through-2026-10-13-4.md` as S313 had guessed; then `--cut 2 --force --write`: S311's receipt moved, 3 receipts to 2, 38,617 B to 27,225 B, the shard's `.verify.sh` exit 0, `bin/check-handoff` and `bin/check-ledger` exit 0 (the tool wrote its own entry below). **The fold,** in its own commit as the file's note requires: the tool's pointer block and its blank line out of `HANDOFFS.md`, one row (`-4`) into `docs/HANDOFFS_ARCHIVE_INDEX.md`.
+
 ### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-4.md` (1 record(s), 38,617 B → 27,225 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
