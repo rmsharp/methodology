@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [BL-101] S314 close-out -- PR2 Part 2's layer 2b built (`pr2/candidate` `c8c0b21`, un-pushed), the HANDOFFS trim and fold done, the gate run read 18/18
+
+The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S313 scored 8). The deliverable was PR2's fourth checkpoint: the ratchet's 1.4.0 and 1.5.0 as one commit on `fd96593` (4 files, +696 / -20), green in a clean clone (ratchet 13/13, 0 unmeasured; suite 298/0/0 in 296 s), its builder reproducing the tree, and its 39 added tests shown red on the 1.3.0 tool (36 of 39). **Gate:** `quality_ratchet.py --run` in a clean `--no-local` clone of `7db3b19`, the last work commit, read 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, 1,304 s, equal to the Phase 0 run on `ee48ace` and to S313's (this session changed no code, test or gate of the fork). `CHANGELOG: pending` on the S314 claim entry is cleared by this statement (a committed entry is not edited). **No fork learning row appended** (D3: considered fork #16, #94 and #107, none restates this session's lesson more generally than the record does; no retirement owed). The local `~/.cache/s314-*` scratch was deleted after looking. His go-aheads, each read back: the trim (`a47cf37`, fold `4d110bd`), the gate re-run (entry above), the push of `ee48ace` (`02fbad1..ee48ace`; the S314 commits after it are local). Nothing sent upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [BL-101] S314 -- the layer 2b record, the plan's status line, and the BL-101 row and detail
 
 `docs/planning/pr-composition-evidence/layer2b-record.md` (what the layer carries, what it leaves out, the decisions taken and the scrub input, what it does not show, next); the plan's status line now names three Part 2 layers built and the trimmer next; the `BL-101` row in `BACKLOG.md` (14 B shorter than before, still over its budget) and its detail paragraph in `BACKLOG-DETAIL.md` say layers 1, 2 and 2b are done. `BL-101` stays open. Nothing sent upstream.
