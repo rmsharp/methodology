@@ -1,0 +1,34 @@
+# bash layer-verify.sh <candidate> c8c0b21322e7 in a clean --no-local clone (S314; nohup, launched 00:36 CDT, 7 min 29 s, load average 8 to 10): the layer's commit, its changed files against its parent fd96593, the ratchet's --run, the scanner, every tracked .verify.sh
+2026-10-14T05:36:06Z
+verifying c8c0b21322e72978eeb621db6561b7c8d3075460 in a clean clone; 0 dirty paths
+changed against its parent fd96593:
+  1	1	.quality-gates.json
+  1	1	starter-kit/quality-gates.json
+  203	17	starter-kit/quality_ratchet.py
+  491	1	tools/test_quality_ratchet.py
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  13/13 pass · 0 fail · 0 unmeasured · results b62a4535792f · manifest 116324e9d629
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 298         298  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 354         354  pass
+  context-budget-unit-tests             >= 148         148  pass
+  trimmer-unit-tests                    >= 181         181  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 74          74  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 13/13 pass · 0 fail · 0 unmeasured · results b62a4535792f · manifest 116324e9d629
+
+ratchet exit 0
+check-layout-literals: scanned 14 files; 121 sites (80 path, 41 text); 18 acknowledged; 169 prose not counted
+scanner exit 1
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done
