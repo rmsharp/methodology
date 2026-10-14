@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-2.md` (1 record(s), 40,239 B → 28,744 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-14 → 2026-10-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-14-2.md`](docs/archive/HANDOFFS-through-2026-10-14-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-14-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-14-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,239 B → 28,744 B (−28.6%).
+
 ### 2026-10-14 · [BL-101] S317 -- his close-out picker: the push of `324e947` to the fork (read back), and the checker call answered (leave `bin/check-handoff` and `bin/check-ledger` out; plan section 7, D5)
 
 He ticked both recommended options. **The push:** `git push origin 324e94703fd9...:refs/heads/main`, a fast-forward `2bc74b9..324e947`, read back with `ls-remote` (equal) and `rev-list --left-right --count origin/main...HEAD` (`0 0`); no `pr2*` branch exists on `origin`; the fork only, nothing sent to `KJ5HST/methodology`. **The decision** (asked because the S317 receipt named it as binding at the sync layer): the pull request does not carry the layout reading of `bin/check-handoff` (6 scanner sites) or `bin/check-ledger` (4); the candidate's scanner is scoped to the tools adopters receive plus the hook, so `layout-literals` (max 0) can be declared at the sync layer without them. Both checkers are canonical-only, which matches D2 and plan section 4's row F; the fork's own move of its instance files (BL-104) will need the reading later, on the fork. Recorded as **D5** in `docs/planning/upstream-pr-composition-plan.md` section 7 (and in section 4's row F), and in the BL-101 detail. The S317 receipt still says the call is "now binding" and `origin/main..HEAD` "reads 7": both were true when it was written and are superseded by this entry. Model: Claude Sonnet 5.5.
