@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-3.md` (1 record(s), 40,360 B → 29,643 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-14 → 2026-10-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-14-3.md`](docs/archive/HANDOFFS-through-2026-10-14-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-14-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-14-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,360 B → 29,643 B (−26.6%).
+
 ### 2026-10-14 · [BL-101] S318 -- his close-out picker: the push of `f897d93` to the fork (read back)
 
 His answer to the S318 close-out picker was to push. `git push origin "${SHA}:refs/heads/main"` under `bash`, a fast-forward `3dd4bc0..f897d93` (7 commits), read back with `ls-remote` (equal to `f897d93`) and `rev-list --left-right --count origin/main...HEAD` (`0 0`); `git ls-remote --heads origin 'pr2*'` lists nothing, so `pr2/candidate` is still local. The fork only; nothing is sent to `KJ5HST/methodology`. **This supersedes item (5) of the S318 receipt's `next_steps`** ("`origin/main` is `3dd4bc0`, 7 unpushed"): the receipt is complete and is not edited. This entry's own commit is a CHANGELOG-only push record and goes to the fork's `origin` under the standing grant for such records. Model: Claude Sonnet 5.5.
