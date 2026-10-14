@@ -2,7 +2,7 @@
 
 **Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7).** Nothing is sent; the fork was pushed to
 its own `origin` only. **PR2 Part 1 is built** (S311: local branch `pr2/candidate`, commit `bbe0dc3`, [`part1-record.md`](pr-composition-evidence/part1-record.md))
-and **Part 2's first seven layers** (S312: `14ef959`, [`layer1-record.md`](pr-composition-evidence/layer1-record.md); S313: `fd96593`, the gate layer, [`layer2-record.md`](pr-composition-evidence/layer2-record.md); S314: `c8c0b21`, the ratchet's 1.4.0 and 1.5.0, [`layer2b-record.md`](pr-composition-evidence/layer2b-record.md); S315: `98ca7fc`, the trimmer 1.8.0, [`layer3-record.md`](pr-composition-evidence/layer3-record.md); S316: `e9c5cb8`, the context-budget gate 1.4.0, [`layer4-record.md`](pr-composition-evidence/layer4-record.md); S317: `dd581fe`, the dashboard 2.22.0, [`layer5-record.md`](pr-composition-evidence/layer5-record.md); S318: `0aa1897`, the sync layers (three commits), [`layer6-record.md`](pr-composition-evidence/layer6-record.md)); **its later layers are next, `bin/migrate-layout` first** (layer 6's record, §7). §3 reads Part 1 as the 24 files of `c8b9ddd`, §4 as themes A to D; S311 built §4's reading (record §1.4). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
+and **Part 2's first seven layers** (S312: `14ef959`, [`layer1-record.md`](pr-composition-evidence/layer1-record.md); S313: `fd96593`, the gate layer, [`layer2-record.md`](pr-composition-evidence/layer2-record.md); S314: `c8c0b21`, the ratchet's 1.4.0 and 1.5.0, [`layer2b-record.md`](pr-composition-evidence/layer2b-record.md); S315: `98ca7fc`, the trimmer 1.8.0, [`layer3-record.md`](pr-composition-evidence/layer3-record.md); S316: `e9c5cb8`, the context-budget gate 1.4.0, [`layer4-record.md`](pr-composition-evidence/layer4-record.md); S317: `dd581fe`, the dashboard 2.22.0, [`layer5-record.md`](pr-composition-evidence/layer5-record.md); S318: `0aa1897`, the sync layers (three commits), [`layer6-record.md`](pr-composition-evidence/layer6-record.md)); **its later layers are next, in a new order (D5 amended at S319, §7): the layout hunks of the two checkers, the prose, then `bin/migrate-layout`, which cannot be green before both** ([`layer7-record.md`](pr-composition-evidence/layer7-record.md)). §3 reads Part 1 as the 24 files of `c8b9ddd`, §4 as themes A to D; S311 built §4's reading (record §1.4). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
 carries a pointer back here).
 Measured at fork `main` = `ffb0fd1` against `upstream/main` = `f34769f` (0 commits behind). Every figure below is printed by a
 script in [`pr-composition-evidence/`](pr-composition-evidence/) (§9) or by a command named beside it.
@@ -148,8 +148,8 @@ files, mostly recorded run outputs, plus `bl105-runs/`. The plan is 60 KB. Upstr
 
 **S2's commits.** Part 1 is the earlier lineage at the state the fork's plan began from (`c8b9ddd`: 24 files, +13,254 / −847, a tree the
 fork's suite passed at 452/0/0, the plan's baseline in its §3.1). Part 2 is the plan's layers in its own order: the resolver and scanner,
-the gate layer (hook and ratchet), the trimmer, the context-budget gate, the dashboard, the sync layers and `migrate-layout`, then the
-prose, with the later ratchet and companion-file changes where they belong. Each layer is a checkpoint commit with the suite run on it
+the gate layer (hook and ratchet), the trimmer, the context-budget gate, the dashboard, the sync layers, the layout hunks of the two checkers (D5, amended), the
+prose, and `migrate-layout` last (its suite needs the checkers and the prose: `layer7-record.md`), with the later ratchet and companion-file changes where they belong. Each layer is a checkpoint commit with the suite run on it
 (`SESSION_RUNNER.md` §Vertical Slice Sessions, gates (b) and (c)), so a reviewer can stop at any layer. Part 1 is built from the fork's
 tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream's tree is PR2's first measurement.
 
@@ -160,7 +160,7 @@ tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream'
 | Carried | Not carried |
 |---|---|
 | Themes **A, B and C** (§1), with their tests | **E** `close_out_report.py` and its tests (its own test reads this repository's 342 receipts) |
-| **D** per decision D3 | **F** `check-handoff`'s new lints, `check-overhead`, `model-report`, `check-learnings`: canonical-only, and §2.3's second row; **and the layout reading of `check-handoff` and `check-ledger` (D5)** |
+| **D** per decision D3; **the layout hunks of `check-handoff` and `check-ledger` (D5, amended at S319)** | **F** `check-handoff`'s new lints, `check-overhead`, `model-report`, `check-learnings`: canonical-only, and §2.3's second row |
 | The portable blocks of `bin/tests.sh` (45 of 54 pass on upstream's tree) | The 9 blocks of §2.3, until each is parametrised or kept on the fork |
 | Gate thresholds tightened by exactly what the pull request adds (`.quality-gates.json`, S231's D6) | `CLAUDE.md`, `README.md`, `.context-budget.json`, the ledgers, `docs/` except the next row |
 | The findings register, the plan, the 20 records (the *evidence* D8 names), about 300 KB | The 3.2 MB of recorded outputs (named by fork commit instead) |
@@ -207,7 +207,7 @@ measured gap. Only a clean clone of the candidate speaks for the pull request.
 ## 7. Decisions for him
 
 **Answered 2026-10-13 at the S308 close-out picker: D1 (a) build now, D2 (a) S2, D3 (a) the whole lineage, D4 the defaults. Each was the
-recommended option; the options below are kept as asked. D5 was asked and answered at the S317 close-out picker (2026-10-14), also as recommended.**
+recommended option; the options below are kept as asked. D5 was asked and answered at the S317 close-out picker (2026-10-14), also as recommended, and amended at S319 (below).**
 
 1. **D1 — may the candidate be built before the adopters and the open rows are done?** (a) **Yes: build now, fork-side; the §7.6 waiver is
    decided at PR4 with the then-open rows listed** *(recommended: building sends nothing, four of the five remaining adopters are not free,
@@ -228,6 +228,11 @@ recommended option; the options below are kept as asked. D5 was asked and answer
    scanner to the tools adopters receive plus the hook** *(recommended and answered: both checkers are canonical-only, adopters never run them, and it matches D2
    and §4's row F; the cost is that those two files read root paths only on the candidate, and the fork's own move of its instance files, BL-104, needs
    the reading later, on the fork)*; (b) carry only the layout hunks of both files (10 sites), hand-built as upstream's blob plus those hunks; (c) decide at the sync layer.
+   **Amended 2026-10-14 (S319, his picker, the recommended option): (b), not (a).** The cost (a) named was not the whole cost. `bin/migrate-layout` runs `check-ledger` and `check-handoff` over the project
+   before and after the move and compares their exit codes, so with both left legacy-only the tool reports `CHECKS DIFFER` and exits 4 on every apply: of its 280 tests, 10 fail on the candidate, 9 of them still
+   with the prose present, and none with the tip's checkers and documents both in (`pr-composition-evidence/layer7-probe-output.txt`, `layer7-record.md` §1). **The order is now: the checkers' layout hunks
+   (hand-built as upstream's blob plus those hunks: the tip's files carry fork-only lints beyond them, +610 / -57 and +72 / -5), then the prose, then `bin/migrate-layout` last.** The checkers' layer also deletes the
+   two `NOT_SCANNED_ALWAYS` entries layer 6 added.
 
 ---
 
