@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-4.md` (1 record(s), 38,617 B → 27,225 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-13 → 2026-10-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-13-4.md`](docs/archive/HANDOFFS-through-2026-10-13-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-13-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-13-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,617 B → 27,225 B (−29.5%).
+
 ### 2026-10-13 · [ad hoc] S313 -- the push of `02fbad1` to the fork's `origin/main`, at his close-out picker
 
 His answer to the S313 close-out picker ("Push `02fbad1` to the fork's own `origin/main` now?": Yes). `git push origin "02fbad1c6e86676b56d0ccc0a795e297cd85ca18:refs/heads/main"` under `bash`: `8ab29a9..02fbad1`, exit 0; read back after a fetch: `git rev-list --left-right --count origin/main...02fbad1` read `0 0`, `git ls-remote origin refs/heads/main` equal, and `git ls-remote --heads origin 'pr2*'` empty (the candidate is not on the remote). `origin` is `https://github.com/rmsharp/methodology.git`, the fork; nothing went to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
