@@ -1,0 +1,40 @@
+# The assertion each failing test stopped on, per state of layer7-probe.sh (saved outputs: ~/.cache/layer7-probe-<state>.out).
+# Produced by:  awk '/^FAIL: /{name=$2} /^AssertionError/{print name " :: " substr($0,1,170)}' ~/.cache/layer7-probe-<state>.out
+# 'Lists differ' lines name the checks the tool saw differ between before and after; '4 != 0' is its exit 4 (checks differ) where 0 was expected.
+
+== base
+test_a_framework_document_that_dangles_after_the_move_is_a_difference_exits_4_and_the_commit_stands :: AssertionError: Tuples differ: (34, 3) != (1, 1)
+test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure :: AssertionError: 4 != 0 : {
+test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back :: AssertionError: Lists differ: ['ledger', 'handoff', 'links', 'proofs'] != ['proofs']
+test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4 :: AssertionError: Lists differ: ['ledger', 'handoff', 'links'] != []
+test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank :: AssertionError: 4 != 0 : {
+test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged :: AssertionError: 4 != 0 : {
+test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds :: AssertionError: 4 != 0 : {
+test_the_text_a_person_reads_lists_each_check_before_and_after :: AssertionError: 4 != 0 : migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-btdanqsv/adopter
+test_the_text_says_so_when_the_tree_is_not_clean :: AssertionError: 'CHECKS DIFFER (tree not clean)' not found in 'migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-pionzeza/adopter\ncanonical
+test_the_text_says_which_links_are_judged_and_which_only_reported :: AssertionError: 4 != 0 : migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-8an9xb3q/adopter
+
+== checkers
+test_a_framework_document_that_dangles_after_the_move_is_a_difference_exits_4_and_the_commit_stands :: AssertionError: Tuples differ: (34, 3) != (1, 1)
+test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure :: AssertionError: 4 != 0 : {
+test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back :: AssertionError: Lists differ: ['links', 'proofs'] != ['proofs']
+test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4 :: AssertionError: Lists differ: ['links'] != []
+test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank :: AssertionError: 4 != 0 : {
+test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged :: AssertionError: 4 != 0 : {
+test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds :: AssertionError: 4 != 0 : {
+test_the_text_a_person_reads_lists_each_check_before_and_after :: AssertionError: 4 != 0 : migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-h5nsakv1/adopter
+test_the_text_says_so_when_the_tree_is_not_clean :: AssertionError: 'CHECKS DIFFER (tree not clean)' not found in 'migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-gckvchxq/adopter\ncanonical
+test_the_text_says_which_links_are_judged_and_which_only_reported :: AssertionError: 4 != 0 : migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-oss7eelw/adopter
+
+== docs
+test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure :: AssertionError: 4 != 0 : {
+test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back :: AssertionError: Lists differ: ['ledger', 'handoff', 'proofs'] != ['proofs']
+test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4 :: AssertionError: Lists differ: ['ledger', 'handoff'] != []
+test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank :: AssertionError: 4 != 0 : {
+test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged :: AssertionError: 4 != 0 : {
+test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds :: AssertionError: 4 != 0 : {
+test_the_text_a_person_reads_lists_each_check_before_and_after :: AssertionError: 4 != 0 : migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-knpxjam_/adopter
+test_the_text_says_so_when_the_tree_is_not_clean :: AssertionError: 'CHECKS DIFFER (tree not clean)' not found in 'migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-j494tw7l/adopter\ncanonical
+test_the_text_says_which_links_are_judged_and_which_only_reported :: AssertionError: 4 != 0 : migrate-layout: /var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/migrate-layout-3foli3au/adopter
+
+== both

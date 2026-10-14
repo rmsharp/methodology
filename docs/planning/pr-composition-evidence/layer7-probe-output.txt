@@ -1,0 +1,51 @@
+layer7-probe: fork 7ac733d, candidate 0aa1897, tip d68207f; 2026-10-14T21:52:28Z
+== state base: candidate 0aa1897 + tip d68207f's tool and suite; checkers=0 docs=0; 3 paths differ from the candidate; scope whole
+   load at start: 6.05, 5.24, 6.13
+   exit 1 in 363 s
+   Ran 280 tests in 362.596s
+   FAILED (failures=10)
+FAIL: test_a_framework_document_that_dangles_after_the_move_is_a_difference_exits_4_and_the_commit_stands (__main__.TestTheChecks)
+FAIL: test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure (__main__.TestTheChecks)
+FAIL: test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back (__main__.TestTheChecks)
+FAIL: test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4 (__main__.TestTheChecks)
+FAIL: test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank (__main__.TestTheChecks)
+FAIL: test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged (__main__.TestTheShardRehearsal)
+FAIL: test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds (__main__.TestTheChecks)
+FAIL: test_the_text_a_person_reads_lists_each_check_before_and_after (__main__.TestTheChecks)
+FAIL: test_the_text_says_so_when_the_tree_is_not_clean (__main__.TestTheChecks)
+FAIL: test_the_text_says_which_links_are_judged_and_which_only_reported (__main__.TestTheChecks)
+== state checkers: candidate 0aa1897 + tip d68207f's tool and suite; checkers=1 docs=0; 5 paths differ from the candidate; scope classes
+   load at start: 14.63, 9.37, 7.67
+   exit 1 in 70 s
+   Ran 23 tests in 69.715s
+   FAILED (failures=10)
+FAIL: test_a_framework_document_that_dangles_after_the_move_is_a_difference_exits_4_and_the_commit_stands (__main__.TestTheChecks)
+FAIL: test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure (__main__.TestTheChecks)
+FAIL: test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back (__main__.TestTheChecks)
+FAIL: test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4 (__main__.TestTheChecks)
+FAIL: test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank (__main__.TestTheChecks)
+FAIL: test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged (__main__.TestTheShardRehearsal)
+FAIL: test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds (__main__.TestTheChecks)
+FAIL: test_the_text_a_person_reads_lists_each_check_before_and_after (__main__.TestTheChecks)
+FAIL: test_the_text_says_so_when_the_tree_is_not_clean (__main__.TestTheChecks)
+FAIL: test_the_text_says_which_links_are_judged_and_which_only_reported (__main__.TestTheChecks)
+== state docs: candidate 0aa1897 + tip d68207f's tool and suite; checkers=0 docs=1; 20 paths differ from the candidate; scope classes
+   load at start: 14.08, 10.17, 8.11
+   exit 1 in 68 s
+   Ran 23 tests in 68.142s
+   FAILED (failures=9)
+FAIL: test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure (__main__.TestTheChecks)
+FAIL: test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back (__main__.TestTheChecks)
+FAIL: test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4 (__main__.TestTheChecks)
+FAIL: test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank (__main__.TestTheChecks)
+FAIL: test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged (__main__.TestTheShardRehearsal)
+FAIL: test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds (__main__.TestTheChecks)
+FAIL: test_the_text_a_person_reads_lists_each_check_before_and_after (__main__.TestTheChecks)
+FAIL: test_the_text_says_so_when_the_tree_is_not_clean (__main__.TestTheChecks)
+FAIL: test_the_text_says_which_links_are_judged_and_which_only_reported (__main__.TestTheChecks)
+== state both: candidate 0aa1897 + tip d68207f's tool and suite; checkers=1 docs=1; 22 paths differ from the candidate; scope whole
+   load at start: 15.50, 12.17, 9.11
+   exit 0 in 362 s
+   Ran 280 tests in 361.358s
+   OK
+layer7-probe done
