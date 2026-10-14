@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S313 -- the PR2 Part 2 layer-2 record, the plan's status line, and the `BL-101` row and detail
+
+[`layer2-record.md`](docs/planning/pr-composition-evidence/layer2-record.md): the answer first; what the layer carries and leaves out; the four decisions the plan did not take (the first is the ratchet's lineage, measured: 1.2.0 cannot be built, 1.3.0 is the first state whose embedded block equals the module, 1.4.0 and 1.5.0 touch no layout code); what it does not show; next. The plan's status line now says two layers are built and the ratchet's timeout releases come first; the `BL-101` row and its detail say the same in a phrase each, in place of "layer 2 next". Fork only; nothing sent. Model: Claude Sonnet 5.5.
+
 ### 2026-10-13 · [ad hoc] S313 -- the Phase 0 gate citation re-run in a clean clone: 18/18, equal to S312's
 
 At his go-ahead (the Phase 0 picker), `python3 starter-kit/quality_ratchet.py --run` in a clean `--no-local` clone of `f616a6c` under `~/.cache/s313-gate`, launched `nohup ... &` with a done-file: **18/18 pass, 0 fail, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`**, 1,397 s (the load average read 4 to 66 while it ran), equal to the S312 close-out citation (run on `e8a815b`; the commits between touch only the two ledgers). That discharges the Phase 0 step S312 did not do. Nothing outward. Model: Claude Sonnet 5.5.
