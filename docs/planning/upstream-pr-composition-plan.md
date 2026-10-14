@@ -1,7 +1,8 @@
 # The one upstream pull request: what it carries, what stands in front of it, how to build it
 
-**Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7).** Nothing is built, nothing is sent; the fork was pushed to
-its own `origin` only. **PR2 is next.** D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
+**Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7).** Nothing is sent; the fork was pushed to
+its own `origin` only. **PR2 Part 1 is built** (S311: local branch `pr2/candidate`, commit `bbe0dc3`, [`part1-record.md`](pr-composition-evidence/part1-record.md))
+and **Part 2's layers are next.** §3 reads Part 1 as the 24 files of `c8b9ddd`, §4 as themes A to D; S311 built §4's reading (record §1.4). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
 carries a pointer back here).
 Measured at fork `main` = `ffb0fd1` against `upstream/main` = `f34769f` (0 commits behind). Every figure below is printed by a
 script in [`pr-composition-evidence/`](pr-composition-evidence/) (§9) or by a command named beside it.

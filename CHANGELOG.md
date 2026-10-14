@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S311 -- the PR2 Part 1 record, the plan's status line, and the `BL-101` row and detail
+
+`pr-composition-evidence/part1-record.md` (what Part 1 carries and leaves out, file by file, with the diff that decided each; the decisions the plan did not make; what it cannot show; one mistake of this session's kept in it: a first draft said the pipeline lint could not be carried, and measuring its scanner, 10 sites in upstream's file and 0 after the three converted blocks, showed it could, so it is carried as Test 36). `upstream-pr-composition-plan.md`'s status paragraph now says Part 1 is built and Part 2's layers are next, and names the §3/§4 disagreement about what Part 1 holds. `docs/planning/BACKLOG.md`'s `BL-101` row reads "Part 1 done, Part 2 next" (+8 B, 58,195 B against its 56,750 B read budget; the dashboard's one high flag stands), its detail carries the figures. Fork only. Model: Claude Sonnet 5.5.
+
 ### 2026-10-13 · [BL-101] S311 -- the saved outputs of PR2 Part 1's measurements
 
 Three files under `docs/planning/pr-composition-evidence/`, each printed by a command named at its top: `part1-literal-output.txt` (the literal Part 1 over upstream's tree: 433 passed, 14 failed, 2 skipped, the nine blocks, and the dashboard suite's 3 failures of 356), `part1-verify-output.txt` (the clean-clone ratchet run of `bbe0dc3`, the suite alone at 271 passed, 0 failed, 0 skipped, and every shipped `.verify.sh`'s exit code in upstream's tree and the candidate's, equal) and `part1-files-and-tokens-output.txt` (the nine changed files, their empty intersection with plan §4's not-carried sets, and the token counts of the added lines: 88 with a backlog code, 80 with a session number, 33 naming a `docs/planning/` path, seven of those documents absent upstream). Fork only. Model: Claude Sonnet 5.5.
