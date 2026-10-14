@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S318
+date: 2026-10-14
+status: pending
+active_task: **PR2, Part 2's sixth layer only: the sync layers** (`docs/planning/upstream-pr-composition-plan.md` §3, sixth; S311 took Part 1, S312 layer 1, S313 layer 2, S314 layer 2b, S315 layer 3, S316 layer 4, S317 layer 5) on the local ref `pr2/candidate` (now `dd581fe`), built in a scratch clone under `~/.cache`, un-pushed, as checkpoint commits of at most 5 files each. DERIVED at Phase 0 (`git`, read-only): the candidate's `bin/sync`, `bin/status`, `bin/check-links` and `bin/_manifest_reader.py` are upstream's own blobs (and fork blobs at `2ed9262` or `7aa27a0`), so those four are replaced by the fork tip's; `bin/_manifest.py`, `bin/tests.sh`, `.quality-gates.json` and `tools/test_layout_resolver.py` equal no fork blob and need a merge or a recorded delta; `tools/test_sync_layouts.py` is new. The checker call is answered (plan §7 D5, 2026-10-14: leave the layout reading of `bin/check-handoff` and `bin/check-ledger` out, scope the scanner to what adopters receive plus the hook). NOT yet checked: what the tip's four tools carry beyond the layout reading, which `bin/tests.sh` blocks the layer changes, and what it does to #94's three files. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S317
 date: 2026-10-14
 status: complete
