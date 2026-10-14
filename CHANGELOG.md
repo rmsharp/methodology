@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-3.md` (1 record(s), 36,337 B → 26,892 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-13 → 2026-10-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-13-3.md`](docs/archive/HANDOFFS-through-2026-10-13-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-13-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-13-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 36,337 B → 26,892 B (−26.0%).
+
 ### 2026-10-13 · [ad hoc] S312 -- the push of `8ab29a9` to the fork's `origin/main`, at his close-out picker
 
 His go-ahead at the S312 close-out picker (`Push 8ab29a9`), by name and not `HEAD`: `f8ef5f2..8ab29a9` to `https://github.com/rmsharp/methodology.git` (the fork, not `KJ5HST/methodology`), 8 commits (the Phase 0 picker's trim `3c1ba2c` and fold `4b49224`, the claim, the two scripts, the saved outputs, the record, the close-out), a fast-forward checked with `merge-base --is-ancestor` first. **Read back:** `git rev-list --left-right --count origin/main...8ab29a9` read `0 0`, `ls-remote` returns `8ab29a95c4a3` for `refs/heads/main`, equal to the local commit, and `ls-remote --heads origin` holds no head naming `pr2`: the candidate branch is still local only. This entry is the one commit after the push and stays local until the next one.
