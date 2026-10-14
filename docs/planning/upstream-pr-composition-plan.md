@@ -160,7 +160,7 @@ tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream'
 | Carried | Not carried |
 |---|---|
 | Themes **A, B and C** (§1), with their tests | **E** `close_out_report.py` and its tests (its own test reads this repository's 342 receipts) |
-| **D** per decision D3 | **F** `check-handoff`'s new lints, `check-overhead`, `model-report`, `check-learnings`: canonical-only, and §2.3's second row |
+| **D** per decision D3 | **F** `check-handoff`'s new lints, `check-overhead`, `model-report`, `check-learnings`: canonical-only, and §2.3's second row; **and the layout reading of `check-handoff` and `check-ledger` (D5)** |
 | The portable blocks of `bin/tests.sh` (45 of 54 pass on upstream's tree) | The 9 blocks of §2.3, until each is parametrised or kept on the fork |
 | Gate thresholds tightened by exactly what the pull request adds (`.quality-gates.json`, S231's D6) | `CLAUDE.md`, `README.md`, `.context-budget.json`, the ledgers, `docs/` except the next row |
 | The findings register, the plan, the 20 records (the *evidence* D8 names), about 300 KB | The 3.2 MB of recorded outputs (named by fork commit instead) |
@@ -207,7 +207,7 @@ measured gap. Only a clean clone of the candidate speaks for the pull request.
 ## 7. Decisions for him
 
 **Answered 2026-10-13 at the S308 close-out picker: D1 (a) build now, D2 (a) S2, D3 (a) the whole lineage, D4 the defaults. Each was the
-recommended option; the options below are kept as asked.**
+recommended option; the options below are kept as asked. D5 was asked and answered at the S317 close-out picker (2026-10-14), also as recommended.**
 
 1. **D1 — may the candidate be built before the adopters and the open rows are done?** (a) **Yes: build now, fork-side; the §7.6 waiver is
    decided at PR4 with the then-open rows listed** *(recommended: building sends nothing, four of the five remaining adopters are not free,
@@ -223,6 +223,11 @@ recommended option; the options below are kept as asked.**
 4. **D4 — defaults I will follow unless you change one:** **wait** for #94 and #92 to merge or be answered before PR5, and if #94 is still
    open then, ask whether to stack on its head or state that this pull request supersedes it (closing it is outward); **scrub** tokens and
    dangling paths in one separate commit; **carry** the register, the plan and the records, not the outputs; **tighten** gates by what is added.
+5. **D5 — does the pull request carry the layout reading of `bin/check-handoff` (6 scanner sites) and `bin/check-ledger` (4)?** §4 was silent, and the
+   scanner cannot read 0 without an answer; it binds at the sync layer, where `layout-literals` is first declared at 0. (a) **Leave both out and scope the
+   scanner to the tools adopters receive plus the hook** *(recommended and answered: both checkers are canonical-only, adopters never run them, and it matches D2
+   and §4's row F; the cost is that those two files read root paths only on the candidate, and the fork's own move of its instance files, BL-104, needs
+   the reading later, on the fork)*; (b) carry only the layout hunks of both files (10 sites), hand-built as upstream's blob plus those hunks; (c) decide at the sync layer.
 
 ---
 
