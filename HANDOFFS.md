@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S314
+date: 2026-10-14
+status: pending
+active_task: **PR2, Part 2's layer 2b only: the quality ratchet's 1.4.0 and 1.5.0 (the timeout releases) as ONE checkpoint commit** (`docs/planning/upstream-pr-composition-plan.md` §3 and §5; `docs/planning/pr-composition-evidence/layer2-record.md` §6; PR2 is two to four sessions, S311 took Part 1, S312 layer 1, S313 layer 2) on `pr2/candidate` (now `fd96593`) in a scratch clone under `~/.cache`, un-pushed, built with a `layer2b-build.py` on `layer2-build.py`'s pattern and verified with `layer-verify.sh` in a clean clone. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S313
 date: 2026-10-13
 status: complete
