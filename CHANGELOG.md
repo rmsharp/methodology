@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-2.md` (1 record(s), 38,029 B → 27,072 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-13 → 2026-10-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-13-2.md`](docs/archive/HANDOFFS-through-2026-10-13-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-13-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-13-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,029 B → 27,072 B (−28.8%).
+
 ### 2026-10-13 · [BL-101] S311 -- his close-out picker answers recorded: the push of `f8ef5f2` read back, PR2 Part 2's first layer next, and the `vscode_quarto_ext` line left alone
 
 His answers at the S311 close-out picker: push `f8ef5f2` to the fork's `main` (`177dc79..f8ef5f2`, `git rev-list --left-right --count origin/main...f8ef5f2` read `0 0`, `ls-remote` equal, no `pr2` branch on the remote; the first attempt failed with no effect because zsh read `"$SHA:refs/..."` as a history modifier, and it was re-run under `bash` with braces); and the next deliverable, **PR2 Part 2's first layer** (the resolver and scanner, plan §3 order). **`vscode_quarto_ext`:** before proposing a restore of the line my dashboard run appended, I re-read the project: a live session is now in that tree (pid 10754), `test/integration/suite/crossref.test.ts` is modified, and `methodology/dashboard_history.jsonl` holds two added lines (18:21:45 and 18:25:40, version 2.22.0), only one of them mine, so nothing was restored and nothing was asked; the receipt's gotcha (7) says so and warns against a `git checkout --` of that file. Fork only; nothing sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
