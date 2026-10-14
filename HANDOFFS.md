@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S313
+date: 2026-10-13
+status: pending
+active_task: **PR2, Part 2's second layer only: the gate layer** (`docs/planning/upstream-pr-composition-plan.md` §3 and §5; PR2 is two to four sessions, S311 took Part 1 and S312 the first layer): `.githooks/pre-commit` and `starter-kit/quality_ratchet.py` as ONE checkpoint commit on `pr2/candidate` (now `14ef959`) in a scratch clone under `~/.cache`, un-pushed, built with a `layer2-build.py` on `layer1-build.py`'s pattern; **it first measures the open design question** (the ratchet's whole 1.1.0 to 1.5.0 lineage at this layer, or 1.2.0 now). Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S312
 date: 2026-10-13
 status: complete
