@@ -1,0 +1,107 @@
+# layer 5 (the dashboard 2.22.0): measurement outputs (unit suites, the contrast, three mutants, the reproduction and the refusal, the scanner, the two pull requests, the scrub input), saved by S317 (2026-10-14) from layer5-measure.sh run on dd581fe (parent e9c5cb8, source aec8166): started 12:27:45, finished by 12:33:34 (about 5 min 50 s)
+
+## Section 1: unit suites
+### the layer's dashboard suite on the layer's dashboard (python3 tools/test_methodology_dashboard.py), dd581fed56958b228c50f0563fda0fe37de4213e
+Ran 395 tests in 49.190s
+OK
+### the candidate BEFORE the layer, its own suite on the old dashboard (2.21.0), e9c5cb8
+Ran 354 tests in 32.927s
+OK
+### the layout suite on the layer (python3 tools/test_layout_resolver.py)
+Ran 75 tests in 1.737s
+OK
+
+## Section 2: the contrast (layer-contrast.sh, layer-outcomes.py): the layer's test file run against the PARENT's tools
+### tools/test_methodology_dashboard.py
+tests: new file 395, old file 354, added 41, removed 0
+on the OLD tool: 32 of the 41 added tests fail or error; 1 of the 354 old tests do
+added tests that pass on BOTH tools (9):
+  TestBL101P5Checklist.test_a_half_migrated_tree_is_scored_for_what_is_there_not_zeroed
+  TestBL101P5Checklist.test_no_other_shape_raises_the_half_migrated_row
+  TestBL101P5Checklist.test_the_item_labels_are_the_same_names_in_every_layout
+  TestBL101P5CopyInsideMethodology.test_a_copy_at_the_project_root_is_unchanged
+  TestBL101P5CopyInsideMethodology.test_it_is_not_found_when_nothing_beside_the_copy_says_it_is_a_methodology_directory
+  TestBL101P5Gates.test_a_floor_lowered_in_place_is_a_loosening_control
+  TestBL101P5Gates.test_a_manifest_deleted_after_the_move_is_still_a_removal
+  TestBL101P5Walk.test_a_script_that_only_sits_in_an_archive_directory_is_still_source
+  TestBL101P5Walk.test_the_docs_directory_point_belongs_to_the_projects_own_docs_not_to_the_methodologys
+on the NEW tool: 0 bad, 0 skipped
+old tests on the old tool: 0 bad, 0 skipped (the control)
+old tests that fail on the old tool with the new file:
+  bad TestFmtRatioAndTwins.test_dashboard_version
+### tools/test_layout_resolver.py
+tests: new file 75, old file 74, added 1, removed 0
+on the OLD tool: 1 of the 1 added tests fail or error; 3 of the 74 old tests do
+added tests that pass on BOTH tools (0):
+on the NEW tool: 0 bad, 0 skipped
+old tests on the old tool: 0 bad, 0 skipped (the control)
+old tests that fail on the old tool with the new file:
+  bad TestEveryEmbeddedCopyIsByteIdentical.test_each_copy_equals_the_modules_block_and_carries_exactly_one
+  bad TestEveryEmbeddedCopyIsByteIdentical.test_every_tool_that_carries_the_markers_is_listed
+  bad TestToolsAlreadyResolvedStayAtZero.test_each_resolved_tool_reports_no_site
+added tests, outcome on the old tool:
+  bad TestEveryEmbeddedCopyIsByteIdentical.test_the_dashboards_canonical_only_twin_carries_the_same_block
+
+## Section 3: three mutants (one at a time on the layer's dashboards, the layout suite run, files restored after each)
+mutant A (one comment line inside the embedded block, starter-kit copy):
+FAIL: test_each_copy_equals_the_modules_block_and_carries_exactly_one (__main__.TestEveryEmbeddedCopyIsByteIdentical)
+Ran 75 tests in 1.689s
+FAILED (failures=1)
+  (restored; dirty paths: 0)
+mutant A2 (the same line inside the block of the tools/ twin only):
+FAIL: test_the_dashboards_canonical_only_twin_carries_the_same_block (__main__.TestEveryEmbeddedCopyIsByteIdentical)
+Ran 75 tests in 1.684s
+FAILED (failures=1)
+  (restored; dirty paths: 0)
+mutant B (open('CHANGELOG.md') outside the block, starter-kit copy):
+FAIL: test_each_resolved_tool_reports_no_site (__main__.TestToolsAlreadyResolvedStayAtZero)
+Ran 75 tests in 1.890s
+FAILED (failures=1)
+  (restored; dirty paths: 0)
+control (unmutated):
+Ran 75 tests in 1.614s
+OK
+
+## Section 4: the builder reproduces the layer's tree, and refuses on one byte of drift
+layer 5 written without the gates file; run the two suites, then pass --dashboard-count N --layout-count M
+dashboard-unit-tests 354 -> 395; layout-unit-tests 74 -> 75
+built tree   cc072f493724
+layer's tree cc072f493724
+refused: starter-kit/methodology_dashboard.py in the candidate is not 75f665e's blob; this builder's premise (the whole difference to <rev> is the dashboard's 2.22.0) does not hold
+dirty paths after the refusal: 0
+
+## Section 5: the layout-literal scanner on the layer (a series, not yet a gate)
+parent: bin/check-handoff: 6 sites
+parent: bin/check-ledger: 4 sites
+parent: bin/check-links: 1 site
+parent: bin/status: 3 sites
+parent: starter-kit/methodology_dashboard.py: 79 sites
+parent: check-layout-literals: scanned 14 files; 93 sites (70 path, 23 text); 31 acknowledged; 171 prose not counted
+layer:  bin/check-handoff: 6 sites
+layer:  bin/check-ledger: 4 sites
+layer:  bin/check-links: 1 site
+layer:  bin/status: 3 sites
+layer:  check-layout-literals: scanned 14 files; 14 sites (6 path, 8 text); 114 acknowledged; 186 prose not counted
+
+## Section 6: the two open pull requests (git merge-tree --write-tree; exit 0 clean, 1 conflicts)
+#94 head 972eb2cd6263
+== tip e9c5cb8 against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip dd581fe against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+#92 head fa2bb5d464f9
+== tip e9c5cb8 against #92: exit 0 (first line is a tree)
+== tip dd581fe against #92: exit 0 (first line is a tree)
+
+## Section 7: scrub input (a coarse regular expression over the layer's added lines, per file; the scrub is its own commit after the layers)
+.quality-gates.json                          added     2 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+starter-kit/methodology_dashboard.py         added   370 | BL-  11 | phase   9 | session   2 | docs/planning   2 | learning   0 | FM   1 | plan   8
+tools/methodology_dashboard.py               added   370 | BL-  11 | phase   9 | session   2 | docs/planning   2 | learning   0 | FM   1 | plan   8
+tools/test_layout_resolver.py                added    13 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+tools/test_methodology_dashboard.py          added   595 | BL-   2 | phase   3 | session   3 | docs/planning   0 | learning   0 | FM   0 | plan   5
+
+layer5-measure done

@@ -1,0 +1,34 @@
+# layer 5: layer-verify.sh output, saved by S317 (2026-10-14): candidate dd581fe in a clean --no-local clone (~/.cache/s317-verify), started 12:04:30, seen finished at 12:12:35 (8 min 5 s at most), exit 0
+verifying dd581fed56958b228c50f0563fda0fe37de4213e in a clean clone; 0 dirty paths
+changed against its parent e9c5cb8:
+  2	2	.quality-gates.json
+  370	115	starter-kit/methodology_dashboard.py
+  370	115	tools/methodology_dashboard.py
+  13	2	tools/test_layout_resolver.py
+  595	4	tools/test_methodology_dashboard.py
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  13/13 pass · 0 fail · 0 unmeasured · results 88f487475334 · manifest 4fa84819da44
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 298         298  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 395         395  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 75          75  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 13/13 pass · 0 fail · 0 unmeasured · results 88f487475334 · manifest 4fa84819da44
+
+ratchet exit 0
+check-layout-literals: scanned 14 files; 14 sites (6 path, 8 text); 114 acknowledged; 186 prose not counted
+scanner exit 1
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done
