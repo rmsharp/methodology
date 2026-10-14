@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-5.md` (1 record(s), 38,264 B → 28,999 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-13 → 2026-10-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-13-5.md`](docs/archive/HANDOFFS-through-2026-10-13-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-13-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-13-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,264 B → 28,999 B (−24.2%).
+
 ### 2026-10-14 · [ad hoc] S314 -- his close-out picker answers: the push of `c9bc2c3` to the fork, and the suite gates keep no `timeout_seconds`
 
 His answers to the S314 close-out picker. **Push the 6 S314 commits: Yes.** `git push origin "c9bc2c3041ee22873637e89246a08e35baf4ec74:refs/heads/main"` under `bash`: `ee48ace..c9bc2c3`, exit 0; read back after a fetch: `git rev-list --left-right --count origin/main...c9bc2c3` read `0 0`, `git ls-remote origin refs/heads/main` equal, `git ls-remote --heads origin 'pr2*'` empty (`pr2/candidate` is still a local ref, `c8c0b21`), `upstream/main` unchanged at `f34769f`. The S314 receipt's `next_steps` item (5) (a push only on his go-ahead, 6 ahead) is superseded by this entry. **Layer 2b's suite gates: keep no `timeout_seconds`** (decision 1 of `layer2b-record.md` stands as built; the alternative stays one builder flag, `--suite-budget 3600`, and the fork's 3600 s is still BL-103's open call). No file other than this ledger changed; nothing sent upstream.
