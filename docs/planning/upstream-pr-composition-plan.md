@@ -2,7 +2,7 @@
 
 **Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7).** Nothing is sent; the fork was pushed to
 its own `origin` only. **PR2 Part 1 is built** (S311: local branch `pr2/candidate`, commit `bbe0dc3`, [`part1-record.md`](pr-composition-evidence/part1-record.md))
-and **Part 2's first two layers** (S312: `14ef959`, [`layer1-record.md`](pr-composition-evidence/layer1-record.md); S313: `fd96593`, the gate layer, [`layer2-record.md`](pr-composition-evidence/layer2-record.md)); **its later layers are next, the ratchet's 1.4.0 and 1.5.0 first** (layer 2's record, §4.1). §3 reads Part 1 as the 24 files of `c8b9ddd`, §4 as themes A to D; S311 built §4's reading (record §1.4). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
+and **Part 2's first three layers** (S312: `14ef959`, [`layer1-record.md`](pr-composition-evidence/layer1-record.md); S313: `fd96593`, the gate layer, [`layer2-record.md`](pr-composition-evidence/layer2-record.md); S314: `c8c0b21`, the ratchet's 1.4.0 and 1.5.0, [`layer2b-record.md`](pr-composition-evidence/layer2b-record.md)); **its later layers are next, the trimmer first** (layer 2b's record, §6). §3 reads Part 1 as the 24 files of `c8b9ddd`, §4 as themes A to D; S311 built §4's reading (record §1.4). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
 carries a pointer back here).
 Measured at fork `main` = `ffb0fd1` against `upstream/main` = `f34769f` (0 commits behind). Every figure below is printed by a
 script in [`pr-composition-evidence/`](pr-composition-evidence/) (§9) or by a command named beside it.
