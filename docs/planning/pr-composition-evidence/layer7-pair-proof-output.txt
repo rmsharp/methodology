@@ -1,0 +1,3 @@
+suite-count    measured=5.0 status=pass
+suite-failed   measured=1.0 status=fail
+command executions: 1
