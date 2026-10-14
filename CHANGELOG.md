@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-13-6.md` (1 record(s), 40,494 B → 28,769 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-13 → 2026-10-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-13-6.md`](docs/archive/HANDOFFS-through-2026-10-13-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-13-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-13-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,494 B → 28,769 B (−29.0%).
+
 ### 2026-10-14 · [BL-101] S315 -- his close-out picker answers recorded: the push of `a9de0f8` read back, the `tests-sh-passed` floor left as it is
 
 His answers to the S315 close-out picker. **Push the 6 S315 commits: Yes.** `git push origin "a9de0f8508f5a49c44d19f8a62d6c920ac95f7df:refs/heads/main"` under `bash` to his fork (`https://github.com/rmsharp/methodology.git`): `3ebe97d..a9de0f8`, exit 0; read back after a fetch: `git rev-list --left-right --count origin/main...a9de0f8` read `0 0`, `git ls-remote origin refs/heads/main` equal, `git ls-remote --heads origin 'pr2*'` empty (`pr2/candidate` is still a local ref, `98ca7fc`), `upstream/main` unchanged at `f34769f`. The S315 receipt's `next_steps` item (6) (a push only on his go-ahead, 6 ahead) is superseded by this entry. **The floor-row go-ahead was NOT ticked:** no backlog row was written for the `tests-sh-passed` finding. **The floor: leave it, take gate re-runs outside the trim window** (before the trim or after the claim): `.quality-gates.json` is unchanged at 503, and lowering it to 497 (fork Learning #70's prescription, a loosening) or making the gate trim-proof stays his later call, adjacent to BL-108's trim-cadence question. No file other than this ledger changed; nothing sent upstream. Model: Claude Sonnet 5.5.
