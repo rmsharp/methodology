@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S315
+date: 2026-10-14
+status: pending
+active_task: **PR2, Part 2's layer 3 only: the trimmer** (`docs/planning/upstream-pr-composition-plan.md` §3, third; S311 took Part 1, S312 layer 1, S313 layer 2, S314 layer 2b) on `pr2/candidate` (now `c8c0b21`) in a scratch clone under `~/.cache`, un-pushed: the fork's `starter-kit/methodology_trim.py` and `tools/test_methodology_trim.py` (equal to their `26bc97a` blobs), the first measurement being what the layer does to #94's two conflicted files; built with a `layer3-build.py` on `layer2b-build.py`'s pattern (base-blob assertion first) and verified with `layer-verify.sh` in a clean clone. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S314
 date: 2026-10-14
 status: complete
