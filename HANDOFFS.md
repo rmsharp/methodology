@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S312
+date: 2026-10-13
+status: pending
+active_task: **PR2, Part 2's first layer only** (`docs/planning/upstream-pr-composition-plan.md` §3 and §5; PR2 is two to four sessions and S311 took Part 1): the resolver and the literal scanner (`tools/layout_resolver.py`, `tools/layout_fixtures.py`, `bin/check-layout-literals`, `tools/test_layout_resolver.py`, their wiring into `bin/tests.sh` and the gate they need) as ONE checkpoint commit on `pr2/candidate` (on `bbe0dc3`, `upstream/main` `f34769f`), built in a `--no-local` scratch clone under `~/.cache`, verified in a clean clone with `docs/planning/pr-composition-evidence/part1-verify.sh`; un-pushed. His picks: the S311 close-out picker (Part 2's first layer) and the S312 Phase 0 picker (`Trim, then Part 2 layer 1`; the trim `3c1ba2c` and its fold `4b49224` are done). NOT in this session: Part 2's later layers, the scrub, PR3 to PR5, anything outward.
+```
+
+```handoff
 session: S311
 date: 2026-10-13
 status: complete
