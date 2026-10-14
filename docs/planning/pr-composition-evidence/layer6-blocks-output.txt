@@ -1,0 +1,41 @@
+candidate 0aa1897: 37 blocks; tip d68207f: 51 blocks
+
+paired by title: 37; identical: 19
+
+differing pairs (candidate no. / tip no.: +added -removed, lines calling bin/sync, bin/status, bin/check-links in the tip's block)
+  10  / 10   +8    -0    calls 4   distributed-file links resolve in the simulated adopter tree
+  18  / 18   +36   -10   calls 5   dashboard scoring unit tests (BL-5 doc-only reshape)
+  22  / 22   +0    -29   calls 0   check-handoff — anti-pattern lints, modes (--allow-pending), fresh-seed, block isolation
+  35  / 28   +1    -1    calls 1   BOOTSTRAP's never-overwrite list is pinned to the manifest (RED-first, Learning #12)
+  23  / 32   +50   -24   calls 0   check-learnings — Learnings table shape (issue #65 Evidence A)
+  24  / 33   +9    -5    calls 0   check-learnings — citations into the distributed corpus resolve
+  25  / 34   +206  -290  calls 0   check-handoff --all — whole-ledger invariants (issue #65 Evidence B)
+  26  / 41   +2    -2    calls 5   status and sync recognise a version a merge hid from the default walk (RED-first)
+  36  / 45   +4    -3    calls 0   no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass 
+  27  / 46   +2    -2    calls 4   --source=github clones its source, so it recognises every version Test N does (RED-first
+  28  / 47   +1    -1    calls 2   --source=github names every distributed file its source lacks, before writing anything (
+  29  / 48   +1    -1    calls 9   a source without its history is named as the cause, not the project's files (RED-first)
+  30  / 49   +1    -1    calls 2   the .gitattributes seed merges CHANGELOG.md by union and keeps HANDOFFS.md visible (RED-
+  31  / 50   +7    -3    calls 0   check-ledger reads what a union merge leaves behind (RED-first against fixtures)
+  32  / 51   +1    -1    calls 3   --source=github installs the SOURCE's manifest, so a checkout ahead of it is not refused
+  33  / 52   +1    -1    calls 0   check-handoff accepts one live pending receipt per line of sessions, and only one (RED-f
+  34  / 53   +1    -2    calls 2   --source=github reads the source's manifest as data, and refuses rows it cannot install 
+  37  / 54   +96   -95   calls 0   the ledger hook and the ratchet chain follow the files under methodology/ (BL-101 P2, X2
+
+unpaired, in the tip only (tip no.: lines, lines calling the three tools)
+  23     97 lines, calls 0   model-report — three sources stay visually/structurally separate (RED-first, Learning #1
+  24    648 lines, calls 0   check-handoff — a Phase 1B stub validates against the stub schema (RED-first, Learning #
+  29    102 lines, calls 0   CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46)
+  30     69 lines, calls 0   model-report — Source 1 parses BOTH \`**Model:**\` dialects (BL-20, RED-first, Learning 
+  31    111 lines, calls 0   model-report -- Source 1 parses a multi-tag \`### \` header and reports (not folds) any 
+  35    113 lines, calls 2   context_budget.py — install-hook, sync distribution, selftest gates
+  36    119 lines, calls 0   the plan-time surface requirement stays coupled to slice gate (d) (issue #75, RED-first)
+  37    218 lines, calls 0   check-learnings — the per-row byte budget, over EVERY row
+  38    470 lines, calls 0   check-handoff — the per-RECORD byte budget, scoped to the record being written
+  39    146 lines, calls 0   check-handoff — the header reserve and the fit assertion (S109, Phase 2)
+  40    473 lines, calls 2   model-report — the population is the WHOLE ledger, live + archived (RED-first, S133)
+  42     79 lines, calls 0   no producer that reads the real repo is piped into an early-exiting consumer (BL-43, RED
+  43     63 lines, calls 0   the ledger hook's own selftest, and the marker list it gates on (BL-76, RED-first)
+  44    118 lines, calls 0   check-overhead — one line, both units, write-free (BL-91 P1, shape A, RED-first)
+
+unpaired, in the candidate only (candidate no.: lines)

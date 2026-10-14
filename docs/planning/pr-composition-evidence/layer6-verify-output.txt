@@ -1,0 +1,35 @@
+verifying 0aa1897ee14f5bce115771961a372f87de5ea03f in a clean clone; 0 dirty paths
+changed against its parent 261b8d3:
+  17	2	.quality-gates.json
+  2	0	bin/check-layout-literals
+  10	0	bin/tests.sh
+  7	1	tools/test_layout_resolver.py
+  986	0	tools/test_sync_layouts.py
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  15/15 pass · 0 fail · 0 unmeasured · results c394bd64daa1 · manifest f83feda853bd
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 299         299  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 395         395  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 76          76  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 15/15 pass · 0 fail · 0 unmeasured · results c394bd64daa1 · manifest f83feda853bd
+
+ratchet exit 0
+check-layout-literals: scanned 12 files; 0 sites (0 path, 0 text); 117 acknowledged; 179 prose not counted
+scanner exit 0
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done

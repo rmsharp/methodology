@@ -1,0 +1,156 @@
+## Section 1: unit suites
+### the sync layer's suite on the layer (python3 tools/test_sync_layouts.py), 0aa1897
+Ran 82 tests in 37.427s
+OK
+### the layout suite on the layer (python3 tools/test_layout_resolver.py)
+Ran 76 tests in 1.896s
+OK
+### the layout suite on the parent, dd581fe
+Ran 75 tests in 1.576s
+OK
+### the sync suite exists at the parent? no
+
+## Section 2: the contrast (layer-contrast.sh, layer-outcomes.py): the layer's test file run against the PARENT's tools
+### tools/test_sync_layouts.py
+tests: new file 82, old file 0, added 82, removed 0
+on the OLD tool: 70 of the 82 added tests fail or error; 0 of the 0 old tests do
+added tests that pass on BOTH tools (12):
+  TestCheckLinksSimulatesBothLayouts.test_the_checker_never_writes_to_the_canonical_checkout_it_simulates_from
+  TestCheckLinksSimulatesBothLayouts.test_the_default_run_prints_the_message_it_always_did
+  TestCheckLinksTreeModeReadsTheTreesLayout.test_a_legacy_tree_is_read_as_the_legacy_layout
+  TestCheckLinksTreeModeReadsTheTreesLayout.test_an_option_given_twice_is_a_usage_error_not_a_silent_last_wins
+  TestStatusNamesAndReadsTheLayout.test_a_missing_directory_is_still_a_row_of_its_own
+  TestSyncFromGithubReadsTheTable.test_a_source_without_the_table_still_serves_a_legacy_project
+  TestSyncIgnoreModeFollowsTheLayout.test_a_legacy_project_in_ignore_mode_is_unchanged
+  TestTheManifestsSecondTable.test_it_names_a_new_destination_for_every_distributed_file_and_no_other
+  TestTheManifestsSecondTable.test_the_destinations_are_exactly_section_4_1
+  TestTheManifestsSecondTable.test_the_fixture_trees_are_built_from_the_table_not_from_a_rule_of_their_own
+  TestTheManifestsSecondTable.test_the_tier_1_tree_moves_only_the_tracked_rows_to_the_tables_destinations
+  TestTheManifestsSecondTable.test_the_workstreams_stay_one_level_down_and_everything_else_is_flat
+on the NEW tool: 0 bad, 0 skipped
+old tests on the old tool: 0 bad, 0 skipped (the control)
+old tests that fail on the old tool with the new file:
+### tools/test_layout_resolver.py
+tests: new file 76, old file 75, added 1, removed 0
+on the OLD tool: 1 of the 1 added tests fail or error; 2 of the 75 old tests do
+added tests that pass on BOTH tools (0):
+on the NEW tool: 0 bad, 0 skipped
+old tests on the old tool: 0 bad, 0 skipped (the control)
+old tests that fail on the old tool with the new file:
+  bad TestEveryEmbeddedCopyIsByteIdentical.test_each_copy_equals_the_modules_block_and_carries_exactly_one
+  bad TestEveryEmbeddedCopyIsByteIdentical.test_every_tool_that_carries_the_markers_is_listed
+added tests, outcome on the old tool:
+  bad TestTheScanSet.test_the_two_checkers_that_do_not_read_the_layout_are_not_scanned_and_say_why
+
+## Section 3: mutants (one at a time on the layer's tree; the named suite run; files restored after each)
+mutant A (one comment line inside bin/sync's embedded resolver block):
+ [tools/test_layout_resolver.py]
+FAIL: test_each_copy_equals_the_modules_block_and_carries_exactly_one (__main__.TestEveryEmbeddedCopyIsByteIdentical)
+Ran 76 tests in 1.860s
+FAILED (failures=1)
+  (restored; dirty paths: 0)
+mutant B (a root literal outside the block in bin/status):
+ [tools/test_sync_layouts.py]
+FAIL: test_the_scanner_reads_no_site_in_this_repository (__main__.TestNoShippedToolNamesARootPath)
+Ran 82 tests in 38.175s
+FAILED (failures=1)
+  (restored; dirty paths: 0)
+mutant C (the scanner no longer skips the two left-out checkers):
+ [tools/test_sync_layouts.py]
+FAIL: test_the_scanner_reads_no_site_in_this_repository (__main__.TestNoShippedToolNamesARootPath)
+Ran 82 tests in 39.268s
+FAILED (failures=1)
+ [tools/test_layout_resolver.py]
+FAIL: test_the_two_checkers_that_do_not_read_the_layout_are_not_scanned_and_say_why (__main__.TestTheScanSet)
+Ran 76 tests in 1.951s
+FAILED (failures=1)
+  (restored; dirty paths: 0)
+mutant D1 (bin/sync no longer refuses a project asked for the other layout):
+ [tools/test_sync_layouts.py]
+FAIL: test_a_legacy_project_asked_for_the_new_layout_is_refused_and_the_migration_tool_is_named (__main__.TestSyncRefusesWhatWouldDamageAProject)
+FAIL: test_a_migrated_project_asked_for_the_legacy_layout_is_refused_and_no_root_runner_appears (__main__.TestSyncRefusesWhatWouldDamageAProject)
+FAIL: test_a_refusal_prints_the_same_header_a_run_does_and_no_files_section (__main__.TestSyncRefusesWhatWouldDamageAProject)
+Ran 82 tests in 40.278s
+FAILED (failures=3)
+  (restored; dirty paths: 0)
+mutant D2 (bin/sync no longer refuses a half-migrated project):
+ [tools/test_sync_layouts.py]
+FAIL: test_a_half_migrated_project_is_refused_whatever_is_asked_and_both_paths_are_named (__main__.TestSyncRefusesWhatWouldDamageAProject) (args=())
+FAIL: test_a_half_migrated_project_is_refused_whatever_is_asked_and_both_paths_are_named (__main__.TestSyncRefusesWhatWouldDamageAProject) (args=('--layout', 'auto'))
+FAIL: test_a_half_migrated_project_is_refused_whatever_is_asked_and_both_paths_are_named (__main__.TestSyncRefusesWhatWouldDamageAProject) (args=('--layout', 'legacy'))
+FAIL: test_a_half_migrated_project_is_refused_whatever_is_asked_and_both_paths_are_named (__main__.TestSyncRefusesWhatWouldDamageAProject) (args=('--layout', 'new'))
+Ran 82 tests in 38.752s
+FAILED (failures=4)
+  (restored; dirty paths: 0)
+control (unmutated, the sync suite):
+Ran 82 tests in 37.287s
+OK
+
+## Section 4: the builder reproduces the layer's tree, and refuses on one byte of drift
+stage prep written: bin/tests.sh
+stage tools written: bin/sync, bin/status, bin/check-links, bin/_manifest_reader.py, tools/test_layout_resolver.py
+stage suite written: tools/test_sync_layouts.py, bin/tests.sh, bin/check-layout-literals, tools/test_layout_resolver.py
+stage suite written: .quality-gates.json
+built tree   5dd9c8ea255a
+layer's tree 5dd9c8ea255a
+refused: bin/sync in the candidate is not the fork's blob at 2ed9262; this builder's premise (the layer is the tip's file, nothing merged) does not hold
+dirty paths after the refusal: 0
+
+## Section 5: the layout-literal scanner on the layer (a series; a gate at 0 from the layer on)
+parent: bin/check-handoff: 6 sites
+parent: bin/check-ledger: 4 sites
+parent: bin/check-links: 1 site
+parent: bin/status: 3 sites
+parent: check-layout-literals: scanned 14 files; 14 sites (6 path, 8 text); 114 acknowledged; 186 prose not counted
+layer:  not scanned: bin/_manifest.py (the manifest is the table of paths itself)
+layer:  not scanned: bin/check-handoff (a canonical-only checker that adopters never run; this tree does not give it the methodology/ layout reading)
+layer:  not scanned: bin/check-ledger (a canonical-only checker that adopters never run; this tree does not give it the methodology/ layout reading)
+layer:  not scanned: bin/tests.sh (the suite encodes the layout and is parameterised over both (plan C13))
+layer:  not scanned: tools/methodology_dashboard.py (byte-identical twin of starter-kit/methodology_dashboard.py, scanned once)
+layer:  check-layout-literals: scanned 12 files; 0 sites (0 path, 0 text); 117 acknowledged; 179 prose not counted
+layer:  scanner exit 0
+
+## Section 6: the two open pull requests (git merge-tree --write-tree; exit 0 clean, 1 conflicts)
+#94 head 972eb2cd6263
+== tip dd581fe against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip 0aa1897 against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+#92 head fa2bb5d464f9
+== tip dd581fe against #92: exit 0 (first line is a tree)
+== tip 0aa1897 against #92: exit 0 (first line is a tree)
+
+## Section 7: scrub input (a coarse regular expression over the layer's added lines, per file; the scrub is its own commit after the layers)
+.quality-gates.json                  added    17 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+bin/_manifest_reader.py              added    65 | BL-   1 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+bin/check-layout-literals            added     2 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+bin/check-links                      added   150 | BL-   1 | phase   2 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   2
+bin/status                           added    85 | BL-   1 | phase   1 | session   0 | docs/planning   1 | learning   0 | FM   0 | plan   3
+bin/sync                             added   145 | BL-   2 | phase   2 | session   0 | docs/planning   1 | learning   0 | FM   0 | plan   4
+bin/tests.sh                         added    13 | BL-   1 | phase   2 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+tools/test_layout_resolver.py        added     9 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+tools/test_sync_layouts.py           added   986 | BL-   1 | phase   5 | session   0 | docs/planning   1 | learning   1 | FM   0 | plan   5
+
+## Section 8: the changed files, per commit and in all (git diff --numstat), and the layer's size
+0aa1897 test(sync): the sync layer's own suite, its two gates, and the scanner's scope
+261b8d3 feat(sync): bin/sync, bin/status, bin/check-links and the manifest reader find a project's files at the root or under methodology/
+4c0bdde test: Test 15 counts the status table's rows, not every line that names the project
+commit 4c0bdde: 1 files
+commit 261b8d3: 5 files
+commit 0aa1897: 5 files
+      17      2  .quality-gates.json
+      65      7  bin/_manifest_reader.py
+       2      0  bin/check-layout-literals
+     150     47  bin/check-links
+      85     21  bin/status
+     145     32  bin/sync
+      13      1  bin/tests.sh
+       9      2  tools/test_layout_resolver.py
+     986      0  tools/test_sync_layouts.py
+  all: 9 files, +1472 / -112
+
+layer6-measure done
