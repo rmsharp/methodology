@@ -1,0 +1,18 @@
+# part1-literal.sh, run 2026-10-13 (S311): upstream/main f34769f + the 25 non-ledger, non-docs files of upstream/main..c8b9ddd
+base f34769f; overlay c8b9ddd;  25 files changed, 13432 insertions(+), 848 deletions(-)
+bin/tests.sh exit 1: == Summary: 433 passed, 14 failed, 2 skipped ==
+  == Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) ==
+  == Test 25: check-handoff — the `commit:` answer-slot rule (BL-14, RED-first per Learning #12) ==
+  == Test 26: check-handoff — the `changelog_ref` locator-form rule (BL-15, RED-first) ==
+  == Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) ==
+  == Test 30: model-report — Source 1 parses BOTH `**Model:**` dialects (BL-20, RED-first, Learning #12) ==
+  == Test 32: check-learnings — Learnings table shape (issue #65 Evidence A) ==
+  == Test 34: check-handoff --all — whole-ledger invariants (issue #65 Evidence B) ==
+  == Test 39: check-handoff — the header reserve and the fit assertion (S109, Phase 2) ==
+  == Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) ==
+the dashboard unit suite alone, in that tree (python3 -I tools/test_methodology_dashboard.py):
+FAIL: test_the_fleet_facts_the_disposition_was_decided_on_are_stated_not_assumed (__main__.TestPhaseC1ReadCapClasses)
+FAIL: test_backlog_is_watched_but_never_given_a_trim_row (__main__.TestS38TrimTriggerRow)
+FAIL: test_record_counter_matches_the_trimmers_zoning_on_every_real_ledger (__main__.TestS38TrimTriggerRow)
+Ran 356 tests in 31.528s
+FAILED (failures=3)

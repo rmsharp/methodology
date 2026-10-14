@@ -1,0 +1,26 @@
+# Part 1 (bbe0dc3) against upstream/main (f34769f): the changed files, and their intersection with the plan section 4 not-carried sets
+.quality-gates.json
+FRAMEWORK_APPARATUS.md
+bin/tests.sh
+starter-kit/BOOTSTRAP.md
+starter-kit/methodology_dashboard.py
+starter-kit/methodology_trim.py
+tools/methodology_dashboard.py
+tools/test_methodology_dashboard.py
+tools/test_methodology_trim.py
+# intersection: EMPTY (E close_out_report.py and test, F bin/check-handoff check-overhead model-report check-learnings, G CLAUDE.md README.md .context-budget* .gitignore, the ledgers, docs/)
+# added lines: 7765
+  backlog code BL-n            lines=88
+  session S<n>                 lines=80
+  docs/planning/ path          lines=33
+  fork Learning / Learning #   lines=25
+  plan-phase P<n>              lines=44
+  issue #                      lines=15
+# docs/planning/ paths the added lines cite, and whether upstream/main has them:
+  18 MISSING docs/planning/BACKLOG.md
+  5 MISSING docs/planning/dashboard-read-cap-class-adopter-drift-plan.md
+  3 MISSING docs/planning/issue67-fork-side-fix-plan.md
+  2 MISSING docs/planning/upstream-resync-2026-10-plan.md
+  2 MISSING docs/planning/read-cap-premise-correction-plan.md
+  2 MISSING docs/planning/framework-context-cost-plan.md
+  1 MISSING docs/planning/read-cap-phase-c-plan.md
