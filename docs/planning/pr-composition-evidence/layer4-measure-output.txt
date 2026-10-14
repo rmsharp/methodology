@@ -1,0 +1,81 @@
+# layer 4 (the context-budget gate 1.4.0): measurement outputs (unit suites, the contrast, the two mutants, the scanner, the two pull requests), saved by S316 (2026-10-14) from the scratch clone ~/.cache/s316-pr2 at e9c5cb8
+
+## Section 1: unit suites. The layer's budget-gate suite on the layer's tool (python3 tools/test_context_budget.py)
+Presence control: without it, a calibrate() that never printed anything would ... skipped 'no transcripts at /Users/rmsharp/.claude/projects/-Users-rmsharp-.cache-s316-pr2'
+test_an_impossible_floor_suppresses_the_constant_entirely (__main__.TestFitGateEndToEnd) ... skipped 'no transcripts at /Users/rmsharp/.claude/projects/-Users-rmsharp-.cache-s316-pr2'
+Ran 163 tests in 10.290s
+OK (skipped=2)
+
+## the candidate BEFORE the layer, its own 148-test suite on 1.3.1 (98ca7fc; ~/.cache/s316-old)
+Presence control: without it, a calibrate() that never printed anything would ... skipped 'no transcripts at /Users/rmsharp/.claude/projects/-Users-rmsharp-.cache-s316-old'
+test_an_impossible_floor_suppresses_the_constant_entirely (__main__.TestFitGateEndToEnd) ... skipped 'no transcripts at /Users/rmsharp/.claude/projects/-Users-rmsharp-.cache-s316-old'
+Ran 148 tests in 6.269s
+OK (skipped=2)
+
+## the layout suite on the layer (python3 tools/test_layout_resolver.py)
+Ran 74 tests in 1.363s
+OK
+
+## Section 2: the contrast. The 163-test file run against the OLD tool (98ca7fc's context_budget.py, blob 22b8d40), per-test outcomes (layer-contrast.sh, layer-outcomes.py)
+tests: new file 163, old file 148, added 15, removed 0
+on the OLD tool: 10 of the 15 added tests fail or error; 1 of the 148 old tests do
+added tests that pass on BOTH tools (5):
+  TestTheConfigMayLiveInEitherLayout.test_a_head_holding_both_configs_and_two_runners_decides_nothing
+  TestTheConfigMayLiveInEitherLayout.test_find_root_keeps_a_repository_that_is_merely_called_methodology
+  TestTheConfigMayLiveInEitherLayout.test_precommit_still_refuses_growth_in_the_new_layout
+  TestTheConfigMayLiveInEitherLayout.test_precommit_takes_its_baseline_across_a_move_of_the_config
+  TestTheConfigMayLiveInEitherLayout.test_the_legacy_layout_still_writes_its_history_at_the_root
+on the NEW tool: 0 bad, 2 skipped
+old tests on the old tool: 0 bad, 2 skipped (the control)
+added tests, outcome on the OLD tool:
+  ok   TestTheConfigMayLiveInEitherLayout.test_a_head_holding_both_configs_and_two_runners_decides_nothing
+  bad  TestTheConfigMayLiveInEitherLayout.test_a_head_holding_both_configs_takes_its_baseline_from_the_methodology_one_when_the_runner_decides
+  bad  TestTheConfigMayLiveInEitherLayout.test_a_tie_the_runner_decides_reads_the_methodology_config_and_leaves_the_root_one_alone
+  bad  TestTheConfigMayLiveInEitherLayout.test_a_tree_holding_both_configs_with_no_deciding_runner_is_refused_naming_both
+  bad  TestTheConfigMayLiveInEitherLayout.test_config_location_reads_the_four_rows_and_the_tie
+  bad  TestTheConfigMayLiveInEitherLayout.test_find_root_from_inside_methodology_is_the_project_and_not_that_directory
+  ok   TestTheConfigMayLiveInEitherLayout.test_find_root_keeps_a_repository_that_is_merely_called_methodology
+  bad  TestTheConfigMayLiveInEitherLayout.test_find_root_prefers_a_project_whose_config_is_under_methodology_to_an_outer_repository
+  ok   TestTheConfigMayLiveInEitherLayout.test_precommit_still_refuses_growth_in_the_new_layout
+  ok   TestTheConfigMayLiveInEitherLayout.test_precommit_takes_its_baseline_across_a_move_of_the_config
+  bad  TestTheConfigMayLiveInEitherLayout.test_precommit_takes_its_baseline_from_a_head_config_that_lives_under_methodology
+  bad  TestTheConfigMayLiveInEitherLayout.test_the_cli_measures_the_same_project_in_either_layout
+  bad  TestTheConfigMayLiveInEitherLayout.test_the_history_is_written_beside_the_config
+  bad  TestTheConfigMayLiveInEitherLayout.test_the_installed_hook_still_finds_the_tool_after_the_methodology_files_move
+  ok   TestTheConfigMayLiveInEitherLayout.test_the_legacy_layout_still_writes_its_history_at_the_root
+old tests that fail on the old tool with the new file:
+  bad  TestPrecommitClassArm.test_the_head_baseline_comes_from_heads_config_not_the_staged_one
+
+## Section 3: the two mutants (one at a time on the layer's tool, file restored after each)
+mutant A (one comment line inside the embedded block):
+  FAIL: test_each_copy_equals_the_modules_block_and_carries_exactly_one (__main__.TestEveryEmbeddedCopyIsByteIdentical)
+  Ran 74 tests in 1.413s
+  FAILED (failures=1)
+  (restored, equal to the original)
+mutant B (open('CHANGELOG.md') outside the block):
+  FAIL: test_each_resolved_tool_reports_no_site (__main__.TestToolsAlreadyResolvedStayAtZero)
+  Ran 74 tests in 1.437s
+  FAILED (failures=1)
+  (restored, equal to the original)
+
+## Section 4: the layout-literal scanner on the layer (python3 bin/check-layout-literals; a series, not yet a gate)
+bin/check-handoff: 6 sites
+bin/check-ledger: 4 sites
+bin/check-links: 1 site
+bin/status: 3 sites
+starter-kit/methodology_dashboard.py: 79 sites
+check-layout-literals: scanned 14 files; 93 sites (70 path, 23 text); 31 acknowledged; 171 prose not counted
+
+## Section 5: the two open pull requests (git merge-tree --write-tree; exit 0 clean, 1 conflicts)
+#94 head 972eb2cd6263   #92 head fa2bb5d464f9
+== tip 98ca7fc against pr94: exit 1
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip 98ca7fc against pr92: exit 0
+== tip e9c5cb8 against pr94: exit 1
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip e9c5cb8 against pr92: exit 0
+

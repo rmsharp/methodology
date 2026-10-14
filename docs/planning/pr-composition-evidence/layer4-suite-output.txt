@@ -1,0 +1,43 @@
+# layer 4: the shell suite run alone (bash bin/tests.sh) in the clean clone ~/.cache/s316-l4-verify at e9c5cb8, saved by S316 (2026-10-14): started 10:07:31, finished 10:12:20 (289 s), exit 0 (the load average was not read at launch)
+# every line except the PASS lines (the full output is 339 lines; the PASS count is 298)
+== Test 1: commit mode + local source (baseline) ==
+== Test 2: dry-run doesn't modify ==
+== Test 3: ignore mode adds .gitignore + warns on tracked files ==
+== Test 4: auto-detect mode from .gitignore ==
+== Test 5: auto-detect source prefers local sibling ==
+== Test 6: status reports current / modified / N-behind / missing ==
+== Test 7: sync refuses to overwrite locally-modified files without --force ==
+== Test 8: sync upgrades N-versions-behind without --force ==
+== Test 9: github source (needs the network; skipped if the repository is unreachable) ==
+== Test 10: distributed-file links resolve in the simulated adopter tree ==
+== Test 11: sync produces the full manifest tree (faithful, per-file) ==
+== Test 12: seed files created once, never clobbered (even --force) ==
+== Test 13: adopter-owned instances are never sync targets ==
+== Test 14: check-links validates the sync-produced tree without mutating it (issue #36) ==
+== Test 15: status emits per-file rows with a disposition column (Phase 4) ==
+== Test 16: an absent seed file is reported, never flagged as drift (Phase 4 DONE) ==
+== Test 17: a partially-stale tree flags only the stale file (Phase 4) ==
+== Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) ==
+== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION ==
+== Test 20: a seed whose format predates canonical is flagged advisory-only (BL-6 item 2) ==
+== Test 21: check-handoff — well-formed receipt passes; field/value defects are caught ==
+== Test 22: check-handoff — anti-pattern lints, modes (--allow-pending), fresh-seed, block isolation ==
+== Test 23: check-learnings — Learnings table shape (issue #65 Evidence A) ==
+== Test 24: check-learnings — citations into the distributed corpus resolve ==
+== Test 25: check-handoff --all — whole-ledger invariants (issue #65 Evidence B) ==
+== Test: context_budget.py ==
+== Test: quality_ratchet.py ==
+== Test 26: status and sync recognise a version a merge hid from the default walk (RED-first) ==
+== Test 27: --source=github clones its source, so it recognises every version Test 26 does (RED-first) ==
+== Test 28: --source=github names every distributed file its source lacks, before writing anything (RED-first) ==
+== Test 29: a source without its history is named as the cause, not the project's files (RED-first) ==
+== Test 30: the .gitattributes seed merges CHANGELOG.md by union and keeps HANDOFFS.md visible (RED-first) ==
+== Test 31: check-ledger reads what a union merge leaves behind (RED-first against fixtures) ==
+== Test 32: --source=github installs the SOURCE's manifest, so a checkout ahead of it is not refused (RED-first) ==
+== Test 33: check-handoff accepts one live pending receipt per line of sessions, and only one (RED-first) ==
+== Test 34: --source=github reads the source's manifest as data, and refuses rows it cannot install safely (RED-first) ==
+
+== Test 35: BOOTSTRAP's never-overwrite list is pinned to the manifest (RED-first, Learning #12) ==
+== Test 36: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) ==
+== Test 37: the ledger hook and the ratchet chain follow the files under methodology/ (BL-101 P2, X2, RED-first) ==
+== Summary: 298 passed, 0 failed, 0 skipped ==

@@ -1,0 +1,31 @@
+# layer 4: layer-verify.sh output, saved by S316 (2026-10-14): candidate e9c5cb8 in a clean --no-local clone (~/.cache/s316-l4-verify), started 09:59:19, finished 10:07:14 (7 min 55 s), exit 0
+verifying e9c5cb86c5c70d46d0f7e23b7b1559bd1f7b022f in a clean clone; 0 dirty paths
+changed against its parent 98ca7fc:
+  1	1	.quality-gates.json
+  146	18	starter-kit/context_budget.py
+  206	1	tools/test_context_budget.py
+  3	2	tools/test_layout_resolver.py
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  13/13 pass · 0 fail · 0 unmeasured · results 989163398659 · manifest 5d02c560b035
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 298         298  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 354         354  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 74          74  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 13/13 pass · 0 fail · 0 unmeasured · results 989163398659 · manifest 5d02c560b035
+ratchet exit 0
+check-layout-literals: scanned 14 files; 93 sites (70 path, 23 text); 31 acknowledged; 171 prose not counted
+scanner exit 1
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done
