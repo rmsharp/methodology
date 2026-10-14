@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] S319 -- the Phase 0 go-aheads: the gate re-run, the HANDOFFS trim (`b1f1f9d`) and its shard pointer folded into the archive index
+
+His answer to the S319 Phase 0 picker picked PR2's `bin/migrate-layout` layer as the deliverable and ticked all three go-aheads (the gate re-run, the HANDOFFS trim, the `CHANGELOG.md` trim as a dry run only). **The gate re-run, first (3 receipts in the tree, so it reads 18/18):** `python3 starter-kit/quality_ratchet.py --run` in a clean `--no-local` clone of `238c158` under `~/.cache/s319-gate`, launched `nohup ... &` with a done-file (load 11.39 at launch), 1,278 s, exit 0: **18/18 pass, 0 fail, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`**, equal to S318's citation, so the Phase 0 check of the newest receipt's `quality_ratchet:` line is discharged; no process was left running (`pgrep` read after the notice). **The trim** (`b1f1f9d`, the tool's own entry below): `methodology_trim.py --file HANDOFFS.md --cut 2 --force`, dry run first (1 of 3 records, 40,360 B to 29,643 B, shard `-3` as S318 guessed), then `--write`; L1, L2 and L3 held, the shard's `.verify.sh`, `check-handoff` and `check-ledger` exit 0; 4 files in the commit, the dashboard's appended snapshot line left unstaged for the claim. **The fold** (this commit): the tool's pointer block out of `HANDOFFS.md`, one row for the shard in `docs/HANDOFFS_ARCHIVE_INDEX.md`. Not yet done: the `CHANGELOG.md` dry run (its trigger fires: 200,581 B against 196,608 B). Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-3.md` (1 record(s), 40,360 B → 29,643 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
