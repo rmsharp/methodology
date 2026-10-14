@@ -1,0 +1,34 @@
+# layer-verify.sh on pr2/candidate 98ca7fc (layer 3), clean --no-local clone, run by S315 (2026-10-14): launched 04:39:38, ended 04:47:58 (8 min 20 s); load average 10 at launch
+verifying 98ca7fc9744104875c409c96274e24dcf4e989c7 in a clean clone; 0 dirty paths
+changed against its parent c8c0b21:
+  1	1	.quality-gates.json
+  228	92	starter-kit/methodology_trim.py
+  406	0	tools/fixtures/trim-verify-template-1.7.0.sh
+  3	2	tools/test_layout_resolver.py
+  497	1	tools/test_methodology_trim.py
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  13/13 pass · 0 fail · 0 unmeasured · results 6f2d2151afb9 · manifest 576e8ab5d8d1
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 298         298  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 354         354  pass
+  context-budget-unit-tests             >= 148         148  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 74          74  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 13/13 pass · 0 fail · 0 unmeasured · results 6f2d2151afb9 · manifest 576e8ab5d8d1
+
+ratchet exit 0
+check-layout-literals: scanned 14 files; 101 sites (73 path, 28 text); 27 acknowledged; 171 prose not counted
+scanner exit 1
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done
