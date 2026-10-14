@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-13 · [BL-101] S312 -- the PR2 Part 2 layer-1 record, the plan's status line, and the `BL-101` row and detail
+
+`pr-composition-evidence/layer1-record.md` (the answer first: `pr2/candidate` is `14ef959`, 7 files, +1,225 / -2, clean-clone ratchet 13/13 with 0 unmeasured, suite 272/0/0; what it carries and leaves out; four decisions the plan did not take; what it does not show; the open design question for layer 2). The plan's status paragraph and the `BL-101` row (`BACKLOG.md`) and its detail (`BACKLOG-DETAIL.md`) now read Part 1 and layer 1 done, layer 2 next. The row grew by 13 B (the file is over its 56,750 B budget either way). No claim in the record is carried over from a sub-agent or from memory: each figure is in `layer1-*-output.txt` or was printed by a command run this session.
+
 ### 2026-10-13 · [BL-101] S312 -- the saved outputs of PR2 Part 2's first layer
 
 Three files under `docs/planning/pr-composition-evidence/`, each headed by the command that printed it: `layer1-verify-output.txt` (`layer-verify.sh` over a clean `--no-local` clone of `14ef959`: ratchet 13/13 pass, 0 fail, 0 unmeasured, results `3dc6075cbb35`, manifest `45c7608f36d2`, 259 s, the scanner's line, the one proof's exit 0), `layer1-suite-output.txt` (`bash bin/tests.sh` on the layer's tree before its commit: 272 passed, 0 failed, 0 skipped, 165 s; the committed tree is byte-equal, `git status` was clean after the commit) and `layer1-scanner-output.txt` (`bin/check-layout-literals` over the layer-1 tree: exit 1, 158 sites over 9 of 14 files scanned, the to-do list of the layers that follow).
