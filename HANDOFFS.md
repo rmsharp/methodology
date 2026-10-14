@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S317
+date: 2026-10-14
+status: pending
+active_task: **PR2, Part 2's layer 5 only: the dashboard** (`docs/planning/upstream-pr-composition-plan.md` §3, fifth; S311 took Part 1, S312 layer 1, S313 layer 2, S314 layer 2b, S315 layer 3, S316 layer 4) on `pr2/candidate` (now `e9c5cb8`) in a scratch clone under `~/.cache`, un-pushed. DERIVED at Phase 0 (`git`, read-only): the candidate's two dashboard twins (`starter-kit/methodology_dashboard.py` and `tools/methodology_dashboard.py`, 2.21.0) equal fork `75f665e`'s blob (`2d2b35c0df`); the fork tip is 2.22.0, +370 / -115 per twin; 13 fork commits (`0d0da93` to `ffc260b`, BL-101 P5 layers 0 to 5, the floors, one fixtures change) touch the three dashboard files after `75f665e`, and beyond them only `tools/test_layout_resolver.py`, `.quality-gates.json`, `tools/layout_fixtures.py` (already the tip's in the candidate, asserted at layer 4) and docs; the candidate's `tools/test_methodology_dashboard.py` is NOT any fork blob: it is `75f665e`'s plus Part 1's portability edits (+34 / -9: two tests that read the fork-only `docs/planning/BACKLOG.md` removed, the ledger floor `checked >= 6` made population-relative), so the builder must re-apply those hunks to the tip's test file, each asserted once, and not copy the tip verbatim (+629 / -13 against the candidate); the layer is five files: the two twins, the tests, `tools/test_layout_resolver.py` (the dashboard's `COPIES` and `RESOLVED` entries and the twin-block test) and `.quality-gates.json` (`dashboard-unit-tests` 354 to a measured count, `layout-unit-tests` 74 to 75). First measurement: what the layer does to #94's three files and #92. The open call (does the pull request carry the layout reading of `bin/check-handoff`, 6 scanner sites, and `bin/check-ledger`, 4?) binds at the sync layer, where `layout-literals` is first declared at 0, not here (derived from S316's gotcha 2, not re-checked against the plan). His picks at the Phase 0 picker: `go`, layer 5, and three go-aheads (the gate re-run: 18/18, the HANDOFFS trim `35005d8` with fold `af7c367`, the push of `2bc74b9`: all done and read back).
+```
+
+```handoff
 session: S316
 date: 2026-10-14
 status: complete
