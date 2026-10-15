@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S325
+date: 2026-10-15
+status: pending
+active_task: **PR2, BL-113's reduction commit on the local ref `pr2/candidate` (`28f99a7`)** (`docs/planning/BACKLOG-DETAIL.md#bl-113`, option (a), decided at S324's picker): pay at least 21 tokens (about 60 B) out of the candidate runner's layout text so `context_budget.py --status` reads at or under 18,900 (about 18,921 today, exit 2), after DERIVING its shape first (an 11th commit after the scrub, or a rebuild of `c8d4375`, option (b)); built in a scratch clone, local ref only, nothing sent to `KJ5HST/methodology`. Not this session: PR3 to PR5, BL-108, BL-113 (e), the `BACKLOG.md` size flag. (IN PROGRESS: claimed 2026-10-15)
+```
+
+```handoff
 session: S324
 date: 2026-10-15
 status: complete
