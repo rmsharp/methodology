@@ -1,0 +1,68 @@
+# Phase B of the scrub (S324): the output-bearing text, built by scrub-build-b.py against the phase A tip.
+# Format: "@@ path" opens a file; "N|old ==> new" rewrites line N (old must occur in it exactly once); "N|old ==>" removes old;
+# "@@ = path" gives a file its twin's edits; "@left path N,M reason" leaves flagged lines as they are, on purpose.
+# Line numbers are those of the phase A tip, the tree named in scrub-derive-after-a.txt's first line.
+
+@@ bin/migrate-layout
+1060| (plan 5A.2) ==>
+1122| (BL-101 P7) ==>
+1352| (plan 7.4) ==>
+
+@@ tools/test_migrate_layout.py
+508| (B1 plan section 4) ==>
+1742|the crowd-out F5 found ==> the crowd-out the machine-read listing prevents
+1872|"F5's row, as it was" ==> "the row, as it was"
+1982| (F24): any other ==> : any other
+2017|"F5's row, as it was: the two bare names" ==> "the row, as it was: the two bare names"
+2024|keeps F5's pointer ==> keeps its pointer
+2032|which is F5's row ==> which is the existing row
+2056|"F5 lists it, as a pattern list" ==> "the machine-read listing includes it, as a pattern list"
+2218|P9 rewrote the documents ==> the documents were rewritten
+@left tools/test_migrate_layout.py 1703 a fixture path, the name a real project's archived proof can have; it names nothing outside the test
+
+@@ bin/check-layout-literals
+59| (plan C13) ==>
+@left bin/check-layout-literals 19,56 CANONICAL_PREFIXES is scanner data: the prefixes under which a name is the canonical repository's own, and its docstring line says so
+
+@@ bin/tests.sh
+1532| (BL-97, RED-first) ==>  (RED-first)
+1630|BL-97 site(s) present ==> early-exiting-consumer site(s) present
+1697| (BL-101 P2, X2, RED-first) ==>  (RED-first)
+1729| (X2)" ==> "
+1730|layout: X2 -- exit ==> layout: exit
+1796|anchor: X2 -- exit ==> anchor: exit
+1856|REFUSED (X2" ==> REFUSED (the gate"
+@left bin/tests.sh 1546,1644 `S13` is a pattern named in an example command and grepped for, not a session number
+
+@@ .githooks/pre-commit
+92| (BL-76) ==>
+177|(X2, the gate follows the ledger) ==> (the gate follows the ledger)
+326| (plan 7.2a) ==>
+329| (D5) ==>
+423|(the layout table in the BL-101 plan: stop, name both) ==> (the layout table: stop, name both)
+
+@@ .quality-gates.json
+66|BL-101 P4: the canonical checkers ==> The canonical checkers
+
+@@ starter-kit/methodology_dashboard.py
+3783| (BL-101) ==>
+
+@@ tools/methodology_dashboard.py
+@@ = starter-kit/methodology_dashboard.py
+
+@@ tools/test_methodology_dashboard.py
+201|BL-34 only adds ==> the change only adds
+3635|option C1 raised the byte budget ==> the budget change raised the byte budget
+3637|the inertness plan §5 warns about ==> the inertness to guard against
+3640| (ledger-trimmer-design.md §5.2) ==>
+4345|"D6: a dry run ==> "a dry run
+4612|(S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) ==> (one was cleared; the other was already clear)
+4635|(S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) ==> (one was cleared; the other was already clear)
+5228|or option C1 ==> or the budget change
+5458|(S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) ==> (one was cleared; the other was already clear)
+5592|re-read plan section 10 dragon 6 first ==> re-read the design first
+5756|fork Learning #26 left it (S176); if ==> the learning left it; if
+5785|"C2 did NOT move ==> "the threshold change did NOT move
+5793|plan §3 caveat 1: the Class A ==> the Class A
+6289| (plan §8 P2) ==>
+6294|P2 APPENDS a sentence to P1's row; it rewrites nothing P1 said ==> the probe APPENDS a sentence to the unprobed row; it rewrites nothing that row said

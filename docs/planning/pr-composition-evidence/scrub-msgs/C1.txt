@@ -1,0 +1,10 @@
+docs: drop internal references from the dashboard's and its tests' comments
+
+Removes backlog codes, session and phase numbers, decision and option labels, learning
+citations, commit hashes, plan citations that name documents outside this repository and the
+names of private adopter projects from the comments and docstrings of
+starter-kit/methodology_dashboard.py, its twin tools/methodology_dashboard.py and
+tools/test_methodology_dashboard.py, and drops the version notes that described a lineage
+this repository does not have. Comments and docstrings only: each file's token stream, read
+without them, is equal before and after, and the two copies of the dashboard stay
+byte-identical.

@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the phase B edits and the messages of the first three commits (`scrub-edits-b.txt`, `scrub-msgs/C1.txt`, `C2.txt`, `C3.txt`)
+
+`scrub-edits-b.txt` is phase B's edit list: 42 edit lines (43 lines rewritten, the dashboard twin sharing one), each naming the exact old text it replaces, and the flagged lines left on purpose with the reason. The three messages are the dashboard's, the trimmer's and the migration tool's. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the driver, the mutation script, the conflicts script and the phase A edits (`scrub-run.sh`, `scrub-mutate.sh`, `scrub-conflicts.sh`, `scrub-edits.txt`)
 
 The driver rebuilds the whole range from the pinned base (`refs/pr2/candidate-before-scrub`, `5afc962`); the mutation script breaks the builders' inputs eight ways and asserts each refusal; the conflicts script is S323's, pointed at the scrub. `scrub-edits.txt` is phase A's explicit edit list: 553 edit lines, each a line number and its new text (the dashboard twin shares its partner's). Model: Claude Sonnet 5.5.

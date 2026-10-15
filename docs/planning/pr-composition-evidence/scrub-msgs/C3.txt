@@ -1,0 +1,6 @@
+docs: drop internal references from the migration tool's and its suite's comments
+
+Removes backlog codes, session and phase numbers, finding labels, plan citations, the names of
+evidence scripts that live outside this repository and the names of private adopter projects from
+the comments and docstrings of bin/migrate-layout and tools/test_migrate_layout.py. Comments and
+docstrings only: each file's token stream, read without them, is equal before and after.

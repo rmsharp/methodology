@@ -1,0 +1,7 @@
+docs: drop internal references from the ledger trimmer's and its tests' comments
+
+Removes backlog codes, decision labels, coupling labels and plan citations that name documents
+outside this repository from the comments and docstrings of starter-kit/methodology_trim.py and
+tools/test_methodology_trim.py. Comments and docstrings only: each file's token stream, read
+without them, is equal before and after. The trimmer's own "P1" check and every string it emits
+are untouched.
