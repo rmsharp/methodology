@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [BL-101] S321 -- the plan, the BL-101 row and its detail record the prose layer; decision D6 (the unmeasured-gate prose) added; next `bin/migrate-layout`
+
+The plan's status line reads "first nine layers" and names `18cda0f`; its §4 seam says the prose layer left the unmeasured-gate sentences out as not layout; §7 gains D6 (three options, (a) a small commit after `bin/migrate-layout` recommended; asked at the S321 close-out picker, unanswered). The BL-101 row and its detail say the same and that the migration tool's 280 tests pass on the layer. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [BL-101] S321 -- the prose layer's evidence, 3 of 3: the end-to-end mutant, the migration-suite probe and the layer's record
 
 `layer6c-record.md` (the answer first, what was measured, the decisions taken, what is not shown, the next layer and one decision for him: the unmeasured-gate prose). The end-to-end mutant: with one link put back, Test 10's first block passes and the new block fails, 300 passed, 1 failed. The probe: the migration tool's suite at the parent, 10 of 23 failed; at the layer, **280 tests OK in 329 s**. Model: Claude Sonnet 5.5.
