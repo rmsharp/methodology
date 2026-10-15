@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [ad hoc] S322 -- the Phase 0 go-aheads: the fork push (`20d5e94..2daa9f8`), the gate re-run, the CHANGELOG dry run, the HANDOFFS trim (`65f93e6`) and its shard pointer folded into the archive index
+
+His answers at the S322 Phase 0 picker ticked all four go-aheads and added a question ("why does HANDOFFS trim keep coming up"), answered in the report: it is BL-108, which he raised at S313, not started. **The push:** `git push origin 2daa9f8...:refs/heads/main`, a fast-forward of 1 commit, read back with `git ls-remote origin refs/heads/main` (equal) and `git rev-list --left-right --count origin/main...2daa9f8` (`0 0`); the fork only. **The gate re-run:** a clean `--no-local` clone of `2daa9f8` (4 receipts), launched as `nohup`, 1,135 s, load 2.4 at launch: 18/18 pass, 0 fail, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, equal to S321's citation. **The `CHANGELOG.md` dry run, nothing written:** `--check` exits 1 (the trigger fires, 237,511 B against 196,608 B); alone it exits 2, refused SRF-RED (1.3984 against `21cf425`; plan §3.3: "do not archive again"); with `--force` and no `--write` it would archive 161 of 215 records to `docs/archive/CHANGELOG-through-2026-10-14.md`, 237,511 B to 97,696 B. The real trim stays his word. **The trim** (`65f93e6`, the tool's entry below): S319's and S318's receipts to `HANDOFFS-through-2026-10-14-5.md` (the shard S321 guessed), 4 receipts to 2, 50,752 B to 28,664 B, shard proof exit 0, `bin/check-handoff` and `bin/check-ledger` exit 0. **The fold,** this commit: the trimmer's pointer block out of `HANDOFFS.md`, one row into `docs/HANDOFFS_ARCHIVE_INDEX.md`. Nothing sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-5.md` (2 record(s), 50,752 B → 28,664 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
