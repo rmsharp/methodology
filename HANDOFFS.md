@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S323
+date: 2026-10-15
+status: pending
+active_task: **PR2, D6's small commit only: the three unmeasured-gate hunks** (`docs/planning/upstream-pr-composition-plan.md` §7 D6, answered (a), do not re-ask; `docs/planning/pr-composition-evidence/layer6c-record.md` §3 and §5): the runner's 3E sentence, `starter-kit/HANDOFFS.md`'s paragraph and `HOW_TO_USE.md`'s 3E bullet (+7 / -4), one commit of 3 files on the local ref `pr2/candidate` (`ab35e96`), derived first and read-only, un-pushed; nothing sent to `KJ5HST/methodology`. Not this session: the scrub, PR3 to PR5, BL-108, the `BACKLOG.md` size flag. (IN PROGRESS: claimed 2026-10-15)
+```
+
+```handoff
 session: S322
 date: 2026-10-15
 status: complete
