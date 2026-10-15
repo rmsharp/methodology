@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S322 close-out -- PR2's last layer built on pr2/candidate (ab35e96): the HANDOFFS receipt complete, the claim closed by a new entry
+
+Closes the S322 claim entry (`CHANGELOG: pending`; a committed entry is never rewritten). **The deliverable:** `bin/migrate-layout` and its suite, the tenth and last Part 2 layer: `pr2/candidate` `18cda0f` to `ab35e96`, two commits, 6 files, +4,483 / -2, three of them the fork tip's bytes whole; the candidate is 19 commits, 46 files, +19,854 / -1,145 over `upstream/main`; clean-clone ratchet 18/18, 0 unmeasured, shell suite 302 / 0 / 0, the tool's 280 tests OK; the paired gate reads a red command-level suite as 280 pass and 1 fail from one run; over the 12 adopters the migration columns equal the fork tip's and the candidate's `bin/sync` needs `--force` for 9 of 12 (PR3's first row). **The gate run on the last work commit `8af565b`** (clean clone, 1,130 s): 18/18, results `d7576eaf9b5b`, manifest `a690abd884d4`, equal to the Phase 0 run and to S321's. The receipt is complete (`self_score` 8, `predecessor_score` 9); no fork learning row appended (rows considered: #55, #64, #16); `CHANGELOG.md` stands at 243,789 B before this entry, `BACKLOG.md` at 60,046 B. Nothing sent to `KJ5HST/methodology`; the 8 commits since `origin/main` (`2daa9f8`) are unpushed. Next: D6's small commit, then the scrub, then PR3. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S322 -- the BL-101 row and its detail record the last layer (`ab35e96`); next D6's small commit, then the scrub
 
 `docs/planning/BACKLOG.md` (+80 B) and `BACKLOG-DETAIL.md`: all ten Part 2 layers are built; PR3's first row is the candidate's `bin/sync` needing `--force` for 9 of 12 adopters. Model: Claude Sonnet 5.5.
