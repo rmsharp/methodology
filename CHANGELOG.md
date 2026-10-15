@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [ad hoc] S325 -- the HANDOFFS trim's shard pointer folded into the archive index (`b72e36b`'s trim, ticked at the Phase 0 picker)
+
+The trim itself is the tool's entry below (`b72e36b`): S321's and S320's receipts to `docs/archive/HANDOFFS-through-2026-10-14-6.md`, 5 receipts to 3 (S324, S323, S322), 63,907 B to 41,022 B, the shard's own proof exit 0 (L1, L2, L3). **The depth was `--cut 3`, not the `--cut 2` the picker and S324's handoff item (4) named:** `--cut 2` archives 3 of 5 and leaves two (read from the dry run); `--cut 3` archives 2 and leaves the three the picker's text said it would leave, BL-108's decided steady state. **The fold,** this commit: the trimmer's pointer block out of `HANDOFFS.md`, one row (`2 | 2026-10-14 → 2026-10-14 | HANDOFFS-through-2026-10-14-6.md | v1.8.0`) at the bottom of `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit as the index's fold rule says (fork Learning #58). Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-6.md` (2 record(s), 63,907 B → 41,022 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
