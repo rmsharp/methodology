@@ -1,0 +1,6 @@
+docs: drop internal references from the shell suite's, the hook's and the checkers' comments
+
+Removes backlog codes, session and phase numbers and plan citations that name documents outside
+this repository from the comments of bin/tests.sh, .githooks/pre-commit, bin/check-layout-literals,
+bin/check-ledger and bin/check-handoff. Full-line comments only: each file, read without them, is
+equal before and after.

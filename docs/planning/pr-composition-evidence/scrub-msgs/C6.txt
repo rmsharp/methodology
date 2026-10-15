@@ -1,0 +1,6 @@
+docs: drop internal references from the sync layer's comments and docstrings
+
+Removes backlog codes, phase numbers and plan citations that name documents outside this
+repository from the comments and docstrings of bin/sync, bin/status, bin/check-links,
+bin/_manifest.py and bin/_manifest_reader.py. Comments and docstrings only: each file's token
+stream, read without them, is equal before and after.

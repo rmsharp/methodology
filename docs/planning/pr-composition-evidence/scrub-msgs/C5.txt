@@ -1,0 +1,7 @@
+docs: drop internal references from the layout resolver's, the fixtures' and their tests' comments
+
+Removes backlog codes, session and phase numbers, coupling labels and plan citations that name
+documents outside this repository from the comments and docstrings of tools/layout_resolver.py,
+tools/layout_fixtures.py, tools/test_layout_resolver.py, tools/test_sync_layouts.py and
+tools/test_checker_layouts.py. Comments and docstrings only: each file's token stream, read
+without them, is equal before and after.

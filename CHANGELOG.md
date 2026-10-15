@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the messages of four more commits (`scrub-msgs/C4.txt` to `C7.txt`)
+
+The ratchet's and the budget gate's, the layout resolver's, the sync layer's, and the shell suite's and the hook's. Each states what it removes and the proof it carries; none carries a fork token. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the phase B edits and the messages of the first three commits (`scrub-edits-b.txt`, `scrub-msgs/C1.txt`, `C2.txt`, `C3.txt`)
 
 `scrub-edits-b.txt` is phase B's edit list: 42 edit lines (43 lines rewritten, the dashboard twin sharing one), each naming the exact old text it replaces, and the flagged lines left on purpose with the reason. The three messages are the dashboard's, the trimmer's and the migration tool's. Model: Claude Sonnet 5.5.

@@ -1,0 +1,7 @@
+docs: drop internal references from the quality ratchet's, the budget gate's and their tests' comments
+
+Removes backlog codes, session and phase numbers, coupling labels and plan citations that name
+documents outside this repository from the comments and docstrings of starter-kit/quality_ratchet.py,
+starter-kit/context_budget.py, tools/test_quality_ratchet.py and tools/test_context_budget.py.
+Comments and docstrings only: each file's token stream, read without them, is equal before and
+after.
