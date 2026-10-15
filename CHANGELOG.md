@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S323 close-out -- D6's small commit built on `pr2/candidate` (`5afc962`): the HANDOFFS receipt complete, the claim closed by this new entry
+
+CHANGELOG: pending is closed here. Receipt `status: complete`, self 8, predecessor (S322) 8, `bin/check-handoff` and `bin/check-ledger` exit 0 (read bare). **The fork's own gate run** on the last work commit `9c2e110` in a clean `--no-local` clone (4 receipts, load 22 at launch): 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, equal to S322's cited run; output `docs/planning/pr-composition-evidence/d6-fork-gate-output.txt`. **Phase 3C:** no fork learning row appended (D3 not triggered; rows considered #52, #82, #16; the mechanical lesson is BL-113's option (e), a gate); no row retired; the HANDOFFS trim was skipped at his pick, so `HANDOFFS.md` holds 4 receipts at rest and the next Phase 0 offers the trim. **Nothing sent to `KJ5HST/methodology`; nothing pushed:** `origin/main` is `22a89d2`, this session adds 6 commits with this one. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-113] S323 -- BL-113 added: the pull request candidate's runner reads over its read-set ceiling, and nothing refuses it
 
 Found by D6's derivation, not by a gate: `context_budget.py --status` on `pr2/candidate` reads `starter-kit/SESSION_RUNNER.md` about 18,921 tokens against 18,900 (exit 2) from `c8d4375` on; upstream's runner reads ok; the tool is in no gate and no hook. The row (index and detail) lists five options, none run, and the one independent of the choice: the tool's exit in `layer-verify.sh`. Not started. `BACKLOG.md` 60,492 B to 60,962 B (+470 B). Model: Claude Sonnet 5.5.
