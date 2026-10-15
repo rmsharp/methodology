@@ -1,0 +1,26 @@
+#94 head 972eb2cd6263; its merge-base with upstream f34769f31; the candidate is ced2c82
+files #94 changes: .quality-gates.json, CHANGELOG.md, FRAMEWORK_APPARATUS.md, starter-kit/methodology_trim.py, tools/test_methodology_trim.py
+starter-kit/methodology_trim.py: #94 adds 430 lines; absent from the candidate as exact lines: 11
+      TRIM_VERSION = "1.7.0"   # 1.7.0: issue #93, cause 3 — a proof is a FROZEN artifact, so a fix to the
+                               # and end red with nothing lost (BL-27 refused to excuse it: a real loss can
+      # FRAMEWORK_APPARATUS.md says a trim earns its own commit, and issue #93 measured what it costs --
+          # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 -- labelled, not excused.
+          m = re.search(r"methodology_trim\.py v([0-9][0-9.]*[0-9])", text)
+                                        "%s is not in the form methodology_trim.py writes it: %s"
+                                        % (key, line[:70]))
+                     "%s: re-derived by methodology_trim.py v%s from the grammar lifted out of its frozen "
+                     % (shard_rel, TRIM_VERSION, g["version"] or "?", g["live"], g["kind"], g["footer"]))
+                  print("methodology_trim.py: --reverify is read-only and takes its own shard; it cannot "
+                        "be combined with %s." % ", ".join(clash), file=sys.stderr)
+tools/test_methodology_trim.py: #94 adds 1136 lines; absent from the candidate as exact lines: 9
+      # design and a control built that way passes for the wrong reason: it can never fail.
+      # BL-27 refused to excuse a bundled frontier edit ("a real loss can have this exact shape"), and
+      # this keeps that: the verdict stays a FAIL. What changes is that the proof can now tell
+      # tamper is made BEFORE the one commit: the proof reads the trim commit's own
+      # contents.
+                  self.assertIn("FAIL:", v.stdout, "labelled, but still a FAIL: " + v.stdout)
+              """NARROWED control -- the real-loss shape BL-27 protected: record 0 was a COMPLETE
+              receipt before the trim and differs after it. Exit 1, the BL-27 note, never relabelled."""
+      # template (the whole-line `leaked` test, the stub label) never reaches a proof already written, and
+.quality-gates.json: #94 adds 1 lines; absent from the candidate as exact lines: 1
+            "threshold": 181,

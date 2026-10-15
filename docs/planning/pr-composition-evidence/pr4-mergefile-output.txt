@@ -1,0 +1,9 @@
+5  .quality-gates.json
+1  bin/check-handoff
+2  bin/tests.sh
+1  starter-kit/BOOTSTRAP.md
+17  starter-kit/methodology_dashboard.py
+6  starter-kit/methodology_trim.py
+17  tools/methodology_dashboard.py
+2  tools/test_methodology_dashboard.py
+conflict regions: 51 in 8 files (the dashboard's two copies: 34); files that merge clean: 29
