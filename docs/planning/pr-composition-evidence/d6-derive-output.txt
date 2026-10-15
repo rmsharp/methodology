@@ -1,0 +1,30 @@
+====================================================================================================
+starter-kit/SESSION_RUNNER.md: candidate 3d09a4a, tip dc2d0fb, 5 remaining hunk(s) candidate->tip
+-- hunk 1  old@135  +1/-0  layout-class=None  named-not-layout=True
+-- hunk 2  old@138  +5/-1  layout-class=layout text  named-not-layout=True
+-- hunk 3  old@147  +1/-0  layout-class=None  named-not-layout=True
+-- hunk 4  old@278  +1/-1  layout-class=None  named-not-layout=True  <== UNMEASURED
+   - Where `.quality-gates.json` declares gates, `quality_ratchet.py --run` is this step's mechanical half; cite its summary line in the receipt.
+   + Where `.quality-gates.json` declares gates, `quality_ratchet.py --run` is this step's mechanical half; cite its summary line in the receipt. A run that reads unmeasured gates is not a clean one: repair the gate (its command, or `timeout_seconds` if it is only slow) and run again, or name each one in the receipt as `unmeasured: <gate>, … — by hand: <result>`.
+   tokens in ADDED lines: none
+-- hunk 5  old@284  +1/-1  layout-class=None  named-not-layout=True
+====================================================================================================
+starter-kit/HANDOFFS.md: candidate 4a3b1a1, tip 394a52a, 1 remaining hunk(s) candidate->tip
+-- hunk 1  old@184  +5/-2  layout-class=None  named-not-layout=True  <== UNMEASURED
+   - <sha12> · manifest <sha12>`) into `runtime_smoke` (or `what_was_done`). The canonical-only
+   - `bin/check-handoff` lints the **newest** receipt for that token when a manifest with gates is present;
+   + <sha12> · manifest <sha12>`) into `runtime_smoke` (or `what_was_done`). A run that reads `U unmeasured`
+   + with `U` above 0 is not a clean one: repair the gate (its command, or `timeout_seconds` if it is only
+   + slow) and run again, or name each unmeasured gate in the same field as `unmeasured: <gate>, <gate> — by
+   + hand: <result>`, at least `U` names. The canonical-only
+   + `bin/check-handoff` lints the **newest** receipt for that token and clause when a manifest with gates is present;
+   tokens in ADDED lines: none
+====================================================================================================
+HOW_TO_USE.md: candidate a28fcc9, tip 6e7fdd2, 2 remaining hunk(s) candidate->tip
+-- hunk 1  old@734  +1/-1  layout-class=None  named-not-layout=True
+-- hunk 2  old@766  +1/-1  layout-class=None  named-not-layout=True  <== UNMEASURED
+   - - **3E: Runtime smoke test** — If the deliverable changes runtime behavior (startup, service registration, config resolution, dispatch, plugin loading), launch the app and confirm the change is active *and not silently overridden* before committing — "build clean" is necessary but not sufficient. If you cannot runtime-verify (needs hardware, an external service, or CI), say so in the handoff *and treat it as a defect* — disclosing the gap is not the same as discharging it (Failure Mode #24). Where `.quality-gates.json` declares gates, `quality_ratchet.py --run` is the mechanical half of this step; its summary line goes into the receipt.
+   + - **3E: Runtime smoke test** — If the deliverable changes runtime behavior (startup, service registration, config resolution, dispatch, plugin loading), launch the app and confirm the change is active *and not silently overridden* before committing — "build clean" is necessary but not sufficient. If you cannot runtime-verify (needs hardware, an external service, or CI), say so in the handoff *and treat it as a defect* — disclosing the gap is not the same as discharging it (Failure Mode #24). Where `.quality-gates.json` declares gates, `quality_ratchet.py --run` is the mechanical half of this step; its summary line goes into the receipt. If it reads unmeasured gates, repair them and run again, or name each one in the receipt (`unmeasured: <gate>, …`).
+   tokens in ADDED lines: none
+====================================================================================================
+UNMEASURED hunks total: +7 / -4

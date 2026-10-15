@@ -1,0 +1,42 @@
+## Section 1: the runner's read-set reading (context_budget.py --status) along the candidate, one commit at a time
+(505541c is the layer's parent and equals upstream/main's runner; c8d4375 is the prose layer's first commit)
+-- 505541c test(checkers): the checkers' own suite, its gate, and the layout scan
+starter-kit/SESSION_RUNNER.md         52,839 B           —  ok
+    exit 0; runner 52839 B
+-- c8d4375 docs(layout): the operating files say where the methodology files sit,
+starter-kit/SESSION_RUNNER.md      ≈18,921 tok  18,900 tok  over
+    exit 2; runner 53184 B
+-- 18cda0f test(layout): the distributed documents must resolve in both layouts
+starter-kit/SESSION_RUNNER.md      ≈18,921 tok  18,900 tok  over
+    exit 2; runner 53184 B
+-- ab35e96 test(layout): the migration tool's suite, its fast classes in the shel
+starter-kit/SESSION_RUNNER.md      ≈18,921 tok  18,900 tok  over
+    exit 2; runner 53184 B
+-- 5afc962 docs(ratchet): a cited gate run that reads unmeasured gates is repaire
+starter-kit/SESSION_RUNNER.md      ≈18,921 tok  18,900 tok  over
+    exit 2; runner 53184 B
+
+## Section 2: the counterfactual, D6 as first answered: the runner's 3E sentence carried too (the fork tip's own text)
+applied the tip's 3E line to the candidate's runner: +224 B
+starter-kit/SESSION_RUNNER.md      ≈19,001 tok  18,900 tok  over
+    exit 2; runner 53408 B
+
+## Section 3: what D6 changes, and what it does not
+  1	1	HOW_TO_USE.md
+  4	1	starter-kit/HANDOFFS.md
+  files in the commit: 2
+  the runner is untouched: yes
+  a gate or budget file touched: 0
+
+## Section 4: the claims the added text makes about tools, against the candidate at 5afc962
+  'unmeasured' in bin/check-handoff: 0 (the clause lint is not carried, so the paragraph keeps upstream's sentence)
+  'unmeasured' printed by quality_ratchet.py (summary line): 1 line(s)
+  'timeout_seconds' declared in quality_ratchet.py: 17 mention(s)
+
+## Section 5: scrub input (a coarse regular expression over the added lines)
+  5 added line(s); fork tokens (backlog code, session number, docs/planning, fork, operator, learning, PR number, issue number): 0
+  the commit message: 0 such token(s)
+
+## Section 6: the layout check and the migration suite's inputs are unchanged
+  bin/check-links --layout both exit 0
+d6-measure done

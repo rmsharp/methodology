@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S323 -- D6's small commit: the saved outputs (derive, build, measure, the clean-clone run)
+
+`d6-derive-output.txt`, `d6-build-output.txt`, `d6-measure-output.txt` and `d6-verify-output.txt` (colour stripped) in `docs/planning/pr-composition-evidence/`. The clean-clone run of `5afc962` (`layer-verify.sh`, 0 dirty paths): the ratchet 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `66cce597ef4a` (equal to the run on `ab35e96`), scanner 15 files 0 sites, the one shipped proof exit 0. The measure output holds the finding: the candidate's runner reads over its read-set ceiling from `c8d4375` on (about 18,921 against 18,900 tokens, exit 2), and D6 moves it by 0. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S323 -- D6's small commit: the four scripts (`d6-derive.py`, `d6-build.py`, `d6-measure.sh`, `d6-conflicts.sh`)
 
 In `docs/planning/pr-composition-evidence/`: the derivation (the unmeasured hunks, +7 / -4 in 3 files, read by importing `layer6c-build.py`), the builder (premises asserted, refuses on drift; carries HANDOFFS +4 / -1 and HOW_TO_USE +1 / -1, never writes the runner), the measure script (the runner's budget reading at each candidate commit, and the counterfactual) and the conflicts script (#94 and #92, before and after). Their outputs and the record follow. Model: Claude Sonnet 5.5.
