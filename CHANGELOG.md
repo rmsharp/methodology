@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S325 -- the PR composition plan's status line says BL-113's reduction commit is built
+
+`docs/planning/upstream-pr-composition-plan.md` (the status paragraph): "Next: BL-113's reduction commit" becomes "is built (`ced2c82`, `bl113-record.md`: the runner reads 23.5 tokens under its ceiling). Next: PR3." The plan stays under its declared 30,000 B (29,408 B). Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S325 -- BL-113's reduction commit: the record, the gate run, and BL-113's detail and row
 
 **The deliverable:** `ced2c82` on the local ref `pr2/candidate` (31 commits over `upstream/main`; the previous tip `28f99a7` pinned as `refs/pr2/candidate-before-reduction`, read back 1 ahead and 0 behind): two files, +3 / -3; the runner's layout paragraph drops its example command (`FRAMEWORK_APPARATUS.md:487-489` already carries it), 53,184 B to 53,100 B; `.context-budget.json`'s runner row records the re-measured density; `context_budget.py --status` exit 2 to 0; measured 18,876.5 tokens against 18,900. **Verified** by `layer-verify.sh` in a clean `--no-local` clone (0 dirty paths): ratchet 18/18, 0 unmeasured, results `23481eb88ba1` (equal to the scrub tip's), manifest `cfa4d5b5fa67`, scanner 0 sites, the shipped proof exit 0 (`bl113-gate-output.txt`). **Two things the record states plainly** (`bl113-record.md` §2, §5): the tool's "21 over" was 11.5 by the doubled read, and the density row moves the tool's line by 43 B, so it is the one hunk he can strip. `BACKLOG-DETAIL.md#bl-113` and its `BACKLOG.md` row say option (a) is done and (e) is still his call. Model: Claude Sonnet 5.5.
