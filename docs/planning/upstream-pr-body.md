@@ -1,57 +1,52 @@
-# The text of the one upstream pull request (draft)
+# The text of the one upstream pull request (draft 2)
 
-**Status: DRAFT, not frozen, nothing sent.** Everything below the rule is the text that would be posted: the title on its own line,
-then the body. Written for `KJ5HST/methodology` from the local branch `pr2/candidate` at `ced2c82` (31 commits over `upstream/main`
-`f34769f`). Every number in it is printed by a command named beside it; the re-runs are in
-[`pr-composition-evidence/pr4-claims.sh`](pr-composition-evidence/pr4-claims.sh),
-[`pr-composition-evidence/pr4-fixture.sh`](pr-composition-evidence/pr4-fixture.sh) and
-[`pr-composition-evidence/pr4-supersede.sh`](pr-composition-evidence/pr4-supersede.sh), the outputs beside them, and the text is checked by
-[`pr-composition-evidence/pr4-body-check.py`](pr-composition-evidence/pr4-body-check.py).
+**Status: DRAFT 2, not frozen, nothing sent.** Draft 1 is `ef98e78`; a fresh reviewer read it and the revisions follow that read
+([`pr-composition-evidence/pr4-record.md`](pr-composition-evidence/pr4-record.md)). Everything below the rule is the text that would be posted:
+the title on its own line, then the body. Written for `KJ5HST/methodology` from the local branch `pr2/candidate` at `ced2c82` (31 commits over
+`upstream/main` `f34769f`). Every number in it is printed by a command named beside it; the re-runs are `pr4-claims.sh`, `pr4-fixture.sh`,
+`pr4-mergefile.sh`, `pr4-supersede.sh` and `pr4-first-commit.sh` in [`pr-composition-evidence/`](pr-composition-evidence/), each with its output, and
+the text is read by `pr4-body-check.py`.
 
 ---
 
 **Title:** A methodology/ directory for a project's framework files, and bin/migrate-layout to move a project there
 
-@KJ5HST: this changes where a project keeps the framework's files and makes every tool in the repository read either place. It is large, so this description says first what I am asking you to decide, then what in it is not about the layout, how to read it, what I measured, and what I could not.
+@KJ5HST: this gives a project's framework files one directory, `methodology/`, instead of two places, and makes every tool read either. A project that does nothing keeps its paths, but its next `bin/sync` still brings new versions of 19 files. It is large (31 commits, +19,821 / -1,150) and about two fifths of it (+8,461 of the added lines, in `bbe0dc3` and `c8c0b21`) is earlier work of mine that you have not seen, so this description starts with what I am asking you to decide.
 
 ## What I am asking you to decide
 
-1. **Do you want the layout at all?** Everything else follows from that. If not, close this; nothing in it changes a project that does not ask.
+1. **Do you want the layout?** Today a project's root lists 18 framework files among its own and 12 more sit under `docs/methodology/` (the 30 rows of `bin/_manifest.py`: 11 kept current by `bin/sync`, 7 "seeds" it writes once and the project then owns, 12 documents). With the layout one directory holds all 30 and the root shows which files are the framework's. That is the whole benefit. If you do not want it, `bbe0dc3`, the first commit, stands alone on your tip (271 passed, 0 failed, 0 skipped and 12/12 gates, in a clean clone of it) and the rest does not.
 2. **Three choices in the dashboard** (below) are policy, not fixes. Tell me which to drop and I will drop them.
-3. **The order with #94.** #94 and this change both rewrite `starter-kit/methodology_trim.py` and its tests (last section). Say whether to wait for #94 and rebase on it, or take this as superseding it.
+3. **The order with #94.** This branch and #94 both rewrite `starter-kit/methodology_trim.py` and its tests: `git merge-tree` conflicts in 3 files and 17 regions (the trimmer 10, its tests 6, `.quality-gates.json` 1). #92 merges clean. This branch carries my #93 fix as its own commits, and of the 430 lines #94 adds to the trimmer all but 11 are in it as exact lines (the version string, comment wording, and the tool's name in four messages, which this branch prints from a constant); of the 1,136 it adds to the tests all but 9 (comments and docstrings); the floor in `.quality-gates.json` is 181 there and 218 here (`pr4-supersede.sh`). Say whether to wait for #94 and rebase on it, or take this as superseding it. I have not resolved the conflicts.
 
 ## What it does
 
-A project that adopts the framework keeps its framework files in two places: 18 at its root, beside its own files (11 that `bin/sync` keeps current and 7 it writes once), and 12 under `docs/methodology/`: the 30 rows of `bin/_manifest.py`. This adds a second layout that holds all 30 under one directory, `methodology/`, with `workstreams/` its one subdirectory, so a project's root shows which files are the framework's.
-
-- **Nothing changes for a project that does not ask.** Every tool reads either layout, and `bin/sync` writes a legacy project the same paths it writes today (measured below).
-- **A project moves with `bin/migrate-layout`,** a dry run unless given `--apply`. It refuses, before writing anything, a tree that is dirty, half-migrated, already holds a destination, keeps the files out of git, or is not current with what `bin/sync` would write. An apply is one commit, rolled back if a step or a check fails. Like `bin/sync` and `bin/status` it is not in `bin/_manifest.py`, so a project does not receive it; it runs from a checkout of this repository.
-- **No tool guesses where the files are.** `tools/layout_resolver.py` decides from where `SESSION_RUNNER.md` sits: at the root, the legacy layout; under `methodology/`, the new one; in both places, a refusal that names both. The same marked block is copied into each of the 10 tools that need it and into the dashboard's twin under `tools/`, because each is a single stdlib file, and `python3 tools/test_layout_resolver.py` asserts that all 11 copies equal the module.
+- **Paths.** `bin/sync` writes a legacy project the same paths it writes today (measured below). Every tool reads either layout.
+- **Moving.** `bin/migrate-layout` is a dry run unless given `--apply`. It refuses, before writing, a tree that is not a git repository with a commit, is dirty, is half-migrated, already holds a destination, keeps the files out of git, or is not current with what `bin/sync` would write. An apply is one commit: a step that fails before it rolls it back; the before-and-after checks run after it, and a difference exits 4, keeps the commit and prints the `git revert` (`--skip-checks` turns them off). Like `bin/sync` and `bin/status` it is not in `bin/_manifest.py`; a project runs it from a checkout of this repository.
+- **No tool guesses where the files are.** `tools/layout_resolver.py` decides from where an anchor file sits: at the root, legacy; under `methodology/`, new; in both places, a refusal naming both. One exception: with `SESSION_RUNNER.md` only under `methodology/`, a file found in both places is the framework's under `methodology/`, and the root copy is left alone as the project's own. Ledger tools anchor on `CHANGELOG.md`, so a project that moved only the framework's files (`--tier 1`) is read right. The block is copied into each of 10 tools and the dashboard's twin, each a single stdlib file; `python3 tools/test_layout_resolver.py` asserts all 11 copies equal the module.
 
 ## What in it is not layout
 
-Two commits are earlier work of mine that you have not seen, and the layout work is built on them:
+- **`bbe0dc3` (9 files, +7,765 / -575).** The dashboard 2.11.3 to 2.21.0 and the ledger trimmer 1.5.0 to 1.7.0 (my fix for #93, which is why it overlaps #94), with their tests (two of the dashboard's tests, which read this repository's own files, are dropped); three blocks of `bin/tests.sh` rewritten so a pipeline under `pipefail` cannot decide a fail arm, a `skip` primitive and two new checks in it; `BOOTSTRAP.md`'s never-overwrite row naming every seed; 11 lines in `FRAMEWORK_APPARATUS.md` for the trimmer's new warning; three floors raised in `.quality-gates.json`. The layout commits for the dashboard and the trimmer build on it.
+- **`c8c0b21` (4 files).** The quality ratchet's 1.4.0 and 1.5.0. A gate takes an optional `timeout_seconds`; a command that outlives it reads `unmeasured` instead of exit code 127 and its whole process group is stopped; gates over one command share one run; changing `timeout_seconds` is a warning, not a refusal. It does not depend on the layout, but it is built on the ratchet's layout commit `fd96593` and cannot be taken without it.
 
-- `bbe0dc3`: the dashboard 2.11.3 to 2.21.0 and the ledger trimmer 1.5.0 to 1.7.0, with their tests, a `skip` in `bin/tests.sh`, and two checks it gains. Trimmer 1.7.0 carries my fix for #93, which is why it overlaps #94.
-- `c8c0b21`: the quality ratchet's 1.4.0 and 1.5.0. A gate whose command outlives its time budget reads `unmeasured` instead of an exit code of 127, and the command's whole process group is stopped.
+I sent whole files rather than the layout hunks because the hunks do not apply to your copies: a three-way merge of your copy, the copy this work started from (`c8b9ddd`, a commit on my fork, `rmsharp/methodology`) and my tip conflicts in 51 places in 8 files, 34 of them the dashboard's two copies (`pr4-mergefile.sh`).
 
-I sent whole files rather than only the layout hunks because the hunks do not apply to your copies: a three-way merge of your copy, the copy this work started from (`c8b9ddd`, on my fork) and my tip conflicts in 51 places in 8 files, 34 of them the dashboard's two copies (command at the end).
+**Three choices in the dashboard** ride along with that lineage:
 
-**Three choices in the dashboard** ride along with that lineage. They are policy, so each is yours to refuse:
-
-- The dashboard's `--sync` takes a directory and skips a target that git tracks or that is brand new unless `--force`. You answered #67 with a remedy that says `cp <canonical> <copy>`; this replaces it.
+- The dashboard's `--sync` takes an optional directory, and skips a target that git tracks, or a brand-new file the project's `.gitignore` does not cover, unless `--force`. You answered #67 with a stale-copy warning that says `cp <canonical> <copy>`; this one says `--sync <directory>` instead.
 - `"methodology"` is no longer in `EXCLUDE_DIRS`, so a portfolio run scores this repository too.
-- How the dashboard recognises a project's installed copy of a framework tool is one table, and the name list (`FRAMEWORK_INSTALLED_SOURCE`) is derived from it. Yours keeps the list and a separate signature table with a test that they agree. After this a name cannot be added without saying how a file of that name identifies itself. The same 7 names are recognised either way; what changes is the design of your code.
+- How the dashboard recognises a project's installed copy of a framework tool is one table, and the name list (`FRAMEWORK_INSTALLED_SOURCE`) is derived from it; yours keeps the list and a separate signature table with a test that they agree. The same 7 names are recognised either way, but the trimmer loses its signature fallback: a copy with no `TRIM_VERSION` line is no longer recognised (the code's own note says every release has one).
 
 It also fixes one defect: `git log --reverse --format=%ai -1` applies `-1` before it reverses, so `first_commit_date` is the newest commit and a project's age is days since its last one. The dashboard now reads the root commits (`--max-parents=0`).
 
 ## How to read it
 
-31 commits, 47 files (38 changed, 9 new), +19,821 / -1,150: `git diff --shortstat f34769f HEAD` and `git rev-list --count f34769f..HEAD`. Every commit but the first touches at most 5 files. The numbers below are the head's. While building I ran the suite and the gates in a clean clone at the last commit of each group in this table; I did not re-run every commit alone for this description.
+31 commits, 47 files (38 changed, 9 new): `git diff --shortstat f34769f HEAD`, `git rev-list --count f34769f..HEAD`. Three commits touch more than 5 files: `bbe0dc3` 9, `14ef959` 7, `fd96593` 6. The numbers in this description are the head's; while building I ran the suite and the gates in a clean clone at the last commit of each group below, and I did not re-run every commit alone.
 
 | Commits | What |
 |---|---|
-| `bbe0dc3` | not layout: dashboard 2.21.0, trimmer 1.7.0, the suite's `skip` (+7,765 / -575, 9 files) |
+| `bbe0dc3` | not layout (above) |
 | `14ef959` | `tools/layout_resolver.py`, `tools/layout_fixtures.py`, `bin/check-layout-literals` (finds a root path written into a tool), and `NEW_LAYOUT`, the manifest's second table, which is data |
 | `fd96593`, `c8c0b21` | the ledger pre-commit hook and the quality ratchet read either layout (ratchet 1.3.0); then ratchet 1.4.0 and 1.5.0, not layout |
 | `98ca7fc`, `e9c5cb8`, `dd581fe` | the trimmer 1.8.0, `context_budget.py` 1.4.0 and the dashboard 2.22.0 each find a project's files at either place; the trimmer writes its archive shard and proof beside the ledger it trims |
@@ -60,10 +55,8 @@ It also fixes one defect: `git log --reverse --format=%ai -1` applies `-1` befor
 | `c8d4375` to `18cda0f` | the documents say where the files sit and their references hold in both layouts; `bin/check-links --layout both` runs in `bin/tests.sh` |
 | `2942e46`, `ab35e96` | `bin/migrate-layout` and its 280-test suite |
 | `5afc962` | a cited gate run that reads unmeasured gates must be repaired or name them (`starter-kit/HANDOFFS.md`, `HOW_TO_USE.md`; 5 lines) |
-| `c933b0f` to `28f99a7` | ten commits that take out references only my fork can resolve, from comments and docstrings (the first seven; no program token changes) and from text a program prints (the last three). Skippable as a run |
-| `ced2c82` | `python3 starter-kit/context_budget.py --status` read `SESSION_RUNNER.md` as over its ceiling after the documents commits; this drops one duplicated example command (84 B). It also edits one line of `.context-budget.json` that records the file's new density and **loosens that gate's line by 43 B**; that hunk is separable |
-
-The ten commits did not remove everything. A grep for four kinds of reference of mine still finds 56 added lines, 36 of them comment lines (`git diff f34769f HEAD -- . ':!docs' | grep -E '^\+[^+]' | grep -cE 'BL-[0-9]+|\bS[0-9]{2,3}\b|\bD[0-9]{1,2}\b|Learning #[0-9]+'`). A script on my fork that counts more kinds read 654 added lines in 28 files before the ten commits and 25 in 6 after.
+| `c933b0f` to `28f99a7` | ten commits that take out references only my fork can resolve: seven in comments and docstrings (no program token changes), three in text a program prints. Skippable as a run. 56 added lines of that kind remain, 36 in comments, some of them names your own trimmer already carries (`git diff f34769f HEAD -- . ':!docs' \| grep -E '^\+[^+]' \| grep -cE 'BL-[0-9]+\|\bS[0-9]{2,3}\b\|\bD[0-9]{1,2}\b\|Learning #[0-9]+'`) |
+| `ced2c82` | `python3 starter-kit/context_budget.py --status` read `SESSION_RUNNER.md` as over its token ceiling after the documents commits; this drops one duplicated example command (84 B). It also changes three lines of `.context-budget.json` (the file's density, its measured size and a note), which **loosens that gate's line by 43 B**; that hunk is separable |
 
 ## What a project sees
 
@@ -75,37 +68,39 @@ python3 <upstream checkout>/bin/sync a-up ; python3 <this branch>/bin/sync a-pr
 diff -rq --exclude=.git a-up a-pr
 ```
 
-Both write the same 30 paths and neither makes a `methodology/` directory. 22 of them differ in bytes, and every one is a file this pull request changes (`git diff --name-only` over `starter-kit/`, `workstreams/` and the three manuals). `pr4-fixture.sh`, in [my fork's evidence directory](https://github.com/rmsharp/methodology/tree/main/docs/planning/pr-composition-evidence), runs this and the next.
+Both write the same 30 paths and neither makes a `methodology/` directory. 22 of them differ in bytes, and every one is a file this pull request changes (`git diff --name-only` over `starter-kit/`, `workstreams/` and the three manuals): that is the next sync's cost to a project that did not ask, 19 tracked files and 3 seeds' sources. `pr4-fixture.sh`, in [my fork's evidence directory](https://github.com/rmsharp/methodology/tree/main/docs/planning/pr-composition-evidence), runs this and the next.
 
 **A project's own files are not overwritten.** The same project with its 7 seeds edited and its framework files at upstream's tip: upstream's `bin/sync` writes 0 paths; this branch's writes 19 (every framework file it changes, nothing else), needs no `--force`, and changes 0 of the 7 seeds.
 
-**A project that has moved is synced as the project it is.** Synced by the `bin/sync` on `main` today, a project under `methodology/` gets 23 framework files written at its root beside the moved ones, and two of my projects' own pre-commit hooks refused that commit as half-migrated. That is why the sync tools are in this pull request and not left for later.
+**A project that has moved is synced as the project it is.** Synced by the `bin/sync` on `main` today, a project under `methodology/` gets 23 framework files written at the legacy places (the root and `docs/methodology/`) beside the moved ones, and two of my projects' own pre-commit hooks refused that commit as half-migrated. That is why the sync tools are in this pull request and not left for later.
 
-**My own 12 projects,** which you cannot reproduce: measured in `--no-local` clones of their committed HEADs by `pr3-adopters.py` in that directory. 7 are under `methodology/` and 5 are not. This branch's `bin/sync` changed none of their seeds and created 13 where a project had none. It refuses a plain run at 10 of the 12, 39 files in all. 38 of those are versions of a file from my fork's history that no commit of this branch carries, so that count is mine and not yours; one `--force`, then a plain run writes nothing at all 12. The 39th is a project's own 49 added lines in its copy of `methodology_trim.py`, which `--force` drops without saying so (below).
+**My own 12 projects** (not reproducible by you; `pr3-adopters.py` in that directory, on clones of their committed HEADs): 7 are under `methodology/`, 5 are not. This branch's `bin/sync` changed none of their seeds. Without `--force` it refuses 10 of the 12, 39 files in all; 38 are versions from my fork's history that no commit of this branch carries, so that count is mine, not yours. After one `--force` a run without it writes nothing, at all 12. The 39th is a project's own 49 added lines in its copy of `methodology_trim.py`, which `--force` drops without saying so (below).
 
 ## Evidence
 
-Each in a clean `--no-local` clone of the pull request's head (0 dirty paths), serially, exit codes read bare; upstream's tip is the control. `pr4-claims.sh` in the same directory runs them all.
+Each in a clean `--no-local` clone of the pull request's head (0 dirty paths), serially, exit codes read bare; upstream's tip is the control. `pr4-claims.sh` runs them all: about 5 minutes for the suite and 10 for the gate run, on a machine with other load.
 
 | Claim | Command | upstream `f34769f` | this branch |
 |---|---|---|---|
 | the suite passes, and holds more | `bash bin/tests.sh` | 261 passed, 0 failed | 302 passed, 0 failed, 0 skipped |
 | every declared gate holds | `python3 starter-kit/quality_ratchet.py --run` | 12/12 pass, 0 fail, 0 unmeasured | 18/18 pass, 0 fail, 0 unmeasured |
 | both layouts' links resolve | `python3 bin/check-links --layout both` | usage error, takes only `--tree` (exit 2) | OK: 80 links across 23 documents, in each layout |
-| no root path is left in a tool | `python3 bin/check-layout-literals` | not present | 15 files, 0 sites |
+| no root path is written into a tool | `python3 bin/check-layout-literals` | not present | 15 files, 0 unacknowledged sites; 138 lines carry a same-line `# layout: ok -- <reason>`; the manifest and `bin/tests.sh` are exempt by name |
 | one resolver, byte for byte | `python3 tools/test_layout_resolver.py` | not present | 76 tests OK; 11 copies, each equal to the module |
-| every frozen proof gives the verdict it gave | `bash <proof>` for each tracked `*.verify.sh` | exit 0 (the one tracked proof) | exit 0 (the same proof) |
-| gates tighten and none loosens | `compare()` of the branch's ratchet, each commit against its parent | | 0 refusals over 31 commits; gates 12 to 18, five floors raised, none lowered |
+| every frozen proof (the `.verify.sh` the trimmer writes beside an archived shard) gives the verdict it gave | `bash <proof>` for each tracked `*.verify.sh` | exit 0 (the one tracked proof) | exit 0 (the same proof) |
+| no gate threshold in `.quality-gates.json` is lowered | the ratchet's own comparison, `quality_ratchet.compare`, each commit against its parent | | 0 refusals over 31 commits; gates 12 to 18, five floors raised (the `ced2c82` density is in `.context-budget.json`, not a gate) |
 
-The unit suites behind the gate: dashboard 395 tests (upstream's floor 229), trimmer 218 (124), quality ratchet 120 (45), context budget 163 (148), and four new: layout 76, checkers 11, sync 82, migration 280.
+The unit suites behind the gate (a floor is a gate's minimum): dashboard 395 tests (upstream's floor 229), trimmer 218 (124), quality ratchet 120 (45), context budget 163 (148), and four new: layout 76, checkers 11, sync 82, migration 280.
 
-## What this does not show
+## What this does not show, and what is missing
 
 - **The route a project takes alone from GitHub.** Every sync above used the local source, not `--source=github`.
-- **Anything about a project that is not mine.** The 12 are mine, and 10 carry versions of the framework's files that are in no history here. A project on your released files is the fixture above.
-- **Windows, your machine, hooks armed in another clone, or a project's own CI.** This repository has no CI, so every check is local.
-- **My own suite as a whole.** It has blocks that read this repository's ledgers, backlog and archive as fixtures and cannot run on your tree; they are not carried, so `bin/tests.sh` here is yours plus the changes above.
-- **Enforcement of the rule in `5afc962`.** The check lives in my version of `bin/check-handoff`, which is not carried, so the rule is prose; the session runner's own sentence for it is left out because the runner is at its ceiling.
+- **Any project that is not mine.** The 12 are mine, and 10 carry versions of the framework's files found in no history here; a project on your released files is the fixture above.
+- **Windows, your machine, hooks armed in another clone, a project's own CI.** This repository has no CI, so every check is local.
+- **My own suite as a whole.** Some of its blocks read this repository's ledgers, backlog and archive as fixtures and cannot run on your tree; they are not carried, so `bin/tests.sh` here is yours plus the changes above.
+- **Enforcement of the rule in `5afc962`.** Its check is in my version of `bin/check-handoff`, which is not carried, so the rule is prose; `SESSION_RUNNER.md`'s own sentence for it is left out because that file is at its token ceiling.
+- **A `CHANGELOG.md` entry, or a change to `README.md` or `CLAUDE.md`** (which list the files). The 31 commits were made without your pre-commit hook, which would require a ledger entry in each; say if you want one entry and I will add it. I have not bumped the framework's release version; release notes would be a separate pull request after a merge, as with #92.
+- **How to merge it.** A merge commit or a rebase keeps the ten reference-removal commits skippable as a run; a squash does not.
 
 Known gaps from the 12 projects, open:
 
@@ -113,14 +108,5 @@ Known gaps from the 12 projects, open:
 - Moving only the framework's files (`--tier 1`) leaves the dashboard writing a second history file under `methodology/` while the root's old one stays, unused.
 - On a ledger in the old format (no month headings) the migration's own entry lands at the end, so the ledger has two orders; `bin/check-ledger` fails before and after.
 - For the hook that `context_budget.py install-hook` writes, the migration warns that it "will refuse the migration commit". It does not.
-- An older copy of the ledger hook that a project armed itself keeps looking for the ledger at the root; once the ledger moves it passes every commit without saying so. The hook in this branch follows the ledger.
+- An older copy of the ledger hook that a project armed itself keeps looking for the ledger at the root; once the ledger moves it passes a commit that has no ledger entry, without saying so. The hook in this branch follows the ledger.
 - A project's own tests or scripts that read a moved file by name can break. The tool lists the files whose text mentions a moved name; that list is an upper bound, not the set that breaks.
-
-## Order with the open pull requests
-
-- **#94** (`972eb2cd6263`): conflicts in 3 files and 17 regions: the trimmer 10, its tests 6, `.quality-gates.json` 1 (`git merge-tree --write-tree`). Of the 430 lines #94 adds to `starter-kit/methodology_trim.py`, all but 11 are in this branch as exact lines; the 11 are the version string, comment wording and the tool's name in four messages (this branch prints it from a constant). Of the 1,136 lines it adds to the tests, all but 9 are here (comments and docstrings). The floor in `.quality-gates.json` is 181 there and 218 here (`pr4-supersede.sh`, same directory). I have not resolved the conflicts.
-- **#92** (`fa2bb5d464f9`): merges clean (`git merge-tree --write-tree`, exit 0). This branch touches neither `CLAUDE.md` nor `README.md`.
-
-I have not bumped the framework's release version. Release notes would be a separate pull request after a merge, in the manner of #92.
-
-Command for the conflict count: for each file the `methodology/` work changed since `c8b9ddd` that upstream also has, `git merge-file -p <your copy> <c8b9ddd's copy> <my tip's copy>`; the exit status is the number of regions (`pr4-mergefile.sh`, same directory).

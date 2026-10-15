@@ -70,7 +70,9 @@ bad += n_bad
 names = {n.rsplit("/", 1)[-1] for rev in (cand, up) for n in git("ls-tree", "-r", "--name-only", rev).split("\n")}
 paths = sorted(set(re.findall(r"`((?:[A-Za-z0-9_.\-]+/)+[A-Za-z0-9_.\-]+|[A-Z_]+\.md|[a-z_]+\.py|pr[0-9]-[a-z\-]+\.(?:sh|py))`", body)))
 for p in paths:
-    if re.fullmatch(r"pr[0-9]-[a-z\-]+\.(?:sh|py)", p):
+    if p == "rmsharp/methodology":
+        ok = "the fork's name, not a path"
+    elif re.fullmatch(r"pr[0-9]-[a-z\-]+\.(?:sh|py)", p):
         ok = "evidence script (named as in the fork's directory)"
     elif "/" not in p and p in names:
         ok = "a file of that name exists"
