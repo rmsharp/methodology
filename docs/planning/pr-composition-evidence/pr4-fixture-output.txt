@@ -1,0 +1,17 @@
+== (a) an empty project, synced once by each tool
+upstream's bin/sync exit 0
+this branch's bin/sync exit 0
+paths written: upstream 30, this branch 30; the two lists are identical
+a methodology/ directory in the project after this branch's sync: no
+paths whose bytes differ: 22
+differing paths that are a file this branch changes (git diff --name-only, starter-kit, workstreams, the three manuals): 22 of 22
+unexplained: none
+
+== (b) a project that holds upstream's files and has edited every seed
+seeds edited: 7
+upstream's bin/sync exit 0; paths it wrote: 0
+this branch's bin/sync exit 0 (plain, no --force); paths it wrote: 19
+seeds this branch's sync changed (of 7): 0
+a methodology/ directory after this branch's sync: no
+
+pr4-fixture done
