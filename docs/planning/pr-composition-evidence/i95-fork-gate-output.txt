@@ -1,0 +1,207 @@
+verifying 722469e2eddc31c658f1949c9c26a248fd2662cc in a clean clone; 0 dirty paths
+changed against its parent 2cef550:
+  4	0	CHANGELOG.md
+  7	0	docs/planning/BACKLOG-DETAIL.md
+  1	0	docs/planning/BACKLOG.md
+  115	0	docs/planning/pr-composition-evidence/i95-record.md
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 503         503  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  close-out-report-unit-tests            >= 82          82  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 75          75  pass
+  checker-layout-unit-tests              >= 15          15  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4
+
+ratchet exit 0
+check-layout-literals: scanned 18 files; 0 sites (0 path, 0 text); 155 acknowledged; 227 prose not counted
+scanner exit 0
+proof docs/archive/CHANGELOG-through-2026-08-02.md.verify.sh exit 1
+proof docs/archive/CHANGELOG-through-2026-08-09.md.verify.sh exit 1
+proof docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-08-15.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-08-17.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-08-25.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-08-30.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-02.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-14.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-16.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-20.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-22.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-10-04.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-10-06.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-10-07.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-10-08.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-10-11.md.verify.sh exit 0
+proof docs/archive/CHANGELOG-through-2026-10-14.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh exit 1
+proof docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh exit 1
+proof docs/archive/HANDOFFS-through-2026-08-11.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-15.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-17.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-18.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-23.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh exit 1
+proof docs/archive/HANDOFFS-through-2026-08-29.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-08-30.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-04.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-07.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-08.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-09-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-09.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-10.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-11.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-15-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-15.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-16-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-16-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-16-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-16-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-17-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-17-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-17-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-17-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-18-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-19-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-19-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-10.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-11.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-12.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-7.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-8.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20-9.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-20.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-7.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-8.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21-9.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-21.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-22-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-22.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-7.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27-8.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-27.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-28.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-09-29.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-01-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-01.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-02-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-02.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-03-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-03-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-03-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-03-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-03-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-03.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-04-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-04-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-04-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-04-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-04-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05-7.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-05.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06-7.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-06.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-07-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-07-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-07-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-07-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-07.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-08-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-08-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-08-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-08-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-08-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-09-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-09-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-09.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-10-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-10-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-10-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-10.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-11-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-11-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-11-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-11-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-11.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-7.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12-8.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-12.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-13-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-13-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-13-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-13-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-13-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-13.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-14-2.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-14-3.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-14-4.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-14-5.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-14-6.md.verify.sh exit 0
+proof docs/archive/HANDOFFS-through-2026-10-14.md.verify.sh exit 0
+proof docs/planning/BACKLOG-COMPLETED.md.verify.sh exit 0
+proof docs/planning/BACKLOG-DETAIL.md.verify.sh exit 0
+proof docs/planning/BACKLOG-archive-2026-08-15.md.verify.sh exit 0
+layer-verify done
