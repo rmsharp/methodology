@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [BL-101] S321 -- the prose layer's evidence, 3 of 3: the end-to-end mutant, the migration-suite probe and the layer's record
+
+`layer6c-record.md` (the answer first, what was measured, the decisions taken, what is not shown, the next layer and one decision for him: the unmeasured-gate prose). The end-to-end mutant: with one link put back, Test 10's first block passes and the new block fails, 300 passed, 1 failed. The probe: the migration tool's suite at the parent, 10 of 23 failed; at the layer, **280 tests OK in 329 s**. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [BL-101] S321 -- the prose layer's evidence, 2 of 3: the verification and mutation outputs
 
 The clean-clone verification of `18cda0f` (8 min 26 s: 16/16, 0 unmeasured, results `7a4736a489ee`, manifest `682c7e6d2333`), the shell suite on the tests stage (301 passed, 0 failed, 0 skipped) and on `c8d4375` alone (300 / 0 / 0), and the mutants over the 54 layout hunks: **reference 28 killed, 7 survived (six are `docs/methodology/` paths spelled in a code span, one is a link to a project-owned file); layout text 0 of 19 killed**, the control green and the clone clean afterwards. Model: Claude Sonnet 5.5.

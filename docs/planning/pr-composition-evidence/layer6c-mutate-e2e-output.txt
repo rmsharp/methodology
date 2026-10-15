@@ -1,0 +1,13 @@
+control (no mutation): bin/check-links --layout both exit 0; 54 mutants (one per layout hunk)
+mutant 53: workstreams/TEMPLATE_CAMPAIGN.md @17 (reference) applied; running the shell suite (about 6 minutes)
+   == Test 10: distributed-file links resolve in the simulated adopter tree ==
+     PASS: check-links: all relative links resolve in adopter layout
+       check-links: OK — 81 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (legacy layout).
+       check-links: FAIL — 1 dangling link(s) in the simulated adopter tree (new layout):
+     FAIL: check-links --layout both: dangling link(s) in one of the layouts (see above)
+   == Test 14: check-links validates the sync-produced tree without mutating it (issue #36) ==
+     PASS: check-links --tree: links resolve in the sync-produced tree
+     PASS: check-links --tree: left the validated tree unmodified (issue #36)
+     PASS: sync layer (manifest table, bin/sync, bin/status, bin/check-links) in both layouts unit tests green
+   == Summary: 300 passed, 1 failed, 0 skipped ==
+suite exit 1
