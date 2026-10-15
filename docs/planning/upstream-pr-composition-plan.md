@@ -168,7 +168,7 @@ tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream'
 
 One seam to keep: the runner's 3E sentence and the `HANDOFFS.md` seed's paragraph say a cited run that reads unmeasured gates must name
 them. They ship as prose (B); the lint that enforces them is `bin/check-handoff`'s (F) and stays on the fork, so upstream would hold a rule
-its own checker does not enforce. PR2 states that in the text or carries the one lint, with the ledger edit it needs. **S321: the candidate's runner and `starter-kit/HANDOFFS.md` do not carry these sentences, and the prose layer left them out as not layout (3 hunks, +7 / -4): D6 (§7) asks where they go.**
+its own checker does not enforce. PR2 states that in the text or carries the one lint, with the ledger edit it needs. **S321: the candidate's runner and `starter-kit/HANDOFFS.md` do not carry these sentences, and the prose layer left them out as not layout (3 hunks, +7 / -4): D6 (§7) was answered (a): a small commit after `bin/migrate-layout`.**
 
 ---
 
@@ -233,7 +233,7 @@ recommended option; the options below are kept as asked. D5 was asked and answer
    with the prose present, and none with the tip's checkers and documents both in (`pr-composition-evidence/layer7-probe-output.txt`, `layer7-record.md` §1). **The order is now: the checkers' layout hunks
    (hand-built as upstream's blob plus those hunks: the tip's files carry fork-only lints beyond them, +610 / -57 and +72 / -5), then the prose, then `bin/migrate-layout` last.** The checkers' layer also deletes the
    two `NOT_SCANNED_ALWAYS` entries layer 6 added.
-6. **D6 — where does the unmeasured-gate prose go?** (asked at the S321 close-out picker; `pr-composition-evidence/layer6c-record.md` §5) The runner's 3E sentence, the `HANDOFFS.md` seed's paragraph and `HOW_TO_USE.md`'s 3E bullet say that a cited run reading unmeasured gates must be
+6. **D6 — where does the unmeasured-gate prose go?** (**answered (a) at the S321 close-out picker, 2026-10-14**, the recommended option, do not re-ask; `pr-composition-evidence/layer6c-record.md` §5) The runner's 3E sentence, the `HANDOFFS.md` seed's paragraph and `HOW_TO_USE.md`'s 3E bullet say that a cited run reading unmeasured gates must be
    repaired or name them (3 hunks, +7 / -4). The candidate carries the ratchet's 1.5.0, which makes "unmeasured" a real reading, and none of these sentences; the prose layer carries layout only, so they are still on the fork. (a) **A small commit after `bin/migrate-layout`, the pull request's text stating that
    the lint that enforces the clause stays on the fork** *(recommended: §4 already says they ship as prose, and a reader of the ratchet's output meets the word without the rule)*; (b) leave them on the fork; (c) decide with the text, at PR4.
 

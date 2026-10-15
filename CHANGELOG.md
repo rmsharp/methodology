@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [BL-101] S321 -- D6 answered (a); backlog rows BL-110 and BL-111 added at his close-out go-ahead
+
+His answers to the S321 close-out picker. **D6 (plan §7), the unmeasured-gate prose: (a), his recommended option, a small commit after `bin/migrate-layout` carrying the 3 hunks (+7 / -4) with the pull request's text stating that the lint stays on the fork:** recorded in the plan (§4's seam and §7), not built; do not re-ask. **BL-110** (no check reads a distributed document's path-spelled references or its layout prose: the 26 prose-layer hunks that survived the mutants) and **BL-111** (S320's three added tests are absent from the fork's checker suite), each written from what is known, not started, with a detail entry. Not pushed: the push he authorized named `3322639`. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [ad hoc] S321 -- the fork push `8ee1b15..3322639` on his close-out go-ahead, read back; this recording commit is pushed with it under the standing grant
 
 His answer to the S321 close-out picker ticked the push and two backlog rows and chose D6 (a). **The push, first:** `git push origin "3322639...:refs/heads/main"`, a fast-forward of 7 commits (the claim, five evidence and plan commits, the close-out), read back with `git ls-remote origin refs/heads/main` (equal to local `HEAD`) and `git rev-list --left-right --count origin/main...HEAD` (`0 0`); the fork only, nothing sent to `KJ5HST/methodology`; `pr2/candidate` stays a local ref. This commit changes only `CHANGELOG.md` and is pushed under his standing grant for push records, so no further record is owed. D6's answer and the two backlog rows follow in their own commits and are not pushed. Model: Claude Sonnet 5.5.
