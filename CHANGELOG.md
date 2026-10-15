@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [ad hoc] S322 -- the real `CHANGELOG.md` trim (`1f4f03b`) at his go-ahead, the gate run on it, and the fork push
+
+**The trim:** 167 records (2026-10-12 to 2026-10-14) to `docs/archive/CHANGELOG-through-2026-10-14.md`, 246,020 B to 98,501 B, shard proof exit 0, `bin/check-ledger` and `bin/check-handoff` exit 0; it ran with `--force` (SRF-RED: plan 3.3 says do not archive again, and the level resets, not the rate) because his picker ticked it against my recommendation; the headroom under the 262,144 B refusal is now about 163,600 B and the file grows 7 to 10 KB a session. `check-ledger --all` reads the same one finding as before (an old shard's entry with two source tags). **The gate run** on `1f4f03b` in a clean `--no-local` clone (3 receipts, load 2.5, 1,124 s): 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, equal to every earlier run today. **The push,** his tick: `git push origin "<the sha of this recording commit>:refs/heads/main"`, a fast-forward from `2daa9f8` of 11 commits (the S322 work, the close-out, his answers, the trim and this record), read back with `git ls-remote origin refs/heads/main` (equal to local `HEAD`) and `git rev-list --left-right --count origin/main...HEAD` (`0 0`); the fork only, nothing sent to `KJ5HST/methodology`; `pr2/candidate` stays a local ref. This commit changes only `CHANGELOG.md` and is pushed with the rest under his standing grant for push records. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-14.md` (167 record(s), 246,020 B → 98,501 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
