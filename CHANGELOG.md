@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S323 -- D6's small commit built on `pr2/candidate` (`ab35e96` to `5afc962`): the record, the conflicts check, the plan
+
+**The local ref moved** (a non-commit action, nothing sent): `git fetch <scratch clone> '+refs/heads/pr2/candidate:refs/heads/pr2/candidate'`, read back equal (`5afc96215eeaeb6c5557dae867bf5c6d79c0017a`), 20 commits, 46 files, +19,859 / -1,147 against `upstream/main`. **One commit, 2 files, +5 / -2:** `starter-kit/HANDOFFS.md` (+4 / -1, the rule's four lines, upstream's checker sentence kept) and `HOW_TO_USE.md` (+1 / -1); the runner's 3E sentence is not carried, by his picker answers. #94's conflicting files are the same three before and after, #92 clean. Record: [`d6-record.md`](docs/planning/pr-composition-evidence/d6-record.md); the plan's status line and §7 D6 say what was built. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S323 -- D6's small commit: the saved outputs (derive, build, measure, the clean-clone run)
 
 `d6-derive-output.txt`, `d6-build-output.txt`, `d6-measure-output.txt` and `d6-verify-output.txt` (colour stripped) in `docs/planning/pr-composition-evidence/`. The clean-clone run of `5afc962` (`layer-verify.sh`, 0 dirty paths): the ratchet 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `66cce597ef4a` (equal to the run on `ab35e96`), scanner 15 files 0 sites, the one shipped proof exit 0. The measure output holds the finding: the candidate's runner reads over its read-set ceiling from `c8d4375` on (about 18,921 against 18,900 tokens, exit 2), and D6 moves it by 0. Model: Claude Sonnet 5.5.
