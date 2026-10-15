@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the driver, the mutation script, the conflicts script and the phase A edits (`scrub-run.sh`, `scrub-mutate.sh`, `scrub-conflicts.sh`, `scrub-edits.txt`)
+
+The driver rebuilds the whole range from the pinned base (`refs/pr2/candidate-before-scrub`, `5afc962`); the mutation script breaks the builders' inputs eight ways and asserts each refusal; the conflicts script is S323's, pointed at the scrub. `scrub-edits.txt` is phase A's explicit edit list: 553 edit lines, each a line number and its new text (the dashboard twin shares its partner's). Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the derivation, the two builders and the cumulative proof (`scrub-derive.py`, `scrub-build.py`, `scrub-build-b.py`, `scrub-proof.py`)
 
 In `docs/planning/pr-composition-evidence/`: the derivation (every line the candidate adds that only this fork can read, classified by where the token sits; a token already in the removed lines of the same hunk, an upstream issue or PR number and a bare learning row up to #13 are not counted), the phase A builder (comments and docstrings; refuses on drift, on a flagged line neither edited nor left, on a token left in, on a changed indentation, on a non-inert edit), the phase B builder (the text a program prints; an edit names its old text) and the cumulative proof (written apart from the builders). Read-only on the fork; they write only into a scratch clone. Model: Claude Sonnet 5.5.

@@ -1,0 +1,612 @@
+# The scrub's edits (S324): one explicit line per rewrite, applied by scrub-build.py to a scratch clone of pr2/candidate.
+# Format: "@@ path" opens a file; "N|text" replaces line N of the candidate's blob with text (verbatim after the first bar);
+# "N|<<DELETE>>" removes it; "@@ = path" gives a file its twin's edits. Line numbers are the candidate's (5afc962).
+
+@@ bin/sync
+6|table). `--layout auto` (the
+23|# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+24|# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+55|# The tool that moves a project from the legacy layout to the new one: a dry run unless --apply.
+336|    one created beside it would be a second, blank copy of a file the project already keeps. It is reported, not created."""
+358|    second runner beside the first, and a tree that holds the runner in both places has no layout."""
+
+@@ bin/status
+17|A project keeps its methodology files at its root (legacy) or under methodology/ (new). Each project's
+18|layout is read, never guessed, and
+37|# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+38|# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+@@ bin/check-links
+22|level down in methodology/ (the new layout, its NEW_LAYOUT table). `--layout` chooses which
+24|The documents resolve in both: a reference that cannot be one relative link in both layouts is a
+42|# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+43|# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+@@ bin/_manifest.py
+30|level down in ``methodology/`` (the new layout). NEW_LAYOUT is the second table: for each ``src`` the
+31|``dest`` it takes in the new layout, flat under ``methodology/`` with ``workstreams/`` the one subdirectory.
+32|It is a table of literals, not a function, for the reason below.
+92|# The new layout: where each file above lands in a project that keeps its methodology files under
+
+@@ bin/_manifest_reader.py
+20|The second table, NEW_LAYOUT, is read the same way by read_new_layout: a dict literal from each
+
+@@ bin/check-layout-literals
+4|The move to a
+6|path: a green suite does not see a literal, and the worst case measured was the ledger hook
+7|passing every commit after the ledger moved. This tool finds them. It was RED on purpose when it was written and its
+8|list was the to-do list of the layers that followed; the last of them took it to zero and declared it a quality gate,
+17|~where a trim writes its shards (which move in tier 2 of bin/migrate-layout);
+31|table itself) and bin/tests.sh (the suite encodes the layout), and tools/ tests.
+@left bin/check-layout-literals 19 describes CANONICAL_PREFIXES, which the code at :56 keeps (output-bearing: phase B)
+
+@@ bin/check-ledger
+33|~# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+34|~# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+@@ bin/check-handoff
+62|~# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+63|~# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+@@ bin/tests.sh
+19|~# prevent. A skip does not fail the suite -- it states what was not exercised.
+37|~# the trimmer would have shipped with zero coverage. Proven by mutation: narrowing
+233|~# A table row STARTS with the project's name; the `layout: <name>  <kind>` line added before the table names it too,
+301|~# The canonical checkers in both layouts: check-ledger and check-handoff,
+304|~# it does not run them over this repository (the real-tree check is a separate run).
+311|~# The sync layer in both layouts: the manifest's second table and its reader, bin/sync, bin/status and
+987|~# The chain names the tool through variables (it is found under starter-kit/, under
+1505|~# An assertion that cannot see its own artifact fails for the wrong reason.
+1513|~# A here-string, not a pipe: the producer is a row of the real BOOTSTRAP.md.
+1523|~# A here-string, not a pipe, and this arm is the SILENT direction: a pipeline
+1536|~# 10 of 3,000 runs, `grep -q PAT <<< "$(cat f)"` 0 of 3,000. Which way the flake points is
+1698|~# It was measured: once the ledger moved under methodology/, a LATER commit that left the ledger
+1702|~# The ledger case is kept here as a permanent test, through the real hook and real git, in both layouts, with the
+1775|~# A tie the framework anchor decides: the project's own
+1805|~# A manifest tie: the tie rule is not
+@left bin/tests.sh 1546 `S13` is a pattern named in an example command (grep -q S13), not a session number
+
+@@ .githooks/pre-commit
+25|~# (methodology/CHANGELOG.md) for the new-layout probes. The hook under test reads it from the index.
+86|~# Git LEAVES REBASE_HEAD BEHIND after a rebase that stopped (a conflict,
+173|~# The ledger may live under methodology/, and the gate must follow it:
+174|~# measured after a move: a later commit that left the ledger out PASSED, because the
+175|~# hook found no tracked CHANGELOG.md and took its "no ledger, never block" branch. The first
+217|~# A ledger in BOTH places is a tie, and the framework anchor
+273|~# REBASE_HEAD IS DELIBERATELY ABSENT FROM THIS LIST. Git leaves it behind
+300|~# methodology/ in a project; the manifest at the root or under methodology/.
+317|~# The ledger lives at the root (legacy) or under methodology/ (new). The Python
+321|~# Measured on a moved ledger: with the gate naming only the root file, a ledger moved under
+411|~# Which file is the ledger? Both tracked is a tie. The framework anchor decides it: a
+412|~# project whose runner is tracked under methodology/, and not at the
+415|~# never guess. Refused loudly, and bypassable like every gate here.
+438|~# No ledger tracked in either place: self-provisioning is the session runner's job (Phase 0),
+439|~# not the hook's. Never block a repo that legitimately has no ledger — an adopter
+
+@@ tools/layout_resolver.py
+2|"""The layout resolver: where do a project's methodology files live?
+4|CANONICAL-ONLY reference copy.
+5|A project keeps its methodology files either at its root (legacy) or one level
+14|A fifth row, no request needed: a file found in BOTH places is the framework's under methodology/ when
+15|the runner is under
+18|cannot forget to ask. A tie the runner does
+22|The anchor is the caller's choice, because a project can be part-way: tier 1 moves the
+27|which is the failure measured once: a gate that passes silently.
+
+@@ tools/layout_fixtures.py
+2|"""Fixture trees in both layouts, for every tool of the methodology/ move to reuse.
+5|The target layout is one level down in methodology/, and the move has two tiers. ``build_tree`` writes one of five
+6|shapes into an empty directory:
+9|~new     every methodology file one level down in methodology/
+11|~(its SEED rows, the generated files, the archive) still at the root: tier 1's
+17|by itself. The new shape is derived from the manifest's second table, NEW_LAYOUT (a literal
+18|table, so ``--source=github`` can read it as data), and tools/test_layout_resolver.py holds the target layout
+19|typed out as literals, so a change to that table cannot also quietly reshape the target.
+20|There is one mapping table, and it is the manifest's.
+34|# What the tools write beside the methodology files.
+
+@@ tools/test_checker_layouts.py
+2|"""The canonical checkers find their ledger (or config) at the project root or under methodology/.
+9|Each tool is run as a command, in a scratch project, in four shapes:
+128|~("new", "docs/archive/CHANGELOG-through-2025-12-01.md")):   # the archive moves last
+
+@@ tools/test_layout_resolver.py
+2|"""Unit tests for the methodology/ layout work.
+61|~"""One test per row of the table."""
+5|bin/check-layout-literals is in bin/_manifest.py, so adopters do not receive them: each shipped tool
+6|embeds the resolver's marked block, and the tests assert here that every
+9|The contract is the four-row table in tools/layout_resolver.py's docstring. Every rule is observed failing
+10|as well as passing (Learning #12): the scanner section builds trees that must be refused.
+11|<<DELETE>>
+244|~"""Shipped tools are single stdlib files, so each carries the same marked block."""
+122|~"""For the ledger and for every file: a project whose SESSION_RUNNER.md is under methodology/ keeps its
+123|<<DELETE>>
+127|~forget to ask."""
+128|<<DELETE>>
+155|~# The ratchet works inside methodology/ and a root manifest is the user's own.
+198|~# The runner moved and the ledger did not: there is no tie, so the rule is not reached.
+205|~"""Each shipped tool that resolves the layout carries the module's block, byte for byte.
+206|~A copy that drifted is a second resolver with its own answers. Each tool that embeds the block is
+207|~listed in COPIES."""
+306|# The target layout, typed out: the one place it is written as literals, so a change to
+389|~# the manifest's NEW_LAYOUT is the one table that maps a file to its new place
+450|~"""List every line that names a methodology file's root path in a shipped tool."""
+648|~"""A tool that resolves the layout scans at zero unacknowledged sites, and stays there: this is
+649|~what stops a later edit putting a root literal back. Each tool resolved is appended to RESOLVED."""
+650|<<DELETE>>
+
+@@ tools/test_sync_layouts.py
+2|"""Unit tests for the sync layer in both layouts.
+5|bin/status and bin/check-links are not in bin/_manifest.py, so adopters do not receive them. The
+6|contract: no blank seed beside a real ledger and no second runner, ignore mode, status and
+7|check-links following the layout, and the manifest staying data so --source=github can read it.
+8|<<DELETE>>
+12|command in a scratch project. Every rule is observed failing as well as passing (Learning #12).
+41|tlr = _load("test_layout_resolver", HERE / "test_layout_resolver.py")  # the target layout, typed out as literals
+146|~"""The new destination of every distributed file, from the target layout as
+303|~directory gets the default, which stays legacy until the contract release."""
+379|~"""A tool that writes the new layout into a legacy tree leaves a second, current runner beside the stale one
+395|~self.assertNotIn("not built", r.out)  # the tool exists: a refusal names a command that exists, without a caveat
+422|~"""The seed half: a seed is the project's after its first creation, and a ledger that sits at the root
+518|~"""Ignore mode lists the TRACKED destinations file by file, so the list, the detection of an ignored
+640|~"""Status reads each project at the place its layout puts the files, and says which layout that is.
+641|~A status over a portfolio names each project's layout, so a half-migrated portfolio is
+725|~"""A seed in the new layout may still sit at the root (tier 1, or the project's own changelog), and its
+815|~"""check-links simulates the adopter tree from the manifest, so it has to be able to simulate the new
+816|~one. Whether the docs link correctly in both is asserted elsewhere in the suite; this is the instrument for it."""
+
+@@ starter-kit/quality_ratchet.py
+24|the shell (on Windows a timed-out command may keep running). It holds THRESHOLDS, not
+61|SAFEGUARDS = "SAFEGUARDS.md"  # layout: ok -- a document cited by bare name in a message; names are relative to the runner's directory
+64|HAS_PROCESS_GROUPS = os.name == "posix"   # a gate's command gets a session of its own, and is stopped with its whole group
+73|# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+74|# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+119|~group is already dead and not yet reaped, and ProcessLookupError is a group that
+169|~discarded, through every gate after it (failure mode #29). A command that FINISHES is left
+315|~at both paths is then the framework's under methodology/; the root copy is the project's own."""
+346|~commit would be compared against nothing."""
+776|~# a command that outlives its budget is STOPPED, not only reported: its shell's child is gone,
+
+@@ starter-kit/context_budget.py
+42|VERSION = "1.4.0"   # 1.4.0: the config and its history file live at the root or under methodology/
+50|# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+51|# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+355|~root one is the project's own."""
+
+@@ tools/test_context_budget.py
+1853|~"""A project keeps its budget config at its root (legacy) or under
+1855|~config's files[] paths stay relative to the PROJECT root in both layouts (bin/migrate-layout
+1857|~methodology/ one is the project's own when the runner is tracked under methodology/."""
+
+@@ tools/test_quality_ratchet.py
+255|# Ctrl-C tests in the background. A fourth argument asks for SIGHUP ignored, as `nohup` would.
+268|~the wrong reason. A test suite run under a shell is the shape here."""
+323|~"""`subprocess.run(shell=True, timeout=t)` kills the shell, not the shell's children: a test
+383|~# (measured); ProcessLookupError is a group already gone. Neither is a failure of the gate.
+409|~(measured: one child left after SIGINT and after SIGHUP to the tool's group)."""
+900|~"""A project keeps its manifest at its root (legacy) or under
+979|~# A project whose runner is under methodology/ keeps its manifest
+1031|~"""A move that reads as 'manifest removed' is refused for the wrong reason,
+1061|~# The fail-open measured here: once the manifest is under methodology/ a ratchet that looks
+1135|~# The ratchet works inside methodology/. A loosening there is refused for the
+1202|~refuses every commit loudly; the hook now also looks for the tool in the other layout."""
+1302|~"shutil", "signal", "time",   # signal, time: a gate's command is stopped when the tool is
+1303|~"pathlib"}   # the embedded layout-resolver block imports it
+1321|~# and on a signal to the tool. Run only where the platform has process groups.
+
+@@ bin/migrate-layout
+2|"""Move a project's methodology files under methodology/.
+5|<<DELETE>>
+15|file current: sync first, because a tool that cannot find the ledger fails open. Every
+18|Tiers: tier 1 moves the framework's own files (the manifest's TRACKED rows); tier 2 the project's state
+20|project's own that joins the move with no manifest entry, PROJECT_LEARNINGS.md). The default, all, is both.
+24|one ledger entry. Every link in a live document to a file the move takes is listed, none rewritten.
+47|# A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+48|# This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+75|# What the tools write beside the methodology files. They are not in
+86|# A file of the project's own that joins the move with no manifest entry. It is the project's state, so
+89|# The two configs whose path values the tool rewrites: they are read where the layout puts them.
+287|~"""A run whose every move is a companion is a top-up of a tree that is already migrated: the framework files
+388|~Where the layout puts it, not at the root only. A config this run moves is read at its place before the
+411|~closes it. So the example heading in a ledger header's 'How to add an entry' fence is not an entry. A fence
+507|# A project's tests, proofs, scripts and configs read a moved path as a machine
+516|# A hook line that says why it names a moved tool and still works (`# layout: ok -- <reason>`: the layout-aware
+529|~"""A dot-file whose name ends in `ignore` is a list of patterns a program reads (`.vscodeignore`, `.npmignore`,
+569|~"""Which moved files a `.Rbuildignore` stops covering. The scan reads whole names,
+608|# A root `.vscodeignore` is read as vsce reads it. vsce 3.9.2 (`out/package.js`,
+610|# each line a minimatch pattern with `{ dot: true }` and no `matchBase`. Measured against minimatch 10.2.5.
+611|<<DELETE>>
+763|~"""Which moved files a `.vscodeignore` stops covering, read as vsce reads it (`vsce_ignore_list`). A moved file
+788|~(the layout-aware ledger hook names the tool that way and tries three places for it) is listed, not marked.
+790|~A file in a machine-read category (tests, proofs, scripts, config, and the CI and hook files) is also listed
+795|~A root `.Rbuildignore` is also read for what its regular expressions cover (`pattern_exposure`), since a pattern
+796|~names no file the scan could find, and its row gains `patterns`. So is a root `.vscodeignore`, for what vsce's
+882|~# The root .Rbuildignore (as R reads it) and the root .vscodeignore (as vsce reads it) are read for what
+908|# A link from a project's live document to a file the move takes breaks, and the
+986|~shard by a working-tree path and exits 2 once the shard moves, while the trimmer's current proofs
+1069|~# The shard proofs run only on a run that can go on, so a REFUSED run's lists are the plan before them. `ran`
+1202|~"""The read-only checks, as data: bin/status, the two ledger checkers, check-links, every shard proof
+
+@@ tools/test_migrate_layout.py
+2|"""Unit tests for bin/migrate-layout.
+5|do not receive it. The contract is a dry run by default; a refusal of a dirty tree, a half-migrated tree, a destination that
+6|exists and a
+14|as well as passing (Learning #12), and the tests are written before the code they pin.
+170|~# places that name a moved file and that the tool reports and does not edit
+348|~# --- the entry never lands in a fenced example ---
+540|~"""The report used to put a project's tests, scripts and proofs in `other` with its prose. The
+562|~"""`.vscodeignore` carried 26 mentions of moved names (21 on code lines) and was filed under
+573|~# --- the pattern rule ---
+646|~# --- the vsce rule ---
+648|~# (`package.js` `collectFiles`); the rows were measured by running minimatch through node.
+692|~packaged. The same row of the probe read vsce 3.6.0 (`vsce ls`): the file was listed after the move."""
+747|~moves it, and 1 of the 36 files a real move put into an adopter's `.vsix` was this one."""
+963|~"""Dry run is the default: it reads, prints the plan as data and writes nothing."""
+1024|~"""A dirty tree, a half-migrated tree, a destination that exists and a tree where bin/status does
+1134|~"""--apply writes the migration as ONE commit: every tracked move a rename git can follow."""
+1248|~"""Tier 1 is the framework's files, tier 2 the project's state; tier 1 alone is a stopping point."""
+1374|~that moved are rewritten and a name with a directory in front of it, or inside a longer name,
+1411|~"""The two JSON configs move with the project's state and name paths in their values: the path a file
+1498|~"""The migration commit carries ONE new ledger entry, and it never rewrites a committed one."""
+1518|~# A ledger that kept the v3.7 seed text has a 'How to add an entry' section that shows an example
+1622|~"""The tool lists every hit it will not rewrite and why: CI workflows, `.claude/` rules, `.githooks/`
+1623|~copies, ledger links (a committed ledger entry is never edited) and anything else that names a moved file."""
+1627|~CATEGORIES = ["ci", "hooks", "tests", "proofs", "scripts", "config", "harness", "ledger", "other"]  # nine categories
+1697|~"""On a real migration every check the tool runs passed and the adopter's own CI broke,
+1835|~"""The list of machine-read files reads whole names, so a root `.Rbuildignore` of
+1840|~not R's engine. A packager's ignore file (`.vscodeignore`) is config, not prose."""
+1972|~# --- a packager's ignore file ---
+1992|~"""Listing a root `.vscodeignore` as config and never judging it let a
+1993|~move that put 36 files into an adopter's `.vsix` pass every check the tool prints; only the adopter's own
+2123|~"""An apply verifies itself, before and after, with the read-only checks: bin/status, the two ledger
+2270|~"""Real data (an adopter's project): an older-format proof reads its shard by its working-tree path, so it exits 2 once
+2331|~# --- the shard proofs run only on a run that can go on, so the list
+2388|~"""Real data: an adopter's pre-commit hook runs context_budget.py from the root, so it refuses the migration commit; and a
+2403|~"""Real data (an adopter's hook): the layout-aware ledger hook assigns the tool's name on a line marked
+2426|~"""The reproduction: the hook an adopter is told to install, copied into a project as it is."""
+2440|~"""Real data (an adopter's project): context_budget.py install-hook writes .git/hooks/pre-commit, which is per clone and not
+2517|~"""Real data (an adopter's project): a ledger that is only the seed cannot take its entry and stay a rename at 90%."""
+2530|# --- PROJECT_LEARNINGS.md joins the move as a companion ---
+2541|~and in a gate: the three places a real project was found pointing at it."""
+2567|~"""A tree the tool calls migrated, with the file still at the root: a real project's state."""
+2574|~"""The file joins the move with no manifest entry. It is the project's own state, so tier 2's."""
+2678|~"""A tree the tool calls migrated has the file still at the root (the state of three real projects);
+2679|~before the top-up existed the tool said `nothing to migrate`. The configs are under
+2680|~methodology/ there, and the rewrite reads them where the layout puts them."""
+2813|~"""The links a move breaks are read as the pure rules say, before any project is involved."""
+2864|~"""A link from a project's live document to a file the move takes breaks and
+
+@@ starter-kit/methodology_trim.py
+57|TRIM_VERSION = "1.8.0"   # 1.8.0: a ledger
+61|~# ledger under methodology/ writes methodology/archive/ and climbs one
+67|~# directories, since the archive moves last, and a shard name is never reused
+92|~# and end red with nothing lost (an earlier fix refused to excuse it: a real loss can
+281|NEW_DIR = "methodology"        # layout: ok -- the directory a migrated project keeps its framework files in
+282|NEW_ARCHIVE_DIR = NEW_DIR + "/archive"   # the archive moves with the ledgers
+286|APPARATUS = "FRAMEWORK_APPARATUS.md"   # layout: ok -- a document cited by bare name inside the proof (names are relative to the runner's directory)
+290|# A ledger sits at its project's root (legacy) or under methodology/ (new). The
+681|~still holds the shards its legacy trims wrote under docs/archive/ (the archive moves last), and
+1069|~the shards its legacy trims wrote are its history, since the archive moves last.
+1122|~A ledger a project moved under methodology/ is the same ledger at its new address, the
+2299|~# Every trim writes an entry into the ACTION ledger, wherever the trimmed file sits, so
+2637|~resolver calls half-migrated. The framework anchor decides a tie without being asked:
+2638|~a project's own product changelog may sit at the root beside the ledger. A tree with no
+
+@@ tools/test_methodology_trim.py
+1278|# design and a control built that way passes for the wrong reason.
+1403|# An earlier fix refused to excuse a bundled frontier edit ("a real loss can have this exact shape"), and
+1404|# that stays: the verdict stays a FAIL. What changes is that the proof can now tell
+1415|# tamper is made BEFORE the one commit: the proof reads the trim commit's own contents.
+1416|<<DELETE>>
+1493|~"""NARROWED control -- the real-loss shape an earlier fix protected: record 0 was a COMPLETE
+1494|~receipt before the trim and differs after it. Exit 1, the generic note, never relabelled."""
+3427|# A ledger under methodology/.
+3431|# ledger under methodology/): shards in methodology/archive/, links climb one, and a
+3472|~"""Add one entry-level link that climbs out of methodology/ -- the convention for a new
+3473|~ledger's link to a project file -- to EVERY record, in a commit of its own."""
+3757|~"""The archive moves LAST: a project whose ledger already moved still holds the shards its legacy
+@left tools/test_methodology_trim.py 1661,3810 `P1` is the trimmer's own frontier-poisoning check (starter-kit/methodology_trim.py:2063), upstream vocabulary
+
+@@ starter-kit/methodology_dashboard.py
+29|~A project that keeps its methodology files under methodology/ (the new layout) keeps this
+118|# 2.19.0: The Class B read-cap
+119|# row stops asserting a trimmer config it never read and
+121|# A's severity there. Changed output on a distributed tool: MINOR.
+122|<<DELETE>>
+123|<<DELETE>>
+124|# 2.22.0: The dashboard reads a
+130|# 2.21.0: The manifest-history walk reads the FIRST-PARENT line (`_gate_manifest_history`):
+132|# removed" rows nobody caused and could miss a
+134|# 2.20.0: The
+138|<<DELETE>>
+139|<<DELETE>>
+143|# `"methodology"` was here and is deliberately gone: the scanner was structurally
+145|# placed to check, and the subject of upstream issue #59. The self-scan is safe now that the dashboard
+146|# classifies repo role; before that it read its own home as a 5%-adoption risk.
+161|# skipped for "other"). Found scanning an adopter project (28 `.rmd` + 12 `.qmd`, 11 of the 12
+191|~# `.r` was already in SOURCE_EXTS (so R LOC always counted toward Source), but had no
+192|~# LANG_MAP entry, so it never got its own "Code by Language" row. Found against an adopter project
+307|# A SECOND large-file question, deliberately NOT a widening of the code-smell check in
+308|# assess_risks(). That check asks "is this MODULE unwieldy?" — a judgment about structure, false for a
+313|# be able to trip *a* large-file risk, and taking that literally would regress that check's test.
+336|# RE-MEASURE rather than restating those five sentences. A measurement made through the harness is the ONLY instrument that
+337|<<DELETE>>
+361|# The Class A pair, mirrored from methodology_trim.py and pinned to it by a canonical
+370|# Class A ledger and is why its risk row survives rather than being deleted.
+371|# CLASS_A_FIRE_BYTES answers "is a trim worth doing?", and for a
+380|# than quietly dropped. It read "the files a session is instructed to read IN
+397|# and a later change has since MADE that call: it PARTITIONED the six names without removing any, and
+413|# the very false positive that check's ext filter, one signal over, exists to kill.
+415|# --- THE POPULATION IS TWO CLASSES, AND THE DIFFERENCE IS NOT COSMETIC ---------------
+431|~#             ⚠ In a project whose OWN trimmer declares a Class B basename -- read from
+444|~#             its ACTIVE TASK, and ONE (an adopter's ledger, 269,652 B) has no such heading at all -- zero
+455|# must FAIL rather than follow. So each class is
+458|# instead is what makes "the population did not change" provable rather than asserted -- the partition
+459|# moves no threshold; the thresholds move separately, in the Class A pair above.
+460|<<DELETE>>
+463|# OUT LOUD. That must be DECIDED rather than inherited. Neither is named as a
+465|# .md corpus (23 files, taken off bin/_manifest.py's SOURCE column) both appear ZERO
+466|# times. `docs/planning/BACKLOG.md` appeared once, as a WORKED EXAMPLE of a backlog, not as a file
+467|# anyone is told to open -- and that text has since left the
+468|# distributed corpus. So they are watched by analogy
+470|# anyway, for this reason:
+473|# Measured cost of keeping them: `docs/BACKLOG.md` matches NO file in the repositories measured, so it
+474|# emits nothing; `docs/planning/BACKLOG.md` matches exactly one, at 0.54x the cap.
+491|~did before the partition, and which was correct only because the two happened to coincide. They
+500|# --- The trim-trigger row ------------------------------------------------------------------
+506|# THE ARCHITECTURE, AND WHY THE DASHBOARD COMPUTES RATHER THAN ASKS. The design says the
+507|# dashboard "reads the number rather than re-deriving it" AND that an agreement test is owed --
+510|# fail; the repo has already paid for that mistake once (three losslessness
+516|# the stated precedent: check_stale_version()/parse_version() interrogate another executable
+520|# calibrated in the design, not a formula. It is read out of the tool's source by regex, the
+522|# (a 0 from an unread source must not be reported as a clean state), and the line
+530|# ITS ORIGINAL REASON HAS EXPIRED AND THE SURVIVING ONE IS NARROWER. When this was written the
+540|#   -> [('starter-kit/methodology_trim.py', 'methodology_trim.py', 'tracked')]
+552|# TRIM_LINE_FIRE_BELOW IS GONE. It was a SECOND distributed copy of the design's
+579|# which is the misdirection the remedy rule exists to prevent. A canonical test asserts these keys against
+740|# WHY A TABLE AND NOT A TUPLE (when the trimmer became the second installed executable).
+764|# live adopter still runs a 1,614-line pre-version copy, and a
+766|# of defect as the fix being wrong. (Moved up from below `is_framework_installed` so it is
+943|# === LAYOUT ===========
+948|# through ITSELF, because tier 1 moves the first group and leaves the second at the root. Every
+953|# never read as the framework's: the resolver's tie rule, which applies to every tool.
+954|NEW_LAYOUT_DIR = "methodology"  # layout: ok -- the directory a migrated project keeps its methodology files in
+969|~workstreams/ the one subdirectory, and docs/methodology/ dropped."""
+970|~if rel == "docs/methodology":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops
+972|~if rel.startswith("docs/methodology/"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops
+973|~rel = rel[len("docs/methodology/"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops
+979|~methodology file follows the runner."""
+998|# methodology/archive/ beside one that moved (methodology_trim.py 1.8.0).
+1007|~(the resolver's tie rule: where the runner is under methodology/, the framework's
+1027|~manifest, so it resolves each target's layout itself: a migrated project's copy is
+1127|# WHY THIS EXISTS, and it is the defect that would otherwise have shipped. The exclusion above keeps
+1223|# --- helpers: locating the trimmer, and computing the line metric without it ------------------
+1235|~imports or executes the file it found -- the design's precedent, and the reason the rows stay
+1236|~read-only. That holds for `ledgers` too: _parse_trim_ledgers PARSES the source
+1259|~None is a real answer here, not a zero: the budget is a calibrated judgment
+1274|# The attribute uses of LEDGERS a reading survives -- each one only READS the table.
+1284|~This is a SOURCE-TEXT read, never an execution: no adopter code runs inside the
+1285|<<DELETE>>
+1286|~scanner -- the design's precedent and find_trim_tool's own contract. `ast.parse` honours that, since
+1288|~cannot tell an entry from a mention: one adopter's widened trimmer spells SESSION_NOTES.md
+1295|~leaves the Class B row exactly as it was, so a false negative costs nothing, while a key
+1414|# the trim row should surface an archive baseline at all is a decision about that
+1441|~# the row an operator reads stops matching `--check`, which is the one thing the design names
+1510|~Issue #67 points 2/3/4: a write is
+1649|# The two directories this script is actually checked into its OWN home repo at (see
+1684|~# An adopter's copy in the new layout sits in <project>/methodology/, one level below the
+1697|~project root stays clean (the new layout lists both files under methodology/) and its history is read back
+1885|~# The NAME every table below is keyed by. A methodology file under methodology/ is
+1959|~# dashboard_history.jsonl has carried the key since the trim row was added. It is no longer what the
+2090|~# A project that moved its state files keeps its changelog and roadmap under methodology/.
+2131|~# The directory the ledger lives in comes first (a no-op in a legacy tree, where it is `path`).
+2480|~"""The trim-trigger row: one verdict per grow-and-must-be-read ledger, and the
+2481|~remedy. Both halves are LEVELS in bytes -- the one-read cap and the context
+2484|~The remedy BRANCHES on whether the trimmer is installed for the scanned project:
+2490|~ONE DEPARTURE FROM THE DESIGN, LABELLED AS SUCH RATHER THAN DRESSED AS A READING. The design says
+2492|~name: no distributed file documents ledger archiving. Verified over the WHOLE distributed set,
+2493|~not a convenient corner of it -- a claim about "no distributed file" cannot be settled by a net
+2494|~that misses some of them:
+2495|<<DELETE>>
+2496|<<DELETE>>
+2497|<<DELETE>>
+2501|~-> `starter-kit/FRAMEWORK_LEARNINGS.md` (prose about PROVING a split lossless, not a procedure for performing one),
+2502|<<DELETE>>
+2503|~`HOW_TO_USE.md` (a worked example project's
+2504|~`POST /projects/:id/archive` endpoint), and `starter-kit/BOOTSTRAP.md` (the
+2508|~still stands. Re-run it; do not read it.
+2509|<<DELETE>>
+2510|<<DELETE>>
+2516|~Inventing a destination would be the exact misdirection the design's remedy rule exists to prevent. WHEN AN
+2517|~ARCHIVING PROCEDURE IS DISTRIBUTED, this branch should point at the seed ledger's own archiving section.
+2524|~# The basenames the installed trimmer's OWN LEDGERS table declares, parsed from
+2553|~# THE PARTITION CHANGED THE SPELLING, NOT THE SET, AND ON EVERY INPUT collect_all CAN PRODUCE IT
+2574|~# This re-implements methodology_trim.py's Trigger, so it must move with it.
+2608|~# keeps "Large files detected" disjoint from both. The change was to the NUMBER
+2643|~# THE ABSTENTION DISCLOSURE WAS HERE, AND A LATER CHANGE DELETED THE STATE IT DETECTED rather than
+2646|~# RATE had no baseline archive AND the byte budget was unreadable. The design forbids
+2712|~# Items are located through the layout (the names stay the legacy ones). For the PUBLISHER
+2735|~# Which layout this project is in, and the paths that settled it (additive).
+3152|~"""The two places the manifest may live, the one the project's layout names first. Both are
+3155|~removal."""
+3225|~FIRST-PARENT ON PURPOSE. Each version is later compared with the next older ROW, so
+3471|~#    files are not counted as docs (so its doc_loc is ~0; `.qmd`/`.rmd` are in
+3472|~#    DOC_EXTS, so a pure-Quarto/R-Markdown corpus clears the doc_loc/doc_files arms
+3792|~# Never guess which copy is live: the tools refuse a half-migrated tree and name both.
+3815|~# the large-file check's narrowings survives intact.
+3818|~# than beside the large-file check: a project that never adopted the methodology is not told its
+3824|~# naming it deferred to a later change shipped in 2.12.0 (collect_trim_metrics), and the
+3825|~# trimmer it called unreachable is now in bin/_manifest.py. What keeps the row bare is
+3828|~# ledger past both thresholds two remedies for one problem. The rows are coupled, and this comment says so rather than
+3829|<<DELETE>>
+3830|~# pretending they are independent. ONE EXCEPTION: a Class B file whose
+3853|~# THIS ROW IS NOW PER-CLASS, WHICH IS HOW THE DEDUP ENDS.
+3854|~# A question was whether this row and the trim row should be deduplicated.
+3855|~# The answer is "make the rows DIFFERENT, not delete
+3862|~# ⚠ THE SEVERITY DROP IS THE FLEET-VISIBLE PART OF THIS CHANGE, and it is a
+3863|~# judgment, not a derivation: a guard can be correct and not worth
+3865|~# adjudicated case — ordered truncation drops the OLDEST
+3887|~# THIS ROW MAY ASSERT ONLY WHAT THIS MODULE EVALUATED. It used to print
+3895|~# DECLARED (READ_CAP_CLASS_A/B above); only the
+3907|~# AND WHERE IT HAS EVALUATED SOMETHING, IT MAY SAY SO. collect_trim_metrics
+3909|~# never an execution). Where that reading lists this
+3955|~# The trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
+4062|~# The trim-trigger row. Wired after the metrics dict is built (it reads the collected
+
+@@ tools/test_methodology_dashboard.py
+118|~# .tex isn't counted as docs (.qmd/.rmd are in DOC_EXTS, but .tex stays out), so
+177|~"""Found while answering a question about an adopter project's "Code by
+184|~RED-first (Learning #12): both gaps confirmed by direct execution against an adopter project
+2357|~# `git log -- <manifest>` without --first-parent follows BOTH parents of a merge whose
+2502|~BOTH or this goes red. 2.19.0: the Class B
+2503|~read-cap row asserts only what it evaluated and names a remedy it has read from the
+2504|~project's own trimmer source -- changed output on a distributed tool, so MINOR.
+2505|<<DELETE>>
+2506|<<DELETE>>
+2507|~2.20.0: the `.gitattributes` seed becomes installed content -- changed output
+2508|~on a distributed tool, so MINOR. 2.21.0: the manifest-history walk is first-parent,
+2510|~2.22.0: the dashboard reads a project that keeps its methodology files under
+2517|~# NOTE: `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not carried here --
+2518|~# the `--sync [DIR]` single-project scope took a different, more general
+2519|~# design (not a bare `cp`), and its behavior is already
+2522|~# `test_sync_end_to_end_via_main_writes_only_the_target`, etc.). The earlier
+2524|~# stale-copy message, which the `--sync [DIR]`-based message does not contain by
+2642|~"""Text that stands in for the ledger trimmer `bin/sync` installs at an adopter's root.
+2652|~So the earlier predicate answered False for this file on BOTH of its arms, and putting the
+2694|~# The synced doc corpus: a Quarto book. If .qmd files were NOT doc-extensions,
+2695|~# the render-toolchain arm of the disjunction would be the ONLY thing that could carry this fixture
+2696|~# — the exact source_loc≈0 research repo the doc-only rule exists for. Since .qmd/.rmd are in DOC_EXTS,
+2700|~# fixture that isolates the toolchain arm.
+2708|~# A single short chapter — doc_loc and doc_files both stay under the thresholds even with
+2709|~# .qmd counted as docs, so is_doc_only can ONLY be reached via render.toolchain_present.
+2727|~"""Guard-the-guard: adding .qmd to DOC_EXTS must not make the toolchain arm of the
+2901|~# 6 once upstream's quality ratchet ships quality_ratchet.py
+2903|~# 7 with upstream's v4.1 `.gitattributes` seed.
+2940|~# --- The SECOND installed executable ------------------------------------------------
+2942|~# The scanner's own exclusion fixed this defect for the scanner. Shipping the trimmer re-opens it for a file that
+2944|~# RED-first tests below were driven against the earlier scanner and watched to FAIL
+2981|~does not prove it (an absence assertion is trivially true before the name
+3538|~"""The agent-read-cap check: the one of three defects that is NOT a mechanical edit.
+3539|<<DELETE>>
+3542|~can see it — regresses the large-file check, whose ratified `test_large_file_ext_filter` (below, untouched)
+3546|~code-smell question   "is this MODULE unwieldy?"   — structure; false for a chapter
+3547|~read-cap question     "does a file a session must read IN FULL still fit in one read?"
+3622|~# The Class A pair is pinned the same way, by parsing the OTHER tool's source. Same
+3624|~# whether the pair is right, which only a fresh measurement can answer.
+3631|~# AND THE BUDGET, which is the half the later change moved. It is written `192 * 1024`, so a
+3667|~independent rather than two spellings of one comprehension."""
+3727|~was free to move by one in either direction undetected. The same lesson one level
+3789|~"""THE SEVERITY WAS SPLIT, NOT THE POPULATION. Still one row per file — that half is
+3820|~that produced the large-file check's narrowings survives in `dashboard_history.jsonl`."""
+3860|~"""The root-commit-date fix.
+3874|~it back through the scanner rather than being handed it."""
+3971|~"""`EXCLUDE_DIRS` contained the literal `"methodology"`, so in portfolio mode the
+4002|~"""Narrowed, not deleted (Learning #12's sibling): removing one member must not empty the
+4042|~"""The PORTFOLIO-mode self-scan was fixed (TestD4SelfExclusion above) but left a
+4125|~"""Upstream issue #67: `check_stale_version()`'s only remedy was a portfolio-wide `--sync` for a one-file
+4126|<<DELETE>>
+4130|~fail for the reason named in its own docstring, matching the design's own test table by row
+4331|~# --- Row 12: dry-run must preview the gate honestly --------------------------------------
+4334|~"""Row 12: the fix. Every design candidate's own dry-run computed the gate INSIDE the
+4436|~The dashboard never imports it -- that is the whole architecture (interrogate by
+4439|~Two spellings of one comprehension would assert nothing."""
+4447|~"""The conditional trim-trigger row.
+4454|~The design says that the dashboard "reads the number rather than re-deriving it" and
+4455|~in the same paragraph owes an AGREEMENT TEST against `--check`. Those two
+4566|~copy of the design's rate rule. The rule was deleted from both tools rather than
+4652|~# Sized off CLASS_A_FIRE_BYTES, not READ_CAP_BYTES. This is a Class A ledger and
+4671|~baseline, and no trimmer, so no budget. The design forbids reporting a 0 from an unread
+4734|~# --- The owed agreement test -------------------------------------------------------------
+4737|~"""The owed agreement test, re-pointed onto the metric that replaced the
+4758|~# THE REGEX WAS RE-POINTED, and the reason is the whole point of the test.
+5157|~# --- the EDGES, not only the predicates ------------------------------------
+5200|~THE THRESHOLD CHANGE MOVED THE BOUNDARY THIS PAIR GUARDS, and the rename is part of the change: these
+5219|~"""THE BAND THE THRESHOLD CHANGE CREATED, and the assertion that proves the move actually happened.
+5221|~Before the change this size fired. It is now the adjudicated band: past the one-read cap, so a
+5275|~# THE SYNTHETIC HALF RUNS FIRST, AND THAT ORDER IS THE POINT. This half depends
+5279|~# hid a dead fixture for three days: a change re-denominated the Class A read
+5281|~# this one, and its own run could not see the miss -- the change silenced the live rows,
+5282|~# so this method skipped and never reached the stale line. It surfaced only later,
+5286|~# The `low` tier went with the "watched but unmeasured" advisory that was deleted, so the
+5289|~# READ_CAP_BYTES + 2 that ledger fires NEITHER arm (the byte arm is None here --
+5339|~# THE PARAGRAPH THAT STOOD HERE DESCRIBED A STATE THAT NO LONGER EXISTS, and it is
+5343|~# repo's own CHANGELOG.md is in exactly that state." The threshold change falsified both halves:
+5364|~# THE THRESHOLD CHANGE EMPTIED THIS GUARD AND IT STAYED GREEN THAT WAY. It read
+5366|~# until the rewording; `collect_trim_metrics` has not emitted that substring
+5417|~# THIS CONTROL WAS RE-SIZED AND RE-WORDED. It used to sit at READ_CAP_BYTES + 2 and
+5430|~"""The detection contract is `.is_file()` AND a content check by regex, and dropping
+5473|~green absence-assertion is not coverage, so it earns its place by
+5486|~"""The partition change -- the watched population
+5489|~WHAT THIS CHANGE DELIBERATELY DOES NOT DO: move a threshold. The design says option A1
+5490|~"changes no threshold and cannot degenerate anything" and its first criterion names
+5491|~none; a summary table that reads as if two thresholds move is the summary
+5492|~that drifted. The threshold move is the next change, which must be bundled with the budget change
+5493|~(`DEFAULT_BUDGET_BYTES`) or it is inert. So the population assertion below is not a
+5506|~# The six names as they stood before this change, copied here as a FROZEN literal and
+5508|~# module's own parts would be an identity that cannot fail.
+5517|~"""The first DONE criterion, asserted three ways because a partition can fail
+5523|~identity that cannot fail. The first draft of this test asserted exactly
+5578|~"""The second DONE criterion: a canonical test must FAIL if a name is added
+5581|~The direction matters. Class A is DECLARED,
+5587|~own executed module. This is the pattern
+5630|~precondition for the partition changing no behaviour, so it is asserted rather than assumed --
+5632|~collector actually emitted.
+5654|~input that can exist, and the partition changed no production behaviour. What this test proves
+5695|~# ⚠ THE THRESHOLD CHANGE HAD TO GROW THIS CONTROL'S FILE. It used to inherit whatever size the fixture
+5709|~"""The third DONE criterion is a DECISION -- keep or drop, but decide it. The
+5720|~a net that misses most of them. The net once had one hit, a learning row
+5722|~instruction to open it), allowed for by name. That row has left the distributed corpus,
+5723|~so both locations now read [] -- which a net that read nothing
+5766|~"""SUCCESSOR TO THE TEST THAT ASSERTED THE CLASSES HAD NO THRESHOLDS, converted deliberately.
+5768|~The earlier version asserted the classes had acquired NO thresholds, because attaching one was
+5769|~a later step's job and would be inert before the budget was settled (`DEFAULT_BUDGET_BYTES`). The later step did both
+5772|~⚠ AND THE EARLIER VERSION HAD A HOLE THAT THE LATER CHANGE WALKED STRAIGHT THROUGH — recorded rather than
+5776|~`[n for n in dir(md) if n.startswith("READ_CAP_CLASS")]` — one prefix. The later constants are
+5778|~to evade anything, and the guard stayed GREEN through the very change it was written to
+5781|~asserting the EXACT expected set, which is what the earlier docstring already claimed.
+5787|~# nothing.
+5823|~"""The DASHBOARD half of the threshold change — the two threshold sites an earlier inventory left owned by
+5824|~no one, and which were fenced rather than resolved.
+5826|~WHY THIS IS IN THE CHANGE AT ALL, since its criterion names only trimmer-side things. Because the threshold change
+5830|~which the comment above that remedy says the wording exists to avoid. The change was widened
+5831|~to cover both sites; this class is that half.
+5879|~"""The fleet-visible half of this change. A Class A ledger between the one-read cap and the
+5880|~archive threshold is the ADJUDICATED case: truncation is ordered and
+5895|~"""Class B rows STAY, and still say why. This is the design's "make the rows DIFFERENT, not
+5898|~⚠ THE "WHY" IT PINS CHANGED, DELIBERATELY, AND THE ASSERTION WAS REPLACED RATHER
+5925|~The class stays declared; the PROSE stops claiming the trimmer's answer.
+5928|~where nothing was read -- this fixture carries no trimmer. The probe appends a remedy ONLY
+5930|~`TestBL88P2TrimmerSourceProbe` pins that arm, and pins this one byte-identical to the unprobed row."""
+5950|~Measured across 12 fleet repos: every `SESSION_NOTES.md` carrying an
+5952|~one project has no such heading at all, which is the case the weaker form is for.
+5981|~"""The change relaxed nothing past READ_REFUSE_BYTES. There the prefix stops existing, the
+6023|# The Class B over-cap row before the trimmer-source probe, FROZEN. Captured from the module before
+6024|# the probe existed, for a watched file of READ_CAP_BYTES + 1 bytes and 100 lines, with nothing evaluated
+6025|# about any trimmer. A LITERAL on purpose: the criterion -- "a probe that finds nothing or
+6026|# fails must leave the row byte-identical to the unprobed row" -- is a claim about that OUTPUT, and a reference
+6027|# computed by the code under test would only compare the new code with itself.
+6079|# The sentence the probe appends when -- and only when -- the scanned project's own trimmer SOURCE declares
+6088|~"""The Class B row may name a remedy it has CHECKED, and only then lower itself.
+6090|~The probe is a SOURCE-TEXT read of the scanned project's own
+6091|<<DELETE>>
+6093|~the precedent `find_trim_tool` already follows for the version and the budget.
+6098|~never a wait for a real one), and there is none (ABSENT). Only CONFIG may differ from the unprobed row, and
+6099|~the other three are compared to that row as a FROZEN LITERAL rather than to each other.
+6101|~THE DECLARED/DERIVED SPLIT IS NOT ENGAGED, AND ONE TEST SAYS SO. The probe changes prose and severity only: the
+6122|~"""The canonical trimmer widened the way an adopter widened its own: one more entry
+6205|~"""Why the reading is a PARSE and not a grep. An adopter's widened trimmer spells
+6369|~"""The probe is confined to the Class B arm between the cap and the refusal. A Class A ledger is
+6390|# === The dashboard understands both layouts ===========
+6394|# in every shape the layout has (legacy, new, tier1, half, empty), puts a real git history under it, and
+6433|~"""The compliance checklist, the adoption test and the role test read the project through the
+6489|~# from the half answer survived every other test (found by a mutation pass).
+6503|~# The runner cannot decide a tie about a state file when the runner itself is at the root.
+6563|~"""The installed-source fingerprint and the read-cap watch: a methodology file is recognised by
+6589|~# project with no docs/ of its own loses them when it migrates. Recorded as a known consequence:
+6758|~check-overhead and check-ledger --all each took such a directory for a subdirectory)."""
+6833|~floor lowered INSIDE the move commit is invisible: the same class as 'a gate fails open when
+6834|~its file moves'."""
+6918|~HANDOFFS.md. When this repository's own instance files move, those two
+
+@@ tools/methodology_dashboard.py
+@@ = starter-kit/methodology_dashboard.py
