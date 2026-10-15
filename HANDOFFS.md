@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S328
+date: 2026-10-15
+status: pending
+active_task: **Derive upstream issue #95 against the pull request candidate** (his Phase 0 picker, 2026-10-15): the four findings reproduced on the fork, on `upstream/main` and on `pr2/candidate`, what a fix touches (file count against the 5-file cap, `git merge-tree` against upstream and the candidate), the overlap with BL-84, a backlog row and a recommended route, as a record with saved scripts and outputs under `docs/planning/pr-composition-evidence/`. No fix, no comment on #95, nothing sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S327
 date: 2026-10-15
 status: complete
