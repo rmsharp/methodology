@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the rebuild log, the mutation run, the conflicts check and the record (`scrub-run-output.txt`, `scrub-mutate-output.txt`, `scrub-conflicts-output.txt`, `scrub-record.md`)
+
+A third build from the saved edits gives the same tree as the first two (`9c570fa5cf84`); eight refusals fire and both baselines pass; #94 conflicts in the same three files before and after, #92 is clean both times. The record states the answer first, what was measured, what I decided without asking, what is left and why, and what none of it shows. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the saved outputs: the phase B index, what is left, the cumulative proof and the clean-clone gate run (`scrub-derive-after-a.txt`, `scrub-derive-final-output.txt`, `scrub-proof-output.txt`, `scrub-gate-output.txt`)
 
 The phase A tip's residual (68 lines in 12 files, the index phase B accounts against), the final tip's (25 lines in 6 files), the proof over `5afc962..28f99a7` (27 files differ, no code token changed) and `layer-verify.sh` on `28f99a7` in a clean `--no-local` clone: the ratchet 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `cfa4d5b5fa67`, the scanner 15 files and 0 sites, the shipped proof exit 0. Model: Claude Sonnet 5.5.

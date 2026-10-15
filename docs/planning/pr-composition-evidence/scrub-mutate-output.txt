@@ -1,0 +1,13 @@
+ok    A baseline -> dry run
+ok    B baseline -> dry run
+ok    A an edit dropped -> neither edited nor left on purpose
+ok    A a fork token left in -> still carries a fork token
+ok    A a code line as an edit -> NOT INERT
+ok    A a line past the end -> is past the end
+ok    A a docstring made code -> NOT INERT
+ok    A an indentation changed -> changes the line's indentation
+ok    B the old text absent -> occurs 0 times
+ok    B a token left in -> still carries a fork token
+ok    B a flagged line not edited -> neither edited nor left on purpose
+
+scrub-mutate: every refusal fired

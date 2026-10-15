@@ -1,0 +1,21 @@
+committed 4b060e3: docs: drop internal references from the sync layer's comments and docstrings
+committed 4481197: docs: drop internal references from the shell suite's, the hook's and the checkers' comments
+committed 8bcc5ea: docs: drop internal references from the layout resolver's, the fixtures' and their tests' comments
+committed e8684ae: docs: drop internal references from the quality ratchet's, the budget gate's and their tests' comments
+committed d5221bc: docs: drop internal references from the migration tool's and its suite's comments
+committed 223fa96: docs: drop internal references from the ledger trimmer's and its tests' comments
+committed 7192a95: docs: drop internal references from the dashboard's and its tests' comments
+committed 2504e2b: docs: drop internal references from the text the migration tool and the layout scanner print
+committed 4ead07e: docs: drop internal references from the text the dashboard prints and its tests assert on
+committed 5107773: docs: drop internal references from the shell suite's titles, the hook's selftest labels and a gate's reason
+5107773 docs: drop internal references from the shell suite's titles, the hook's selftest labels and a gate's reason
+4ead07e docs: drop internal references from the text the dashboard prints and its tests assert on
+2504e2b docs: drop internal references from the text the migration tool and the layout scanner print
+7192a95 docs: drop internal references from the dashboard's and its tests' comments
+223fa96 docs: drop internal references from the ledger trimmer's and its tests' comments
+d5221bc docs: drop internal references from the migration tool's and its suite's comments
+e8684ae docs: drop internal references from the quality ratchet's, the budget gate's and their tests' comments
+8bcc5ea docs: drop internal references from the layout resolver's, the fixtures' and their tests' comments
+4481197 docs: drop internal references from the shell suite's, the hook's and the checkers' comments
+4b060e3 docs: drop internal references from the sync layer's comments and docstrings
+tree 9c570fa5cf8482755b975a68780914fc96fe2fbe

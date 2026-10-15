@@ -1,0 +1,6 @@
+== origin/fix/trim-verify-false-red-issue93 (972eb2c)
+  5afc962: exit 1; conflicted paths: .quality-gates.json starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+  28f99a7: exit 1; conflicted paths: .quality-gates.json starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+== origin/docs/release-v4.2 (fa2bb5d)
+  5afc962: exit 0; conflicted paths: 
+  28f99a7: exit 0; conflicted paths: 
