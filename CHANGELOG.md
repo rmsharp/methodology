@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-113] S323 -- BL-113 added: the pull request candidate's runner reads over its read-set ceiling, and nothing refuses it
+
+Found by D6's derivation, not by a gate: `context_budget.py --status` on `pr2/candidate` reads `starter-kit/SESSION_RUNNER.md` about 18,921 tokens against 18,900 (exit 2) from `c8d4375` on; upstream's runner reads ok; the tool is in no gate and no hook. The row (index and detail) lists five options, none run, and the one independent of the choice: the tool's exit in `layer-verify.sh`. Not started. `BACKLOG.md` 60,492 B to 60,962 B (+470 B). Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S323 -- D6's small commit built on `pr2/candidate` (`ab35e96` to `5afc962`): the record, the conflicts check, the plan
 
 **The local ref moved** (a non-commit action, nothing sent): `git fetch <scratch clone> '+refs/heads/pr2/candidate:refs/heads/pr2/candidate'`, read back equal (`5afc96215eeaeb6c5557dae867bf5c6d79c0017a`), 20 commits, 46 files, +19,859 / -1,147 against `upstream/main`. **One commit, 2 files, +5 / -2:** `starter-kit/HANDOFFS.md` (+4 / -1, the rule's four lines, upstream's checker sentence kept) and `HOW_TO_USE.md` (+1 / -1); the runner's 3E sentence is not carried, by his picker answers. #94's conflicting files are the same three before and after, #92 clean. Record: [`d6-record.md`](docs/planning/pr-composition-evidence/d6-record.md); the plan's status line and §7 D6 say what was built. Model: Claude Sonnet 5.5.
