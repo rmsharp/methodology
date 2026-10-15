@@ -1,0 +1,10 @@
+differs after normalising: starter-kit/CHANGELOG.md @11
+   - The Action Ledger, which bin/sync
+   + FRAMEWORK_APPARATUS.md The Action Ledger, which bin/sync
+differs after normalising: starter-kit/HANDOFFS.md @144
+   - subsection of The Action Ledger.
+   + subsection of FRAMEWORK_APPARATUS.md The Action Ledger.
+differs after normalising: starter-kit/SESSION_RUNNER.md @39
+   - 3. **Backfill** — prepend one entry per undocumented span, **source-tagged so the audit still enumerates it** (The Action Ledger; best-recoverable source), noting provenance and the commit range: ### 
+   + 3. **Backfill** — prepend one entry per undocumented span, **source-tagged so the audit still enumerates it** (FRAMEWORK_APPARATUS.md The Action Ledger; best-recoverable source), noting provenance and
+reference hunks: 35, equal after normalising: 32, flagged: 3

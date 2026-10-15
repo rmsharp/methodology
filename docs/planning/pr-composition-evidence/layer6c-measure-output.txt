@@ -1,0 +1,138 @@
+## Section 1: the simulated adopter tree after each commit (bin/check-links, each layout; the parent first)
+505541c test(checkers): the checkers' own suite, its gate, and the layout scanne files  -
+    legacy  OK — 116 relative link(s) across 23 distributed markdown files resolve
+    new     FAIL — 35 dangling link(s)
+c8d4375 docs(layout): the operating files say where the methodology files sit, a files  5
+    legacy  OK — 111 relative link(s) across 23 distributed markdown files resolve
+    new     FAIL — 31 dangling link(s)
+04918ce docs(layout): the framework documents and the skills index hold in both  files  5
+    legacy  OK — 88 relative link(s) across 23 distributed markdown files resolve
+    new     FAIL — 8 dangling link(s)
+23e6e66 docs(layout): the workstreams name the runner, the skills index and the  files  5
+    legacy  OK — 82 relative link(s) across 23 distributed markdown files resolve
+    new     FAIL — 2 dangling link(s)
+0248ebf docs(layout): the workstreams name the runner, the skills index and the  files  2
+    legacy  OK — 80 relative link(s) across 23 distributed markdown files resolve
+    new     OK — 80 relative link(s) across 23 distributed markdown files resolve
+18cda0f test(layout): the distributed documents must resolve in both layouts     files  2
+    legacy  OK — 80 relative link(s) across 23 distributed markdown files resolve
+    new     OK — 80 relative link(s) across 23 distributed markdown files resolve
+
+## Section 2: the builder reproduces the layer's tree, and refuses on drift
+stage docs1 written: starter-kit/SESSION_RUNNER.md, starter-kit/BOOTST
+stage docs2 written: FRAMEWORK_APPARATUS.md, HOW_TO_USE.md, ITERATIVE_
+stage docs3 written: workstreams/ARCHITECTURE_WORKSTREAM.md, workstrea
+stage docs4 written: workstreams/TEMPLATE_CAMPAIGN.md, workstreams/TEM
+stage tests written: bin/tests.sh
+stage tests written: .quality-gates.json
+built tree   03437e32f5c3
+layer's tree 03437e32f5c3
+refused: starter-kit/SESSION_RUNNER.md in the candidate is blob 98f4881, not 71ad950; the premise (the layer is the candidate's copy plus the tip's layout hunks) does not hold
+dirty paths after the refusal: 0
+
+## Section 3: the new check (bin/check-links --layout both, what Test 10's second block runs) on the parent and on the layer
+parent 505541c: exit 1
+check-links: OK — 116 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (legacy layout).
+check-links: FAIL — 35 dangling link(s) in the simulated adopter tree (new layout):
+layer  18cda0f: exit 0
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (legacy layout).
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (new layout).
+
+## Section 4: real projects synced by the layer's own bin/sync in each layout, the links read in the project itself, and the prose's example commands run in it
+sync --layout new: exit 0
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the tree
+sync --layout legacy: exit 0
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the tree
+the runner's example in the migrated project (python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --check): exit 0
+the same command in the legacy project, without the prefix: exit 0
+the legacy form in the migrated project (no methodology/ in front of the file): exit 3
+BOOTSTRAP's example in the migrated project (python3 methodology/methodology_dashboard.py): exit 0; files it wrote: ./methodology/dashboard_history.jsonl ./methodology/dashboard.html 
+
+## Section 5: the flags and tools the layer's added prose names, and where each exists (the candidate at the layer; the tip's migrate-layout, which the NEXT layer carries)
+  --apply         bin/sync [tip: bin/migrate-layout]
+  --check         starter-kit/methodology_trim.py starter-kit/context_budget.py starter-kit/methodology_dashboard.py
+  --file          bin/check-ledger bin/check-handoff starter-kit/methodology_trim.py starter-kit/methodology_dashboard.py
+  --layout        bin/sync bin/check-links
+  --mode          bin/sync
+  --no-verify     starter-kit/context_budget.py starter-kit/quality_ratchet.py [tip: bin/migrate-layout]
+  --run           bin/check-handoff starter-kit/context_budget.py starter-kit/quality_ratchet.py starter-kit/methodology_dashboard.py
+  --tier          [tip: bin/migrate-layout]
+  bin/_manifest.py           in the candidate at the layer
+  bin/migrate-layout         NOT in the candidate; in the tip (the next layer)
+  bin/status                 in the candidate at the layer
+  bin/sync                   in the candidate at the layer
+
+## Section 6: the two open pull requests (git merge-tree --write-tree; exit 0 clean, 1 conflicts)
+#94 head 972eb2cd6263
+== tip 505541c against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip 18cda0f against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+#92 head fa2bb5d464f9
+== tip 505541c against #92: exit 0 (first line is a tree)
+== tip 18cda0f against #92: exit 0 (first line is a tree)
+
+## Section 7: scrub input (a coarse regular expression over the layer's added lines, per file; the scrub is its own commit after the layers)
+.quality-gates.json                                        added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+FRAMEWORK_APPARATUS.md                                     added    4 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+HOW_TO_USE.md                                              added    4 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+ITERATIVE_METHODOLOGY.md                                   added    7 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  3 | plan  0
+bin/tests.sh                                               added    8 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+starter-kit/BOOTSTRAP.md                                   added   30 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+starter-kit/CHANGELOG.md                                   added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+starter-kit/CLAUDE_TEMPLATE.md                             added    3 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+starter-kit/HANDOFFS.md                                    added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+starter-kit/RECOMMENDED_SKILLS.md                          added   14 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  2 | plan  0
+starter-kit/SAFEGUARDS.md                                  added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+starter-kit/SESSION_RUNNER.md                              added   13 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/ARCHITECTURE_WORKSTREAM.md                     added    2 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/AUDIT_WORKSTREAM.md                            added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/DEVELOPMENT_WORKSTREAM.md                      added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md   added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/TEMPLATE_CAMPAIGN.md                           added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+workstreams/TEMPLATE_WORKSTREAM.md                         added    1 | BL-  0 | phase  0 | session  0 | docs/planning  0 | learning  0 | FM  0 | plan  0
+commit c8d4375 message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+commit 04918ce message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+commit 23e6e66 message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+commit 0248ebf message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+commit 18cda0f message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+
+## Section 8: the changed files, per commit and in all (git diff --numstat), and the candidate against upstream
+18cda0f test(layout): the distributed documents must resolve in both layouts
+0248ebf docs(layout): the workstreams name the runner, the skills index and the safeguards without a path (2 of 2)
+23e6e66 docs(layout): the workstreams name the runner, the skills index and the safeguards without a path (1 of 2)
+04918ce docs(layout): the framework documents and the skills index hold in both layouts
+c8d4375 docs(layout): the operating files say where the methodology files sit, and their references hold in both layouts
+commit c8d4375: 5 files
+commit 04918ce: 5 files
+commit 23e6e66: 5 files
+commit 0248ebf: 2 files
+commit 18cda0f: 2 files
+       1      1  .quality-gates.json
+       4      0  FRAMEWORK_APPARATUS.md
+       4      3  HOW_TO_USE.md
+       7      7  ITERATIVE_METHODOLOGY.md
+       8      0  bin/tests.sh
+      30     12  starter-kit/BOOTSTRAP.md
+       1      1  starter-kit/CHANGELOG.md
+       3      2  starter-kit/CLAUDE_TEMPLATE.md
+       1      1  starter-kit/HANDOFFS.md
+      14     14  starter-kit/RECOMMENDED_SKILLS.md
+       1      1  starter-kit/SAFEGUARDS.md
+      13     11  starter-kit/SESSION_RUNNER.md
+       2      2  workstreams/ARCHITECTURE_WORKSTREAM.md
+       1      1  workstreams/AUDIT_WORKSTREAM.md
+       1      1  workstreams/DEVELOPMENT_WORKSTREAM.md
+       1      1  workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+       1      1  workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+       1      1  workstreams/TEMPLATE_CAMPAIGN.md
+       1      1  workstreams/TEMPLATE_WORKSTREAM.md
+  all: 19 files, +95 / -61
+the candidate 18cda0f against upstream/main f34769f: 17 commits;  44 files changed, 15373 insertions(+), 1145 deletions(-)
+
+layer6c-measure done

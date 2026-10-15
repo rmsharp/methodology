@@ -1,0 +1,47 @@
+layer6c-build --report: tip 7087493, candidate 505541c
+23 framework documents (every Markdown file under starter-kit/ and workstreams/, plus ITERATIVE_METHODOLOGY.md, FRAMEWORK_APPARATUS.md, HOW_TO_USE.md)
+
+17 differ from the candidate's copy, 6 are equal (carried: nothing): starter-kit/CONTEXT_TEMPLATE.md, starter-kit/FRAMEWORK_LEARNINGS.md, starter-kit/ROADMAP.md, starter-kit/SESSION_NOTES.md, workstreams/DESIGN_WORKSTREAM.md, workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+
+file                                                            reference    layout text     NOT layout
+FRAMEWORK_APPARATUS.md                                          0 (+0 -0)      1 (+4 -0)      0 (+0 -0)
+HOW_TO_USE.md                                                   0 (+0 -0)      4 (+4 -3)      2 (+2 -2)
+ITERATIVE_METHODOLOGY.md                                        7 (+7 -7)      0 (+0 -0)      0 (+0 -0)
+starter-kit/BOOTSTRAP.md                                        3 (+3 -3)    11 (+27 -9)      0 (+0 -0)
+starter-kit/CHANGELOG.md                                        1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+starter-kit/CLAUDE_TEMPLATE.md                                  0 (+0 -0)      2 (+3 -2)      0 (+0 -0)
+starter-kit/HANDOFFS.md                                         1 (+1 -1)      0 (+0 -0)      1 (+5 -2)
+starter-kit/RECOMMENDED_SKILLS.md                             8 (+14 -14)      0 (+0 -0)      0 (+0 -0)
+starter-kit/SAFEGUARDS.md                                       1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+starter-kit/SESSION_RUNNER.md                                 6 (+11 -11)      1 (+2 -0)      5 (+9 -3)
+workstreams/ARCHITECTURE_WORKSTREAM.md                          2 (+2 -2)      0 (+0 -0)      0 (+0 -0)
+workstreams/AUDIT_WORKSTREAM.md                                 1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+workstreams/DEVELOPMENT_WORKSTREAM.md                           1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md      1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md        1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+workstreams/TEMPLATE_CAMPAIGN.md                                1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+workstreams/TEMPLATE_WORKSTREAM.md                              1 (+1 -1)      0 (+0 -0)      0 (+0 -0)
+total (hunks, lines added, lines removed)                    35 (+46 -46)   19 (+40 -14)     8 (+16 -7)
+
+all: +102 -67 over 62 hunks; carried by this layer: +86 -60 over 54 hunks
+
+the hunks NOT carried (candidate line, lines, why, the first words added):
+  HOW_TO_USE.md @734 +1 -1  a session number in prose: fork text, and the scrub would remove it
+      'The solution is three layers of documentation, each serving a different purpose — plus, since S130, the flight'
+  HOW_TO_USE.md @766 +1 -1  the unmeasured-gate clause: the plan's section 4 seam (prose upstream's checker does not enforce)
+      '- **3E: Runtime smoke test** — If the deliverable changes runtime behavior (startup, service registration, con'
+  starter-kit/HANDOFFS.md @184 +5 -2  the unmeasured-gate clause: the plan's section 4 seam (prose upstream's checker does not enforce)
+      '<sha12> · manifest <sha12>`) into `runtime_smoke` (or `what_was_done`). A run that reads `U unmeasured`\nwith `'
+  starter-kit/SESSION_RUNNER.md @133 +1 -0  issue #75's plan-surface rule: upstream's runner lacks it and the plan's section 8 leaves it out
+      '- **The surface** — *where* that criterion will be demonstrated (device, staging, CI, simulator, local machine'
+  starter-kit/SESSION_RUNNER.md @136 +5 -1  issue #75's plan-surface rule: upstream's runner lacks it and the plan's section 8 leaves it out
+      "Without explicit completion criteria, executors don't know when to stop and tend to bundle adjacent phases. Wi"
+  starter-kit/SESSION_RUNNER.md @145 +1 -0  issue #75's plan-surface rule: upstream's runner lacks it and the plan's section 8 leaves it out
+      '- [ ] Each phase names the SURFACE its DONE criterion will be demonstrated on — and, where that surface is una'
+  starter-kit/SESSION_RUNNER.md @276 +1 -1  the unmeasured-gate clause: the plan's section 4 seam (prose upstream's checker does not enforce)
+      "Where `.quality-gates.json` declares gates, `quality_ratchet.py --run` is this step's mechanical half; cite it"
+  starter-kit/SESSION_RUNNER.md @282 +1 -1  a model-tag sentence: the fork's own, for a convention upstream's FRAMEWORK_APPARATUS already documents
+      '- **Record every action in the authoritative ledger.** Prepend a dated, source-tagged entry to `CHANGELOG.md` '
+
+the stages (files per commit, cap 5): docs1 5, docs2 5, docs3 5, docs4 2, tests 2
+the stages name exactly the 17 documents that differ
