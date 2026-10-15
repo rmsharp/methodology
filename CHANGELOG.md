@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the plan's status and D4, and BL-113's decision recorded; `pr2/candidate` moved `5afc962` to `28f99a7`
+
+The plan's status line names the scrub and D4 says why it is ten commits, not one; BL-113's row and detail carry his Phase 0 answer (option (a), a reduction commit on the candidate, not started). **The non-commit action:** the local ref `pr2/candidate` moved `5afc962` to `28f99a7` by `git fetch <clone> '+HEAD:refs/heads/pr2/candidate'` from the clone the gate ran in, read back equal (`rev-parse`, `5afc962` an ancestor, 30 commits over `upstream/main`, 10 over the base); the base is pinned as `refs/pr2/candidate-before-scrub`; the temporary refs were removed. Nothing was pushed or sent. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the rebuild log, the mutation run, the conflicts check and the record (`scrub-run-output.txt`, `scrub-mutate-output.txt`, `scrub-conflicts-output.txt`, `scrub-record.md`)
 
 A third build from the saved edits gives the same tree as the first two (`9c570fa5cf84`); eight refusals fire and both baselines pass; #94 conflicts in the same three files before and after, #92 is clean both times. The record states the answer first, what was measured, what I decided without asking, what is left and why, and what none of it shows. Model: Claude Sonnet 5.5.
