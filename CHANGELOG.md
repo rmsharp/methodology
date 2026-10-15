@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] S321 -- the fork push `8ee1b15..3322639` on his close-out go-ahead, read back; this recording commit is pushed with it under the standing grant
+
+His answer to the S321 close-out picker ticked the push and two backlog rows and chose D6 (a). **The push, first:** `git push origin "3322639...:refs/heads/main"`, a fast-forward of 7 commits (the claim, five evidence and plan commits, the close-out), read back with `git ls-remote origin refs/heads/main` (equal to local `HEAD`) and `git rev-list --left-right --count origin/main...HEAD` (`0 0`); the fork only, nothing sent to `KJ5HST/methodology`; `pr2/candidate` stays a local ref. This commit changes only `CHANGELOG.md` and is pushed under his standing grant for push records, so no further record is owed. D6's answer and the two backlog rows follow in their own commits and are not pushed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [BL-101] S321 close-out -- PR2's prose layer built on pr2/candidate (18cda0f): the HANDOFFS receipt complete, the claim closed by a new entry
 
 **Resolves the claim's `CHANGELOG: pending`** (a committed entry is never rewritten, so this entry closes it). The one deliverable is done: PR2's prose layer on the local ref `pr2/candidate`, `505541c` to **`18cda0f`** (five commits, 19 files, +95 / -61: the layout hunks only of the 17 differing framework documents, 54 of 62 hunks, 8 left out as not layout; Test 10's `--layout both` block), verified in a clean `--no-local` clone (ratchet 16/16, 0 unmeasured, results `7a4736a489ee`), probed against the migration tool (280 tests pass on the layer, 10 of 23 fail at the parent), mutated (28 of 35 reference hunks killed; the 19 layout-text hunks are read by no check). Recorded in `layer6c-record.md`; nothing is sent to `KJ5HST/methodology`.
