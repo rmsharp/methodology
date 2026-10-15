@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S327 -- PR4: the pull request's body, drafted and FROZEN for a fresh reviewer (`docs/planning/upstream-pr-body.md`)
+
+The text below the file's first rule is what would be posted: a title, three decisions up front (the layout at all; three dashboard choices that are policy; the order with #94), what in the series is not layout, a commit map, what a project sees, the evidence table, what it does not show, six known gaps, the order with #94 and #92. `pr-composition-evidence/pr4-body-check.py` reads it: no session number, backlog or plan code, finding label, decision code or coined name, no placeholder left, 24 cited commit hashes resolve, 24 cited paths exist. **Frozen at this commit; a reviewer with no context reads this text and the branch, read-only, and the revisions follow as their own commit.** Nothing is sent. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S327 -- PR4: why whole files (`pr4-mergefile.sh`) and how much of #94 the candidate already holds (`pr4-supersede.sh`), with outputs
 
 **`pr4-mergefile.sh`:** a three-way `git merge-file` of upstream's copy, the copy the directory work started from (`c8b9ddd`) and the fork's tip over every shipped file the work changed that upstream also has: **51 conflict regions in 8 files** (the dashboard's two copies 17 each, `.quality-gates.json` 5, the trimmer 6, `bin/tests.sh` 2, the dashboard's tests 2, `bin/check-handoff` 1, `starter-kit/BOOTSTRAP.md` 1), 29 files merge clean. **The plan's "52 in 16 files" (section 0.2) does not reproduce**: the 17 + 17 for the dashboard does, the file count and the total by one do not; the pull request text uses the 51 in 8, with the command. **`pr4-supersede.sh`:** of the 430 lines #94 adds to `starter-kit/methodology_trim.py` 11 are absent from the candidate as exact lines (the version string, comment wording, the tool's name in four messages), of the 1,136 it adds to the tests 9 (comments and docstrings), and in `.quality-gates.json` its floor 181 against the candidate's 218. Model: Claude Sonnet 5.5.
