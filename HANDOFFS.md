@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S322
+date: 2026-10-15
+status: pending
+active_task: **PR2, Part 2's last layer only: `bin/migrate-layout` and its suite** (`docs/planning/upstream-pr-composition-plan.md` §3 and §7 D5, D6 answered (a); `docs/planning/pr-composition-evidence/layer6c-record.md` §5 named it) on the local ref `pr2/candidate` (`18cda0f`), derived first and read-only, built in a scratch clone as checkpoint commits of at most 5 files each, un-pushed; nothing sent to `KJ5HST/methodology`. Not this session: the D6 unmeasured-gate commit, the scrub, the `CHANGELOG.md` trim, PR3 to PR5. (IN PROGRESS: claimed 2026-10-15)
+```
+
+```handoff
 session: S321
 date: 2026-10-14
 status: complete
