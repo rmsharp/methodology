@@ -1,0 +1,8 @@
+docs: drop internal references from the text the migration tool and the layout scanner print
+
+The text a program prints or a test asserts on, as opposed to a comment: the plan citations in
+bin/migrate-layout's refusal and usage messages, the plan code in the ledger entry it writes into a
+project (that entry is now free of a reference only this repository's maintainers can resolve), the
+plan code in bin/check-layout-literals' explanation of a scanned file, and the finding labels in the
+migration suite's assertion messages. No logic changes: the token stream of each Python file, with
+its string literals and comments masked, is equal before and after.

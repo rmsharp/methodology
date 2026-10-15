@@ -1,0 +1,985 @@
+candidate 5afc962 (tree 82f6af6eb37d4fd755b8f2c5f73d20e7023f3fd8) against f34769f: 46 changed files
+
+STRICT classes, added lines carrying one (a line with two counts once per class):
+  BL        199
+  S         102
+  LEARN      21
+  PLANDOC    31
+  PHASE     109
+  PLANREF   265
+  PRPLAN      0
+  ADOPTER    27
+  PLANFILE   35
+  FINDING    50
+  SECTION    61
+  lines with at least one strict token: 654 in 28 files
+  lines with only a soft word (not counted):  64 in 11 files
+
+per file (strict lines / soft-only lines / classes):
+  tools/test_methodology_dashboard.py               138   13   BL=27 ADOPTER=5 S=25 PHASE=16 PLANREF=68 PLANDOC=5 PLANFILE=6 LEARN=12 SECTION=11
+  starter-kit/methodology_dashboard.py              114   10   BL=35 PLANDOC=7 PLANFILE=8 PHASE=18 SECTION=7 PLANREF=46 ADOPTER=5 S=24 LEARN=3
+  tools/methodology_dashboard.py                    114   10   BL=35 PLANDOC=7 PLANFILE=8 PHASE=18 SECTION=7 PLANREF=46 ADOPTER=5 S=24 LEARN=3
+  tools/test_migrate_layout.py                       56    0   BL=13 PHASE=6 PLANDOC=1 PLANFILE=4 SECTION=4 PLANREF=19 FINDING=25 S=8 ADOPTER=11
+  bin/migrate-layout                                 34    0   BL=19 PHASE=3 PLANDOC=1 PLANFILE=2 SECTION=3 PLANREF=12 FINDING=17 S=2 ADOPTER=1
+  bin/tests.sh                                       24    0   BL=12 S=4 PHASE=8 LEARN=1 FINDING=6 PLANREF=3
+  tools/test_layout_resolver.py                      19    1   BL=1 PHASE=8 PLANDOC=1 PLANFILE=1 SECTION=6 S=3 PLANREF=5
+  .githooks/pre-commit                               18    0   BL=9 PHASE=3 PLANREF=10 S=2 FINDING=2
+  starter-kit/methodology_trim.py                    16   10   BL=6 PHASE=3 PLANREF=11 SECTION=2
+  tools/test_methodology_trim.py                     15   10   LEARN=2 BL=5 PLANREF=5 PHASE=3 S=2 SECTION=1
+  tools/test_quality_ratchet.py                      14    2   S=5 BL=7 PHASE=3 PLANREF=5 SECTION=1
+  tools/test_sync_layouts.py                         14    0   BL=1 PHASE=3 PLANDOC=1 PLANFILE=1 SECTION=3 PLANREF=10
+  tools/fixtures/trim-verify-template-1.7.0.sh       12    4   BL=10 PLANDOC=1 PLANREF=1
+  starter-kit/quality_ratchet.py                     10    2   BL=5 PLANREF=4 SECTION=1
+  bin/check-layout-literals                           9    0   BL=1 PLANDOC=3 PHASE=3 PLANFILE=1 SECTION=1 PLANREF=4 S=1
+  tools/layout_fixtures.py                            8    0   BL=1 PHASE=3 PLANDOC=1 PLANFILE=1 SECTION=5 PLANREF=1
+  bin/sync                                            6    0   BL=2 PLANDOC=1 PHASE=2 PLANFILE=1 PLANREF=3 SECTION=1
+  tools/layout_resolver.py                            6    0   BL=1 PHASE=1 PLANDOC=1 PLANFILE=1 SECTION=1 S=1 PLANREF=2
+  bin/check-links                                     4    1   BL=1 PHASE=2 PLANREF=1 SECTION=1
+  bin/status                                          4    0   BL=1 PHASE=1 PLANDOC=1 PLANFILE=1 PLANREF=1 SECTION=1
+  starter-kit/context_budget.py                       4    0   BL=1 PHASE=1 PLANREF=2 SECTION=1
+  bin/_manifest.py                                    3    0   BL=2 PLANREF=1 SECTION=1
+  tools/test_checker_layouts.py                       3    0   BL=1 PHASE=1 PLANREF=2 SECTION=1
+  tools/test_context_budget.py                        3    0   BL=1 PHASE=2 PLANREF=1 S=1
+  bin/check-handoff                                   2    0   PLANREF=1 SECTION=1
+  bin/check-ledger                                    2    0   PLANREF=1 SECTION=1
+  .quality-gates.json                                 1    0   BL=1 PHASE=1
+  bin/_manifest_reader.py                             1    0   BL=1
+  ITERATIVE_METHODOLOGY.md                            0    1   
+
+STRICT lines by where the token sits (comment, tcomment (a trailing comment) and docstring are inert; string and code are behaviour-bearing):
+  comment     309
+  tcomment     22
+  docstring   270
+  string       22
+  code         31
+
+per file, behaviour-bearing strict lines (string + code):
+  tools/test_methodology_dashboard.py              string=13 code=2 (of 138)
+  tools/test_migrate_layout.py                     string=2 code=8 (of 56)
+  bin/tests.sh                                     string=0 code=8 (of 24)
+  .githooks/pre-commit                             string=0 code=5 (of 18)
+  bin/migrate-layout                               string=1 code=2 (of 34)
+  starter-kit/methodology_trim.py                  string=3 code=0 (of 16)
+  tools/test_methodology_trim.py                   string=0 code=3 (of 15)
+  bin/check-layout-literals                        string=1 code=1 (of 9)
+  .quality-gates.json                              string=0 code=1 (of 1)
+  starter-kit/methodology_dashboard.py             string=1 code=0 (of 114)
+  tools/fixtures/trim-verify-template-1.7.0.sh     string=0 code=1 (of 12)
+  tools/methodology_dashboard.py                   string=1 code=0 (of 114)
+
+142 distinct repository paths cited on added lines; 88 are not in the candidate's tree:
+  .githooks/h                                                            <- tools/test_layout_resolver.py
+  .githooks/pre-push                                                     <- tools/test_migrate_layout.py
+  bin/__pycache__                                                        <- tools/layout_fixtures.py, tools/test_migrate_layout.py, tools/test_sync_layouts.py
+  bin/check                                                              <- bin/check-layout-literals
+  bin/notes                                                              <- tools/test_migrate_layout.py
+  bin/refresh                                                            <- tools/test_migrate_layout.py
+  bin/tool                                                               <- tools/test_layout_resolver.py
+  bin/x                                                                  <- tools/test_layout_resolver.py
+  docs/.gitignore                                                        <- tools/test_migrate_layout.py
+  docs/BACKLOG.md                                                        <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/CHANGELOG.md                                                      <- tools/test_methodology_dashboard.py
+  docs/FORK_LEARNINGS.md                                                 <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/PROJECT_LEARNINGS.md                                              <- tools/test_migrate_layout.py
+  docs/RELEASE_HISTORY.md                                                <- tools/test_methodology_trim.py
+  docs/SESSION_RUNNER.md                                                 <- tools/test_migrate_layout.py
+  docs/a                                                                 <- tools/test_migrate_layout.py
+  docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh <- tools/test_migrate_layout.py
+  docs/architecture-history/SESSION_NOTES-pointer-collapse.verify.sh     <- tools/test_migrate_layout.py
+  docs/archive/../../etc/passwd                                          <- tools/test_methodology_trim.py
+  docs/archive/CHANGELOG-archive.md                                      <- tools/test_migrate_layout.py
+  docs/archive/CHANGELOG-through-2025-11-01.md                           <- tools/test_checker_layouts.py
+  docs/archive/CHANGELOG-through-2025-12-01.md                           <- tools/test_checker_layouts.py
+  docs/archive/CHANGELOG-through-2026-01-01.md                           <- tools/fixtures/trim-verify-template-1.7.0.sh, tools/test_methodology_trim.py, tools/test_m
+  docs/archive/CHANGELOG-through-2026-01-01.md.verify.sh                 <- tools/test_methodology_trim.py
+  docs/archive/CHANGELOG-through-2026-08-01.md                           <- tools/test_migrate_layout.py
+  docs/archive/HANDOFFS-through-1999-01-01.md                            <- tools/test_methodology_trim.py
+  docs/archive/HANDOFFS-through-2026-02-02                               <- tools/test_methodology_trim.py
+  docs/archive/HANDOFFS-through-2026-02-02.md                            <- tools/test_methodology_trim.py
+  docs/archive/HANDOFFS-through-2026-08-02.md                            <- tools/test_migrate_layout.py
+  docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh                  <- tools/test_migrate_layout.py
+  docs/archive/SESSION_NOTES-through-2026-08-01.md                       <- tools/test_migrate_layout.py
+  docs/archive/SESSION_NOTES-through-2026-08-01.md.verify.sh             <- tools/test_migrate_layout.py
+  docs/archive/notes.md                                                  <- tools/test_migrate_layout.py
+  docs/archive/project-notes.md                                          <- tools/test_migrate_layout.py
+  docs/archive/s.sh                                                      <- tools/test_methodology_dashboard.py
+  docs/archive/s.verify.sh                                               <- tools/test_methodology_dashboard.py
+  docs/archive/sub/CHANGELOG-through-2026-08-01.md                       <- tools/test_migrate_layout.py
+  docs/audits/2026-08-15-bl36-archive-losslessness.md                    <- tools/fixtures/trim-verify-template-1.7.0.sh
+  docs/b.md                                                              <- tools/test_methodology_trim.py
+  docs/g.md                                                              <- tools/test_migrate_layout.py
+  docs/guide.md                                                          <- tools/test_migrate_layout.py
+  docs/guide.qmd                                                         <- tools/test_migrate_layout.py
+  docs/index.md                                                          <- tools/test_methodology_dashboard.py
+  docs/many.md                                                           <- tools/test_migrate_layout.py
+  docs/methodology                                                       <- HOW_TO_USE.md, bin/check-layout-literals, bin/migrate-layout, bin/tests.sh, starter-kit/BO
+  docs/methodology/CHANGELOG.md                                          <- tools/test_methodology_trim.py
+  docs/methodology/FRAMEWORK_APPARATUS.md                                <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_sync_layo
+  docs/methodology/HOW_TO_USE.md                                         <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_layout_re
+  docs/methodology/ITERATIVE_METHODOLOGY.md                              <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_migrate_l
+  docs/methodology/PROJECT_CONVENTIONS.md                                <- tools/test_migrate_layout.py
+  docs/methodology/ROADMAP.md                                            <- tools/test_sync_layouts.py
+  docs/methodology/sessions                                              <- starter-kit/BOOTSTRAP.md
+  docs/methodology/workstreams                                           <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md                <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/AUDIT_WORKSTREAM.md                       <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/DESIGN_WORKSTREAM.md                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md                 <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_migrate_l
+  docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md                    <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/planning/BACKLOG.md                                               <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/planning/dashboard-read-cap-class-adopter-drift-plan.md           <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/planning/framework-context-cost-plan.md                           <- tools/test_methodology_dashboard.py
+  docs/planning/issue67-fork-side-fix-plan.md                            <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/planning/methodology-subdirectory-plan.md                         <- bin/check-layout-literals, bin/migrate-layout, bin/status, bin/sync, starter-kit/methodolo
+  docs/planning/read-cap-phase-c-plan.md                                 <- tools/test_methodology_dashboard.py
+  docs/planning/read-cap-premise-correction-plan.md                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/planning/upstream-resync-2026-10-plan.md                          <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/x.md                                                              <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  docs/x/CHANGELOG.md                                                    <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/x/HANDOFFS.md                                                     <- tools/test_methodology_trim.py
+  docs/x/SESSION_NOTES-pointer-collapse.verify.sh                        <- tools/test_migrate_layout.py
+  docs/x/a.md                                                            <- tools/test_migrate_layout.py
+  starter-kit/GHOST.md                                                   <- tools/test_sync_layouts.py
+  starter-kit/NAME                                                       <- tools/test_layout_resolver.py
+  starter-kit/X                                                          <- bin/migrate-layout
+  starter-kit/a.py                                                       <- tools/test_layout_resolver.py
+  starter-kit/bad.py                                                     <- tools/test_layout_resolver.py
+  starter-kit/notes.md                                                   <- tools/test_layout_resolver.py
+  starter-kit/t.py                                                       <- tools/test_layout_resolver.py
+  tools/__pycache__                                                      <- tools/test_layout_resolver.py, tools/test_migrate_layout.py, tools/test_sync_layouts.py
+  tools/layout_fixtures.GENERATED                                        <- bin/migrate-layout
+  tools/methodology/quality_ratchet.py                                   <- tools/test_quality_ratchet.py
+  tools/methodology_trim.py                                              <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  tools/test_x.py                                                        <- tools/test_layout_resolver.py
+  workstreams/A.md                                                       <- tools/test_methodology_trim.py
+
+103 bare file names on added lines are not the basename of any file in the candidate's tree (fixture names are expected; read for evidence-script names):
+  02d.py                                         <- tools/test_migrate_layout.py
+  20b.md                                         <- tools/test_migrate_layout.py
+  20y.md                                         <- tools/test_methodology_trim.py
+  A.md                                           <- tools/test_context_budget.py, tools/test_methodology_dashboard.py
+  ALPHA.md                                       <- bin/migrate-layout, tools/test_migrate_layout.py
+  B.md                                           <- tools/test_context_budget.py, tools/test_methodology_dashboard.py
+  BACKUP-CHANGELOG.md                            <- tools/test_layout_resolver.py
+  CHANGELOG-archive.md                           <- tools/test_migrate_layout.py
+  CHANGELOG-through-.txt                         <- tools/test_migrate_layout.py
+  CHANGELOG-through-2000-01-01.md                <- tools/layout_fixtures.py
+  CHANGELOG-through-2025-12-31.md                <- tools/test_methodology_dashboard.py
+  CHANGELOG-through-2026-08-01.md                <- tools/test_migrate_layout.py
+  CHANGELOG-through-2026-08-01.md.verify.sh      <- tools/test_migrate_layout.py
+  CHANGELOG-through-2026-09-28.md.verify.sh      <- tools/test_migrate_layout.py
+  CHANGELOG-through-a.md                         <- tools/test_methodology_dashboard.py
+  CHANGELOG-through-x.md                         <- tools/test_migrate_layout.py
+  CHANGELOG-through-z.md                         <- tools/test_methodology_dashboard.py
+  CODE_OF_CONDUCT.md                             <- bin/migrate-layout
+  CONTEXT.md                                     <- ITERATIVE_METHODOLOGY.md, starter-kit/BOOTSTRAP.md, starter-kit/RECOMMENDED_SKIL
+  CONTRIBUTING.md                                <- bin/migrate-layout
+  FOO.txt                                        <- tools/test_migrate_layout.py
+  HANDOFFS-through-2026-08-02-3.md.verify.sh     <- tools/test_migrate_layout.py
+  HANDOFFS-through-2026-08-02.md                 <- tools/test_migrate_layout.py
+  HANDOFFS-through-2026-08-02.md.verify.sh       <- tools/test_migrate_layout.py
+  ISSUE_TEMPLATE.md                              <- bin/migrate-layout
+  MY_CHANGELOG.md                                <- tools/test_migrate_layout.py
+  MY_SESSION_RUNNER.md                           <- tools/test_migrate_layout.py
+  NOTES-CHANGELOG.md                             <- tools/test_migrate_layout.py
+  PARENT_WORKSTREAM.md                           <- bin/check-links, tools/test_sync_layouts.py
+  PROJECT_CONVENTIONS.md                         <- tools/test_migrate_layout.py
+  PROJECT_LEARNINGS.md                           <- bin/migrate-layout, starter-kit/BOOTSTRAP.md, starter-kit/CLAUDE_TEMPLATE.md, to
+  PULL_REQUEST_TEMPLATE.md                       <- bin/migrate-layout
+  PWNED4.md                                      <- tools/test_methodology_trim.py
+  ROADMAP-through-x.md                           <- tools/test_migrate_layout.py
+  SESSION_NOTES-through-x.md                     <- tools/test_migrate_layout.py
+  _CAMPAIGN.md                                   <- starter-kit/SESSION_RUNNER.md
+  _TEMPLATE.md                                   <- starter-kit/BOOTSTRAP.md
+  a.md                                           <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  a.txt                                          <- tools/test_migrate_layout.py
+  also-gone.md                                   <- tools/test_migrate_layout.py
+  app.py                                         <- tools/test_methodology_dashboard.py
+  args.json                                      <- bin/migrate-layout
+  b.md                                           <- tools/test_migrate_layout.py
+  b.txt                                          <- tools/test_migrate_layout.py
+  c.md                                           <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  chap07.md                                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test
+  chapter07.md                                   <- tools/test_methodology_dashboard.py
+  d.md                                           <- starter-kit/methodology_trim.py, tools/test_migrate_layout.py
+  dashboard_history.jsonl                        <- bin/migrate-layout, starter-kit/methodology_dashboard.py, tools/layout_fixtures.
+  does-not-exist.md                              <- tools/test_methodology_dashboard.py
+  f.md                                           <- tools/test_migrate_layout.py
+  f24-differential.py                            <- bin/migrate-layout
+  f24-oracle.py                                  <- bin/migrate-layout, tools/test_migrate_layout.py
+  findings-register.md                           <- tools/test_migrate_layout.py
+  g.md                                           <- tools/test_migrate_layout.py
+  gone.md                                        <- tools/test_migrate_layout.py
+  guide.md                                       <- tools/test_migrate_layout.py
+  keep.txt                                       <- tools/test_layout_resolver.py, tools/test_migrate_layout.py
+  ledger-trimmer-design.md                       <- tools/test_methodology_dashboard.py
+  many.md                                        <- tools/test_migrate_layout.py
+  marker.txt                                     <- tools/test_quality_ratchet.py
+  moved.verify.sh                                <- tools/test_methodology_trim.py
+  my-SESSION_RUNNER.md                           <- tools/test_migrate_layout.py
+  n.quality-gates-results.json                   <- tools/test_migrate_layout.py
+  nCHANGELOG.md                                  <- tools/test_migrate_layout.py
+  nREADME.md                                     <- tools/test_migrate_layout.py
+  nSESSION_RUNNER.md                             <- tools/test_migrate_layout.py
+  new.txt                                        <- tools/test_migrate_layout.py
+  note.md                                        <- tools/test_migrate_layout.py
+  notes.md                                       <- tools/test_migrate_layout.py
+  notes.txt                                      <- tools/test_layout_resolver.py, tools/test_migrate_layout.py
+  npackage.json                                  <- tools/test_migrate_layout.py
+  npm-shrinkwrap.json                            <- bin/migrate-layout
+  old.HANDOFFS.md                                <- tools/test_layout_resolver.py
+  other.md                                       <- tools/test_migrate_layout.py
+  other.txt                                      <- tools/test_context_budget.py
+  package-lock.json                              <- bin/migrate-layout
+  package.json                                   <- bin/migrate-layout, tools/test_migrate_layout.py
+  project-notes.md                               <- tools/test_migrate_layout.py
+  r.json                                         <- tools/test_quality_ratchet.py
+  rSESSION_RUNNER.md                             <- tools/test_migrate_layout.py
+  read-cap-phase-c-plan.md                       <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  run.sh                                         <- tools/test_migrate_layout.py
+  runs.txt                                       <- tools/test_quality_ratchet.py
+  s-through-2026-01-01.md                        <- tools/test_methodology_trim.py
+  s.md                                           <- starter-kit/methodology_trim.py, tools/test_migrate_layout.py
+  s.verify.sh                                    <- tools/test_methodology_dashboard.py, tools/test_methodology_trim.py
+  scratch.txt                                    <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  session_runner.md                              <- tools/test_migrate_layout.py
+  settings.json                                  <- tools/test_migrate_layout.py
+  stray.txt                                      <- tools/test_migrate_layout.py
+  tracked.txt                                    <- .githooks/pre-commit
+  trim_fixture.py                                <- tools/test_methodology_dashboard.py
+  u.md                                           <- tools/test_migrate_layout.py
+  unrelated.txt                                  <- tools/test_quality_ratchet.py
+  verify-all.sh                                  <- tools/test_migrate_layout.py
+  verify.sh                                      <- .githooks/pre-commit
+  w.md                                           <- tools/test_migrate_layout.py
+  x.md                                           <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  x.md.verify.sh                                 <- tools/test_methodology_trim.py
+  x00ADMAP.md                                    <- tools/test_sync_layouts.py
+  xSESSION_RUNNER.md                             <- tools/test_migrate_layout.py
+  z.md                                           <- tools/test_methodology_dashboard.py
+
+=== STRICT lines in full (file:line: text) ===
+.githooks/pre-commit:25: <comment> [BL] # (methodology/CHANGELOG.md) for the BL-101 probes. The hook under test reads it from the index.
+.githooks/pre-commit:86: <comment> [BL] # BL-76. Git LEAVES REBASE_HEAD BEHIND after a rebase that stopped (a conflict,
+.githooks/pre-commit:92: <code> [BL] expect "stale REBASE_HEAD -> STILL REFUSED (BL-76)"         1
+.githooks/pre-commit:173: <comment> [BL,PHASE,PLANREF] # BL-101 P2 (plan 4.3, C5). The ledger may live under methodology/, and the gate must follow it:
+.githooks/pre-commit:174: <comment> [S] # measured at S273, after the move a later commit that left the ledger out PASSED, because the
+.githooks/pre-commit:175: <comment> [FINDING] # hook found no tracked CHANGELOG.md and took its "no ledger, never block" branch. X2 is the first
+.githooks/pre-commit:177: <code> [FINDING] build newledger; expect "new layout: ledger not co-staged -> REFUSED (X2, the gate follows the ledger)" 1
+.githooks/pre-commit:217: <comment> [BL,PHASE,PLANREF] # BL-101 P3 (decided 2026-10-06, plan 7.2a): a ledger in BOTH places is a tie, and the framework anchor
+.githooks/pre-commit:273: <comment> [BL] # REBASE_HEAD IS DELIBERATELY ABSENT FROM THIS LIST (BL-76). Git leaves it behind
+.githooks/pre-commit:300: <comment> [BL,PHASE,PLANREF] # methodology/ in a project; the manifest at the root or under methodology/ (BL-101 P2, plan C4).
+.githooks/pre-commit:317: <comment> [BL,PLANREF] # The ledger lives at the root (legacy) or under methodology/ (new): BL-101, plan 4.3. The Python
+.githooks/pre-commit:321: <comment> [S,PLANREF] # Measured at S273 (plan C5): with the gate naming only the root file, a ledger moved under
+.githooks/pre-commit:326: <code> [PLANREF] legacy_runner=SESSION_RUNNER.md           # layout: ok -- the framework anchor, root half: it decides a tie (plan 7.2a)
+.githooks/pre-commit:329: <code> [PLANREF] new_archive=methodology/archive           # layout: ok -- where it will write it once the archive moves (D5)
+.githooks/pre-commit:412: <comment> [PLANREF] # 2026-10-06, plan 7.2a): a project whose runner is tracked under methodology/, and not at the
+.githooks/pre-commit:415: <comment> [PLANREF] # never guess (plan 4.3). Refused loudly, and bypassable like every gate here.
+.githooks/pre-commit:423: <code> [BL] (the layout table in the BL-101 plan: stop, name both). Finish the move (the
+.githooks/pre-commit:438: <comment> [PLANREF] # No ledger tracked in either place: self-provisioning is the session runner's job (decision D3,
+.quality-gates.json:66: <code> [BL,PHASE] "why": "BL-101 P4: the canonical checkers (check-ledger and check-handoff) run as commands in both layouts, in a tie the runner decides and in a half-migrated tree. Count never drops; green/red is carried by tests-sh-passed. 11 is measured (Ran 11 tests, OK)."
+bin/_manifest.py:30: <docstring> [BL] level down in ``methodology/`` (the new layout, BL-101). NEW_LAYOUT is the second table: for each ``src`` the
+bin/_manifest.py:32: <docstring> [PLANREF,SECTION] (plan section 4.1). It is a table of literals, not a function, for the reason below.
+bin/_manifest.py:92: <comment> [BL] # The new layout (BL-101): where each file above lands in a project that keeps its methodology files under
+bin/_manifest_reader.py:20: <docstring> [BL] The second table, NEW_LAYOUT (BL-101), is read the same way by read_new_layout: a dict literal from each
+bin/check-handoff:62: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+bin/check-handoff:63: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+bin/check-layout-literals:4: <docstring> [BL,PLANDOC,PHASE,PLANFILE,SECTION] BL-101 phase P1 (docs/planning/methodology-subdirectory-plan.md section 7.1). The move to a
+bin/check-layout-literals:6: <docstring> [PLANREF] path: a green suite does not see a literal, and the plan's C5 measured the worst case, the ledger hook
+bin/check-layout-literals:7: <docstring> [PHASE] passing every commit after the ledger moved. This tool finds them. It was RED on purpose from P1 and its
+bin/check-layout-literals:8: <docstring> [S,PHASE] list was the to-do list of phases P2-P6; P6 (S279) took it to zero and declared it a quality gate,
+bin/check-layout-literals:17: <docstring> [PLANREF] where a trim writes its shards (the plan moves it in tier 2, decision D5);
+bin/check-layout-literals:19: <docstring> [PLANDOC] A name behind a canonical-source directory (starter-kit/, tools/, workstreams/, docs/planning/) is that
+bin/check-layout-literals:31: <docstring> [PLANREF] table itself) and bin/tests.sh (the suite encodes the layout, plan C13), and tools/ tests.
+bin/check-layout-literals:56: <code> [PLANDOC] CANONICAL_PREFIXES = ("starter-kit/", "tools/", "workstreams/", "docs/planning/", "docs/tutorials/", "docs/audits/")
+bin/check-layout-literals:59: <string> [PLANREF] "bin/tests.sh": "the suite encodes the layout and is parameterised over both (plan C13)",
+bin/check-ledger:33: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+bin/check-ledger:34: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+bin/check-links:22: <docstring> [BL,PHASE] level down in methodology/ (the new layout, its NEW_LAYOUT table): BL-101 phase P6. `--layout` chooses which
+bin/check-links:24: <docstring> [PHASE] Since phase P9 the documents resolve in both: a reference that cannot be one relative link in both layouts is a
+bin/check-links:42: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+bin/check-links:43: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+bin/migrate-layout:2: <docstring> [BL,PHASE] """Move a project's methodology files under methodology/ (BL-101, phase P7).
+bin/migrate-layout:5: <docstring> [PLANDOC,PHASE,PLANFILE,SECTION] Contract: docs/planning/methodology-subdirectory-plan.md section 4.7 and section 7.3 row P7.
+bin/migrate-layout:15: <docstring> [PLANREF] file current: sync first (plan 5A.2), because a tool that cannot find the ledger fails open (plan C5). Every
+bin/migrate-layout:18: <docstring> [PLANREF] Tiers (plan 4.6): tier 1 moves the framework's own files (the manifest's TRACKED rows); tier 2 the project's state
+bin/migrate-layout:20: <docstring> [PLANREF] project's own that joins the move with no manifest entry, PROJECT_LEARNINGS.md, plan D10). The default, all, is both.
+bin/migrate-layout:24: <docstring> [BL,FINDING] one ledger entry (BL-105). Every link in a live document to a file the move takes is listed, none rewritten (F30).
+bin/migrate-layout:47: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+bin/migrate-layout:48: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+bin/migrate-layout:75: <comment> [PLANREF,SECTION] # What the tools write beside the methodology files (plan section 2.1, "Generated beside them"). They are not in
+bin/migrate-layout:86: <comment> [BL,PLANREF] # BL-105 (plan D10): a file of the project's own that joins the move with no manifest entry. It is the project's state, so
+bin/migrate-layout:89: <comment> [BL,FINDING] # The two configs whose path values the tool rewrites. BL-105 F29: they are read where the layout puts them.
+bin/migrate-layout:287: <docstring> [BL] """BL-105: a run whose every move is a companion is a top-up of a tree that is already migrated: the framework files
+bin/migrate-layout:388: <docstring> [BL,FINDING] BL-105 F29: where the layout puts it, not at the root only. A config this run moves is read at its place before the
+bin/migrate-layout:411: <docstring> [FINDING] closes it. So the example heading in a ledger header's 'How to add an entry' fence is not an entry (F21). A fence
+bin/migrate-layout:507: <comment> [BL,PLANREF,FINDING] # BL-101 F5 (plan 7.6, findings register): a project's tests, proofs, scripts and configs read a moved path as a machine
+bin/migrate-layout:516: <comment> [BL,FINDING] # BL-101 F15: a hook line that says why it names a moved tool and still works (`# layout: ok -- <reason>`: the layout-aware
+bin/migrate-layout:529: <docstring> [BL,FINDING] """BL-101 F11: a dot-file whose name ends in `ignore` is a list of patterns a program reads (`.vscodeignore`, `.npmignore`,
+bin/migrate-layout:569: <docstring> [BL,PLANREF,FINDING] """BL-101 F10 (plan 7.6, findings register): which moved files a `.Rbuildignore` stops covering. The scan reads whole names,
+bin/migrate-layout:608: <comment> [BL,PLANREF,FINDING] # BL-101 F24 (plan 7.6, findings register): a root `.vscodeignore` is read as vsce reads it. vsce 3.9.2 (`out/package.js`,
+bin/migrate-layout:610: <comment> [S] # each line a minimatch pattern with `{ dot: true }` and no `matchBase`. Measured against minimatch 10.2.5 in S299 (the
+bin/migrate-layout:611: <comment> [PLANFILE] # adopter's own checkout; `f24-oracle.py`, `f24-differential.py`).
+bin/migrate-layout:763: <docstring> [BL,FINDING] """BL-101 F24: which moved files a `.vscodeignore` stops covering, read as vsce reads it (`vsce_ignore_list`). A moved file
+bin/migrate-layout:788: <docstring> [BL,FINDING] (BL-101 F15: the layout-aware ledger hook names the tool that way and tries three places for it) is listed, not marked.
+bin/migrate-layout:790: <docstring> [BL,FINDING] BL-101 F5: a file in a machine-read category (tests, proofs, scripts, config, and the CI and hook files) is also listed
+bin/migrate-layout:795: <docstring> [BL,FINDING] BL-101 F10: a root `.Rbuildignore` is also read for what its regular expressions cover (`pattern_exposure`), since a pattern
+bin/migrate-layout:796: <docstring> [BL,FINDING] names no file the scan could find, and its row gains `patterns`. BL-101 F24: so is a root `.vscodeignore`, for what vsce's
+bin/migrate-layout:882: <comment> [BL,FINDING] # BL-101 F10, F24: the root .Rbuildignore (as R reads it) and the root .vscodeignore (as vsce reads it) are read for what
+bin/migrate-layout:908: <comment> [BL,S,FINDING] # BL-101 F30 (his call, S303: list only): a link from a project's live document to a file the move takes breaks, and the
+bin/migrate-layout:986: <docstring> [ADOPTER] shard by a working-tree path and exits 2 once the shard moves (vscode_quarto_ext), while the trimmer's current proofs
+bin/migrate-layout:1062: <code> [PLANREF] refusals.append(refusal("not-current", "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): "
+bin/migrate-layout:1069: <comment> [FINDING] # F32: the shard proofs run only on a run that can go on, so a REFUSED run's lists are the plan before them. `ran`
+bin/migrate-layout:1124: <string> [BL,PHASE] "Moved by bin/migrate-layout of the KJ5HST/methodology checkout at %s%s (BL-101 P7)." % (sha, modified),
+bin/migrate-layout:1202: <docstring> [PLANREF] """The read-only checks of plan 4.7.4, as data: bin/status, the two ledger checkers, check-links, every shard proof
+bin/migrate-layout:1354: <code> [PLANREF] out.append("    at tier 1 and then at tier all (plan 7.4).")
+bin/status:17: <docstring> [BL,PHASE] A project keeps its methodology files at its root (legacy) or under methodology/ (new): BL-101 phase P6,
+bin/status:18: <docstring> [PLANDOC,PLANFILE] docs/planning/methodology-subdirectory-plan.md section 5A. Each project's layout is read, never guessed, and
+bin/status:37: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+bin/status:38: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+bin/sync:6: <docstring> [BL,PLANDOC,PHASE,PLANFILE] table); BL-101 phase P6, docs/planning/methodology-subdirectory-plan.md section 5A. `--layout auto` (the
+bin/sync:23: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+bin/sync:24: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+bin/sync:55: <comment> [BL,PHASE] # The tool that moves a project from the legacy layout to the new one (BL-101 phase P7): a dry run unless --apply.
+bin/sync:336: <docstring> [PLANREF] one created beside it is the failure the plan's C1 names. It is reported, not created."""
+bin/sync:358: <docstring> [PLANREF] second runner beside the first (C1), and a tree that holds the runner in both places has no layout."""
+bin/tests.sh:19: <comment> [BL] # prevent (BL-40). A skip does not fail the suite -- it states what was not exercised.
+bin/tests.sh:37: <comment> [S] # the trimmer would have shipped with zero coverage (S39'). Proven by mutation: narrowing
+bin/tests.sh:233: <comment> [PHASE] # A table row STARTS with the project's name; the `layout: <name>  <kind>` line P6 added before the table names it too,
+bin/tests.sh:301: <comment> [BL,PHASE] # The canonical checkers in both layouts (BL-101 P4): check-ledger and check-handoff,
+bin/tests.sh:304: <comment> [PHASE] # it does not run them over this repository (the real-tree check is the evidence script of the P4 session).
+bin/tests.sh:311: <comment> [BL,PHASE] # The sync layer in both layouts (BL-101 P6): the manifest's second table and its reader, bin/sync, bin/status and
+bin/tests.sh:987: <comment> [BL,PHASE] # The chain names the tool through variables since BL-101 P2 (it is found under starter-kit/, under
+bin/tests.sh:1505: <comment> [LEARN] # An assertion that cannot see its own artifact fails for the wrong reason (fork Learning #16).
+bin/tests.sh:1513: <comment> [BL] # A here-string, not a pipe -- BL-43: the producer is a row of the real BOOTSTRAP.md.
+bin/tests.sh:1523: <comment> [BL] # A here-string, not a pipe -- BL-43, and this arm is the SILENT direction: a pipeline
+bin/tests.sh:1532: <code> [BL] echo "== Test 36: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) =="
+bin/tests.sh:1536: <comment> [BL] # 10 of 3,000 runs, `grep -q PAT <<< "$(cat f)"` 0 of 3,000 (BL-97). Which way the flake points is
+bin/tests.sh:1546: <comment> [S] # S13`), `pipefail` makes the pipeline's status the producer's, the `if` reads false, and the
+bin/tests.sh:1630: <code> [BL] || fail "BL-97 site(s) present: $SITES45"
+bin/tests.sh:1644: <code> [S] if "$B" --file "$F" 2>&1 | grep -q 'S13'; then                      # HIDDEN
+bin/tests.sh:1697: <code> [BL,PHASE,FINDING] echo "== Test 37: the ledger hook and the ratchet chain follow the files under methodology/ (BL-101 P2, X2, RED-first) =="
+bin/tests.sh:1698: <comment> [PLANREF] # Plan C5 measured it: once the ledger moved under methodology/, a LATER commit that left the ledger
+bin/tests.sh:1702: <comment> [FINDING] # X2 is kept here as a permanent test, through the real hook and real git, in both layouts, with the
+bin/tests.sh:1729: <code> [FINDING] && pass "$L37 layout: a later commit that leaves the ledger out is refused, naming ${PRE37}CHANGELOG.md (X2)" \
+bin/tests.sh:1730: <code> [FINDING] || fail "$L37 layout: X2 -- exit $RC37, wanted 1 naming ${PRE37}CHANGELOG.md; got: $OUT37"
+bin/tests.sh:1775: <comment> [BL,PHASE,PLANREF] # A tie the framework anchor decides (BL-101 P3, decided 2026-10-06, plan 7.2a): the project's own
+bin/tests.sh:1796: <code> [FINDING] || fail "tie decided by the anchor: X2 -- exit $RC37, wanted 1 naming methodology/CHANGELOG.md; got: $OUT37"
+bin/tests.sh:1805: <comment> [BL,S,PHASE,PLANREF] # A manifest tie (BL-101 P4, decided 2026-10-07 at the S276 picker, plan 7.2b): the tie rule is not
+bin/tests.sh:1856: <code> [FINDING] t37_mutant "the new-layout ledger branch disabled" 's.replace("if indexed \"$new_ledger\"; then", "if false; then", 1)' "new layout: ledger not co-staged -> REFUSED (X2"
+starter-kit/context_budget.py:42: <tcomment> [BL,PHASE] VERSION = "1.4.0"   # 1.4.0: BL-101 P4 -- the config and its history file live at the root or under methodology/
+starter-kit/context_budget.py:50: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+starter-kit/context_budget.py:51: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+starter-kit/context_budget.py:355: <docstring> [PLANREF] root one is the project's own (plan 7.2b)."""
+starter-kit/methodology_dashboard.py:29: <docstring> [BL] A project that keeps its methodology files under methodology/ (BL-101, the new layout) keeps this
+starter-kit/methodology_dashboard.py:118: <comment> [BL,PLANDOC,PLANFILE] # 2.19.0: BL-88 (docs/planning/dashboard-read-cap-class-adopter-drift-plan.md). The Class B read-cap
+starter-kit/methodology_dashboard.py:119: <comment> [PHASE] # row stops asserting a trimmer config it never read (P1, cb9b0ed, which shipped without a bump) and
+starter-kit/methodology_dashboard.py:121: <comment> [PHASE] # A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
+starter-kit/methodology_dashboard.py:124: <comment> [BL,PLANDOC,PHASE,PLANFILE,SECTION] # 2.22.0: BL-101 P5 (docs/planning/methodology-subdirectory-plan.md, section 7.2). The dashboard reads a
+starter-kit/methodology_dashboard.py:130: <comment> [BL] # 2.21.0: BL-99. The manifest-history walk reads the FIRST-PARENT line (`_gate_manifest_history`):
+starter-kit/methodology_dashboard.py:134: <comment> [BL,PLANDOC,PLANREF,PLANFILE] # 2.20.0: BL-95 R1, the 2026-10 resync (docs/planning/upstream-resync-2026-10-plan.md, D5). The
+starter-kit/methodology_dashboard.py:143: <comment> [PLANREF] # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
+starter-kit/methodology_dashboard.py:161: <comment> [BL,ADOPTER] # skipped for "other"). BL-34 — found scanning `nprcgenekeepr` (28 `.rmd` + 12 `.qmd`, 11 of the 12
+starter-kit/methodology_dashboard.py:191: <comment> [BL] # BL-34 — `.r` was already in SOURCE_EXTS (so R LOC always counted toward Source), but had no
+starter-kit/methodology_dashboard.py:192: <comment> [ADOPTER] # LANG_MAP entry, so it never got its own "Code by Language" row. Found against `nprcgenekeepr`
+starter-kit/methodology_dashboard.py:307: <comment> [BL] # A SECOND large-file question, deliberately NOT a widening of the BL-5 code-smell check in
+starter-kit/methodology_dashboard.py:308: <comment> [BL] # assess_risks(). BL-5 asks "is this MODULE unwieldy?" — a judgment about structure, false for a
+starter-kit/methodology_dashboard.py:313: <comment> [BL] # be able to trip *a* large-file risk, and taking that literally would regress BL-5's test.
+starter-kit/methodology_dashboard.py:337: <comment> [PLANDOC,PLANFILE] # docs/planning/read-cap-premise-correction-plan.md Appendix A, and it is the ONLY instrument that
+starter-kit/methodology_dashboard.py:361: <comment> [PLANREF] # PHASE C2 — the Class A pair, mirrored from methodology_trim.py and pinned to it by a canonical
+starter-kit/methodology_dashboard.py:370: <comment> [PLANREF] # Class A ledger and is why its risk row survives rather than being deleted (plan §7 rejects
+starter-kit/methodology_dashboard.py:380: <comment> [BL] # than quietly dropped (Phase B / BL-52). It read "the files a session is instructed to read IN
+starter-kit/methodology_dashboard.py:397: <comment> [PLANREF] # and Phase C1 has since MADE that call: it PARTITIONED the six names without removing any, and
+starter-kit/methodology_dashboard.py:413: <comment> [BL] # the very false positive BL-5's ext filter, one signal over, exists to kill.
+starter-kit/methodology_dashboard.py:415: <comment> [PLANREF] # --- Phase C1: THE POPULATION IS TWO CLASSES, AND THE DIFFERENCE IS NOT COSMETIC ---------------
+starter-kit/methodology_dashboard.py:431: <comment> [BL,PHASE] #             ⚠ BL-88 P2: in a project whose OWN trimmer declares a Class B basename -- read from
+starter-kit/methodology_dashboard.py:444: <comment> [ADOPTER] #             its ACTIVE TASK, and ONE (mts-system, 269,652 B) has no such heading at all -- zero
+starter-kit/methodology_dashboard.py:455: <comment> [PLANFILE,SECTION] # read-cap-phase-c-plan.md section 10 dragon 6 says must FAIL rather than follow. So each class is
+starter-kit/methodology_dashboard.py:459: <comment> [PLANREF,SECTION] # moves no threshold (plan sections 8 and 9; section 7's A1 row, which reads otherwise, is the
+starter-kit/methodology_dashboard.py:460: <comment> [PLANREF] # summary that drifted, and the threshold move is Phase C2).
+starter-kit/methodology_dashboard.py:463: <comment> [PLANREF,SECTION] # OUT LOUD. Plan section 9 requires this be DECIDED rather than inherited. Neither is named as a
+starter-kit/methodology_dashboard.py:465: <comment> [S] # .md corpus (23 files at S176, taken off bin/_manifest.py's SOURCE column) both appear ZERO
+starter-kit/methodology_dashboard.py:466: <comment> [LEARN] # times. `docs/planning/BACKLOG.md` appeared once, in fork Learning #26, which cites this repo's
+starter-kit/methodology_dashboard.py:468: <comment> [S] # distributed corpus for docs/FORK_LEARNINGS.md at the S176 resync. So they are watched by analogy
+starter-kit/methodology_dashboard.py:470: <comment> [PLANREF,SECTION] # anyway, for the reason plan section 7 rejects option D on:
+starter-kit/methodology_dashboard.py:491: <docstring> [PLANREF] did before Phase C1, and which was correct only because the two happened to coincide. They
+starter-kit/methodology_dashboard.py:500: <comment> [S] # --- S38: the trim-trigger row ------------------------------------------------------------------
+starter-kit/methodology_dashboard.py:506: <comment> [PLANREF] # THE ARCHITECTURE, AND WHY THE DASHBOARD COMPUTES RATHER THAN ASKS. The design (§1.3) says the
+starter-kit/methodology_dashboard.py:507: <comment> [S] # dashboard "reads the number rather than re-deriving it" AND that S38 owes an agreement test --
+starter-kit/methodology_dashboard.py:510: <comment> [LEARN] # fail; the repo has already paid for that mistake once (fork Learning #16 -- three losslessness
+starter-kit/methodology_dashboard.py:516: <comment> [PLANREF] # §7.1's stated precedent: check_stale_version()/parse_version() interrogate another executable
+starter-kit/methodology_dashboard.py:520: <comment> [PLANREF] # calibrated in design §5.4, not a formula. It is read out of the tool's source by regex, the
+starter-kit/methodology_dashboard.py:522: <comment> [PLANREF] # (decision D4: a 0 from an unread source must not be reported as a clean state), and the line
+starter-kit/methodology_dashboard.py:530: <comment> [S] # ITS ORIGINAL REASON EXPIRED AT S39' AND THE SURVIVING ONE IS NARROWER. When this was written the
+starter-kit/methodology_dashboard.py:540: <comment> [S] #   -> [('starter-kit/methodology_trim.py', 'methodology_trim.py', 'tracked')]  since S39'
+starter-kit/methodology_dashboard.py:552: <comment> [PLANREF] # TRIM_LINE_FIRE_BELOW IS GONE (Phase B). It was a SECOND distributed copy of design §5.2's
+starter-kit/methodology_dashboard.py:579: <comment> [PLANREF] # which is the misdirection §7.3 exists to prevent. A canonical test asserts these keys against
+starter-kit/methodology_dashboard.py:740: <comment> [S] # WHY A TABLE AND NOT A TUPLE (S39', when the trimmer became the second installed executable).
+starter-kit/methodology_dashboard.py:764: <comment> [ADOPTER] # live adopter (feedback-loop-comparison) still runs a 1,614-line pre-version copy, and a
+starter-kit/methodology_dashboard.py:766: <comment> [S] # of defect as the fix being wrong. (Moved up from below `is_framework_installed` at S39' so it is
+starter-kit/methodology_dashboard.py:943: <comment> [BL,PLANDOC,PLANFILE,SECTION] # === LAYOUT (BL-101 P5; docs/planning/methodology-subdirectory-plan.md sections 4.1 and 4.3) ===========
+starter-kit/methodology_dashboard.py:948: <comment> [PLANREF] # through ITSELF, because the plan's tier 1 moves the first group and leaves the second at the root. Every
+starter-kit/methodology_dashboard.py:953: <comment> [S] # never read as the framework's: the resolver's tie rule, decided for every tool at S276.
+starter-kit/methodology_dashboard.py:954: <tcomment> [PLANREF] NEW_LAYOUT_DIR = "methodology"  # layout: ok -- the directory a migrated project keeps its methodology files in (plan 4.1)
+starter-kit/methodology_dashboard.py:969: <docstring> [PLANREF] workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2)."""
+starter-kit/methodology_dashboard.py:970: <tcomment> [PLANREF] if rel == "docs/methodology":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+starter-kit/methodology_dashboard.py:972: <tcomment> [PLANREF] if rel.startswith("docs/methodology/"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+starter-kit/methodology_dashboard.py:973: <tcomment> [PLANREF] rel = rel[len("docs/methodology/"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+starter-kit/methodology_dashboard.py:979: <docstring> [PLANREF] methodology file follows the runner (plan 4.3)."""
+starter-kit/methodology_dashboard.py:998: <comment> [PLANREF] # methodology/archive/ beside one that moved (plan 4.1, methodology_trim.py 1.8.0).
+starter-kit/methodology_dashboard.py:1007: <docstring> [S,PLANREF] (the plan's tie rule, decided at S276: where the runner is under methodology/, the framework's
+starter-kit/methodology_dashboard.py:1027: <docstring> [PLANREF] manifest (plan C15), so it resolves each target's layout itself: a migrated project's copy is
+starter-kit/methodology_dashboard.py:1127: <comment> [S] # WHY THIS EXISTS, and it is the defect S39' would otherwise have shipped. The exclusion above keeps
+starter-kit/methodology_dashboard.py:1223: <comment> [S] # --- S38 helpers: locating the trimmer, and computing the line metric without it ------------------
+starter-kit/methodology_dashboard.py:1235: <docstring> [PLANREF] imports or executes the file it found -- §7.1's precedent, and the reason the rows stay
+starter-kit/methodology_dashboard.py:1236: <docstring> [BL,PHASE] read-only. That holds for `ledgers` too (BL-88 P2): _parse_trim_ledgers PARSES the source
+starter-kit/methodology_dashboard.py:1259: <docstring> [PLANREF] None is a real answer here, not a zero: the budget is a calibrated judgment (design §5.4)
+starter-kit/methodology_dashboard.py:1274: <comment> [BL,PHASE] # BL-88 P2: the attribute uses of LEDGERS a reading survives -- each one only READS the table.
+starter-kit/methodology_dashboard.py:1284: <docstring> [BL,PLANDOC,PHASE,PLANREF,PLANFILE] BL-88 P2 (docs/planning/dashboard-read-cap-class-adopter-drift-plan.md §8). The operator
+starter-kit/methodology_dashboard.py:1286: <docstring> [PLANREF] scanner -- §7.1's precedent and find_trim_tool's own contract. `ast.parse` honours that, since
+starter-kit/methodology_dashboard.py:1288: <docstring> [ADOPTER] cannot tell an entry from a mention: nprcgenekeepr's widened trimmer spells SESSION_NOTES.md
+starter-kit/methodology_dashboard.py:1295: <docstring> [PHASE] leaves the Class B row exactly as P1 wrote it, so a false negative costs nothing, while a key
+starter-kit/methodology_dashboard.py:1414: <comment> [S] # the S38 row should surface an archive baseline at all is part of Phase C's decision about that
+starter-kit/methodology_dashboard.py:1441: <comment> [PLANREF] # the row an operator reads stops matching `--check`, which is the one thing §1.3 names
+starter-kit/methodology_dashboard.py:1510: <docstring> [PLANDOC,PLANREF,PLANFILE] Issue #67 points 2/3/4 (docs/planning/issue67-fork-side-fix-plan.md, D1-D4): a write is
+starter-kit/methodology_dashboard.py:1649: <comment> [BL] # BL-29: the two directories this script is actually checked into its OWN home repo at (see
+starter-kit/methodology_dashboard.py:1684: <comment> [BL,PHASE] # BL-101 P5: an adopter's copy in the new layout sits in <project>/methodology/, one level below the
+starter-kit/methodology_dashboard.py:1697: <docstring> [PLANREF] project root stays clean (plan 4.1 lists both files under methodology/) and its history is read back
+starter-kit/methodology_dashboard.py:1885: <comment> [BL,PHASE] # BL-101 P5: the NAME every table below is keyed by. A methodology file under methodology/ is
+starter-kit/methodology_dashboard.py:1959: <comment> [S] # dashboard_history.jsonl has carried the key since S38. It is no longer what the
+starter-kit/methodology_dashboard.py:2090: <comment> [BL,PHASE] # BL-101 P5: a project that moved its state files keeps its changelog and roadmap under methodology/.
+starter-kit/methodology_dashboard.py:2131: <comment> [BL,PHASE] # BL-101 P5: the directory the ledger lives in comes first (a no-op in a legacy tree, where it is `path`).
+starter-kit/methodology_dashboard.py:2480: <docstring> [S] """S38 -- the trim-trigger row: one verdict per grow-and-must-be-read ledger, and the
+starter-kit/methodology_dashboard.py:2484: <docstring> [PLANREF] The remedy BRANCHES on whether the trimmer is installed for the scanned project (§7.3):
+starter-kit/methodology_dashboard.py:2490: <docstring> [PLANREF] ONE DEPARTURE FROM §7.3, LABELLED AS SUCH RATHER THAN DRESSED AS A READING. The design says
+starter-kit/methodology_dashboard.py:2492: <docstring> [S] name: no distributed file documents ledger archiving, which is precisely what queue item S40
+starter-kit/methodology_dashboard.py:2493: <docstring> [PLANREF] is for (design §11 Phase 5 says so itself -- "Today zero distributed files say anything on
+starter-kit/methodology_dashboard.py:2501: <docstring> [LEARN] -> `starter-kit/FRAMEWORK_LEARNINGS.md` (fork Learning #15's prose about PROVING a split
+starter-kit/methodology_dashboard.py:2504: <docstring> [S] `POST /projects/:id/archive` endpoint), and, since S39', `starter-kit/BOOTSTRAP.md` (the
+starter-kit/methodology_dashboard.py:2516: <docstring> [S,PLANREF] Inventing a destination would be the exact misdirection §7.3 exists to prevent. WHEN S40
+starter-kit/methodology_dashboard.py:2524: <comment> [BL,PHASE] # BL-88 P2: the basenames the installed trimmer's OWN LEDGERS table declares, parsed from
+starter-kit/methodology_dashboard.py:2553: <comment> [PLANREF] # PHASE C1 CHANGED THE SPELLING, NOT THE SET, AND ON EVERY INPUT collect_all CAN PRODUCE IT
+starter-kit/methodology_dashboard.py:2574: <comment> [PLANREF] # PHASE C2. This re-implements methodology_trim.py's Trigger, so it must move with it.
+starter-kit/methodology_dashboard.py:2608: <comment> [BL,PLANREF] # keeps BL-5's "Large files detected" disjoint from both. Phase C2 changed the NUMBER
+starter-kit/methodology_dashboard.py:2646: <comment> [PLANREF] # RATE had no baseline archive AND the byte budget was unreadable. Decision D4 forbids
+starter-kit/methodology_dashboard.py:2712: <comment> [BL,PHASE] # BL-101 P5: items are located through the layout (the names stay the legacy ones). For the PUBLISHER
+starter-kit/methodology_dashboard.py:2735: <comment> [BL,PHASE] # BL-101 P5: which layout this project is in, and the paths that settled it (additive).
+starter-kit/methodology_dashboard.py:3152: <docstring> [BL,PHASE] """The two places the manifest may live, the one the project's layout names first (BL-101 P5). Both are
+starter-kit/methodology_dashboard.py:3225: <docstring> [BL] FIRST-PARENT ON PURPOSE (BL-99). Each version is later compared with the next older ROW, so
+starter-kit/methodology_dashboard.py:3471: <comment> [BL] #    files are not counted as docs (so its doc_loc is ~0; BL-34 added `.qmd`/`.rmd` to
+starter-kit/methodology_dashboard.py:3792: <comment> [PLANREF] # Never guess which copy is live: the tools refuse a half-migrated tree and name both (plan 4.3).
+starter-kit/methodology_dashboard.py:3796: <string> [BL] "to guess (BL-101). Move or remove one copy"})
+starter-kit/methodology_dashboard.py:3815: <comment> [BL] # BL-5's and Layer 7's narrowings survives intact.
+starter-kit/methodology_dashboard.py:3818: <comment> [BL] # than beside the BL-5 check: a project that never adopted the methodology is not told its
+starter-kit/methodology_dashboard.py:3824: <comment> [S] # naming it deferred to queue item S38 shipped in 2.12.0 (collect_trim_metrics), and the
+starter-kit/methodology_dashboard.py:3825: <comment> [S] # trimmer it called unreachable is in bin/_manifest.py as of S39'. What keeps the row bare is
+starter-kit/methodology_dashboard.py:3829: <comment> [S] # raised and undecided (S38's residual 1), so this comment states the coupling rather than
+starter-kit/methodology_dashboard.py:3830: <comment> [BL,PHASE] # pretending the rows are independent. ONE EXCEPTION since BL-88 P2: a Class B file whose
+starter-kit/methodology_dashboard.py:3853: <comment> [PLANREF] # PHASE C2 — THIS ROW IS NOW PER-CLASS, WHICH IS HOW THE DEDUP ENDS.
+starter-kit/methodology_dashboard.py:3854: <comment> [S] # S38's residual 1 asked whether this row and the trim row should be deduplicated.
+starter-kit/methodology_dashboard.py:3855: <comment> [PLANREF] # The answer plan §7 gives for option A1 is "make the rows DIFFERENT, not delete
+starter-kit/methodology_dashboard.py:3863: <comment> [PLANREF] # judgment, not a derivation. §10 dragon 7: a guard can be correct and not worth
+starter-kit/methodology_dashboard.py:3865: <comment> [BL] # adjudicated case (BL-52 third addendum) — ordered truncation drops the OLDEST
+starter-kit/methodology_dashboard.py:3887: <comment> [BL] # BL-88 — THIS ROW MAY ASSERT ONLY WHAT THIS MODULE EVALUATED. It used to print
+starter-kit/methodology_dashboard.py:3895: <comment> [SECTION] # DECLARED (READ_CAP_CLASS_A/B above, and section 10 dragon 6 with it); only the
+starter-kit/methodology_dashboard.py:3907: <comment> [PHASE] # P2 — AND WHERE IT HAS EVALUATED SOMETHING, IT MAY SAY SO. collect_trim_metrics
+starter-kit/methodology_dashboard.py:3955: <comment> [S] # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
+starter-kit/methodology_dashboard.py:4062: <comment> [S] # S38: the trim-trigger row. Wired after the metrics dict is built (it reads the collected
+starter-kit/methodology_trim.py:57: <tcomment> [BL,PHASE,PLANREF,SECTION] TRIM_VERSION = "1.8.0"   # 1.8.0: BL-101 P3 (the methodology/ directory plan, section 7.2, coupling C7) -- a ledger
+starter-kit/methodology_trim.py:61: <comment> [PLANREF] # ledger under methodology/ writes methodology/archive/ (decision D5) and climbs one
+starter-kit/methodology_trim.py:67: <comment> [PLANREF] # directories, since D5 moves the archive last, and a shard name is never reused
+starter-kit/methodology_trim.py:92: <comment> [BL] # and end red with nothing lost (BL-27 refused to excuse it: a real loss can
+starter-kit/methodology_trim.py:281: <tcomment> [PLANREF] NEW_DIR = "methodology"        # layout: ok -- the directory a migrated project keeps its framework files in (plan 4.1)
+starter-kit/methodology_trim.py:282: <tcomment> [PLANREF] NEW_ARCHIVE_DIR = NEW_DIR + "/archive"   # decision D5: the archive moves with the ledgers
+starter-kit/methodology_trim.py:286: <tcomment> [PLANREF] APPARATUS = "FRAMEWORK_APPARATUS.md"   # layout: ok -- a document cited by bare name inside the proof (names are relative to the runner's directory, plan 4.4)
+starter-kit/methodology_trim.py:290: <comment> [PLANREF,SECTION] # A ledger sits at its project's root (legacy) or under methodology/ (new): the plan's section 4.3. The
+starter-kit/methodology_trim.py:681: <docstring> [PLANREF] still holds the shards its legacy trims wrote under docs/archive/ (D5 moves the archive last), and
+starter-kit/methodology_trim.py:1069: <docstring> [PLANREF] the shards its legacy trims wrote are its history, since the archive moves last (D5).
+starter-kit/methodology_trim.py:1122: <docstring> [BL,PHASE] BL-101 P3: a ledger a project moved under methodology/ is the same ledger at its new address, the
+starter-kit/methodology_trim.py:1697: <string> [BL] # `> 24` length filter is kept. Same class of fix as BL-28 just above, on the other clause.
+starter-kit/methodology_trim.py:1749: <string> [BL] # one missing and the edit keeps the generic note and exit 1, which is what BL-27 protected: a
+starter-kit/methodology_trim.py:1760: <string> [PLANREF] # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 (the plan's D2).
+starter-kit/methodology_trim.py:2299: <comment> [BL,PHASE] # BL-101 P3. Every trim writes an entry into the ACTION ledger, wherever the trimmed file sits, so
+starter-kit/methodology_trim.py:2638: <docstring> [PLANREF] 2026-10-06 and 2026-10-07, plan 7.2a and 7.2b): a project's own product changelog may sit at the root beside the ledger. A tree with no
+starter-kit/quality_ratchet.py:24: <docstring> [BL] the shell (BL-107; on Windows a timed-out command may keep running). It holds THRESHOLDS, not
+starter-kit/quality_ratchet.py:61: <tcomment> [PLANREF] SAFEGUARDS = "SAFEGUARDS.md"  # layout: ok -- a document cited by bare name in a message; names are relative to the runner's directory (plan 4.4)
+starter-kit/quality_ratchet.py:64: <tcomment> [BL] HAS_PROCESS_GROUPS = os.name == "posix"   # a gate's command gets a session of its own, and is stopped with its whole group (BL-107)
+starter-kit/quality_ratchet.py:73: <comment> [PLANREF] # A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+starter-kit/quality_ratchet.py:74: <comment> [SECTION] # section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+starter-kit/quality_ratchet.py:119: <docstring> [BL] group is already dead and not yet reaped (measured, BL-107), and ProcessLookupError is a group that
+starter-kit/quality_ratchet.py:169: <docstring> [BL] discarded, through every gate after it (BL-107; failure mode #29). A command that FINISHES is left
+starter-kit/quality_ratchet.py:315: <docstring> [PLANREF] at both paths is then the framework's under methodology/ (plan 7.2b); the root copy is the project's own."""
+starter-kit/quality_ratchet.py:346: <docstring> [PLANREF] commit would be compared against nothing (plan C4)."""
+starter-kit/quality_ratchet.py:776: <comment> [BL] # a command that outlives its budget is STOPPED, not only reported (BL-107): its shell's child is gone,
+tools/fixtures/trim-verify-template-1.7.0.sh:29: <comment> [BL] # BL-27 fix 1: the same declared front-matter fields assert_L2's reversal exception already knows
+tools/fixtures/trim-verify-template-1.7.0.sh:194: <comment> [BL] # --- What the TRIM COMMIT introduced, MEASURED rather than assumed (BL-36) -------------------
+tools/fixtures/trim-verify-template-1.7.0.sh:207: <comment> [PLANDOC] # missing at every trim (docs/audits/2026-08-15-bl36-archive-losslessness.md).
+tools/fixtures/trim-verify-template-1.7.0.sh:218: <comment> [BL] # which is BL-27's judgement and is still correct — a real loss has that same shape.
+tools/fixtures/trim-verify-template-1.7.0.sh:266: <comment> [BL] # a declared regenerated field's own value (BL-27 fix 1), the same exception assert_L2 already
+tools/fixtures/trim-verify-template-1.7.0.sh:286: <comment> [BL] # BL-28 fix: exact-line-set membership, not substring containment. `ln not in afront` tested
+tools/fixtures/trim-verify-template-1.7.0.sh:302: <comment> [BL] # `> 24` length filter is kept. Same class of fix as BL-28 just above, on the other clause.
+tools/fixtures/trim-verify-template-1.7.0.sh:327: <comment> [BL] # BL-27 fix 2: a same-commit close-out bundling (a session's own frontier receipt going
+tools/fixtures/trim-verify-template-1.7.0.sh:336: <comment> [BL] # BL-36 re-expressed the gate in the new vocabulary. It was `bad == [0]` — the record-ALTERED
+tools/fixtures/trim-verify-template-1.7.0.sh:354: <comment> [BL] # one missing and the edit keeps the generic note and exit 1, which is what BL-27 protected: a
+tools/fixtures/trim-verify-template-1.7.0.sh:365: <comment> [PLANREF] # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 (the plan's D2).
+tools/fixtures/trim-verify-template-1.7.0.sh:379: <code> [BL] "carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was "
+tools/layout_fixtures.py:2: <docstring> [BL,PHASE] """Fixture trees in both layouts, for every phase of the methodology/ move to reuse (BL-101, P1).
+tools/layout_fixtures.py:5: <docstring> [PLANDOC,PLANFILE,SECTION] The plan is docs/planning/methodology-subdirectory-plan.md: section 4.1 is the target layout, section
+tools/layout_fixtures.py:9: <docstring> [SECTION] new     section 4.1: every methodology file one level down in methodology/
+tools/layout_fixtures.py:11: <docstring> [SECTION] (its SEED rows, the generated files, the archive) still at the root: section 4.6's
+tools/layout_fixtures.py:17: <docstring> [PHASE] by itself. The new shape is derived from the manifest's second table, NEW_LAYOUT (phase P6: a literal
+tools/layout_fixtures.py:18: <docstring> [SECTION] table, so ``--source=github`` can read it as data), and tools/test_layout_resolver.py holds section 4.1
+tools/layout_fixtures.py:19: <docstring> [PHASE] typed out as literals, so a change to that table cannot also quietly reshape the target. Before P6 this
+tools/layout_fixtures.py:34: <comment> [PLANREF,SECTION] # What the tools write beside the methodology files (plan section 2.1, "Generated beside them").
+tools/layout_resolver.py:2: <docstring> [BL,PHASE] """The layout resolver: where do a project's methodology files live? (BL-101, phase P1.)
+tools/layout_resolver.py:4: <docstring> [PLANDOC,PLANFILE] CANONICAL-ONLY reference copy. Contract: docs/planning/methodology-subdirectory-plan.md
+tools/layout_resolver.py:5: <docstring> [SECTION] section 4.3. A project keeps its methodology files either at its root (legacy) or one level
+tools/layout_resolver.py:18: <docstring> [S] cannot forget to ask: the S276 build made it a request, and that is what he overruled. A tie the runner does
+tools/layout_resolver.py:22: <docstring> [PLANREF] The anchor is the caller's choice, because a project can be part-way: the plan's tier 1 moves the
+tools/layout_resolver.py:27: <docstring> [PLANREF] which is the failure the plan's C5 measured: a gate that passes silently.
+tools/methodology_dashboard.py:29: <docstring> [BL] A project that keeps its methodology files under methodology/ (BL-101, the new layout) keeps this
+tools/methodology_dashboard.py:118: <comment> [BL,PLANDOC,PLANFILE] # 2.19.0: BL-88 (docs/planning/dashboard-read-cap-class-adopter-drift-plan.md). The Class B read-cap
+tools/methodology_dashboard.py:119: <comment> [PHASE] # row stops asserting a trimmer config it never read (P1, cb9b0ed, which shipped without a bump) and
+tools/methodology_dashboard.py:121: <comment> [PHASE] # A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
+tools/methodology_dashboard.py:124: <comment> [BL,PLANDOC,PHASE,PLANFILE,SECTION] # 2.22.0: BL-101 P5 (docs/planning/methodology-subdirectory-plan.md, section 7.2). The dashboard reads a
+tools/methodology_dashboard.py:130: <comment> [BL] # 2.21.0: BL-99. The manifest-history walk reads the FIRST-PARENT line (`_gate_manifest_history`):
+tools/methodology_dashboard.py:134: <comment> [BL,PLANDOC,PLANREF,PLANFILE] # 2.20.0: BL-95 R1, the 2026-10 resync (docs/planning/upstream-resync-2026-10-plan.md, D5). The
+tools/methodology_dashboard.py:143: <comment> [PLANREF] # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
+tools/methodology_dashboard.py:161: <comment> [BL,ADOPTER] # skipped for "other"). BL-34 — found scanning `nprcgenekeepr` (28 `.rmd` + 12 `.qmd`, 11 of the 12
+tools/methodology_dashboard.py:191: <comment> [BL] # BL-34 — `.r` was already in SOURCE_EXTS (so R LOC always counted toward Source), but had no
+tools/methodology_dashboard.py:192: <comment> [ADOPTER] # LANG_MAP entry, so it never got its own "Code by Language" row. Found against `nprcgenekeepr`
+tools/methodology_dashboard.py:307: <comment> [BL] # A SECOND large-file question, deliberately NOT a widening of the BL-5 code-smell check in
+tools/methodology_dashboard.py:308: <comment> [BL] # assess_risks(). BL-5 asks "is this MODULE unwieldy?" — a judgment about structure, false for a
+tools/methodology_dashboard.py:313: <comment> [BL] # be able to trip *a* large-file risk, and taking that literally would regress BL-5's test.
+tools/methodology_dashboard.py:337: <comment> [PLANDOC,PLANFILE] # docs/planning/read-cap-premise-correction-plan.md Appendix A, and it is the ONLY instrument that
+tools/methodology_dashboard.py:361: <comment> [PLANREF] # PHASE C2 — the Class A pair, mirrored from methodology_trim.py and pinned to it by a canonical
+tools/methodology_dashboard.py:370: <comment> [PLANREF] # Class A ledger and is why its risk row survives rather than being deleted (plan §7 rejects
+tools/methodology_dashboard.py:380: <comment> [BL] # than quietly dropped (Phase B / BL-52). It read "the files a session is instructed to read IN
+tools/methodology_dashboard.py:397: <comment> [PLANREF] # and Phase C1 has since MADE that call: it PARTITIONED the six names without removing any, and
+tools/methodology_dashboard.py:413: <comment> [BL] # the very false positive BL-5's ext filter, one signal over, exists to kill.
+tools/methodology_dashboard.py:415: <comment> [PLANREF] # --- Phase C1: THE POPULATION IS TWO CLASSES, AND THE DIFFERENCE IS NOT COSMETIC ---------------
+tools/methodology_dashboard.py:431: <comment> [BL,PHASE] #             ⚠ BL-88 P2: in a project whose OWN trimmer declares a Class B basename -- read from
+tools/methodology_dashboard.py:444: <comment> [ADOPTER] #             its ACTIVE TASK, and ONE (mts-system, 269,652 B) has no such heading at all -- zero
+tools/methodology_dashboard.py:455: <comment> [PLANFILE,SECTION] # read-cap-phase-c-plan.md section 10 dragon 6 says must FAIL rather than follow. So each class is
+tools/methodology_dashboard.py:459: <comment> [PLANREF,SECTION] # moves no threshold (plan sections 8 and 9; section 7's A1 row, which reads otherwise, is the
+tools/methodology_dashboard.py:460: <comment> [PLANREF] # summary that drifted, and the threshold move is Phase C2).
+tools/methodology_dashboard.py:463: <comment> [PLANREF,SECTION] # OUT LOUD. Plan section 9 requires this be DECIDED rather than inherited. Neither is named as a
+tools/methodology_dashboard.py:465: <comment> [S] # .md corpus (23 files at S176, taken off bin/_manifest.py's SOURCE column) both appear ZERO
+tools/methodology_dashboard.py:466: <comment> [LEARN] # times. `docs/planning/BACKLOG.md` appeared once, in fork Learning #26, which cites this repo's
+tools/methodology_dashboard.py:468: <comment> [S] # distributed corpus for docs/FORK_LEARNINGS.md at the S176 resync. So they are watched by analogy
+tools/methodology_dashboard.py:470: <comment> [PLANREF,SECTION] # anyway, for the reason plan section 7 rejects option D on:
+tools/methodology_dashboard.py:491: <docstring> [PLANREF] did before Phase C1, and which was correct only because the two happened to coincide. They
+tools/methodology_dashboard.py:500: <comment> [S] # --- S38: the trim-trigger row ------------------------------------------------------------------
+tools/methodology_dashboard.py:506: <comment> [PLANREF] # THE ARCHITECTURE, AND WHY THE DASHBOARD COMPUTES RATHER THAN ASKS. The design (§1.3) says the
+tools/methodology_dashboard.py:507: <comment> [S] # dashboard "reads the number rather than re-deriving it" AND that S38 owes an agreement test --
+tools/methodology_dashboard.py:510: <comment> [LEARN] # fail; the repo has already paid for that mistake once (fork Learning #16 -- three losslessness
+tools/methodology_dashboard.py:516: <comment> [PLANREF] # §7.1's stated precedent: check_stale_version()/parse_version() interrogate another executable
+tools/methodology_dashboard.py:520: <comment> [PLANREF] # calibrated in design §5.4, not a formula. It is read out of the tool's source by regex, the
+tools/methodology_dashboard.py:522: <comment> [PLANREF] # (decision D4: a 0 from an unread source must not be reported as a clean state), and the line
+tools/methodology_dashboard.py:530: <comment> [S] # ITS ORIGINAL REASON EXPIRED AT S39' AND THE SURVIVING ONE IS NARROWER. When this was written the
+tools/methodology_dashboard.py:540: <comment> [S] #   -> [('starter-kit/methodology_trim.py', 'methodology_trim.py', 'tracked')]  since S39'
+tools/methodology_dashboard.py:552: <comment> [PLANREF] # TRIM_LINE_FIRE_BELOW IS GONE (Phase B). It was a SECOND distributed copy of design §5.2's
+tools/methodology_dashboard.py:579: <comment> [PLANREF] # which is the misdirection §7.3 exists to prevent. A canonical test asserts these keys against
+tools/methodology_dashboard.py:740: <comment> [S] # WHY A TABLE AND NOT A TUPLE (S39', when the trimmer became the second installed executable).
+tools/methodology_dashboard.py:764: <comment> [ADOPTER] # live adopter (feedback-loop-comparison) still runs a 1,614-line pre-version copy, and a
+tools/methodology_dashboard.py:766: <comment> [S] # of defect as the fix being wrong. (Moved up from below `is_framework_installed` at S39' so it is
+tools/methodology_dashboard.py:943: <comment> [BL,PLANDOC,PLANFILE,SECTION] # === LAYOUT (BL-101 P5; docs/planning/methodology-subdirectory-plan.md sections 4.1 and 4.3) ===========
+tools/methodology_dashboard.py:948: <comment> [PLANREF] # through ITSELF, because the plan's tier 1 moves the first group and leaves the second at the root. Every
+tools/methodology_dashboard.py:953: <comment> [S] # never read as the framework's: the resolver's tie rule, decided for every tool at S276.
+tools/methodology_dashboard.py:954: <tcomment> [PLANREF] NEW_LAYOUT_DIR = "methodology"  # layout: ok -- the directory a migrated project keeps its methodology files in (plan 4.1)
+tools/methodology_dashboard.py:969: <docstring> [PLANREF] workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2)."""
+tools/methodology_dashboard.py:970: <tcomment> [PLANREF] if rel == "docs/methodology":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+tools/methodology_dashboard.py:972: <tcomment> [PLANREF] if rel.startswith("docs/methodology/"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+tools/methodology_dashboard.py:973: <tcomment> [PLANREF] rel = rel[len("docs/methodology/"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+tools/methodology_dashboard.py:979: <docstring> [PLANREF] methodology file follows the runner (plan 4.3)."""
+tools/methodology_dashboard.py:998: <comment> [PLANREF] # methodology/archive/ beside one that moved (plan 4.1, methodology_trim.py 1.8.0).
+tools/methodology_dashboard.py:1007: <docstring> [S,PLANREF] (the plan's tie rule, decided at S276: where the runner is under methodology/, the framework's
+tools/methodology_dashboard.py:1027: <docstring> [PLANREF] manifest (plan C15), so it resolves each target's layout itself: a migrated project's copy is
+tools/methodology_dashboard.py:1127: <comment> [S] # WHY THIS EXISTS, and it is the defect S39' would otherwise have shipped. The exclusion above keeps
+tools/methodology_dashboard.py:1223: <comment> [S] # --- S38 helpers: locating the trimmer, and computing the line metric without it ------------------
+tools/methodology_dashboard.py:1235: <docstring> [PLANREF] imports or executes the file it found -- §7.1's precedent, and the reason the rows stay
+tools/methodology_dashboard.py:1236: <docstring> [BL,PHASE] read-only. That holds for `ledgers` too (BL-88 P2): _parse_trim_ledgers PARSES the source
+tools/methodology_dashboard.py:1259: <docstring> [PLANREF] None is a real answer here, not a zero: the budget is a calibrated judgment (design §5.4)
+tools/methodology_dashboard.py:1274: <comment> [BL,PHASE] # BL-88 P2: the attribute uses of LEDGERS a reading survives -- each one only READS the table.
+tools/methodology_dashboard.py:1284: <docstring> [BL,PLANDOC,PHASE,PLANREF,PLANFILE] BL-88 P2 (docs/planning/dashboard-read-cap-class-adopter-drift-plan.md §8). The operator
+tools/methodology_dashboard.py:1286: <docstring> [PLANREF] scanner -- §7.1's precedent and find_trim_tool's own contract. `ast.parse` honours that, since
+tools/methodology_dashboard.py:1288: <docstring> [ADOPTER] cannot tell an entry from a mention: nprcgenekeepr's widened trimmer spells SESSION_NOTES.md
+tools/methodology_dashboard.py:1295: <docstring> [PHASE] leaves the Class B row exactly as P1 wrote it, so a false negative costs nothing, while a key
+tools/methodology_dashboard.py:1414: <comment> [S] # the S38 row should surface an archive baseline at all is part of Phase C's decision about that
+tools/methodology_dashboard.py:1441: <comment> [PLANREF] # the row an operator reads stops matching `--check`, which is the one thing §1.3 names
+tools/methodology_dashboard.py:1510: <docstring> [PLANDOC,PLANREF,PLANFILE] Issue #67 points 2/3/4 (docs/planning/issue67-fork-side-fix-plan.md, D1-D4): a write is
+tools/methodology_dashboard.py:1649: <comment> [BL] # BL-29: the two directories this script is actually checked into its OWN home repo at (see
+tools/methodology_dashboard.py:1684: <comment> [BL,PHASE] # BL-101 P5: an adopter's copy in the new layout sits in <project>/methodology/, one level below the
+tools/methodology_dashboard.py:1697: <docstring> [PLANREF] project root stays clean (plan 4.1 lists both files under methodology/) and its history is read back
+tools/methodology_dashboard.py:1885: <comment> [BL,PHASE] # BL-101 P5: the NAME every table below is keyed by. A methodology file under methodology/ is
+tools/methodology_dashboard.py:1959: <comment> [S] # dashboard_history.jsonl has carried the key since S38. It is no longer what the
+tools/methodology_dashboard.py:2090: <comment> [BL,PHASE] # BL-101 P5: a project that moved its state files keeps its changelog and roadmap under methodology/.
+tools/methodology_dashboard.py:2131: <comment> [BL,PHASE] # BL-101 P5: the directory the ledger lives in comes first (a no-op in a legacy tree, where it is `path`).
+tools/methodology_dashboard.py:2480: <docstring> [S] """S38 -- the trim-trigger row: one verdict per grow-and-must-be-read ledger, and the
+tools/methodology_dashboard.py:2484: <docstring> [PLANREF] The remedy BRANCHES on whether the trimmer is installed for the scanned project (§7.3):
+tools/methodology_dashboard.py:2490: <docstring> [PLANREF] ONE DEPARTURE FROM §7.3, LABELLED AS SUCH RATHER THAN DRESSED AS A READING. The design says
+tools/methodology_dashboard.py:2492: <docstring> [S] name: no distributed file documents ledger archiving, which is precisely what queue item S40
+tools/methodology_dashboard.py:2493: <docstring> [PLANREF] is for (design §11 Phase 5 says so itself -- "Today zero distributed files say anything on
+tools/methodology_dashboard.py:2501: <docstring> [LEARN] -> `starter-kit/FRAMEWORK_LEARNINGS.md` (fork Learning #15's prose about PROVING a split
+tools/methodology_dashboard.py:2504: <docstring> [S] `POST /projects/:id/archive` endpoint), and, since S39', `starter-kit/BOOTSTRAP.md` (the
+tools/methodology_dashboard.py:2516: <docstring> [S,PLANREF] Inventing a destination would be the exact misdirection §7.3 exists to prevent. WHEN S40
+tools/methodology_dashboard.py:2524: <comment> [BL,PHASE] # BL-88 P2: the basenames the installed trimmer's OWN LEDGERS table declares, parsed from
+tools/methodology_dashboard.py:2553: <comment> [PLANREF] # PHASE C1 CHANGED THE SPELLING, NOT THE SET, AND ON EVERY INPUT collect_all CAN PRODUCE IT
+tools/methodology_dashboard.py:2574: <comment> [PLANREF] # PHASE C2. This re-implements methodology_trim.py's Trigger, so it must move with it.
+tools/methodology_dashboard.py:2608: <comment> [BL,PLANREF] # keeps BL-5's "Large files detected" disjoint from both. Phase C2 changed the NUMBER
+tools/methodology_dashboard.py:2646: <comment> [PLANREF] # RATE had no baseline archive AND the byte budget was unreadable. Decision D4 forbids
+tools/methodology_dashboard.py:2712: <comment> [BL,PHASE] # BL-101 P5: items are located through the layout (the names stay the legacy ones). For the PUBLISHER
+tools/methodology_dashboard.py:2735: <comment> [BL,PHASE] # BL-101 P5: which layout this project is in, and the paths that settled it (additive).
+tools/methodology_dashboard.py:3152: <docstring> [BL,PHASE] """The two places the manifest may live, the one the project's layout names first (BL-101 P5). Both are
+tools/methodology_dashboard.py:3225: <docstring> [BL] FIRST-PARENT ON PURPOSE (BL-99). Each version is later compared with the next older ROW, so
+tools/methodology_dashboard.py:3471: <comment> [BL] #    files are not counted as docs (so its doc_loc is ~0; BL-34 added `.qmd`/`.rmd` to
+tools/methodology_dashboard.py:3792: <comment> [PLANREF] # Never guess which copy is live: the tools refuse a half-migrated tree and name both (plan 4.3).
+tools/methodology_dashboard.py:3796: <string> [BL] "to guess (BL-101). Move or remove one copy"})
+tools/methodology_dashboard.py:3815: <comment> [BL] # BL-5's and Layer 7's narrowings survives intact.
+tools/methodology_dashboard.py:3818: <comment> [BL] # than beside the BL-5 check: a project that never adopted the methodology is not told its
+tools/methodology_dashboard.py:3824: <comment> [S] # naming it deferred to queue item S38 shipped in 2.12.0 (collect_trim_metrics), and the
+tools/methodology_dashboard.py:3825: <comment> [S] # trimmer it called unreachable is in bin/_manifest.py as of S39'. What keeps the row bare is
+tools/methodology_dashboard.py:3829: <comment> [S] # raised and undecided (S38's residual 1), so this comment states the coupling rather than
+tools/methodology_dashboard.py:3830: <comment> [BL,PHASE] # pretending the rows are independent. ONE EXCEPTION since BL-88 P2: a Class B file whose
+tools/methodology_dashboard.py:3853: <comment> [PLANREF] # PHASE C2 — THIS ROW IS NOW PER-CLASS, WHICH IS HOW THE DEDUP ENDS.
+tools/methodology_dashboard.py:3854: <comment> [S] # S38's residual 1 asked whether this row and the trim row should be deduplicated.
+tools/methodology_dashboard.py:3855: <comment> [PLANREF] # The answer plan §7 gives for option A1 is "make the rows DIFFERENT, not delete
+tools/methodology_dashboard.py:3863: <comment> [PLANREF] # judgment, not a derivation. §10 dragon 7: a guard can be correct and not worth
+tools/methodology_dashboard.py:3865: <comment> [BL] # adjudicated case (BL-52 third addendum) — ordered truncation drops the OLDEST
+tools/methodology_dashboard.py:3887: <comment> [BL] # BL-88 — THIS ROW MAY ASSERT ONLY WHAT THIS MODULE EVALUATED. It used to print
+tools/methodology_dashboard.py:3895: <comment> [SECTION] # DECLARED (READ_CAP_CLASS_A/B above, and section 10 dragon 6 with it); only the
+tools/methodology_dashboard.py:3907: <comment> [PHASE] # P2 — AND WHERE IT HAS EVALUATED SOMETHING, IT MAY SAY SO. collect_trim_metrics
+tools/methodology_dashboard.py:3955: <comment> [S] # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
+tools/methodology_dashboard.py:4062: <comment> [S] # S38: the trim-trigger row. Wired after the metrics dict is built (it reads the collected
+tools/test_checker_layouts.py:2: <docstring> [BL,PHASE] """The canonical checkers find their ledger (or config) at the project root or under methodology/ (BL-101 P4).
+tools/test_checker_layouts.py:9: <docstring> [PLANREF,SECTION] Plan section 4.3 and 7.2b. Each tool is run as a command, in a scratch project, in four shapes:
+tools/test_checker_layouts.py:128: <tcomment> [PLANREF] ("new", "docs/archive/CHANGELOG-through-2025-12-01.md")):   # the archive moves last (D5)
+tools/test_context_budget.py:1853: <docstring> [BL,PHASE,PLANREF] """BL-101 P4 (plan 4.3, C9, 7.2b): a project keeps its budget config at its root (legacy) or under
+tools/test_context_budget.py:1855: <docstring> [PHASE] config's files[] paths stay relative to the PROJECT root in both layouts (bin/migrate-layout, P7,
+tools/test_context_budget.py:1857: <docstring> [S] methodology/ one is the project's own when the runner is tracked under methodology/ (S276's picker)."""
+tools/test_layout_resolver.py:2: <docstring> [BL,PHASE] """Unit tests for the methodology/ layout work (BL-101, phase P1).
+tools/test_layout_resolver.py:6: <docstring> [PHASE] P2-P6 embed the resolver's marked block in each shipped tool, and assert here that every
+tools/test_layout_resolver.py:9: <docstring> [PLANDOC,PLANFILE,SECTION] The contract is docs/planning/methodology-subdirectory-plan.md section 4.3 (the four-row
+tools/test_layout_resolver.py:10: <docstring> [PHASE,SECTION] table) and section 7.1 (what P1 is done when). Every rule is observed failing as well as
+tools/test_layout_resolver.py:61: <docstring> [SECTION] """Section 4.3, one test per row of the table."""
+tools/test_layout_resolver.py:122: <docstring> [S,PLANREF] """Decided 2026-10-06 (S275 close-out picker, plan 7.2a) for the ledger, and 2026-10-07 (S276 close-out
+tools/test_layout_resolver.py:123: <docstring> [PLANREF] picker, plan 7.2b) for every file: a project whose SESSION_RUNNER.md is under methodology/ keeps its
+tools/test_layout_resolver.py:127: <docstring> [S] forget to ask (the S276 build asked in the tools that read a ledger and not in the ratchet, and that
+tools/test_layout_resolver.py:155: <comment> [S] # S276's picker: the ratchet works inside methodology/ and a root manifest is the user's own.
+tools/test_layout_resolver.py:198: <comment> [PLANREF] # The runner moved and the ledger did not (plan 4.6): there is no tie, so the rule is not reached.
+tools/test_layout_resolver.py:205: <docstring> [PLANREF] """Each shipped tool that resolves the layout carries the module's block, byte for byte (plan 4.3).
+tools/test_layout_resolver.py:206: <docstring> [PHASE] A copy that drifted is a second resolver with its own answers. P2 embeds it in the ratchet; each
+tools/test_layout_resolver.py:244: <docstring> [SECTION] """Shipped tools are single stdlib files, so each carries the same marked block (section 4.3)."""
+tools/test_layout_resolver.py:306: <comment> [PLANREF,SECTION] # The plan's section 4.1, typed out: the one place the target layout is written as literals, so a change to
+tools/test_layout_resolver.py:389: <comment> [PHASE] # was lf.new_path, a rule of this module's own; P6 made the manifest's NEW_LAYOUT the one table
+tools/test_layout_resolver.py:450: <docstring> [SECTION] """Section 7.1: list every line that names a methodology file's root path in a shipped tool."""
+tools/test_layout_resolver.py:648: <docstring> [PHASE] """A tool that phase P2-P5 has worked scans at zero unacknowledged sites, and stays there: the
+tools/test_layout_resolver.py:649: <docstring> [PHASE] scanner is not a gate until P6, so this is what stops a later edit putting a root literal back.
+tools/test_layout_resolver.py:650: <docstring> [PHASE] Each phase appends the tools it resolved; P6 replaces the list with the gate."""
+tools/test_methodology_dashboard.py:118: <comment> [BL] # .tex isn't counted as docs (BL-34 added .qmd/.rmd to DOC_EXTS, but .tex stays out), so
+tools/test_methodology_dashboard.py:177: <docstring> [BL,ADOPTER] """BL-34 — found while answering an operator question about `nprcgenekeepr`'s "Code by
+tools/test_methodology_dashboard.py:184: <docstring> [ADOPTER] RED-first (Learning #12): both gaps confirmed by direct execution against `../nprcgenekeepr`
+tools/test_methodology_dashboard.py:201: <string> [BL] "R must still count as Source -- BL-34 only adds the missing language row")
+tools/test_methodology_dashboard.py:2357: <comment> [BL] # BL-99. `git log -- <manifest>` without --first-parent follows BOTH parents of a merge whose
+tools/test_methodology_dashboard.py:2502: <docstring> [BL,S] BOTH or this goes red; S115 lost a run to changing one. 2.19.0 is BL-88: the Class B
+tools/test_methodology_dashboard.py:2503: <docstring> [PHASE] read-cap row asserts only what it evaluated (P1) and names a remedy it has read from the
+tools/test_methodology_dashboard.py:2504: <docstring> [PHASE] project's own trimmer source (P2) -- changed output on a distributed tool, so MINOR. P1
+tools/test_methodology_dashboard.py:2507: <docstring> [BL,PLANREF] resync (BL-95, D5): the `.gitattributes` seed becomes installed content -- changed output
+tools/test_methodology_dashboard.py:2508: <docstring> [BL] on a distributed tool, so MINOR. 2.21.0 is BL-99: the manifest-history walk is first-parent,
+tools/test_methodology_dashboard.py:2510: <docstring> [BL,PHASE] 2.22.0 is BL-101 P5: the dashboard reads a project that keeps its methodology files under
+tools/test_methodology_dashboard.py:2518: <comment> [S] # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
+tools/test_methodology_dashboard.py:2642: <docstring> [S] """Text that stands in for the ledger trimmer `bin/sync` installs at an adopter's root (S39').
+tools/test_methodology_dashboard.py:2652: <docstring> [S] So the pre-S39' predicate answered False for this file on BOTH of its arms, and putting the
+tools/test_methodology_dashboard.py:2694: <comment> [BL] # The synced doc corpus: a Quarto book. Before BL-34, .qmd files were NOT doc-extensions, so
+tools/test_methodology_dashboard.py:2696: <comment> [BL] # — the exact source_loc≈0 research repo BL-5 exists for. BL-34 added .qmd/.rmd to DOC_EXTS, so
+tools/test_methodology_dashboard.py:2700: <comment> [BL] # fixture that isolates the toolchain arm post-BL-34.
+tools/test_methodology_dashboard.py:2708: <comment> [BL] # A single short chapter — doc_loc and doc_files both stay under BL-5's thresholds even with
+tools/test_methodology_dashboard.py:2709: <comment> [BL] # .qmd counted as docs (BL-34), so is_doc_only can ONLY be reached via render.toolchain_present.
+tools/test_methodology_dashboard.py:2727: <docstring> [BL] """BL-34 guard-the-guard: adding .qmd to DOC_EXTS must not make the toolchain arm of the
+tools/test_methodology_dashboard.py:2901: <comment> [S] # 6 since the resync's stage M2 (S177): upstream's quality ratchet ships quality_ratchet.py
+tools/test_methodology_dashboard.py:2903: <comment> [BL] # 7 since the 2026-10 resync (BL-95 R1): upstream's v4.1 `.gitattributes` seed.
+tools/test_methodology_dashboard.py:2940: <comment> [S] # --- S39': the SECOND installed executable ------------------------------------------------
+tools/test_methodology_dashboard.py:2944: <comment> [S] # RED-first tests below were driven against the pre-S39' scanner and watched to FAIL
+tools/test_methodology_dashboard.py:2981: <docstring> [S] does not prove it (S37 gotcha 4: an absence assertion is trivially true before the name
+tools/test_methodology_dashboard.py:3538: <docstring> [PLANDOC,PLANREF,PLANFILE] """Plan D4(b) (`docs/planning/framework-context-cost-plan.md:391`), and the one defect of the
+tools/test_methodology_dashboard.py:3542: <docstring> [BL] can see it — regresses BL-5, whose ratified `test_large_file_ext_filter` (below, untouched)
+tools/test_methodology_dashboard.py:3546: <docstring> [BL] BL-5's question       "is this MODULE unwieldy?"   — structure; false for a chapter
+tools/test_methodology_dashboard.py:3622: <comment> [PLANREF] # PHASE C2 pins the Class A pair the same way, by parsing the OTHER tool's source. Same
+tools/test_methodology_dashboard.py:3631: <comment> [PLANREF] # AND THE BUDGET, which is the half option C1 moved. It is written `192 * 1024`, so a
+tools/test_methodology_dashboard.py:3638: <string> [PLANREF] "option C1 raised the byte budget to MEET the Class A arm; if they have "
+tools/test_methodology_dashboard.py:3640: <string> [PLANREF] "that is the inertness plan §5 warns about")
+tools/test_methodology_dashboard.py:3643: <string> [PLANREF,PLANFILE] "next record (ledger-trimmer-design.md §5.2)")
+tools/test_methodology_dashboard.py:3667: <docstring> [LEARN] independent (fork Learning #16) rather than two spellings of one comprehension."""
+tools/test_methodology_dashboard.py:3727: <docstring> [LEARN] was free to move by one in either direction undetected. Fork Learning #16's lesson one level
+tools/test_methodology_dashboard.py:3789: <docstring> [PLANREF] """PHASE C2 SPLIT THE SEVERITY, NOT THE POPULATION. Still one row per file — that half is
+tools/test_methodology_dashboard.py:3820: <docstring> [BL] that produced BL-5's and Layer 7's narrowings survives in `dashboard_history.jsonl`."""
+tools/test_methodology_dashboard.py:3860: <docstring> [PLANDOC,PLANREF,PLANFILE] """Plan D4(a) (`docs/planning/framework-context-cost-plan.md:391`).
+tools/test_methodology_dashboard.py:3874: <docstring> [LEARN] it back through the scanner rather than being handed it (fork Learning #16)."""
+tools/test_methodology_dashboard.py:3971: <docstring> [PLANREF] """Plan D4(c): `EXCLUDE_DIRS` contained the literal `"methodology"`, so in portfolio mode the
+tools/test_methodology_dashboard.py:4042: <docstring> [BL] """BL-29: D4(c) fixed the PORTFOLIO-mode self-scan (TestD4SelfExclusion above) but left a
+tools/test_methodology_dashboard.py:4125: <docstring> [S,PLANDOC,PLANFILE] """Upstream issue #67 (docs/planning/issue67-fork-side-fix-plan.md, S57 proposed / S58
+tools/test_methodology_dashboard.py:4130: <docstring> [PLANREF] fail for the reason named in its own docstring, matching the plan's own SS7 test table by row
+tools/test_methodology_dashboard.py:4331: <comment> [PLANREF] # --- Row 12: D4, dry-run must preview the gate honestly --------------------------------------
+tools/test_methodology_dashboard.py:4334: <docstring> [PLANREF] """Row 12: the D4 fix. Every design candidate's own dry-run computed the gate INSIDE the
+tools/test_methodology_dashboard.py:4349: <code> [PLANREF] self.assertEqual(written, 0, "D6: a dry run always returns 0, even with --force")
+tools/test_methodology_dashboard.py:4436: <docstring> [PLANREF] The dashboard never imports it -- that is the whole architecture (§7.1: interrogate by
+tools/test_methodology_dashboard.py:4439: <docstring> [LEARN] Two spellings of one comprehension would assert nothing (fork Learning #16)."""
+tools/test_methodology_dashboard.py:4447: <docstring> [S,PLANREF] """Queue item S38 -- the conditional trim-trigger row (design §7, §11 Phase 3).
+tools/test_methodology_dashboard.py:4454: <docstring> [PLANREF] The design says (§1.3) that the dashboard "reads the number rather than re-deriving it" and
+tools/test_methodology_dashboard.py:4566: <docstring> [PLANREF] copy of design §5.2's rate rule. Phase B deleted the rule from both tools rather than
+tools/test_methodology_dashboard.py:4616: <string> [S] "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
+tools/test_methodology_dashboard.py:4639: <string> [S] "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
+tools/test_methodology_dashboard.py:4652: <comment> [PLANREF] # PHASE C2: sized off CLASS_A_FIRE_BYTES, not READ_CAP_BYTES. This is a Class A ledger and
+tools/test_methodology_dashboard.py:4671: <docstring> [PLANREF] baseline, and no trimmer, so no budget. Decision D4 forbids reporting a 0 from an unread
+tools/test_methodology_dashboard.py:4734: <comment> [PLANREF] # --- §1.3's owed agreement test -------------------------------------------------------------
+tools/test_methodology_dashboard.py:4737: <docstring> [PLANREF] """§1.3's owed agreement test, re-pointed by Phase B onto the metric that replaced the
+tools/test_methodology_dashboard.py:4758: <comment> [PLANREF] # PHASE C2 RE-POINTED THIS REGEX, and the reason is the whole point of the test.
+tools/test_methodology_dashboard.py:5157: <comment> [S] # --- the EDGES, not only the predicates (S37's gotcha 5) ------------------------------------
+tools/test_methodology_dashboard.py:5200: <docstring> [PLANREF] PHASE C2 MOVED THE BOUNDARY THIS PAIR GUARDS, and the rename is part of the change: these
+tools/test_methodology_dashboard.py:5219: <docstring> [PLANREF] """THE BAND PHASE C2 CREATED, and the assertion that proves the move actually happened.
+tools/test_methodology_dashboard.py:5221: <docstring> [PLANREF] Before C2 this size fired. It is now the adjudicated band: past the one-read cap, so a
+tools/test_methodology_dashboard.py:5232: <code> [PLANREF] self.assertFalse(led["fires"], "and the byte arm must not fire here either, or option C1 "
+tools/test_methodology_dashboard.py:5275: <comment> [S] # THE SYNTHETIC HALF RUNS FIRST, AND THAT ORDER IS THE POINT -- S128. This half depends
+tools/test_methodology_dashboard.py:5279: <comment> [PLANREF] # hid a dead fixture for three days. Phase C2 (0afe9d6) re-denominated the Class A read
+tools/test_methodology_dashboard.py:5281: <comment> [PLANREF] # this one, and its own 287/287 run could not see the miss -- C2 silenced the live rows,
+tools/test_methodology_dashboard.py:5289: <comment> [PLANREF] # READ_CAP_BYTES + 2 that ledger fires NEITHER arm post-C2 (the byte arm is None here --
+tools/test_methodology_dashboard.py:5339: <comment> [S] # THE PARAGRAPH HERE UNTIL S128 DESCRIBED A STATE THAT NO LONGER EXISTS, and it is
+tools/test_methodology_dashboard.py:5343: <comment> [PLANREF] # repo's own CHANGELOG.md is in exactly that state." Phase C2 falsified both halves:
+tools/test_methodology_dashboard.py:5364: <comment> [PLANREF] # PHASE C2 EMPTIED THIS GUARD AND IT STAYED GREEN THAT WAY. It read
+tools/test_methodology_dashboard.py:5366: <comment> [PLANREF] # until C2 reworded it; `collect_trim_metrics` has not emitted that substring
+tools/test_methodology_dashboard.py:5417: <comment> [PLANREF] # PHASE C2 RE-SIZED AND RE-WORDED THIS CONTROL. It used to sit at READ_CAP_BYTES + 2 and
+tools/test_methodology_dashboard.py:5430: <docstring> [PLANREF] """§7.2's detection contract is `.is_file()` AND a content check by regex, and dropping
+tools/test_methodology_dashboard.py:5462: <string> [S] "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
+tools/test_methodology_dashboard.py:5473: <docstring> [S] green absence-assertion is not coverage (S37's gotcha 4), so it earns its place by
+tools/test_methodology_dashboard.py:5486: <docstring> [BL,PLANDOC,PLANREF,PLANFILE] """Phase C1 of `docs/planning/read-cap-phase-c-plan.md` (BL-51) -- the watched population
+tools/test_methodology_dashboard.py:5489: <docstring> [PLANREF,SECTION] WHAT THIS PHASE DELIBERATELY DOES NOT DO: move a threshold. Plan section 8 says option A1
+tools/test_methodology_dashboard.py:5490: <docstring> [PLANREF,SECTION] "changes no threshold and cannot degenerate anything" and section 9's Phase C1 criterion names
+tools/test_methodology_dashboard.py:5491: <docstring> [SECTION] none; section 7's A1 row, whose mechanism cell reads as if two thresholds move, is the summary
+tools/test_methodology_dashboard.py:5492: <docstring> [PLANREF,SECTION] that drifted. The threshold move is Phase C2, which section 8 requires be bundled with option
+tools/test_methodology_dashboard.py:5493: <docstring> [PLANREF] C1 (`DEFAULT_BUDGET_BYTES`) or it is inert. So the population assertion below is not a
+tools/test_methodology_dashboard.py:5508: <comment> [LEARN] # module's own parts would be an identity that cannot fail (fork Learning #16).
+tools/test_methodology_dashboard.py:5517: <docstring> [PLANREF,SECTION] """Plan section 9's first DONE criterion, asserted three ways because a partition can fail
+tools/test_methodology_dashboard.py:5523: <docstring> [LEARN] identity that cannot fail (fork Learning #16). The first draft of this test asserted exactly
+tools/test_methodology_dashboard.py:5578: <docstring> [PLANREF,SECTION] """Plan section 9's second DONE criterion: a canonical test must FAIL if a name is added
+tools/test_methodology_dashboard.py:5581: <docstring> [PLANREF,SECTION] The direction matters and is the subject of plan section 10 dragon 6. Class A is DECLARED,
+tools/test_methodology_dashboard.py:5587: <docstring> [LEARN] own executed module (fork Learning #16). This is the pattern
+tools/test_methodology_dashboard.py:5596: <string> [PLANREF,SECTION] "deliberately -- and re-read plan section 10 dragon 6 first")
+tools/test_methodology_dashboard.py:5630: <docstring> [PLANREF] precondition for Phase C1 changing no behaviour, so it is asserted rather than assumed --
+tools/test_methodology_dashboard.py:5632: <docstring> [LEARN] collector actually emitted (fork Learning #16 again).
+tools/test_methodology_dashboard.py:5654: <docstring> [PLANREF] input that can exist, and Phase C1 changed no production behaviour. What this test proves
+tools/test_methodology_dashboard.py:5695: <comment> [PLANREF] # ⚠ PHASE C2 HAD TO GROW THIS CONTROL'S FILE. It used to inherit whatever size the fixture
+tools/test_methodology_dashboard.py:5709: <docstring> [PLANREF,SECTION] """Plan section 9's third DONE criterion is a DECISION -- keep or drop, but decide it. The
+tools/test_methodology_dashboard.py:5720: <docstring> [S,LEARN] a net that misses most of them. Until the S176 resync the net had one hit, fork Learning #26
+tools/test_methodology_dashboard.py:5760: <string> [S,LEARN] "fork Learning #26 left it (S176); if that has changed, revisit the comment "
+tools/test_methodology_dashboard.py:5766: <docstring> [PLANREF] """SUCCESSOR TO `test_phase_c1_moved_no_threshold`, converted deliberately at Phase C2.
+tools/test_methodology_dashboard.py:5769: <docstring> [PLANREF] C2's job and would be inert before option C1 settled `DEFAULT_BUDGET_BYTES`. C2 did both
+tools/test_methodology_dashboard.py:5772: <docstring> [PLANREF] ⚠ AND C1'S VERSION HAD A HOLE THAT C2 WALKED STRAIGHT THROUGH — recorded rather than
+tools/test_methodology_dashboard.py:5787: <comment> [LEARN] # nothing — fork Learning #43, earned in this very class.
+tools/test_methodology_dashboard.py:5789: <string> [PLANREF] "C2 did NOT move the one-read budget. It is a measured harness fact, not "
+tools/test_methodology_dashboard.py:5797: <string> [PLANREF] "plan §3 caveat 1: the Class A arm fires BELOW the hard refusal, never at "
+tools/test_methodology_dashboard.py:5823: <docstring> [PLANREF] """Phase C2's DASHBOARD half — the two threshold sites the plan's §6 inventory left owned by
+tools/test_methodology_dashboard.py:5824: <docstring> [S] no phase, and which S115 fenced at the top of the plan rather than resolving.
+tools/test_methodology_dashboard.py:5826: <docstring> [PLANREF] WHY THIS IS IN C2 AT ALL, since §9's C2 criterion names only trimmer-side things. Because C2
+tools/test_methodology_dashboard.py:5880: <docstring> [BL] archive threshold is the ADJUDICATED case (BL-52 third addendum): truncation is ordered and
+tools/test_methodology_dashboard.py:5895: <docstring> [PLANREF] """Class B rows STAY, and still say why. This is plan §7's "make the rows DIFFERENT, not
+tools/test_methodology_dashboard.py:5898: <docstring> [BL] ⚠ THE "WHY" IT PINS CHANGED AT BL-88, DELIBERATELY, AND THE ASSERTION WAS REPLACED RATHER
+tools/test_methodology_dashboard.py:5925: <docstring> [BL] The class stays declared; the PROSE stops claiming the trimmer's answer. BL-88.
+tools/test_methodology_dashboard.py:5928: <docstring> [BL,PHASE] where nothing was read -- this fixture carries no trimmer. BL-88 P2 appends a remedy ONLY
+tools/test_methodology_dashboard.py:5930: <docstring> [PHASE] `TestBL88P2TrimmerSourceProbe` pins that arm, and pins this one byte-identical to P1."""
+tools/test_methodology_dashboard.py:5950: <docstring> [S] Measured across 12 fleet repos at S227: every `SESSION_NOTES.md` carrying an
+tools/test_methodology_dashboard.py:5952: <docstring> [ADOPTER] `mts-system` has no such heading at all, which is the case the weaker form is for.
+tools/test_methodology_dashboard.py:5981: <docstring> [PLANREF] """C2 relaxed nothing past READ_REFUSE_BYTES. There the prefix stops existing, the
+tools/test_methodology_dashboard.py:6023: <comment> [BL,PHASE] # BL-88 P2 -- P1's Class B over-cap row, FROZEN. Captured from the module at `cb9b0ed` (P1, before
+tools/test_methodology_dashboard.py:6024: <comment> [PHASE] # P2 existed) for a watched file of READ_CAP_BYTES + 1 bytes and 100 lines, with nothing evaluated
+tools/test_methodology_dashboard.py:6025: <comment> [PLANREF] # about any trimmer. A LITERAL on purpose: plan §8 P2's criterion -- "a probe that finds nothing or
+tools/test_methodology_dashboard.py:6027: <comment> [LEARN] # computed by the code under test would only compare the new code with itself (fork Learning #16).
+tools/test_methodology_dashboard.py:6079: <comment> [PHASE] # The sentence P2 appends when -- and only when -- the scanned project's own trimmer SOURCE declares
+tools/test_methodology_dashboard.py:6088: <docstring> [BL,PHASE] """BL-88 P2 -- the Class B row may name a remedy it has CHECKED, and only then lower itself.
+tools/test_methodology_dashboard.py:6090: <docstring> [PLANDOC,PHASE,PLANREF,PLANFILE] Plan: `docs/planning/dashboard-read-cap-class-adopter-drift-plan.md` §8 P2. The operator's
+tools/test_methodology_dashboard.py:6091: <docstring> [S] sub-decision (S228's report): the probe is a SOURCE-TEXT read of the scanned project's own
+tools/test_methodology_dashboard.py:6093: <docstring> [PLANREF] the §7.1 precedent `find_trim_tool` already follows for the version and the budget.
+tools/test_methodology_dashboard.py:6098: <docstring> [PHASE] never a wait for a real one), and there is none (ABSENT). Only CONFIG may differ from P1, and
+tools/test_methodology_dashboard.py:6122: <docstring> [ADOPTER] """The canonical trimmer widened the way `nprcgenekeepr` widened its own: one more entry
+tools/test_methodology_dashboard.py:6205: <docstring> [ADOPTER] """Why the reading is a PARSE and not a grep. `nprcgenekeepr`'s widened trimmer spells
+tools/test_methodology_dashboard.py:6294: <string> [PHASE,PLANREF] "severity (plan §8 P2)")
+tools/test_methodology_dashboard.py:6299: <string> [PHASE] "P2 APPENDS a sentence to P1's row; it rewrites nothing P1 said")
+tools/test_methodology_dashboard.py:6369: <docstring> [PHASE] """P2 is confined to the Class B arm between the cap and the refusal. A Class A ledger is
+tools/test_methodology_dashboard.py:6390: <comment> [BL,PHASE,PLANREF,SECTION] # === BL-101 P5: the dashboard understands both layouts (plan section 7.2, row P5; C8, C15) ===========
+tools/test_methodology_dashboard.py:6433: <docstring> [PLANREF] """C8: the compliance checklist, the adoption test and the role test read the project through the
+tools/test_methodology_dashboard.py:6489: <comment> [S] # from the half answer survived every other test (found by the S278 mutation pass).
+tools/test_methodology_dashboard.py:6503: <comment> [PLANREF] # The runner cannot decide a tie about a state file when the runner itself is at the root (plan 4.3).
+tools/test_methodology_dashboard.py:6563: <docstring> [PLANREF] """C8, the installed-source fingerprint and the read-cap watch: a methodology file is recognised by
+tools/test_methodology_dashboard.py:6589: <comment> [PLANREF,SECTION] # project with no docs/ of its own loses them when it migrates. Recorded in the plan's section 7.2d:
+tools/test_methodology_dashboard.py:6758: <docstring> [S] S277's check-overhead and check-ledger --all each took such a directory for a subdirectory)."""
+tools/test_methodology_dashboard.py:6833: <docstring> [PLANREF] floor lowered INSIDE the move commit is invisible: the plan's E2, the same class as 'a gate fails open when
+tools/test_methodology_dashboard.py:6834: <docstring> [S] its file moves' (S273)."""
+tools/test_methodology_dashboard.py:6918: <docstring> [PHASE,PLANREF] HANDOFFS.md. When this repository's own instance files move (the plan's P8 rehearsal and G-B), those two
+tools/test_methodology_trim.py:1278: <comment> [LEARN] # design and a control built that way passes for the wrong reason (fork Learning #58).
+tools/test_methodology_trim.py:1403: <comment> [BL] # BL-27 refused to excuse a bundled frontier edit ("a real loss can have this exact shape"), and
+tools/test_methodology_trim.py:1404: <comment> [PLANREF] # the plan's D2 keeps that: the verdict stays a FAIL. What changes is that the proof can now tell
+tools/test_methodology_trim.py:1416: <comment> [LEARN] # Learning #58).
+tools/test_methodology_trim.py:1493: <docstring> [BL] """NARROWED control -- the real-loss shape BL-27 protected: record 0 was a COMPLETE
+tools/test_methodology_trim.py:1494: <docstring> [BL] receipt before the trim and differs after it. Exit 1, the BL-27 note, never relabelled."""
+tools/test_methodology_trim.py:1506: <code> [BL] self.assertIn("BL-27", v.stdout, v.stdout)
+tools/test_methodology_trim.py:1661: <docstring> [PHASE] own P1 check refuses to run (the undocumented set is non-empty) and the guard is never reached."""
+tools/test_methodology_trim.py:1764: <code> [S] new = "```handoff\nsession: S99\ndate: 2026-02-02\nstatus: complete\nactive_task: y\n```\n\n---\n\n"
+tools/test_methodology_trim.py:1779: <code> [S] new = "```handoff\nsession: S99\ndate: 2026-02-02\nstatus: complete\nactive_task: y\n```\n\n---\n\n"
+tools/test_methodology_trim.py:3427: <comment> [BL,PHASE,PLANREF,SECTION] # BL-101 P3 -- a ledger under methodology/ (plan sections 4.3, 4.8, 7.2 row P3; coupling C7).
+tools/test_methodology_trim.py:3431: <comment> [PLANREF] # ledger under methodology/): shards in methodology/archive/ (decision D5), links climb one, and a
+tools/test_methodology_trim.py:3473: <docstring> [PLANREF] ledger for a link to a project file (C6) -- to EVERY record, in a commit of its own."""
+tools/test_methodology_trim.py:3757: <docstring> [PLANREF] """D5 moves the archive LAST: a project whose ledger already moved still holds the shards its legacy
+tools/test_methodology_trim.py:3810: <tcomment> [PHASE] old.write_text("a frozen shard of the legacy layout\n", encoding="utf-8")   # on disk is the test: no commit, so no P1 finding
+tools/test_migrate_layout.py:2: <docstring> [BL,PHASE] """Unit tests for bin/migrate-layout (BL-101, phase P7).
+tools/test_migrate_layout.py:5: <docstring> [PLANDOC,PLANFILE,SECTION] do not receive it. The contract is docs/planning/methodology-subdirectory-plan.md section 4.7 and section 7.3
+tools/test_migrate_layout.py:6: <docstring> [PHASE] row P7: a dry run by default; a refusal of a dirty tree, a half-migrated tree, a destination that exists and a
+tools/test_migrate_layout.py:170: <comment> [PLANREF] # places that name a moved file and that the tool reports and does not edit (plan 4.7.1)
+tools/test_migrate_layout.py:348: <comment> [FINDING] # --- the entry never lands in a fenced example (F21) ---
+tools/test_migrate_layout.py:508: <string> [PLANREF,SECTION] "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.\n"
+tools/test_migrate_layout.py:540: <docstring> [BL,PLANREF,FINDING] """BL-101 F5 (plan 7.6): the report used to put a project's tests, scripts and proofs in `other` with its prose. The
+tools/test_migrate_layout.py:562: <docstring> [BL,S,FINDING] """BL-101 F11 (register, S290): `.vscodeignore` carried 26 mentions of moved names (21 on code lines) and was filed under
+tools/test_migrate_layout.py:573: <comment> [BL,FINDING] # --- the pattern rule (BL-101 F10) ---
+tools/test_migrate_layout.py:646: <comment> [BL,FINDING] # --- the vsce rule (BL-101 F24) ---
+tools/test_migrate_layout.py:648: <comment> [S,PLANFILE] # (`package.js` `collectFiles`), measured in S299: `f24-oracle.py` re-runs this table through node and compares.
+tools/test_migrate_layout.py:692: <docstring> [S] packaged. The same row of the probe in S290 read vsce 3.6.0 (`vsce ls`): the file was listed after the move."""
+tools/test_migrate_layout.py:747: <docstring> [PHASE] moves it, and 1 of the 36 files the P17 move put into the adopter's `.vsix` was this one."""
+tools/test_migrate_layout.py:963: <docstring> [PLANREF] """Dry run is the default (plan 4.7): it reads, prints the plan as data and writes nothing."""
+tools/test_migrate_layout.py:1024: <docstring> [PLANREF] """Plan 4.7: a dirty tree, a half-migrated tree, a destination that exists and a tree where bin/status does
+tools/test_migrate_layout.py:1134: <docstring> [PLANREF] """--apply writes the migration as ONE commit (plan 4.7.2): every tracked move a rename git can follow."""
+tools/test_migrate_layout.py:1248: <docstring> [PLANREF] """Plan 4.6: tier 1 is the framework's files, tier 2 the project's state; tier 1 alone is a stopping point."""
+tools/test_migrate_layout.py:1374: <docstring> [PLANREF] that moved are rewritten (plan C11, 4.4) and a name with a directory in front of it, or inside a longer name,
+tools/test_migrate_layout.py:1411: <docstring> [PLANREF] """The two JSON configs move with the project's state and name paths in their values (plan C9): the path a file
+tools/test_migrate_layout.py:1498: <docstring> [PLANREF] """Plan 4.7.2: the migration commit carries ONE new ledger entry, and 4.7.3: it never rewrites a committed one."""
+tools/test_migrate_layout.py:1518: <comment> [ADOPTER,FINDING] # F21: chat_verification's ledger kept the v3.7 seed text, whose 'How to add an entry' section shows an example
+tools/test_migrate_layout.py:1622: <docstring> [PLANREF] """Plan 4.7.1: the tool lists every hit it will not rewrite and why: CI workflows, `.claude/` rules, `.githooks/`
+tools/test_migrate_layout.py:1623: <docstring> [PLANREF] copies, ledger links (a committed ledger entry is never edited, C6) and anything else that names a moved file."""
+tools/test_migrate_layout.py:1627: <tcomment> [BL,FINDING] CATEGORIES = ["ci", "hooks", "tests", "proofs", "scripts", "config", "harness", "ledger", "other"]  # BL-101 F5: nine, was five
+tools/test_migrate_layout.py:1697: <docstring> [BL,PHASE,PLANREF,PLANFILE,FINDING] """BL-101 F5 (plan 7.6, findings-register.md). At P11 every check the tool runs passed and the adopter's own CI broke,
+tools/test_migrate_layout.py:1703: <string> [S] "docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh")
+tools/test_migrate_layout.py:1742: <code> [FINDING] self.assertEqual({s["file"] for s in tests["sites"]}, {"tests/test_big.py"}, "the capped sites are all one file's: the crowd-out F5 found")
+tools/test_migrate_layout.py:1835: <docstring> [BL,S,PLANREF,PLANFILE,FINDING] """BL-101 F10 and F11 (plan 7.6, findings-register.md; S290). F5's list reads whole names, so a root `.Rbuildignore` of
+tools/test_migrate_layout.py:1840: <docstring> [FINDING] not R's engine. F11: a packager's ignore file (`.vscodeignore`) is config, not prose."""
+tools/test_migrate_layout.py:1872: <code> [FINDING] self.assertEqual((row["mentions"], row["code_mentions"], row["line"]), (1, 0, 1), "F5's row, as it was")
+tools/test_migrate_layout.py:1972: <comment> [FINDING] # --- F11 ---
+tools/test_migrate_layout.py:1982: <code> [FINDING] self.assertNotIn("patterns", npm, "only vsce's matching was read and run (F24): any other pattern list is listed, never judged")
+tools/test_migrate_layout.py:1992: <docstring> [BL,S,PLANREF,FINDING] """BL-101 F24 (plan 7.6, findings register; S299). F11 listed a root `.vscodeignore` as config and never judged it, so a
+tools/test_migrate_layout.py:1993: <docstring> [ADOPTER] move that put 36 files into `vscode_quarto_ext`'s `.vsix` passed every check the tool prints and only the adopter's own
+tools/test_migrate_layout.py:2017: <code> [FINDING] self.assertEqual((row["mentions"], row["code_mentions"]), (2, 2), "F5's row, as it was: the two bare names")
+tools/test_migrate_layout.py:2024: <code> [FINDING] self.assertEqual((row["line"], row["text"]), (3, "SESSION_RUNNER.md"), "an existing row keeps F5's pointer: its first mention")
+tools/test_migrate_layout.py:2032: <code> [FINDING] self.assertEqual(row["mentions"], 2, "the file still names two moved files, which is F5's row")
+tools/test_migrate_layout.py:2056: <code> [FINDING] self.assertEqual(below["mentions"], 1, "F5 lists it, as a pattern list")
+tools/test_migrate_layout.py:2123: <docstring> [PLANREF] """Plan 4.7.4: an apply verifies itself, before and after, with the read-only checks: bin/status, the two ledger
+tools/test_migrate_layout.py:2218: <code> [PHASE] self.assertNotIn("informational", checks, "no check is exempt any more: P9 rewrote the documents")
+tools/test_migrate_layout.py:2270: <docstring> [ADOPTER] """Real data (vscode_quarto_ext): an older-format proof reads its shard by its working-tree path, so it exits 2 once
+tools/test_migrate_layout.py:2331: <comment> [BL,ADOPTER,FINDING] # --- F32 (BL-105 build phase 4, vscode_quarto_ext): the shard proofs run only on a run that can go on, so the list
+tools/test_migrate_layout.py:2388: <docstring> [ADOPTER] """Real data: wsfct's pre-commit hook runs context_budget.py from the root, so it refuses the migration commit; and a
+tools/test_migrate_layout.py:2403: <docstring> [ADOPTER,FINDING] """Real data (church_growth, register F15): the layout-aware ledger hook assigns the tool's name on a line marked
+tools/test_migrate_layout.py:2426: <docstring> [FINDING] """The F15 reproduction: the hook register row F2 tells an adopter to install, copied into a project as it is."""
+tools/test_migrate_layout.py:2440: <docstring> [ADOPTER] """Real data (wsfct): context_budget.py install-hook writes .git/hooks/pre-commit, which is per clone and not
+tools/test_migrate_layout.py:2517: <docstring> [ADOPTER] """Real data (claude_work): a ledger that is only the seed cannot take its entry and stay a rename at 90%."""
+tools/test_migrate_layout.py:2530: <comment> [BL,PLANREF,SECTION] # --- BL-105 build phase 2: PROJECT_LEARNINGS.md joins the move as a companion (plan D10; the rehearsal record, section 7) ---
+tools/test_migrate_layout.py:2541: <docstring> [S] and in a gate: the three places the rehearsal (S302) found a project pointing at it."""
+tools/test_migrate_layout.py:2567: <docstring> [PHASE,ADOPTER] """A tree the tool calls migrated, with the file still at the root: nprcgenekeepr's state at P15."""
+tools/test_migrate_layout.py:2574: <docstring> [PLANREF] """Plan D10: the file joins the move with no manifest entry. It is the project's own state, so tier 2's."""
+tools/test_migrate_layout.py:2678: <docstring> [PLANREF,ADOPTER,SECTION] """Plan D10, record section 7: a tree the tool calls migrated has the file still at the root (nprcgenekeepr,
+tools/test_migrate_layout.py:2679: <docstring> [ADOPTER] model_project_constructor, vscode_quarto_ext); today the tool says `nothing to migrate`. The configs are under
+tools/test_migrate_layout.py:2680: <docstring> [FINDING] methodology/ there, and the rewrite reads them where the layout puts them (F29)."""
+tools/test_migrate_layout.py:2813: <docstring> [BL,FINDING] """BL-101 F30: the links a move breaks are read as the pure rules say, before any project is involved."""
+tools/test_migrate_layout.py:2864: <docstring> [BL,S,FINDING] """BL-101 F30 (his call, S303: LIST ONLY). A link from a project's live document to a file the move takes breaks and
+tools/test_quality_ratchet.py:255: <comment> [S] # Ctrl-C tests in the background (S306). A fourth argument asks for SIGHUP ignored, as `nohup` would.
+tools/test_quality_ratchet.py:268: <docstring> [BL] the wrong reason. A test suite run under a shell is the shape here (BL-107)."""
+tools/test_quality_ratchet.py:323: <docstring> [BL] """BL-107. `subprocess.run(shell=True, timeout=t)` kills the shell, not the shell's children: a test
+tools/test_quality_ratchet.py:383: <comment> [S] # (measured, S306); ProcessLookupError is a group already gone. Neither is a failure of the gate.
+tools/test_quality_ratchet.py:409: <docstring> [S] (measured, S306: one child left after SIGINT and after SIGHUP to the tool's group)."""
+tools/test_quality_ratchet.py:900: <docstring> [BL,PHASE,PLANREF,SECTION] """BL-101 P2 (plan section 4.3): a project keeps its manifest at its root (legacy) or under
+tools/test_quality_ratchet.py:979: <comment> [S,PLANREF] # S276's picker (plan 7.2b): a project whose runner is under methodology/ keeps its manifest
+tools/test_quality_ratchet.py:1031: <docstring> [BL,PHASE,PLANREF] """BL-101 P2, plan C4. A move that reads as 'manifest removed' is refused for the wrong reason,
+tools/test_quality_ratchet.py:1061: <comment> [PLANREF] # The fail-open C4 measured: once the manifest is under methodology/ a ratchet that looks
+tools/test_quality_ratchet.py:1135: <comment> [S] # S276's picker: the ratchet works inside methodology/. A loosening there is refused for the
+tools/test_quality_ratchet.py:1202: <docstring> [PLANREF] refuses every commit loudly (C4); the hook now also looks for the tool in the other layout."""
+tools/test_quality_ratchet.py:1302: <tcomment> [BL] "shutil", "signal", "time",   # signal, time: a gate's command is stopped when the tool is (BL-107)
+tools/test_quality_ratchet.py:1303: <tcomment> [BL,PHASE] "pathlib"}   # the embedded layout-resolver block (BL-101 P2) imports it
+tools/test_quality_ratchet.py:1321: <comment> [BL] # and on a signal to the tool (BL-107). Run only where the platform has process groups.
+tools/test_sync_layouts.py:2: <docstring> [BL,PHASE] """Unit tests for the sync layer in both layouts (BL-101, phase P6).
+tools/test_sync_layouts.py:6: <docstring> [PLANDOC,PHASE,PLANFILE,SECTION] contract is docs/planning/methodology-subdirectory-plan.md section 7.2 row P6 and the couplings it
+tools/test_sync_layouts.py:7: <docstring> [PLANREF] names (C1 no blank seed beside a real ledger and no second runner, C2 ignore mode, C3 status and
+tools/test_sync_layouts.py:41: <tcomment> [SECTION] tlr = _load("test_layout_resolver", HERE / "test_layout_resolver.py")  # section 4.1, typed out as literals
+tools/test_sync_layouts.py:146: <docstring> [PLANREF,SECTION] """The new destination of every distributed file, from the plan's section 4.1 as
+tools/test_sync_layouts.py:303: <docstring> [PLANREF] directory gets the default, which stays legacy until the contract release (plan 5A.2 rule 2, D7)."""
+tools/test_sync_layouts.py:379: <docstring> [PLANREF] """C1: a tool that writes the new layout into a legacy tree leaves a second, current runner beside the stale one
+tools/test_sync_layouts.py:395: <tcomment> [PHASE] self.assertNotIn("not built", r.out)  # P7 built the tool: a refusal names a command that exists, without a caveat
+tools/test_sync_layouts.py:422: <docstring> [PLANREF] """C1, the seed half: a seed is the project's after its first creation, and a ledger that sits at the root
+tools/test_sync_layouts.py:518: <docstring> [PLANREF] """C2: ignore mode lists the TRACKED destinations file by file, so the list, the detection of an ignored
+tools/test_sync_layouts.py:640: <docstring> [PLANREF] """C3: status reads each project at the place its layout puts the files, and says which layout that is.
+tools/test_sync_layouts.py:641: <docstring> [PLANREF] Plan 5A.2 rule 6: a status over a portfolio names each project's layout, so a half-migrated portfolio is
+tools/test_sync_layouts.py:725: <docstring> [PLANREF] """C3: a seed in the new layout may still sit at the root (tier 1, or the project's own changelog), and its
+tools/test_sync_layouts.py:815: <docstring> [PLANREF] """C3: check-links simulates the adopter tree from the manifest, so it has to be able to simulate the new
+
+=== SOFT-ONLY lines in full ===
+ITERATIVE_METHODOLOGY.md:296: [upstream-ref] 8. **Record every action, then commit.** Before committing: (a) remove any debug instrumentation added during this session (tagged debug logs per `/diagnose` — see `RECOMMENDED_SKILLS.md` — and ad-hoc prints); (b) prepend a dated, source-tagged entry to the authoritative ledger `CHANGELOG.md` for **
+bin/check-links:247: [upstream-ref] # the caller's tree (issue #36).
+starter-kit/methodology_dashboard.py:132: [fork] # removed" rows nobody caused (9 of the 10 on this fork after the 2026-10 resync) and could miss a
+starter-kit/methodology_dashboard.py:145: [upstream-ref] # placed to check, and the subject of upstream issue #59. The self-scan is safe now that Layer 4
+starter-kit/methodology_dashboard.py:731: [fork] # campaign plan, which lives on the fork's `main` only:
+starter-kit/methodology_dashboard.py:777: [upstream-ref] # Arriving via upstream/main's PR #66 (context-budget gate, FM #28): a version constant, for a
+starter-kit/methodology_dashboard.py:800: [upstream-ref] # Arriving via upstream/main's PR #82 (the quality ratchet): a third installed executable, with its
+starter-kit/methodology_dashboard.py:1195: [upstream-ref] Issue #67 point 1: the remedy used to be the portfolio-wide --sync only -- disproportionate
+starter-kit/methodology_dashboard.py:1490: [upstream-ref] Issue #67 point 2. Every current flag is dash-prefixed, so this is really just "the first
+starter-kit/methodology_dashboard.py:3909: [operator] # never an execution -- the operator's decision). Where that reading lists this
+starter-kit/methodology_dashboard.py:3958: [operator] # know what an operator was told. Absent key tolerated: a metrics dict built by an older
+starter-kit/methodology_dashboard.py:5047: [upstream-ref] if "--dry-run" in args:                                                    # issue #67 pt. 4
+starter-kit/methodology_trim.py:72: [upstream-ref] # 1.7.0: issue #93, cause 3 — a proof is a FROZEN artifact, so a fix to the
+starter-kit/methodology_trim.py:90: [upstream-ref] # 1.6.0: issue #93, cause 1 — a commit that FINALIZES a session's pending claim
+starter-kit/methodology_trim.py:114: [upstream-ref] # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
+starter-kit/methodology_trim.py:1430: [upstream-ref] # Issue #93: what a PENDING STUB looks like in this ledger, or '' when it declares none. A frozen
+starter-kit/methodology_trim.py:1692: [upstream-ref] # Issue #93 fix: whole-line membership, not substring containment. `ln in sfront` and
+starter-kit/methodology_trim.py:1725: [upstream-ref] # @@APPARATUS@@ says a trim earns its own commit, and issue #93 measured what it costs --
+starter-kit/methodology_trim.py:1743: [upstream-ref] # Issue #93, cause 1: ONE shape of frontier edit can be NAMED rather than merely noted -- a pending
+starter-kit/methodology_trim.py:1845: [upstream-ref] # template never reaches an old proof (issue #93: ten of one adopter's 54 proofs read red on trims
+starter-kit/methodology_trim.py:2124: [upstream-ref] # Issue #93, cause 1 -- the PREVENT half. The generated proof can only NAME a stub finalize after
+starter-kit/methodology_trim.py:2135: [operator] # still the operator's call. It keys on the ledger's declared stub_marker, so a ledger that
+starter-kit/quality_ratchet.py:235: [upstream-ref] a commit that REMOVES the manifest from the worktree (PR #82 review, 2a/4): a walk that only
+starter-kit/quality_ratchet.py:653: [upstream-ref] the root broke every commit in a fresh clone of the latter (PR #82 review, section 4)."""
+tools/fixtures/trim-verify-template-1.7.0.sh:35: [upstream-ref] # Issue #93: what a PENDING STUB looks like in this ledger, or '' when it declares none. A frozen
+tools/fixtures/trim-verify-template-1.7.0.sh:297: [upstream-ref] # Issue #93 fix: whole-line membership, not substring containment. `ln in sfront` and
+tools/fixtures/trim-verify-template-1.7.0.sh:330: [upstream-ref] # FRAMEWORK_APPARATUS.md says a trim earns its own commit, and issue #93 measured what it costs --
+tools/fixtures/trim-verify-template-1.7.0.sh:348: [upstream-ref] # Issue #93, cause 1: ONE shape of frontier edit can be NAMED rather than merely noted -- a pending
+tools/methodology_dashboard.py:132: [fork] # removed" rows nobody caused (9 of the 10 on this fork after the 2026-10 resync) and could miss a
+tools/methodology_dashboard.py:145: [upstream-ref] # placed to check, and the subject of upstream issue #59. The self-scan is safe now that Layer 4
+tools/methodology_dashboard.py:731: [fork] # campaign plan, which lives on the fork's `main` only:
+tools/methodology_dashboard.py:777: [upstream-ref] # Arriving via upstream/main's PR #66 (context-budget gate, FM #28): a version constant, for a
+tools/methodology_dashboard.py:800: [upstream-ref] # Arriving via upstream/main's PR #82 (the quality ratchet): a third installed executable, with its
+tools/methodology_dashboard.py:1195: [upstream-ref] Issue #67 point 1: the remedy used to be the portfolio-wide --sync only -- disproportionate
+tools/methodology_dashboard.py:1490: [upstream-ref] Issue #67 point 2. Every current flag is dash-prefixed, so this is really just "the first
+tools/methodology_dashboard.py:3909: [operator] # never an execution -- the operator's decision). Where that reading lists this
+tools/methodology_dashboard.py:3958: [operator] # know what an operator was told. Absent key tolerated: a metrics dict built by an older
+tools/methodology_dashboard.py:5047: [upstream-ref] if "--dry-run" in args:                                                    # issue #67 pt. 4
+tools/test_layout_resolver.py:128: [his] difference is what he overruled)."""
+tools/test_methodology_dashboard.py:2338: [fork] """A repo whose manifest forks into two lineages and is joined by a --no-ff merge whose
+tools/test_methodology_dashboard.py:2517: [upstream-ref] # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
+tools/test_methodology_dashboard.py:2524: [fork] # stale-copy message, which this fork's `--sync [DIR]`-based message does not contain by
+tools/test_methodology_dashboard.py:3181: [fork] # same completeness gate) is deliberately not carried over: this fork's design derives
+tools/test_methodology_dashboard.py:3973: [upstream-ref] is best placed to check, and the subject of upstream issue #59.
+tools/test_methodology_dashboard.py:4359: [upstream-ref] """Row 13: direct reproduction of issue #67 point 4. RED because today's bare --dry-run
+tools/test_methodology_dashboard.py:4711: [operator] told an operator looking straight at an installed tool that it was not installed."""
+tools/test_methodology_dashboard.py:4721: [operator] # different finding from `tool_present` False, and conflating them once told an operator
+tools/test_methodology_dashboard.py:5264: [operator] # --- what the operator actually READS: the severities and the numbers ----------------------
+tools/test_methodology_dashboard.py:5457: [operator] what an operator was told."""
+tools/test_methodology_dashboard.py:5830: [operator] which the comment above that remedy says the wording exists to avoid. The operator widened C2
+tools/test_methodology_dashboard.py:6268: [operator] """The operator's decision, pinned: a source whose top level would write a file and exit
+tools/test_methodology_dashboard.py:6715: [upstream-ref] # The portfolio root is not a git repository, so a new copy there is gated without --force (issue #67):
+tools/test_methodology_trim.py:1259: [upstream-ref] # Issue #93, cause 2 -- the GENERATED .verify.sh's L2 "leaked" clause is a SUBSTRING test.
+tools/test_methodology_trim.py:1268: [upstream-ref] # the ten false reds in the adopter issue #93 reports are this shape.
+tools/test_methodology_trim.py:1397: [upstream-ref] # Issue #93, cause 1 -- a commit that FINALIZES a session's pending claim stub and trims in the
+tools/test_methodology_trim.py:1401: [upstream-ref] # the adopter issue #93 reports, with nothing lost.
+tools/test_methodology_trim.py:1415: [fork] # tamper is made BEFORE the one commit: the proof reads the trim commit's own contents (fork
+tools/test_methodology_trim.py:1621: [upstream-ref] # Issue #93, cause 1, the PREVENT half -- a write-time guard. The proof can only NAME a stub
+tools/test_methodology_trim.py:1632: [operator] # operator's call. The guard keys on the ledger's declared stub_marker, so a ledger that declares
+tools/test_methodology_trim.py:1833: [upstream-ref] # Issue #93, the third layer -- SAY THE SAME THING EVERYWHERE. The rule that makes a trim lossless-
+tools/test_methodology_trim.py:1884: [upstream-ref] # Issue #93, cause 3 -- `--reverify <shard>`. A proof is a FROZEN artifact, so a fix to the
+tools/test_methodology_trim.py:1956: [upstream-ref] t2 = re.sub(r"# Issue #93: what a PENDING STUB.*?\nSTUB = re\.compile\(.*?\n",
+tools/test_quality_ratchet.py:252: [fork] # non-interactive shell has SIGINT ignored, ignored signals survive fork and exec, and Python installs no
+tools/test_quality_ratchet.py:480: [fork] pid, fd = pty.fork()

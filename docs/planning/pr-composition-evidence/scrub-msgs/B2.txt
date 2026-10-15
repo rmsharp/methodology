@@ -1,0 +1,7 @@
+docs: drop internal references from the text the dashboard prints and its tests assert on
+
+The risk text the dashboard prints for a half-migrated project no longer carries a backlog code, and
+the assertion messages of tools/test_methodology_dashboard.py no longer cite session numbers, option
+labels or plan sections. No logic changes: the token stream of each Python file, with its string
+literals and comments masked, is equal before and after, and the two copies of the dashboard stay
+byte-identical.

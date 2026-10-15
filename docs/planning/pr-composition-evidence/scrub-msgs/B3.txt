@@ -1,0 +1,7 @@
+docs: drop internal references from the shell suite's titles, the hook's selftest labels and a gate's reason
+
+The test titles and failure messages of bin/tests.sh, the selftest labels and the refusal text of
+.githooks/pre-commit, and the "why" of one gate in .quality-gates.json no longer carry backlog codes,
+probe labels or plan citations. The one selftest label that bin/tests.sh matches by substring is
+changed in both places. No logic changes: each shell file still parses, and the gate manifest is equal
+before and after with every "why" masked.

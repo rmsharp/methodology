@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the messages of phase B and the phase A index (`scrub-msgs/B1.txt` to `B3.txt`, `scrub-derive-output.txt`)
+
+`scrub-derive-output.txt` is the derivation over the candidate before the scrub: 654 lines carrying a fork token in 28 files (601 in comments and docstrings, 53 in a string or in code), and the index the phase A builder accounts against. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the messages of four more commits (`scrub-msgs/C4.txt` to `C7.txt`)
 
 The ratchet's and the budget gate's, the layout resolver's, the sync layer's, and the shell suite's and the hook's. Each states what it removes and the proof it carries; none carries a fork token. Model: Claude Sonnet 5.5.
