@@ -1,0 +1,33 @@
+files in both trees: 96; the sets are equal
+executable bits / modes unchanged: yes
+27 file(s) differ
+  .githooks/pre-commit                           sh -n parses                                 ok
+  .quality-gates.json                            JSON, `why` masked                           ok
+  bin/_manifest.py                               Python tokens, strings and comments masked   ok
+  bin/_manifest_reader.py                        Python tokens, strings and comments masked   ok
+  bin/check-handoff                              Python tokens, strings and comments masked   ok
+  bin/check-layout-literals                      Python tokens, strings and comments masked   ok
+  bin/check-ledger                               Python tokens, strings and comments masked   ok
+  bin/check-links                                Python tokens, strings and comments masked   ok
+  bin/migrate-layout                             Python tokens, strings and comments masked   ok
+  bin/status                                     Python tokens, strings and comments masked   ok
+  bin/sync                                       Python tokens, strings and comments masked   ok
+  bin/tests.sh                                   bash -n parses                               ok
+  starter-kit/context_budget.py                  Python tokens, strings and comments masked   ok
+  starter-kit/methodology_dashboard.py           Python tokens, strings and comments masked   ok
+  starter-kit/methodology_trim.py                Python tokens, strings and comments masked   ok
+  starter-kit/quality_ratchet.py                 Python tokens, strings and comments masked   ok
+  tools/layout_fixtures.py                       Python tokens, strings and comments masked   ok
+  tools/layout_resolver.py                       Python tokens, strings and comments masked   ok
+  tools/methodology_dashboard.py                 Python tokens, strings and comments masked   ok
+  tools/test_checker_layouts.py                  Python tokens, strings and comments masked   ok
+  tools/test_context_budget.py                   Python tokens, strings and comments masked   ok
+  tools/test_layout_resolver.py                  Python tokens, strings and comments masked   ok
+  tools/test_methodology_dashboard.py            Python tokens, strings and comments masked   ok
+  tools/test_methodology_trim.py                 Python tokens, strings and comments masked   ok
+  tools/test_migrate_layout.py                   Python tokens, strings and comments masked   ok
+  tools/test_quality_ratchet.py                  Python tokens, strings and comments masked   ok
+  tools/test_sync_layouts.py                     Python tokens, strings and comments masked   ok
+the two dashboard copies byte-identical in 28f99a7: yes
+diff against FROM: +692 / -733 over 27 files (git diff --numstat)
+CUMULATIVE PROOF: HOLDS

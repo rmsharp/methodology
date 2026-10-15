@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S324 -- the scrub: the saved outputs: the phase B index, what is left, the cumulative proof and the clean-clone gate run (`scrub-derive-after-a.txt`, `scrub-derive-final-output.txt`, `scrub-proof-output.txt`, `scrub-gate-output.txt`)
+
+The phase A tip's residual (68 lines in 12 files, the index phase B accounts against), the final tip's (25 lines in 6 files), the proof over `5afc962..28f99a7` (27 files differ, no code token changed) and `layer-verify.sh` on `28f99a7` in a clean `--no-local` clone: the ratchet 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `cfa4d5b5fa67`, the scanner 15 files and 0 sites, the shipped proof exit 0. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S324 -- the scrub: the messages of phase B and the phase A index (`scrub-msgs/B1.txt` to `B3.txt`, `scrub-derive-output.txt`)
 
 `scrub-derive-output.txt` is the derivation over the candidate before the scrub: 654 lines carrying a fork token in 28 files (601 in comments and docstrings, 53 in a string or in code), and the index the phase A builder accounts against. Model: Claude Sonnet 5.5.

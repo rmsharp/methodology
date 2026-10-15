@@ -1,0 +1,371 @@
+candidate 6658fc6 (tree 1632399cb374e0004b7d679dff76f10ee0a94bd6) against f34769f: 46 changed files
+
+STRICT classes, added lines carrying one (a line with two counts once per class):
+  BL         23
+  S           9
+  LEARN       1
+  PLANDOC     3
+  PHASE       8
+  PLANREF    17
+  PRPLAN      0
+  ADOPTER     0
+  PLANFILE    1
+  FINDING    13
+  SECTION     2
+  lines with at least one strict token: 68 in 12 files
+  lines with only a soft word (not counted):  61 in 10 files
+
+per file (strict lines / soft-only lines / classes):
+  tools/test_methodology_dashboard.py                15   12   BL=1 PLANREF=9 PLANFILE=1 S=4 SECTION=1 LEARN=1 PHASE=2
+  tools/fixtures/trim-verify-template-1.7.0.sh       12    4   BL=10 PLANDOC=1 PLANREF=1
+  tools/test_migrate_layout.py                       10    0   PLANREF=1 SECTION=1 S=1 FINDING=7 PHASE=1
+  bin/tests.sh                                        9    0   BL=3 S=2 PHASE=1 FINDING=5
+  .githooks/pre-commit                                5    0   BL=2 FINDING=1 PLANREF=2
+  tools/test_methodology_trim.py                      5    9   BL=1 PHASE=2 S=2
+  bin/check-layout-literals                           3    0   PLANDOC=2 PLANREF=1
+  bin/migrate-layout                                  3    0   PLANREF=2 BL=1 PHASE=1
+  starter-kit/methodology_trim.py                     3   10   BL=2 PLANREF=1
+  .quality-gates.json                                 1    0   BL=1 PHASE=1
+  starter-kit/methodology_dashboard.py                1   10   BL=1
+  tools/methodology_dashboard.py                      1   10   BL=1
+  ITERATIVE_METHODOLOGY.md                            0    1   
+  bin/check-links                                     0    1   
+  starter-kit/quality_ratchet.py                      0    2   
+  tools/test_quality_ratchet.py                       0    2   
+
+STRICT lines by where the token sits (comment, tcomment (a trailing comment) and docstring are inert; string and code are behaviour-bearing):
+  comment      12
+  tcomment      1
+  docstring     2
+  string       22
+  code         31
+
+per file, behaviour-bearing strict lines (string + code):
+  tools/test_methodology_dashboard.py              string=13 code=2 (of 15)
+  tools/test_migrate_layout.py                     string=2 code=8 (of 10)
+  bin/tests.sh                                     string=0 code=8 (of 9)
+  .githooks/pre-commit                             string=0 code=5 (of 5)
+  bin/migrate-layout                               string=1 code=2 (of 3)
+  starter-kit/methodology_trim.py                  string=3 code=0 (of 3)
+  tools/test_methodology_trim.py                   string=0 code=3 (of 5)
+  bin/check-layout-literals                        string=1 code=1 (of 3)
+  .quality-gates.json                              string=0 code=1 (of 1)
+  starter-kit/methodology_dashboard.py             string=1 code=0 (of 1)
+  tools/fixtures/trim-verify-template-1.7.0.sh     string=0 code=1 (of 12)
+  tools/methodology_dashboard.py                   string=1 code=0 (of 1)
+
+134 distinct repository paths cited on added lines; 80 are not in the candidate's tree:
+  .githooks/h                                                            <- tools/test_layout_resolver.py
+  .githooks/pre-push                                                     <- tools/test_migrate_layout.py
+  bin/__pycache__                                                        <- tools/layout_fixtures.py, tools/test_migrate_layout.py, tools/test_sync_layouts.py
+  bin/check                                                              <- bin/check-layout-literals
+  bin/notes                                                              <- tools/test_migrate_layout.py
+  bin/refresh                                                            <- tools/test_migrate_layout.py
+  bin/tool                                                               <- tools/test_layout_resolver.py
+  bin/x                                                                  <- tools/test_layout_resolver.py
+  docs/.gitignore                                                        <- tools/test_migrate_layout.py
+  docs/BACKLOG.md                                                        <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/CHANGELOG.md                                                      <- tools/test_methodology_dashboard.py
+  docs/PROJECT_LEARNINGS.md                                              <- tools/test_migrate_layout.py
+  docs/RELEASE_HISTORY.md                                                <- tools/test_methodology_trim.py
+  docs/SESSION_RUNNER.md                                                 <- tools/test_migrate_layout.py
+  docs/a                                                                 <- tools/test_migrate_layout.py
+  docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh <- tools/test_migrate_layout.py
+  docs/architecture-history/SESSION_NOTES-pointer-collapse.verify.sh     <- tools/test_migrate_layout.py
+  docs/archive/../../etc/passwd                                          <- tools/test_methodology_trim.py
+  docs/archive/CHANGELOG-archive.md                                      <- tools/test_migrate_layout.py
+  docs/archive/CHANGELOG-through-2025-11-01.md                           <- tools/test_checker_layouts.py
+  docs/archive/CHANGELOG-through-2025-12-01.md                           <- tools/test_checker_layouts.py
+  docs/archive/CHANGELOG-through-2026-01-01.md                           <- tools/fixtures/trim-verify-template-1.7.0.sh, tools/test_methodology_trim.py, tools/test_m
+  docs/archive/CHANGELOG-through-2026-01-01.md.verify.sh                 <- tools/test_methodology_trim.py
+  docs/archive/CHANGELOG-through-2026-08-01.md                           <- tools/test_migrate_layout.py
+  docs/archive/HANDOFFS-through-1999-01-01.md                            <- tools/test_methodology_trim.py
+  docs/archive/HANDOFFS-through-2026-02-02                               <- tools/test_methodology_trim.py
+  docs/archive/HANDOFFS-through-2026-02-02.md                            <- tools/test_methodology_trim.py
+  docs/archive/HANDOFFS-through-2026-08-02.md                            <- tools/test_migrate_layout.py
+  docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh                  <- tools/test_migrate_layout.py
+  docs/archive/SESSION_NOTES-through-2026-08-01.md                       <- tools/test_migrate_layout.py
+  docs/archive/SESSION_NOTES-through-2026-08-01.md.verify.sh             <- tools/test_migrate_layout.py
+  docs/archive/notes.md                                                  <- tools/test_migrate_layout.py
+  docs/archive/project-notes.md                                          <- tools/test_migrate_layout.py
+  docs/archive/s.sh                                                      <- tools/test_methodology_dashboard.py
+  docs/archive/s.verify.sh                                               <- tools/test_methodology_dashboard.py
+  docs/archive/sub/CHANGELOG-through-2026-08-01.md                       <- tools/test_migrate_layout.py
+  docs/audits/2026-08-15-bl36-archive-losslessness.md                    <- tools/fixtures/trim-verify-template-1.7.0.sh
+  docs/b.md                                                              <- tools/test_methodology_trim.py
+  docs/g.md                                                              <- tools/test_migrate_layout.py
+  docs/guide.md                                                          <- tools/test_migrate_layout.py
+  docs/guide.qmd                                                         <- tools/test_migrate_layout.py
+  docs/index.md                                                          <- tools/test_methodology_dashboard.py
+  docs/many.md                                                           <- tools/test_migrate_layout.py
+  docs/methodology                                                       <- HOW_TO_USE.md, bin/check-layout-literals, bin/migrate-layout, bin/tests.sh, starter-kit/BO
+  docs/methodology/CHANGELOG.md                                          <- tools/test_methodology_trim.py
+  docs/methodology/FRAMEWORK_APPARATUS.md                                <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_sync_layo
+  docs/methodology/HOW_TO_USE.md                                         <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_layout_re
+  docs/methodology/ITERATIVE_METHODOLOGY.md                              <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_migrate_l
+  docs/methodology/PROJECT_CONVENTIONS.md                                <- tools/test_migrate_layout.py
+  docs/methodology/ROADMAP.md                                            <- tools/test_sync_layouts.py
+  docs/methodology/sessions                                              <- starter-kit/BOOTSTRAP.md
+  docs/methodology/workstreams                                           <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md                <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/AUDIT_WORKSTREAM.md                       <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/DESIGN_WORKSTREAM.md                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md                 <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_migrate_l
+  docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md                    <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/planning/BACKLOG.md                                               <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  docs/x.md                                                              <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  docs/x/CHANGELOG.md                                                    <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py
+  docs/x/HANDOFFS.md                                                     <- tools/test_methodology_trim.py
+  docs/x/SESSION_NOTES-pointer-collapse.verify.sh                        <- tools/test_migrate_layout.py
+  docs/x/a.md                                                            <- tools/test_migrate_layout.py
+  starter-kit/GHOST.md                                                   <- tools/test_sync_layouts.py
+  starter-kit/NAME                                                       <- tools/test_layout_resolver.py
+  starter-kit/X                                                          <- bin/migrate-layout
+  starter-kit/a.py                                                       <- tools/test_layout_resolver.py
+  starter-kit/bad.py                                                     <- tools/test_layout_resolver.py
+  starter-kit/notes.md                                                   <- tools/test_layout_resolver.py
+  starter-kit/t.py                                                       <- tools/test_layout_resolver.py
+  tools/__pycache__                                                      <- tools/test_layout_resolver.py, tools/test_migrate_layout.py, tools/test_sync_layouts.py
+  tools/layout_fixtures.GENERATED                                        <- bin/migrate-layout
+  tools/methodology/quality_ratchet.py                                   <- tools/test_quality_ratchet.py
+  tools/methodology_trim.py                                              <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodolo
+  tools/test_x.py                                                        <- tools/test_layout_resolver.py
+  workstreams/A.md                                                       <- tools/test_methodology_trim.py
+
+99 bare file names on added lines are not the basename of any file in the candidate's tree (fixture names are expected; read for evidence-script names):
+  02d.py                                         <- tools/test_migrate_layout.py
+  20b.md                                         <- tools/test_migrate_layout.py
+  20y.md                                         <- tools/test_methodology_trim.py
+  A.md                                           <- tools/test_context_budget.py, tools/test_methodology_dashboard.py
+  ALPHA.md                                       <- bin/migrate-layout, tools/test_migrate_layout.py
+  B.md                                           <- tools/test_context_budget.py, tools/test_methodology_dashboard.py
+  BACKUP-CHANGELOG.md                            <- tools/test_layout_resolver.py
+  CHANGELOG-archive.md                           <- tools/test_migrate_layout.py
+  CHANGELOG-through-.txt                         <- tools/test_migrate_layout.py
+  CHANGELOG-through-2000-01-01.md                <- tools/layout_fixtures.py
+  CHANGELOG-through-2025-12-31.md                <- tools/test_methodology_dashboard.py
+  CHANGELOG-through-2026-08-01.md                <- tools/test_migrate_layout.py
+  CHANGELOG-through-2026-08-01.md.verify.sh      <- tools/test_migrate_layout.py
+  CHANGELOG-through-2026-09-28.md.verify.sh      <- tools/test_migrate_layout.py
+  CHANGELOG-through-a.md                         <- tools/test_methodology_dashboard.py
+  CHANGELOG-through-x.md                         <- tools/test_migrate_layout.py
+  CHANGELOG-through-z.md                         <- tools/test_methodology_dashboard.py
+  CODE_OF_CONDUCT.md                             <- bin/migrate-layout
+  CONTEXT.md                                     <- ITERATIVE_METHODOLOGY.md, starter-kit/BOOTSTRAP.md, starter-kit/RECOMMENDED_SKIL
+  CONTRIBUTING.md                                <- bin/migrate-layout
+  FOO.txt                                        <- tools/test_migrate_layout.py
+  HANDOFFS-through-2026-08-02-3.md.verify.sh     <- tools/test_migrate_layout.py
+  HANDOFFS-through-2026-08-02.md                 <- tools/test_migrate_layout.py
+  HANDOFFS-through-2026-08-02.md.verify.sh       <- tools/test_migrate_layout.py
+  ISSUE_TEMPLATE.md                              <- bin/migrate-layout
+  MY_CHANGELOG.md                                <- tools/test_migrate_layout.py
+  MY_SESSION_RUNNER.md                           <- tools/test_migrate_layout.py
+  NOTES-CHANGELOG.md                             <- tools/test_migrate_layout.py
+  PARENT_WORKSTREAM.md                           <- bin/check-links, tools/test_sync_layouts.py
+  PROJECT_CONVENTIONS.md                         <- tools/test_migrate_layout.py
+  PROJECT_LEARNINGS.md                           <- bin/migrate-layout, starter-kit/BOOTSTRAP.md, starter-kit/CLAUDE_TEMPLATE.md, to
+  PULL_REQUEST_TEMPLATE.md                       <- bin/migrate-layout
+  PWNED4.md                                      <- tools/test_methodology_trim.py
+  ROADMAP-through-x.md                           <- tools/test_migrate_layout.py
+  SESSION_NOTES-through-x.md                     <- tools/test_migrate_layout.py
+  _CAMPAIGN.md                                   <- starter-kit/SESSION_RUNNER.md
+  _TEMPLATE.md                                   <- starter-kit/BOOTSTRAP.md
+  a.md                                           <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  a.txt                                          <- tools/test_migrate_layout.py
+  also-gone.md                                   <- tools/test_migrate_layout.py
+  app.py                                         <- tools/test_methodology_dashboard.py
+  args.json                                      <- bin/migrate-layout
+  b.md                                           <- tools/test_migrate_layout.py
+  b.txt                                          <- tools/test_migrate_layout.py
+  c.md                                           <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  chap07.md                                      <- starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test
+  chapter07.md                                   <- tools/test_methodology_dashboard.py
+  d.md                                           <- starter-kit/methodology_trim.py, tools/test_migrate_layout.py
+  dashboard_history.jsonl                        <- bin/migrate-layout, starter-kit/methodology_dashboard.py, tools/layout_fixtures.
+  does-not-exist.md                              <- tools/test_methodology_dashboard.py
+  f.md                                           <- tools/test_migrate_layout.py
+  g.md                                           <- tools/test_migrate_layout.py
+  gone.md                                        <- tools/test_migrate_layout.py
+  guide.md                                       <- tools/test_migrate_layout.py
+  keep.txt                                       <- tools/test_layout_resolver.py, tools/test_migrate_layout.py
+  ledger-trimmer-design.md                       <- tools/test_methodology_dashboard.py
+  many.md                                        <- tools/test_migrate_layout.py
+  marker.txt                                     <- tools/test_quality_ratchet.py
+  moved.verify.sh                                <- tools/test_methodology_trim.py
+  my-SESSION_RUNNER.md                           <- tools/test_migrate_layout.py
+  n.quality-gates-results.json                   <- tools/test_migrate_layout.py
+  nCHANGELOG.md                                  <- tools/test_migrate_layout.py
+  nREADME.md                                     <- tools/test_migrate_layout.py
+  nSESSION_RUNNER.md                             <- tools/test_migrate_layout.py
+  new.txt                                        <- tools/test_migrate_layout.py
+  note.md                                        <- tools/test_migrate_layout.py
+  notes.md                                       <- tools/test_migrate_layout.py
+  notes.txt                                      <- tools/test_layout_resolver.py, tools/test_migrate_layout.py
+  npackage.json                                  <- tools/test_migrate_layout.py
+  npm-shrinkwrap.json                            <- bin/migrate-layout
+  old.HANDOFFS.md                                <- tools/test_layout_resolver.py
+  other.md                                       <- tools/test_migrate_layout.py
+  other.txt                                      <- tools/test_context_budget.py
+  package-lock.json                              <- bin/migrate-layout
+  package.json                                   <- bin/migrate-layout, tools/test_migrate_layout.py
+  project-notes.md                               <- tools/test_migrate_layout.py
+  r.json                                         <- tools/test_quality_ratchet.py
+  rSESSION_RUNNER.md                             <- tools/test_migrate_layout.py
+  run.sh                                         <- tools/test_migrate_layout.py
+  runs.txt                                       <- tools/test_quality_ratchet.py
+  s-through-2026-01-01.md                        <- tools/test_methodology_trim.py
+  s.md                                           <- starter-kit/methodology_trim.py, tools/test_migrate_layout.py
+  s.verify.sh                                    <- tools/test_methodology_dashboard.py, tools/test_methodology_trim.py
+  scratch.txt                                    <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  session_runner.md                              <- tools/test_migrate_layout.py
+  settings.json                                  <- tools/test_migrate_layout.py
+  stray.txt                                      <- tools/test_migrate_layout.py
+  tracked.txt                                    <- .githooks/pre-commit
+  trim_fixture.py                                <- tools/test_methodology_dashboard.py
+  u.md                                           <- tools/test_migrate_layout.py
+  unrelated.txt                                  <- tools/test_quality_ratchet.py
+  verify-all.sh                                  <- tools/test_migrate_layout.py
+  verify.sh                                      <- .githooks/pre-commit
+  w.md                                           <- tools/test_migrate_layout.py
+  x.md                                           <- tools/test_methodology_trim.py, tools/test_migrate_layout.py
+  x.md.verify.sh                                 <- tools/test_methodology_trim.py
+  x00ADMAP.md                                    <- tools/test_sync_layouts.py
+  xSESSION_RUNNER.md                             <- tools/test_migrate_layout.py
+  z.md                                           <- tools/test_methodology_dashboard.py
+
+=== STRICT lines in full (file:line: text) ===
+.githooks/pre-commit:92: <code> [BL] expect "stale REBASE_HEAD -> STILL REFUSED (BL-76)"         1
+.githooks/pre-commit:177: <code> [FINDING] build newledger; expect "new layout: ledger not co-staged -> REFUSED (X2, the gate follows the ledger)" 1
+.githooks/pre-commit:326: <code> [PLANREF] legacy_runner=SESSION_RUNNER.md           # layout: ok -- the framework anchor, root half: it decides a tie (plan 7.2a)
+.githooks/pre-commit:329: <code> [PLANREF] new_archive=methodology/archive           # layout: ok -- where it will write it once the archive moves (D5)
+.githooks/pre-commit:423: <code> [BL] (the layout table in the BL-101 plan: stop, name both). Finish the move (the
+.quality-gates.json:66: <code> [BL,PHASE] "why": "BL-101 P4: the canonical checkers (check-ledger and check-handoff) run as commands in both layouts, in a tie the runner decides and in a half-migrated tree. Count never drops; green/red is carried by tests-sh-passed. 11 is measured (Ran 11 tests, OK)."
+bin/check-layout-literals:19: <docstring> [PLANDOC] A name behind a canonical-source directory (starter-kit/, tools/, workstreams/, docs/planning/) is that
+bin/check-layout-literals:56: <code> [PLANDOC] CANONICAL_PREFIXES = ("starter-kit/", "tools/", "workstreams/", "docs/planning/", "docs/tutorials/", "docs/audits/")
+bin/check-layout-literals:59: <string> [PLANREF] "bin/tests.sh": "the suite encodes the layout and is parameterised over both (plan C13)",
+bin/migrate-layout:1060: <code> [PLANREF] refusals.append(refusal("not-current", "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): "
+bin/migrate-layout:1122: <string> [BL,PHASE] "Moved by bin/migrate-layout of the KJ5HST/methodology checkout at %s%s (BL-101 P7)." % (sha, modified),
+bin/migrate-layout:1352: <code> [PLANREF] out.append("    at tier 1 and then at tier all (plan 7.4).")
+bin/tests.sh:1532: <code> [BL] echo "== Test 36: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) =="
+bin/tests.sh:1546: <comment> [S] # S13`), `pipefail` makes the pipeline's status the producer's, the `if` reads false, and the
+bin/tests.sh:1630: <code> [BL] || fail "BL-97 site(s) present: $SITES45"
+bin/tests.sh:1644: <code> [S] if "$B" --file "$F" 2>&1 | grep -q 'S13'; then                      # HIDDEN
+bin/tests.sh:1697: <code> [BL,PHASE,FINDING] echo "== Test 37: the ledger hook and the ratchet chain follow the files under methodology/ (BL-101 P2, X2, RED-first) =="
+bin/tests.sh:1729: <code> [FINDING] && pass "$L37 layout: a later commit that leaves the ledger out is refused, naming ${PRE37}CHANGELOG.md (X2)" \
+bin/tests.sh:1730: <code> [FINDING] || fail "$L37 layout: X2 -- exit $RC37, wanted 1 naming ${PRE37}CHANGELOG.md; got: $OUT37"
+bin/tests.sh:1796: <code> [FINDING] || fail "tie decided by the anchor: X2 -- exit $RC37, wanted 1 naming methodology/CHANGELOG.md; got: $OUT37"
+bin/tests.sh:1856: <code> [FINDING] t37_mutant "the new-layout ledger branch disabled" 's.replace("if indexed \"$new_ledger\"; then", "if false; then", 1)' "new layout: ledger not co-staged -> REFUSED (X2"
+starter-kit/methodology_dashboard.py:3783: <string> [BL] "to guess (BL-101). Move or remove one copy"})
+starter-kit/methodology_trim.py:1697: <string> [BL] # `> 24` length filter is kept. Same class of fix as BL-28 just above, on the other clause.
+starter-kit/methodology_trim.py:1749: <string> [BL] # one missing and the edit keeps the generic note and exit 1, which is what BL-27 protected: a
+starter-kit/methodology_trim.py:1760: <string> [PLANREF] # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 (the plan's D2).
+tools/fixtures/trim-verify-template-1.7.0.sh:29: <comment> [BL] # BL-27 fix 1: the same declared front-matter fields assert_L2's reversal exception already knows
+tools/fixtures/trim-verify-template-1.7.0.sh:194: <comment> [BL] # --- What the TRIM COMMIT introduced, MEASURED rather than assumed (BL-36) -------------------
+tools/fixtures/trim-verify-template-1.7.0.sh:207: <comment> [PLANDOC] # missing at every trim (docs/audits/2026-08-15-bl36-archive-losslessness.md).
+tools/fixtures/trim-verify-template-1.7.0.sh:218: <comment> [BL] # which is BL-27's judgement and is still correct — a real loss has that same shape.
+tools/fixtures/trim-verify-template-1.7.0.sh:266: <comment> [BL] # a declared regenerated field's own value (BL-27 fix 1), the same exception assert_L2 already
+tools/fixtures/trim-verify-template-1.7.0.sh:286: <comment> [BL] # BL-28 fix: exact-line-set membership, not substring containment. `ln not in afront` tested
+tools/fixtures/trim-verify-template-1.7.0.sh:302: <comment> [BL] # `> 24` length filter is kept. Same class of fix as BL-28 just above, on the other clause.
+tools/fixtures/trim-verify-template-1.7.0.sh:327: <comment> [BL] # BL-27 fix 2: a same-commit close-out bundling (a session's own frontier receipt going
+tools/fixtures/trim-verify-template-1.7.0.sh:336: <comment> [BL] # BL-36 re-expressed the gate in the new vocabulary. It was `bad == [0]` — the record-ALTERED
+tools/fixtures/trim-verify-template-1.7.0.sh:354: <comment> [BL] # one missing and the edit keeps the generic note and exit 1, which is what BL-27 protected: a
+tools/fixtures/trim-verify-template-1.7.0.sh:365: <comment> [PLANREF] # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 (the plan's D2).
+tools/fixtures/trim-verify-template-1.7.0.sh:379: <code> [BL] "carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was "
+tools/methodology_dashboard.py:3783: <string> [BL] "to guess (BL-101). Move or remove one copy"})
+tools/test_methodology_dashboard.py:201: <string> [BL] "R must still count as Source -- BL-34 only adds the missing language row")
+tools/test_methodology_dashboard.py:3635: <string> [PLANREF] "option C1 raised the byte budget to MEET the Class A arm; if they have "
+tools/test_methodology_dashboard.py:3637: <string> [PLANREF] "that is the inertness plan §5 warns about")
+tools/test_methodology_dashboard.py:3640: <string> [PLANREF,PLANFILE] "next record (ledger-trimmer-design.md §5.2)")
+tools/test_methodology_dashboard.py:4345: <code> [PLANREF] self.assertEqual(written, 0, "D6: a dry run always returns 0, even with --force")
+tools/test_methodology_dashboard.py:4612: <string> [S] "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
+tools/test_methodology_dashboard.py:4635: <string> [S] "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
+tools/test_methodology_dashboard.py:5228: <code> [PLANREF] self.assertFalse(led["fires"], "and the byte arm must not fire here either, or option C1 "
+tools/test_methodology_dashboard.py:5458: <string> [S] "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
+tools/test_methodology_dashboard.py:5592: <string> [PLANREF,SECTION] "deliberately -- and re-read plan section 10 dragon 6 first")
+tools/test_methodology_dashboard.py:5756: <string> [S,LEARN] "fork Learning #26 left it (S176); if that has changed, revisit the comment "
+tools/test_methodology_dashboard.py:5785: <string> [PLANREF] "C2 did NOT move the one-read budget. It is a measured harness fact, not "
+tools/test_methodology_dashboard.py:5793: <string> [PLANREF] "plan §3 caveat 1: the Class A arm fires BELOW the hard refusal, never at "
+tools/test_methodology_dashboard.py:6289: <string> [PHASE,PLANREF] "severity (plan §8 P2)")
+tools/test_methodology_dashboard.py:6294: <string> [PHASE] "P2 APPENDS a sentence to P1's row; it rewrites nothing P1 said")
+tools/test_methodology_trim.py:1505: <code> [BL] self.assertIn("BL-27", v.stdout, v.stdout)
+tools/test_methodology_trim.py:1660: <docstring> [PHASE] own P1 check refuses to run (the undocumented set is non-empty) and the guard is never reached."""
+tools/test_methodology_trim.py:1763: <code> [S] new = "```handoff\nsession: S99\ndate: 2026-02-02\nstatus: complete\nactive_task: y\n```\n\n---\n\n"
+tools/test_methodology_trim.py:1778: <code> [S] new = "```handoff\nsession: S99\ndate: 2026-02-02\nstatus: complete\nactive_task: y\n```\n\n---\n\n"
+tools/test_methodology_trim.py:3809: <tcomment> [PHASE] old.write_text("a frozen shard of the legacy layout\n", encoding="utf-8")   # on disk is the test: no commit, so no P1 finding
+tools/test_migrate_layout.py:508: <string> [PLANREF,SECTION] "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.\n"
+tools/test_migrate_layout.py:1703: <string> [S] "docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh")
+tools/test_migrate_layout.py:1742: <code> [FINDING] self.assertEqual({s["file"] for s in tests["sites"]}, {"tests/test_big.py"}, "the capped sites are all one file's: the crowd-out F5 found")
+tools/test_migrate_layout.py:1872: <code> [FINDING] self.assertEqual((row["mentions"], row["code_mentions"], row["line"]), (1, 0, 1), "F5's row, as it was")
+tools/test_migrate_layout.py:1982: <code> [FINDING] self.assertNotIn("patterns", npm, "only vsce's matching was read and run (F24): any other pattern list is listed, never judged")
+tools/test_migrate_layout.py:2017: <code> [FINDING] self.assertEqual((row["mentions"], row["code_mentions"]), (2, 2), "F5's row, as it was: the two bare names")
+tools/test_migrate_layout.py:2024: <code> [FINDING] self.assertEqual((row["line"], row["text"]), (3, "SESSION_RUNNER.md"), "an existing row keeps F5's pointer: its first mention")
+tools/test_migrate_layout.py:2032: <code> [FINDING] self.assertEqual(row["mentions"], 2, "the file still names two moved files, which is F5's row")
+tools/test_migrate_layout.py:2056: <code> [FINDING] self.assertEqual(below["mentions"], 1, "F5 lists it, as a pattern list")
+tools/test_migrate_layout.py:2218: <code> [PHASE] self.assertNotIn("informational", checks, "no check is exempt any more: P9 rewrote the documents")
+
+=== SOFT-ONLY lines in full ===
+ITERATIVE_METHODOLOGY.md:296: [upstream-ref] 8. **Record every action, then commit.** Before committing: (a) remove any debug instrumentation added during this session (tagged debug logs per `/diagnose` — see `RECOMMENDED_SKILLS.md` — and ad-hoc prints); (b) prepend a dated, source-tagged entry to the authoritative ledger `CHANGELOG.md` for **
+bin/check-links:247: [upstream-ref] # the caller's tree (issue #36).
+starter-kit/methodology_dashboard.py:141: [upstream-ref] # placed to check, and the subject of upstream issue #59. The self-scan is safe now that the dashboard
+starter-kit/methodology_dashboard.py:725: [fork] # campaign plan, which lives on the fork's `main` only:
+starter-kit/methodology_dashboard.py:771: [upstream-ref] # Arriving via upstream/main's PR #66 (context-budget gate, FM #28): a version constant, for a
+starter-kit/methodology_dashboard.py:794: [upstream-ref] # Arriving via upstream/main's PR #82 (the quality ratchet): a third installed executable, with its
+starter-kit/methodology_dashboard.py:1189: [upstream-ref] Issue #67 point 1: the remedy used to be the portfolio-wide --sync only -- disproportionate
+starter-kit/methodology_dashboard.py:1434: [operator] # the row an operator reads stops matching `--check`, which is the one thing the design names
+starter-kit/methodology_dashboard.py:1483: [upstream-ref] Issue #67 point 2. Every current flag is dash-prefixed, so this is really just "the first
+starter-kit/methodology_dashboard.py:1503: [upstream-ref] Issue #67 points 2/3/4: a write is
+starter-kit/methodology_dashboard.py:3944: [operator] # know what an operator was told. Absent key tolerated: a metrics dict built by an older
+starter-kit/methodology_dashboard.py:5033: [upstream-ref] if "--dry-run" in args:                                                    # issue #67 pt. 4
+starter-kit/methodology_trim.py:72: [upstream-ref] # 1.7.0: issue #93, cause 3 — a proof is a FROZEN artifact, so a fix to the
+starter-kit/methodology_trim.py:90: [upstream-ref] # 1.6.0: issue #93, cause 1 — a commit that FINALIZES a session's pending claim
+starter-kit/methodology_trim.py:114: [upstream-ref] # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
+starter-kit/methodology_trim.py:1430: [upstream-ref] # Issue #93: what a PENDING STUB looks like in this ledger, or '' when it declares none. A frozen
+starter-kit/methodology_trim.py:1692: [upstream-ref] # Issue #93 fix: whole-line membership, not substring containment. `ln in sfront` and
+starter-kit/methodology_trim.py:1725: [upstream-ref] # @@APPARATUS@@ says a trim earns its own commit, and issue #93 measured what it costs --
+starter-kit/methodology_trim.py:1743: [upstream-ref] # Issue #93, cause 1: ONE shape of frontier edit can be NAMED rather than merely noted -- a pending
+starter-kit/methodology_trim.py:1845: [upstream-ref] # template never reaches an old proof (issue #93: ten of one adopter's 54 proofs read red on trims
+starter-kit/methodology_trim.py:2124: [upstream-ref] # Issue #93, cause 1 -- the PREVENT half. The generated proof can only NAME a stub finalize after
+starter-kit/methodology_trim.py:2135: [operator] # still the operator's call. It keys on the ledger's declared stub_marker, so a ledger that
+starter-kit/quality_ratchet.py:235: [upstream-ref] a commit that REMOVES the manifest from the worktree (PR #82 review, 2a/4): a walk that only
+starter-kit/quality_ratchet.py:653: [upstream-ref] the root broke every commit in a fresh clone of the latter (PR #82 review, section 4)."""
+tools/fixtures/trim-verify-template-1.7.0.sh:35: [upstream-ref] # Issue #93: what a PENDING STUB looks like in this ledger, or '' when it declares none. A frozen
+tools/fixtures/trim-verify-template-1.7.0.sh:297: [upstream-ref] # Issue #93 fix: whole-line membership, not substring containment. `ln in sfront` and
+tools/fixtures/trim-verify-template-1.7.0.sh:330: [upstream-ref] # FRAMEWORK_APPARATUS.md says a trim earns its own commit, and issue #93 measured what it costs --
+tools/fixtures/trim-verify-template-1.7.0.sh:348: [upstream-ref] # Issue #93, cause 1: ONE shape of frontier edit can be NAMED rather than merely noted -- a pending
+tools/methodology_dashboard.py:141: [upstream-ref] # placed to check, and the subject of upstream issue #59. The self-scan is safe now that the dashboard
+tools/methodology_dashboard.py:725: [fork] # campaign plan, which lives on the fork's `main` only:
+tools/methodology_dashboard.py:771: [upstream-ref] # Arriving via upstream/main's PR #66 (context-budget gate, FM #28): a version constant, for a
+tools/methodology_dashboard.py:794: [upstream-ref] # Arriving via upstream/main's PR #82 (the quality ratchet): a third installed executable, with its
+tools/methodology_dashboard.py:1189: [upstream-ref] Issue #67 point 1: the remedy used to be the portfolio-wide --sync only -- disproportionate
+tools/methodology_dashboard.py:1434: [operator] # the row an operator reads stops matching `--check`, which is the one thing the design names
+tools/methodology_dashboard.py:1483: [upstream-ref] Issue #67 point 2. Every current flag is dash-prefixed, so this is really just "the first
+tools/methodology_dashboard.py:1503: [upstream-ref] Issue #67 points 2/3/4: a write is
+tools/methodology_dashboard.py:3944: [operator] # know what an operator was told. Absent key tolerated: a metrics dict built by an older
+tools/methodology_dashboard.py:5033: [upstream-ref] if "--dry-run" in args:                                                    # issue #67 pt. 4
+tools/test_methodology_dashboard.py:2338: [fork] """A repo whose manifest forks into two lineages and is joined by a --no-ff merge whose
+tools/test_methodology_dashboard.py:2515: [upstream-ref] # NOTE: `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not carried here --
+tools/test_methodology_dashboard.py:3179: [fork] # same completeness gate) is deliberately not carried over: this fork's design derives
+tools/test_methodology_dashboard.py:3970: [upstream-ref] is best placed to check, and the subject of upstream issue #59.
+tools/test_methodology_dashboard.py:4122: [upstream-ref] """Upstream issue #67: `check_stale_version()`'s only remedy was a portfolio-wide `--sync` for a one-file
+tools/test_methodology_dashboard.py:4355: [upstream-ref] """Row 13: direct reproduction of issue #67 point 4. RED because today's bare --dry-run
+tools/test_methodology_dashboard.py:4707: [operator] told an operator looking straight at an installed tool that it was not installed."""
+tools/test_methodology_dashboard.py:4717: [operator] # different finding from `tool_present` False, and conflating them once told an operator
+tools/test_methodology_dashboard.py:5260: [operator] # --- what the operator actually READS: the severities and the numbers ----------------------
+tools/test_methodology_dashboard.py:5453: [operator] what an operator was told."""
+tools/test_methodology_dashboard.py:6263: [operator] """The operator's decision, pinned: a source whose top level would write a file and exit
+tools/test_methodology_dashboard.py:6710: [upstream-ref] # The portfolio root is not a git repository, so a new copy there is gated without --force (issue #67):
+tools/test_methodology_trim.py:1259: [upstream-ref] # Issue #93, cause 2 -- the GENERATED .verify.sh's L2 "leaked" clause is a SUBSTRING test.
+tools/test_methodology_trim.py:1268: [upstream-ref] # the ten false reds in the adopter issue #93 reports are this shape.
+tools/test_methodology_trim.py:1397: [upstream-ref] # Issue #93, cause 1 -- a commit that FINALIZES a session's pending claim stub and trims in the
+tools/test_methodology_trim.py:1401: [upstream-ref] # the adopter issue #93 reports, with nothing lost.
+tools/test_methodology_trim.py:1620: [upstream-ref] # Issue #93, cause 1, the PREVENT half -- a write-time guard. The proof can only NAME a stub
+tools/test_methodology_trim.py:1631: [operator] # operator's call. The guard keys on the ledger's declared stub_marker, so a ledger that declares
+tools/test_methodology_trim.py:1832: [upstream-ref] # Issue #93, the third layer -- SAY THE SAME THING EVERYWHERE. The rule that makes a trim lossless-
+tools/test_methodology_trim.py:1883: [upstream-ref] # Issue #93, cause 3 -- `--reverify <shard>`. A proof is a FROZEN artifact, so a fix to the
+tools/test_methodology_trim.py:1955: [upstream-ref] t2 = re.sub(r"# Issue #93: what a PENDING STUB.*?\nSTUB = re\.compile\(.*?\n",
+tools/test_quality_ratchet.py:252: [fork] # non-interactive shell has SIGINT ignored, ignored signals survive fork and exec, and Python installs no
+tools/test_quality_ratchet.py:480: [fork] pid, fd = pty.fork()
