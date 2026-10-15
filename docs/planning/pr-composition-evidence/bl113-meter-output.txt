@@ -1,0 +1,31 @@
+BL-113's measurement, 2026-10-15 (S325). The doubled read: each runner blob written twice over, the Read tool called on the
+result with no offset or limit; above its 25,000-token cap it prints the whole file's token count in its truncation notice.
+The reader was a general-purpose subagent on the opus model, told to copy each notice verbatim and nothing else. Its four
+lines are below, unedited. The number is a claim until its control reproduces: up-x2 is the control.
+
+Files (built from `git show <rev>:starter-kit/SESSION_RUNNER.md`, concatenated twice; blob hashes read with `git hash-object`):
+  up-x2    upstream's runner, 505541c, blob 71ad950f, 52,839 B, doubled 105,678 B
+  cand-x2  the candidate's runner, 28f99a7, blob 3d09a4a8, 53,184 B, doubled 106,368 B
+  A-x2     the candidate's runner with the example command dropped, blob 07ef7250, 53,100 B, doubled 106,200 B
+  B-x2     A with two more wording changes, 53,085 B, doubled 106,170 B (not used: A is enough)
+
+--- the reader's report, verbatim ---
+up-x2: [Truncated: PARTIAL view — /private/tmp/claude-501/-Users-rmsharp-Development-methodology/891ced55-68d6-4e45-bb79-36b7224ec2dc/scratchpad/meter/up-x2.md: showing lines 1-449 of 795 total (37599 tokens, cap 25000). Call Read with offset=450 limit=449 for the next page, or Grep to find a specific section. To read it anyway, up to what still fits in your context, call Read again with allow_large: true — only if you genuinely need all of it or the user asked for the whole file. Do NOT answer from this page alone if the answer may be further in the file.]
+cand-x2: [Truncated: PARTIAL view — /private/tmp/claude-501/-Users-rmsharp-Development-methodology/891ced55-68d6-4e45-bb79-36b7224ec2dc/scratchpad/meter/cand-x2.md: showing lines 1-448 of 799 total (37823 tokens, cap 25000). Call Read with offset=449 limit=448 for the next page, or Grep to find a specific section. To read it anyway, up to what still fits in your context, call Read again with allow_large: true — only if you genuinely need all of it or the user asked for the whole file. Do NOT answer from this page alone if the answer may be further in the file.]
+A-x2: [Truncated: PARTIAL view — /private/tmp/claude-501/-Users-rmsharp-Development-methodology/891ced55-68d6-4e45-bb79-36b7224ec2dc/scratchpad/meter/A-x2.md: showing lines 1-449 of 799 total (37753 tokens, cap 25000). Call Read with offset=450 limit=449 for the next page, or Grep to find a specific section. To read it anyway, up to what still fits in your context, call Read again with allow_large: true — only if you genuinely need all of it or the user asked for the whole file. Do NOT answer from this page alone if the answer may be further in the file.]
+B-x2: [Truncated: PARTIAL view — /private/tmp/claude-501/-Users-rmsharp-Development-methodology/891ced55-68d6-4e45-bb79-36b7224ec2dc/scratchpad/meter/B-x2.md: showing lines 1-449 of 799 total (37747 tokens, cap 25000). Call Read with offset=450 limit=449 for the next page, or Grep to find a specific section. To read it anyway, up to what still fits in your context, call Read again with allow_large: true — only if you genuinely need all of it or the user asked for the whole file. Do NOT answer from this page alone if the answer may be further in the file.]
+Reader's note: it read A-x2 and B-x2 together in one parallel batch, not one after the other as asked; up-x2 and cand-x2 were each read alone, in order.
+--- end of the reader's report ---
+
+What the four lines give (halved: the doubled file is the file twice):
+  blob      bytes    doubled   tokens (halved)   B/token    against the ceiling 18,900
+  control   52,839   37,599    18,799.5          2.8107     recorded in .context-budget.json (the runner row's note: "the doubled read reports 37,599, so 18,799.5 tokens"): REPRODUCED
+  before    53,184   37,823    18,911.5          2.8123     +11.5 over (the tool, at 2.8107, said 18,921: +21)
+  after (A) 53,100   37,753    18,876.5          2.8130     -23.5 under
+  B         53,085   37,747    18,873.5          2.8127     not used
+
+The control reproduced to the token, which is what makes the other three readings usable. NOT shown by this file: that the
+reader's own tokenizer equals the harness a maintainer's agent runs on; that the two readings read in parallel were not
+affected by it (the notice is computed per file, and each is a whole-file count); the density is one number per blob and
+says nothing about how the tokens fall across the file. The committed blob of the reduction commit is 07ef7250 (A), read back
+with `git rev-parse HEAD:starter-kit/SESSION_RUNNER.md`.

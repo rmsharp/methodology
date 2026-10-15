@@ -1,0 +1,14 @@
+docs(runner): drop the layout paragraph's duplicate example command; the runner reads under its ceiling again
+
+The runner's "Where the files are" paragraph carried an example of the trimmer's command in a migrated
+project, and FRAMEWORK_APPARATUS.md already carries the same command and cites that section by name. The
+runner is a whole-read file with a token ceiling, so the copy is dropped from it: 84 B, 53,184 B to 53,100 B.
+
+Measured by the doubled read (the file twice over, so the Read tool prints a whole-file token count),
+against a control that reproduced its recorded 37,599: the runner before the cut read 18,911.5 tokens,
+11.5 over its 18,900 ceiling (the config's density, measured on the earlier blob, made the tool say 18,921);
+after the cut it reads 18,876.5, 23.5 under. The runner's row in .context-budget.json records the new
+blob's density (2.8130 B/token at 53,100 B) and a sentence saying how it was measured; its ceiling,
+max_tokens 18,900, is unchanged, and `context_budget.py --status` reads ok and exits 0.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>

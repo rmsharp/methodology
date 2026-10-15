@@ -1,0 +1,43 @@
+BL-113's reduction commit: the budget tool's reading, before and after (2026-10-15, S325). Every block is the tool's own output, colour stripped.
+Run in clones of pr2/candidate: python3 starter-kit/context_budget.py --status (read-only; it writes nothing).
+
+## 1. Before: the candidate's tip 28f99a7 (runner 53,184 B), exit 2
+
+──────────────────────────────────────────────────────────────────────────
+  context budget  OVER   resident 49,722 B ≈ 16,970 tok
+──────────────────────────────────────────────────────────────────────────
+  file                                      size     ceiling  status
+  CLAUDE.md                             49,722 B    59,168 B  ok
+  starter-kit/SESSION_RUNNER.md      ≈18,921 tok  18,900 tok  over
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  starter-kit/FRAMEWORK_LEARNINGS.md    17,621 B    73,728 B  ok
+──────────────────────────────────────────────────────────────────────────
+  resident total 49,722 B / 59,168 B ceiling   growth run 1/10
+  read-set total 70,132 B / no ceiling declared
+──────────────────────────────────────────────────────────────────────────
+
+  starter-kit/SESSION_RUNNER.md — ≈18,921 tokens exceeds the 18,900-token ceiling by 21 — at 2.8107 B/token (measured)
+
+
+## 2. After: the reduction commit ced2c82 (runner 53,100 B, blob 07ef7250), exit 0
+
+──────────────────────────────────────────────────────────────────────────
+  context budget  OK   resident 49,722 B ≈ 16,970 tok
+──────────────────────────────────────────────────────────────────────────
+  file                                      size     ceiling  status
+  CLAUDE.md                             49,722 B    59,168 B  ok
+  starter-kit/SESSION_RUNNER.md         53,100 B           —  ok
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  starter-kit/FRAMEWORK_LEARNINGS.md    17,621 B    73,728 B  ok
+──────────────────────────────────────────────────────────────────────────
+  resident total 49,722 B / 59,168 B ceiling   growth run 1/10
+  read-set total 70,048 B / no ceiling declared
+──────────────────────────────────────────────────────────────────────────
+  nothing over budget
+
+
+## 3. The ceiling is live: the runner grown by N bytes of 'x' on ced2c82 (a throwaway clone)
++0 B (runner 53100 B): exit 0
++68 B (runner 53168 B): exit 0
++69 B (runner 53169 B): exit 2  starter-kit/SESSION_RUNNER.md — ≈18,901 tokens exceeds the 18,900-token ceiling by 1 — at 2.8130 B/token (measured)
+At the previous density (2.8107) the same ceiling fires at 53,126 B (int(53,125 / 2.8107) = 18,900; 53,126 / 2.8107 = 18,901.3): the density row moves the line by 43 B.
