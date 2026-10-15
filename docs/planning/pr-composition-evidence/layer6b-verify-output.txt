@@ -1,0 +1,39 @@
+2026-10-15T00:33:30Z
+ 19:33:30  up 23 days  1:39,  8 users,  load average: 11.95, 9.65, 8.25
+verifying 505541c3b351fdd5971f0b662599667a78dee5c8 in a clean clone; 0 dirty paths
+changed against its parent a459b8b:
+  9	1	.quality-gates.json
+  0	2	bin/check-layout-literals
+  10	0	bin/tests.sh
+  204	0	tools/test_checker_layouts.py
+  7	4	tools/test_layout_resolver.py
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  16/16 pass · 0 fail · 0 unmeasured · results e960a10e187f · manifest 8169f9089eea
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 300         300  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 395         395  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 76          76  pass
+  checker-layout-unit-tests              >= 11          11  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 16/16 pass · 0 fail · 0 unmeasured · results e960a10e187f · manifest 8169f9089eea
+
+ratchet exit 0
+check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 188 prose not counted
+scanner exit 0
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done
+2026-10-15T00:43:07Z

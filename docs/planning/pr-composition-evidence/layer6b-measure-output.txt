@@ -1,0 +1,64 @@
+## Section 1: unit suites
+### the checkers' suite on the layer (python3 tools/test_checker_layouts.py), 505541c
+Ran 11 tests in 1.491s
+OK
+### the layout suite on the layer / on the parent (python3 tools/test_layout_resolver.py)
+Ran 76 tests in 1.915s OK 
+Ran 76 tests in 1.868s OK 
+### the checkers' suite exists at the parent? no
+
+## Section 2: the builder reproduces the layer's tree, and refuses on drift
+stage tools written: bin/check-ledger, bin/check-handoff, tools/test_layout_resolver.py
+stage suite written: tools/test_checker_layouts.py, bin/tests.sh, bin/check-layout-literals, tools/test_layout_resolver.py
+stage suite written: .quality-gates.json
+built tree   bc9d4c00f6d5
+layer's tree bc9d4c00f6d5
+refused: bin/check-handoff in the candidate is blob e4376f7, not upstream's d314c4d; the premise (the layer is upstream's blob plus the tip's layout hunks) does not hold
+dirty paths after the refusal: 0
+
+## Section 3: the layout-literal scanner on the layer (a series: it read 14 sites in 14 files at layer 5, 0 sites in 12 files at layer 6)
+parent, bin/check-handoff read by hand (the parent's scanner exempts it): 6 sites, 0 acknowledged
+parent, bin/check-ledger read by hand (the parent's scanner exempts it): 4 sites, 0 acknowledged
+layer:  check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 188 prose not counted
+layer:  scanner exit 0
+layer:  exempt from the scan: ['bin/_manifest.py', 'bin/tests.sh', 'tools/methodology_dashboard.py']
+
+## Section 4: the two open pull requests (git merge-tree --write-tree; exit 0 clean, 1 conflicts)
+#94 head 972eb2cd6263
+== tip 0aa1897 against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip 505541c against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+#92 head fa2bb5d464f9
+== tip 0aa1897 against #92: exit 0 (first line is a tree)
+== tip 505541c against #92: exit 0 (first line is a tree)
+
+## Section 5: scrub input (a coarse regular expression over the layer's added lines, per file; the scrub is its own commit after the layers)
+.quality-gates.json                  added     9 | BL-   1 | phase   1 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+bin/check-handoff                    added    60 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   2
+bin/check-layout-literals            added     0 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+bin/check-ledger                     added    72 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   2
+bin/tests.sh                         added    10 | BL-   1 | phase   2 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+tools/test_checker_layouts.py        added   204 | BL-   1 | phase   1 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   1
+tools/test_layout_resolver.py        added     9 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning   0 | FM   0 | plan   0
+
+## Section 6: the changed files, per commit and in all (git diff --numstat), and the candidate against upstream
+505541c test(checkers): the checkers' own suite, its gate, and the layout scanner now reads both
+a459b8b feat(checkers): bin/check-ledger and bin/check-handoff find a project's ledger at the root or under methodology/
+commit a459b8b: 3 files
+commit 505541c: 5 files
+       9      1  .quality-gates.json
+      60     13  bin/check-handoff
+       0      2  bin/check-layout-literals
+      72      5  bin/check-ledger
+      10      0  bin/tests.sh
+     204      0  tools/test_checker_layouts.py
+       9      5  tools/test_layout_resolver.py
+  all: 7 files, +364 / -26
+the candidate 505541c against upstream/main f34769f: 12 commits;  29 files changed, 15279 insertions(+), 1085 deletions(-)
+
+layer6b-measure done
