@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-4.md` (1 record(s), 39,659 B → 27,867 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-14 → 2026-10-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-14-4.md`](docs/archive/HANDOFFS-through-2026-10-14-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-14-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-14-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,659 B → 27,867 B (−29.7%).
+
 ### 2026-10-14 · [BL-109] S319 -- his close-out picker: a backlog row for the fork's `migrate-layout-unit-tests` gate, which passes over a red command-level suite
 
 BL-109 in `docs/planning/BACKLOG.md` (one compact row, +346 B: the file is 58,987 B against its 56,750 B budget, still the dashboard's one high flag) and its detail at the end of `docs/planning/BACKLOG-DETAIL.md`. Written from what S319 measured: the fork's `measure_gate()` (1.5.0, `:483`) is byte-identical to the candidate's and ignores the exit code of a gate with an `extract`; `bin/tests.sh` runs only two fast classes of that suite; a script over `.quality-gates.json` and `bin/tests.sh` found it the only extract gate whose suite is run in part (the other eight are run whole). The fix shape (a second gate over the same command, no `extract`, max 0) is recorded as an option, **not built and no gate changed**; the pull request's candidate gets the pair when its layer is built. Model: Claude Sonnet 5.5.
