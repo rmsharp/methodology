@@ -1,0 +1,22 @@
+layer6b-probe: fork 4a521e4, layer 505541c3b351fdd5971f0b662599667a78dee5c8, tip 4a521e4; 2026-10-15T00:45:37Z
+== state layer: layer 505541c + tip 4a521e4's tool and suite; docs=0; 3 paths differ from the layer; scope classes
+   load at start: 11.10, 10.90, 9.51
+   exit 1 in 62 s
+   Ran 23 tests in 62.124s
+   FAILED (failures=10)
+   failed: TestTheChecks.test_a_framework_document_that_dangles_after_the_move_is_a_difference_exits_4_and_the_commit_stands
+   failed: TestTheChecks.test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure
+   failed: TestTheChecks.test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back
+   failed: TestTheChecks.test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4
+   failed: TestTheChecks.test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank
+   failed: TestTheChecks.test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds
+   failed: TestTheChecks.test_the_text_a_person_reads_lists_each_check_before_and_after
+   failed: TestTheChecks.test_the_text_says_so_when_the_tree_is_not_clean
+   failed: TestTheChecks.test_the_text_says_which_links_are_judged_and_which_only_reported
+   failed: TestTheShardRehearsal.test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged
+== state layer-docs: layer 505541c + tip 4a521e4's tool and suite; docs=1; 20 paths differ from the layer; scope whole
+   load at start: 11.98, 10.87, 9.57
+   exit 0 in 361 s
+   Ran 280 tests in 361.333s
+   OK
+layer6b-probe done

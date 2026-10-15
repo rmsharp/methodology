@@ -1,0 +1,42 @@
+corpus: fork fc94978: CHANGELOG.md 214849 B + 24 shards; HANDOFFS.md 27411 B + 144 shards
+old-checkledger_all-legacy                   exit 1  265 B  check-ledger: 1 finding(s) in 25 file(s)
+new-checkledger_all-legacy                   exit 1  265 B  check-ledger: 1 finding(s) in 25 file(s)
+new-checkledger_all-new                      exit 1  272 B  check-ledger: 1 finding(s) in 25 file(s)
+new-checkledger_all-new-docs                 exit 1  265 B  check-ledger: 1 finding(s) in 25 file(s)
+   old == new on the legacy tree (output)
+   old == new on the legacy tree (exit)
+   legacy == new (output, paths normalised)
+   legacy == new (exit)
+   legacy == new-docs (output, paths normalised)
+   legacy == new-docs (exit)
+old-checkledger-legacy                       exit 0  55 B  check-ledger: OK — 1 file(s), no structural findings
+new-checkledger-legacy                       exit 0  55 B  check-ledger: OK — 1 file(s), no structural findings
+new-checkledger-new                          exit 0  55 B  check-ledger: OK — 1 file(s), no structural findings
+new-checkledger-new-docs                     exit 0  55 B  check-ledger: OK — 1 file(s), no structural findings
+   old == new on the legacy tree (output)
+   old == new on the legacy tree (exit)
+   legacy == new (output, paths normalised)
+   legacy == new (exit)
+   legacy == new-docs (output, paths normalised)
+   legacy == new-docs (exit)
+old-checkhandoff_all-legacy                  exit 0  135 B  check-handoff --all: OK — 2 receipt(s) in <ROOT>/HANDOFFS.md, all structurally complete, fences balanced, no
+new-checkhandoff_all-legacy                  exit 0  135 B  check-handoff --all: OK — 2 receipt(s) in <ROOT>/HANDOFFS.md, all structurally complete, fences balanced, no
+new-checkhandoff_all-new                     exit 0  147 B  check-handoff --all: OK — 2 receipt(s) in <ROOT>/methodology/HANDOFFS.md, all structurally complete, fences 
+new-checkhandoff_all-new-docs                exit 0  147 B  check-handoff --all: OK — 2 receipt(s) in <ROOT>/methodology/HANDOFFS.md, all structurally complete, fences 
+   old == new on the legacy tree (output)
+   old == new on the legacy tree (exit)
+   legacy == new (output, paths normalised)
+   legacy == new (exit)
+   legacy == new-docs (output, paths normalised)
+   legacy == new-docs (exit)
+old-checkhandoff-legacy                      exit 0  85 B  check-handoff: OK — newest receipt in <ROOT>/HANDOFFS.md is structurally complete.
+new-checkhandoff-legacy                      exit 0  85 B  check-handoff: OK — newest receipt in <ROOT>/HANDOFFS.md is structurally complete.
+new-checkhandoff-new                         exit 0  97 B  check-handoff: OK — newest receipt in <ROOT>/methodology/HANDOFFS.md is structurally complete.
+new-checkhandoff-new-docs                    exit 0  97 B  check-handoff: OK — newest receipt in <ROOT>/methodology/HANDOFFS.md is structurally complete.
+   old == new on the legacy tree (output)
+   old == new on the legacy tree (exit)
+   legacy == new (output, paths normalised)
+   legacy == new (exit)
+   legacy == new-docs (output, paths normalised)
+   legacy == new-docs (exit)
+layer6b-realtree done
