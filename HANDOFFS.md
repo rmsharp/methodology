@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S326
+date: 2026-10-15
+status: pending
+active_task: **PR3, the adopter-impact table of the pull request plan** (`docs/planning/upstream-pr-composition-plan.md` §5, row PR3; his Phase 0 picker, 2026-10-15): `bin/status` and `bin/sync --dry-run` run from the candidate (local ref `pr2/candidate`, `ced2c82`) over the 12 adopters in `--no-local` clones, legacy and migrated, plus a legacy fixture synced by upstream's tool and by the candidate's, the trees diffed; the table committed; derive first, read-only on every adopter; nothing sent to `KJ5HST/methodology`. Not this session: PR4, PR5, BL-108, BL-113 (e), the `BACKLOG.md` size flag, the HANDOFFS trim (he did not tick it). (IN PROGRESS: claimed 2026-10-15)
+```
+
+```handoff
 session: S325
 date: 2026-10-15
 status: complete
