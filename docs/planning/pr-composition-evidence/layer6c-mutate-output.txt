@@ -1,0 +1,58 @@
+control (no mutation): bin/check-links --layout both exit 0; 54 mutants (one per layout hunk)
+  1 FRAMEWORK_APPARATUS.md                                     @486  layout text SURVIVED | 
+  2 HOW_TO_USE.md                                              @746  layout text SURVIVED | | **Operating procedure** | `SESSION_RUNNER.md` (project root) | Know 
+  3 HOW_TO_USE.md                                              @826  layout text SURVIVED | 1. **Place `SESSION_RUNNER.md` at the project root** (alongside your C
+  4 HOW_TO_USE.md                                              @832  layout text SURVIVED | 
+  5 HOW_TO_USE.md                                              @838  layout text SURVIVED | 5. **Put the methodology framework in a known location** (e.g., `docs/
+  6 ITERATIVE_METHODOLOGY.md                                   @186  reference   KILLED   | 1. **Read project `CONTEXT.md` if it exists.** A project-level domain 
+  7 ITERATIVE_METHODOLOGY.md                                   @218  reference   KILLED   | **Running the grill.** The methodology recommends Pocock's `/grill-me`
+  8 ITERATIVE_METHODOLOGY.md                                   @296  reference   KILLED   | 8. **Record every action, then commit.** Before committing: (a) remove
+  9 ITERATIVE_METHODOLOGY.md                                   @343  reference   KILLED   | The methodology recommends Pocock's `/diagnose` skill for the actual d
+ 10 ITERATIVE_METHODOLOGY.md                                   @414  reference   KILLED   | The canonical index is [`RECOMMENDED_SKILLS.md`](../../RECOMMENDED_SKI
+ 11 ITERATIVE_METHODOLOGY.md                                   @418  reference   KILLED   | **A skill is not a phase.** A recommended skill that pulls a session a
+ 12 ITERATIVE_METHODOLOGY.md                                   @430  reference   KILLED   | Methodology owns *when and why* to raise the tier (this rule); your ag
+ 13 starter-kit/BOOTSTRAP.md                                   @38   layout text SURVIVED | 
+ 14 starter-kit/BOOTSTRAP.md                                   @43   layout text SURVIVED | The methodology supports two ways to keep the synced files current in 
+ 15 starter-kit/BOOTSTRAP.md                                   @53   layout text SURVIVED | 
+ 16 starter-kit/BOOTSTRAP.md                                   @72   layout text SURVIVED | `bin/sync` copies the full methodology corpus into the target: the ope
+ 17 starter-kit/BOOTSTRAP.md                                   @97   layout text SURVIVED | Copy `docs/methodology/` content (`ITERATIVE_METHODOLOGY.md`, `FRAMEWO
+ 18 starter-kit/BOOTSTRAP.md                                   @114  layout text SURVIVED | This table is the minimum manual set. The **authoritative, complete di
+ 19 starter-kit/BOOTSTRAP.md                                   @200  layout text SURVIVED | **Keep CLAUDE.md lean — extract Learnings before they crowd the budget
+ 20 starter-kit/BOOTSTRAP.md                                   @202  reference   SURVIVED | > *Project Learnings live in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNING
+ 21 starter-kit/BOOTSTRAP.md                                   @204  layout text SURVIVED | This is the same discipline as the three-file `BACKLOG`/`CHANGELOG`/`R
+ 22 starter-kit/BOOTSTRAP.md                                   @263  layout text SURVIVED | mkdir -p docs/methodology/sessions
+ 23 starter-kit/BOOTSTRAP.md                                   @327  reference   KILLED   | **Quality ratchet (recommended).** The second hook the methodology shi
+ 24 starter-kit/BOOTSTRAP.md                                   @381  layout text SURVIVED | | **Tracked** (canonical owns them) | `SESSION_RUNNER.md`, `FRAMEWORK_
+ 25 starter-kit/BOOTSTRAP.md                                   @387  layout text SURVIVED | stop it. Say it explicitly.
+ 26 starter-kit/BOOTSTRAP.md                                   @423  reference   SURVIVED | | Workstream documents in `docs/methodology/workstreams/` | After 2-3 
+ 27 starter-kit/CHANGELOG.md                                   @11   reference   KILLED   | [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-actio
+ 28 starter-kit/CLAUDE_TEMPLATE.md                             @9    layout text SURVIVED | 
+ 29 starter-kit/CLAUDE_TEMPLATE.md                             @82   layout text SURVIVED | size budget, extract these rows to a committed PROJECT_LEARNINGS.md at
+ 30 starter-kit/HANDOFFS.md                                    @144  reference   KILLED   | subsection of [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATU
+ 31 starter-kit/RECOMMENDED_SKILLS.md                          @5    reference   KILLED   | **Principle (from [`ITERATIVE_METHODOLOGY.md`](docs/methodology/ITERAT
+ 32 starter-kit/RECOMMENDED_SKILLS.md                          @28   reference   KILLED   | | [`/grill-me`](https://github.com/mattpocock/skills/tree/main/skills/
+ 33 starter-kit/RECOMMENDED_SKILLS.md                          @37   reference   KILLED   | **Reading the "Phases spanned" column.** A skill that spans multiple p
+ 34 starter-kit/RECOMMENDED_SKILLS.md                          @39   reference   KILLED   | **`/triage` prerequisite note.** The skill's body (at the pinned SHA) 
+ 35 starter-kit/RECOMMENDED_SKILLS.md                          @54   reference   KILLED   | | `/code-review` | [`AUDIT_WORKSTREAM.md`](docs/methodology/workstream
+ 36 starter-kit/RECOMMENDED_SKILLS.md                          @77   reference   KILLED   | **Shape A fan-out — worker isolation.** A fan-out of workers under one
+ 37 starter-kit/RECOMMENDED_SKILLS.md                          @87   reference   KILLED   | **See also: [`ITERATIVE_METHODOLOGY.md`](docs/methodology/ITERATIVE_ME
+ 38 starter-kit/RECOMMENDED_SKILLS.md                          @92   reference   KILLED   | | `/to-issues` | Pocock (`engineering/to-issues`) | Covered by the iss
+ 39 starter-kit/SAFEGUARDS.md                                  @108  reference   SURVIVED | A deliverable that compiles, renders, and embeds the right assets is c
+ 40 starter-kit/SESSION_RUNNER.md                              @6    layout text SURVIVED | 
+ 41 starter-kit/SESSION_RUNNER.md                              @39   reference   KILLED   | 3. **Backfill** — prepend one entry per undocumented span, **source-ta
+ 42 starter-kit/SESSION_RUNNER.md                              @61   reference   SURVIVED | | "Design the [X]" | One design document | `docs/methodology/workstrea
+ 43 starter-kit/SESSION_RUNNER.md                              @67   reference   SURVIVED | | "Write/draft/audit [paper/section/dimension]" | One paper section, o
+ 44 starter-kit/SESSION_RUNNER.md                              @70   reference   SURVIVED | | "Fan out" / two sessions at once | ONE deliverable, ONE closer per t
+ 45 starter-kit/SESSION_RUNNER.md                              @74   reference   KILLED   | **⚠ Multi-session campaign check.** If your work cannot be produced cl
+ 46 starter-kit/SESSION_RUNNER.md                              @76   reference   SURVIVED | **If no workstream document exists for the task type, follow the maste
+ 47 workstreams/ARCHITECTURE_WORKSTREAM.md                     @189  reference   KILLED   | Two structural questions to apply when an existing module looks wrong 
+ 48 workstreams/ARCHITECTURE_WORKSTREAM.md                     @218  reference   KILLED   | - **Not** during feature implementation. Spotting a shallow module mid
+ 49 workstreams/AUDIT_WORKSTREAM.md                            @24   reference   KILLED   | The methodology owns *the audit framework* (criteria definition, scope
+ 50 workstreams/DEVELOPMENT_WORKSTREAM.md                      @62   reference   KILLED   | For the actual workflow of moving an issue through these states — labe
+ 51 workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md @23   reference   KILLED   | | [`SESSION_RUNNER.md`](../../../SESSION_RUNNER.md) | Operational chec
+ 52 workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md   @25   reference   KILLED   | | [`SESSION_RUNNER.md`](../../../SESSION_RUNNER.md) | Operational chec
+ 53 workstreams/TEMPLATE_CAMPAIGN.md                           @17   reference   KILLED   | | [`SESSION_RUNNER.md`](../../../SESSION_RUNNER.md) | Operational chec
+ 54 workstreams/TEMPLATE_WORKSTREAM.md                         @18   reference   KILLED   | Follows the citation-shape convention ([`RECOMMENDED_SKILLS.md`](../..
+layout text   0 killed, 19 survived
+reference    28 killed,  7 survived
+clone clean afterwards: yes

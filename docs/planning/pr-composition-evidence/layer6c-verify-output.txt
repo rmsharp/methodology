@@ -1,0 +1,33 @@
+verifying 18cda0f291705ab5e25090bb8418e6d30c4b07e4 in a clean clone; 0 dirty paths
+changed against its parent 0248ebf:
+  1	1	.quality-gates.json
+  8	0	bin/tests.sh
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  16/16 pass · 0 fail · 0 unmeasured · results 7a4736a489ee · manifest 682c7e6d2333
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 301         301  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 395         395  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 76          76  pass
+  checker-layout-unit-tests              >= 11          11  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 16/16 pass · 0 fail · 0 unmeasured · results 7a4736a489ee · manifest 682c7e6d2333
+
+ratchet exit 0
+check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 188 prose not counted
+scanner exit 0
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done

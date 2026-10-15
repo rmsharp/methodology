@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-14 · [BL-101] S321 -- the prose layer's evidence, 2 of 3: the verification and mutation outputs
+
+The clean-clone verification of `18cda0f` (8 min 26 s: 16/16, 0 unmeasured, results `7a4736a489ee`, manifest `682c7e6d2333`), the shell suite on the tests stage (301 passed, 0 failed, 0 skipped) and on `c8d4375` alone (300 / 0 / 0), and the mutants over the 54 layout hunks: **reference 28 killed, 7 survived (six are `docs/methodology/` paths spelled in a code span, one is a link to a project-owned file); layout text 0 of 19 killed**, the control green and the clone clean afterwards. Model: Claude Sonnet 5.5.
+
 ### 2026-10-14 · [BL-101] S321 -- the prose layer's evidence, 1 of 3: the probe script and the report, reference-check and measure outputs
 
 `layer6c-probe.sh` and three saved outputs. The report: 23 documents, 17 differ, 62 hunks, 54 layout and 8 not. The reference check: 35 `reference` hunks, 32 equal to the old text after link syntax and paths are normalised, 3 name the file the link target named. The measure: dangling links in the `methodology/` layout 35, 31, 8, 2, 0, 0 after the parent and each commit; #94 conflicts in the same 15 regions at the parent and at the layer, #92 clean; no backlog code, session number or plan section in the 95 added lines or the five messages. Model: Claude Sonnet 5.5.
