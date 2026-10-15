@@ -1,0 +1,14 @@
+control (no mutation): test_checker_layouts.py exit 0, test_layout_resolver.py exit 0
+R2-1 check-ledger ignores an explicit --file (the refusal message says to name the ledger with it) SURVIVED
+      changed line: if False:
+R2-2 check-ledger finds no ledger anywhere and reads from the wrong directory      SURVIVED
+      changed line: return (directory if directory is not None else root.parent) / LEDGER_NAME, found
+R2-3 check-ledger's resolver reports a tie as legacy (the block, in check-ledger only) KILLED by test_checker_layouts.py, test_layout_resolver.py
+      changed line: return "legacy", root, found
+R2-4 check-ledger lets a runner at the root decide a tie as well                   KILLED by test_checker_layouts.py, test_layout_resolver.py
+      changed line: if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md"):
+R2-5 check-handoff lets a runner at the root decide a tie as well                  KILLED by test_checker_layouts.py, test_layout_resolver.py
+      changed line: if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md"):
+R2-6 check-handoff ignores an explicit --file                                      SURVIVED
+      changed line: path = default_path()
+round 2: 3 killed, 3 survived; clone clean afterwards: yes
