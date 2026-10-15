@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S327
+date: 2026-10-15
+status: pending
+active_task: **PR4, the text of the one upstream pull request and its approval** (`docs/planning/upstream-pr-composition-plan.md` §5, row PR4; his Phase 0 picker, 2026-10-15): a body in recognised terms, every number tied to a command in the diff; a fresh reviewer's read of a FROZEN draft; shown to him inline; `grep` of the body for session numbers, backlog codes and coined names; each claim of §6 re-run; his approval picker lists the then-open register rows (D1) and the state of #94 and #92 (D4). Nothing is sent to `KJ5HST/methodology`. Not this session: PR5, BL-108, BL-113 (e), the `BACKLOG.md` size flag, the HANDOFFS trim (he ticked "leave it for a later session": 5 receipts at rest, the claim makes 6). (IN PROGRESS: claimed 2026-10-15)
+```
+
+```handoff
 session: S326
 date: 2026-10-15
 status: complete
