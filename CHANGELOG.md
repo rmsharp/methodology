@@ -253,6 +253,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-5.md` (2 record(s), 50,752 B → 28,664 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-14 → 2026-10-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-14-5.md`](docs/archive/HANDOFFS-through-2026-10-14-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-14-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-14-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 50,752 B → 28,664 B (−43.5%).
+
 ### 2026-10-14 · [BL-101] S321 -- D6 answered (a); backlog rows BL-110 and BL-111 added at his close-out go-ahead
 
 His answers to the S321 close-out picker. **D6 (plan §7), the unmeasured-gate prose: (a), his recommended option, a small commit after `bin/migrate-layout` carrying the 3 hunks (+7 / -4) with the pull request's text stating that the lint stays on the fork:** recorded in the plan (§4's seam and §7), not built; do not re-ask. **BL-110** (no check reads a distributed document's path-spelled references or its layout prose: the 26 prose-layer hunks that survived the mutants) and **BL-111** (S320's three added tests are absent from the fork's checker suite), each written from what is known, not started, with a detail entry. Not pushed: the push he authorized named `3322639`. Model: Claude Sonnet 5.5.
