@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S322 -- the last layer's run outputs, 1 of 2: the suites, the clean-clone ratchet and the mutants
+
+The shell suite on the tool's commit alone 301 / 0 / 0 (305 s); on the suite stage 302 / 0 / 0 (341 s) and the whole migration suite 280 OK (364.5 s, load 85 at launch); the layer's last commit in a clean `--no-local` clone: ratchet 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `66cce597ef4a`, scanner 15 files and 0 sites; mutants L1 to L4 and W1 killed, G1 shows the paired gate reading a red suite as 280 pass and 1 fail from one run. Outputs only. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S322 -- the last layer's scripts (the builder re-based, the mutants, the measure script, the adopters' comparison)
 
 `layer7b-build.py` is the S319 draft with one change in code, the `COPIES` text (the checkers' layer appended two entries); `layer7b-mutate.py` aims mutants at what the layer adds and runs the real two gates over a red suite; `layer7b-measure.sh` prints the other measurements; `layer7b-adopters-compare.py` compares two runs of `migrate-12-adopters.py`. Scripts only: their outputs and the record follow. Model: Claude Sonnet 5.5.

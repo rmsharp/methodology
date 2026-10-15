@@ -1,0 +1,53 @@
+## fast mutants (layer7b-mutate.py --fast)
+mutants in a fresh clone at ab35e96 (0 dirty paths)
+
+L1 COPIES loses the tool
+  changed tools/test_layout_resolver.py:
+    -              "bin/check-ledger", "bin/check-handoff",   # the checkers' layer
+    -              "bin/migrate-layout")   # the migration tool; each later layer appends the tools it carries
+    +              "bin/check-ledger", "bin/check-handoff")   # the migration tool; each later layer appends the tools it carries
+  KILLED -> exit 1, Ran 76 tests in 1.986s; FAILED (failures=1) [as expected]
+
+L2 one line of the resolver block in the tool
+  changed bin/migrate-layout:
+    -        return "half", None, found
+    +        return "half", None, ()
+  KILLED -> exit 1, Ran 76 tests in 1.996s; FAILED (failures=1) [as expected]
+
+L3 the tool is not a file (the assertion the sync suite regains)
+  moved bin/migrate-layout -> bin/migrate-layout-x
+  KILLED -> exit 1, Ran 4 tests in 1.663s; FAILED (failures=1) [as expected]
+
+L4 the wiring block's command names a class that does not exist (the command alone)
+  changed bin/tests.sh:
+    -if python3 "$METHODOLOGY/tools/test_migrate_layout.py" TestThePureRules TestUsageAndNothingToDo >/dev/null 2>&1; then
+    +if python3 "$METHODOLOGY/tools/test_migrate_layout.py" TestNoSuchClassHere TestUsageAndNothingToDo >/dev/null 2>&1; then
+  KILLED -> exit 1, Ran 6 tests in 0.487s; FAILED (errors=1) [as expected]
+
+## end-to-end mutants (layer7b-mutate.py --e2e-wiring --e2e-gates)
+start 1792046726 2026-10-15T06:45:26Z at  load 18.68, 27.92, 21.85
+mutants in a fresh clone at ab35e96 (0 dirty paths)
+
+W1 the wiring mutant through the whole shell suite
+  changed bin/tests.sh:
+    -if python3 "$METHODOLOGY/tools/test_migrate_layout.py" TestThePureRules TestUsageAndNothingToDo >/dev/null 2>&1; then
+    +if python3 "$METHODOLOGY/tools/test_migrate_layout.py" TestNoSuchClassHere TestUsageAndNothingToDo >/dev/null 2>&1; then
+  exit 1 in 330 s
+     FAIL: migration tool (bin/migrate-layout) rules and usage unit tests failed
+   == Summary: 301 passed, 1 failed, 0 skipped ==
+
+G1 the layer's two gates over a red command-level suite, through the candidate's own run_gates()
+  changed bin/migrate-layout:
+    -    return 0 if report["checks"]["ok"] else 4
+    +    return 0 if report["checks"]["ok"] else 5
+  gates: migrate-layout-unit-tests (min 280, 3600 s, extract yes), migrate-layout-unit-tests-failed (max 0, 3600 s, extract no), V1-failed-with-extract (max 0, 3600 s, extract yes), V2-failed-threshold-5 (max 5, 3600 s, extract no), V3-failed-no-timeout (max 0, None s, extract no)
+  run_gates exit 0 in 375 s
+   migrate-layout-unit-tests          measured=280.0 status=pass
+   migrate-layout-unit-tests-failed   measured=1.0 status=fail
+   V1-failed-with-extract             measured=280.0 status=fail
+   V2-failed-threshold-5              measured=1.0 status=pass
+   V3-failed-no-timeout               measured=1.0 status=fail
+  suite executions (marks in the counter): 1
+exit 0
+end 1792047434
+run done
