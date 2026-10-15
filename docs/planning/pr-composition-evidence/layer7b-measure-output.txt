@@ -1,0 +1,125 @@
+## Section 1: the files, per commit and in all; and which are the tip's bytes whole (git rev-parse of the two blobs)
+ab35e96 test(layout): the migration tool's suite, its fast classes in the shell suite and its two gates (2 of 2)
+2942e46 feat(layout): bin/migrate-layout moves a legacy project's methodology files under methodology/ (1 of 2: the tool)
+commit 2942e46: 3 files
+commit ab35e96: 3 files
+      18      1  .quality-gates.json
+    1458      0  bin/migrate-layout
+      11      0  bin/tests.sh
+       2      1  tools/test_layout_resolver.py
+    2993      0  tools/test_migrate_layout.py
+       1      0  tools/test_sync_layouts.py
+  all: 6 files, +4483 / -2
+  bin/migrate-layout                 layer 06afa06b2  tip 06afa06b2  the tip's bytes whole
+  tools/test_migrate_layout.py       layer da7177abe  tip da7177abe  the tip's bytes whole
+  tools/test_sync_layouts.py         layer 34712638e  tip 34712638e  the tip's bytes whole
+  tools/test_layout_resolver.py      layer 48a074364  tip 59cf3faf1  differs from the tip (by design: see the record)
+  bin/tests.sh                       layer e7fc04439  tip 0371c8bbc  differs from the tip (by design: see the record)
+  .quality-gates.json                layer 918781a74  tip 32bb83d59  differs from the tip (by design: see the record)
+  mode of bin/migrate-layout at the layer: 100755
+
+## Section 2: the builder reproduces the layer's tree, and refuses on drift
+stage tool written: bin/migrate-layout, tools/test_layout_resolver.py, tools/test_sync_layouts.py
+stage suite written: tools/test_migrate_layout.py, bin/tests.sh
+stage suite written: .quality-gates.json
+built tree   b0f9ca028c94
+layer's tree b0f9ca028c94
+refused: the candidate's bin/sync is not 91fdf8c's, so the tool would be tested against inputs it was not written against
+dirty paths after the refusal: 0
+refused: the candidate's tools/test_sync_layouts.py is not the tip's less the one assertion; taking the tip's file would overwrite more than that line
+dirty paths after the refusal: 0
+
+## Section 3: the scanner, the layout suite and the link check, on the parent and on the layer
+-- parent (18cda0f)
+check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 188 prose not counted
+Ran 76 tests in 1.908s OK 
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (legacy layout).
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (new layout).
+-- new (ab35e96)
+check-layout-literals: scanned 15 files; 0 sites (0 path, 0 text); 138 acknowledged; 194 prose not counted
+Ran 76 tests in 1.970s OK 
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (legacy layout).
+check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (new layout).
+
+## Section 4: the tool run as a command in a project the layer's own bin/sync wrote (legacy layout), dry run then --apply, and its refusals
+sync --layout legacy: exit 0
+(bin/sync wrote the files; committed them as the adopters' script does)
+project: 2 commit(s), 30 tracked files, status: 0 dirty
+layout: proj  legacy
+dry run: exit 0 (writes nothing: 0 dirty paths)
+migrate-layout: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/61c2d328-63f6-439e-a95b-4c09ba34edb3/scratchpad/layer7b-measure/proj
+canonical: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/61c2d328-63f6-439e-a95b-4c09ba34edb3/scratchpad/layer7b-measure/new @ ab35e96508c1
+layout: legacy   tier: all   mode: dry run (nothing written; add --apply to migrate)
+
+moves (30):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+-- a dirty tree is refused:
+apply on a dirty tree: exit 1
+REFUSED:
+  - [dirty-tree] the working tree is not clean: stray.txt
+  this run is refused, so the shard proofs did not run in a clone: this list and the left-in-place list are the plan before that rehearsal, and once the refusal clears a 
+-- an apply over the seed ledger, which is a few lines long, is rolled back by the tool's own rule (a moved file must stay 90% similar):
+apply: exit 3
+ROLLED BACK: a moved file would fall below 90% similarity, so git log --follow could not reach its history: CHANGELOG.md -> methodology/CHANGELOG.md (67%: the ledger is too small to take its entry and
+  after the rollback: HEAD unchanged, dirty paths 0, runner at the root yes
+-- the same project with a ledger of 80 entries (a real project's ledger is longer), then an apply:
+apply: exit 0
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 0 -> exit 0
+  links:   exit 0; 0 framework, 0 project dangling -> exit 0; 0 framework, 0 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 2 commit(s) reached by git log --follow -> 3 commit(s) reached by git log --follow
+  clean tree: yes
+APPLIED: one commit, 4aa7f6df2df4
+after: 4 commit(s) against 3 before; the migration commit: chore(methodology): move the methodology files under methodology/ (tier all, 30 files)
+  renames git follows in it: 30 of 30 paths; lowest similarity: 96%
+  not renamed: 
+  files at the root now: 0 ; under methodology/: 30
+  the runner at the root: no; under methodology/: yes; dirty after: 0
+layout: proj  new
+a second run on the migrated project: exit 0 (migrate-layout: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/61c2d328-63f6-439e-a95b-4c09ba34edb3/scra)
+
+## Section 5: the prose's claims about the tool, read against the tool that now exists (the prose layer's NOT CHECKED, S321's record section 4)
+lines the prose layer added that name the tool: 3
++| **`methodology/`** | all of it in one `methodology/` directory, `workstreams/` beneath it; the root keeps `CLAUDE.md`, `.githooks/`, `.github/` and the project's own files | a project started with `--layout new`, or moved by `b
++- **Moving a project:** from the canonical checkout, `bin/migrate-layout your-project/` is a dry run; `--apply` moves the files in one commit that git follows as renames, and rewrites the paths in `CLAUDE.md`, `.gitignore` and th
++This is the same discipline as the three-file `BACKLOG`/`CHANGELOG`/`ROADMAP` split above — and as `SESSION_RUNNER.md` → `FRAMEWORK_LEARNINGS.md`, where the framework applies it to itself: the always-read file stays scannable
+  --apply         bin/migrate-layout bin/sync
+  --check         starter-kit/methodology_trim.py starter-kit/context_budget.py starter-kit/methodology_dashboard.py
+  --file          bin/check-ledger bin/check-handoff starter-kit/methodology_trim.py starter-kit/methodology_dashboard.py
+  --layout        bin/sync bin/check-links
+  --mode          bin/sync
+  --no-verify     bin/migrate-layout starter-kit/context_budget.py starter-kit/quality_ratchet.py
+  --run           bin/check-handoff starter-kit/context_budget.py starter-kit/quality_ratchet.py starter-kit/methodology_dashboard.py
+  --tier          bin/migrate-layout
+
+## Section 6: the two open pull requests (git merge-tree --write-tree; exit 0 clean, 1 conflicts)
+#94 head 972eb2cd6263
+== tip 18cda0f against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+== tip ab35e96 against #94: exit 1 (first line is a tree)
+   .quality-gates.json: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 9 conflict region(s)
+   tools/test_methodology_trim.py: 5 conflict region(s)
+#92 head fa2bb5d464f9
+== tip 18cda0f against #92: exit 0 (first line is a tree)
+== tip ab35e96 against #92: exit 0 (first line is a tree)
+
+## Section 7: scrub input (a coarse regular expression over the layer's added lines, per file; the scrub is its own commit after the layers)
+.quality-gates.json                added   18 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning  0 | FM  0 | plan   0
+bin/migrate-layout                 added 1458 | BL-  19 | phase   3 | session   2 | docs/planning   1 | learning  0 | FM  0 | plan  14
+bin/tests.sh                       added   11 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning  0 | FM  0 | plan   0
+tools/test_layout_resolver.py      added    2 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning  0 | FM  0 | plan   0
+tools/test_migrate_layout.py       added 2993 | BL-  13 | phase   7 | session   8 | docs/planning   1 | learning  1 | FM  0 | plan  19
+tools/test_sync_layouts.py         added    1 | BL-   0 | phase   0 | session   0 | docs/planning   0 | learning  0 | FM  0 | plan   0
+commit 2942e46 message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+commit ab35e96 message: 0 line(s) with a backlog code, session number, phase, plan section or learning
+
+## Section 8: the candidate against upstream
+the candidate ab35e96 against upstream/main f34769f: 19 commits;  46 files changed, 19854 insertions(+), 1145 deletions(-)
+
+layer7b-measure done

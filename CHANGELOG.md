@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S322 -- PR2's last layer, `bin/migrate-layout`, built on `pr2/candidate` (`18cda0f` to `ab35e96`): the measurements, the 12-adopter comparison, the record, the plan's status line
+
+The local ref moved by `git fetch <scratch clone> '+refs/heads/pr2/candidate:refs/heads/pr2/candidate'` and was read back equal (the ref, the clone's HEAD and the verified commit are one sha); two commits, 6 files, +4,483 / -2, three of the files the fork tip's bytes whole; the candidate is 19 commits over `upstream/main` (`f34769f`). **Over the 12 adopters, the candidate's tree against the fork tip's:** the migration columns equal in all twelve (24 of 27 columns), and the candidate's `bin/sync` needs `--force` for 9 of 12 where the fork's does not (the adopters hold earlier fork versions: PR3's first row). #94 still 3 files and 15 regions, #92 clean. Nothing sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S322 -- the last layer's run outputs, 1 of 2: the suites, the clean-clone ratchet and the mutants
 
 The shell suite on the tool's commit alone 301 / 0 / 0 (305 s); on the suite stage 302 / 0 / 0 (341 s) and the whole migration suite 280 OK (364.5 s, load 85 at launch); the layer's last commit in a clean `--no-local` clone: ratchet 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `66cce597ef4a`, scanner 15 files and 0 sites; mutants L1 to L4 and W1 killed, G1 shows the paired gate reading a red suite as 280 pass and 1 fail from one run. Outputs only. Model: Claude Sonnet 5.5.
