@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S325 close-out -- BL-113's reduction commit built on `pr2/candidate` (`28f99a7` to `ced2c82`): the HANDOFFS receipt complete, the claim closed by this new entry
+
+CHANGELOG: pending is closed here. Receipt `status: complete`, self 8, predecessor (S324) 8, `bin/check-handoff` exit 0 (read bare). **The deliverable** (`pr-composition-evidence/bl113-record.md`): one commit on the local ref `pr2/candidate`, two files, +3 / -3; the runner's layout paragraph drops its example command (53,184 B to 53,100 B), `context_budget.py --status` exit 2 to 0; the doubled read (control reproduced, 37,599) says 18,911.5 tokens before, **11.5 over and not the tool's 21**, and 18,876.5 after, 23.5 under; the density row in `.context-budget.json` is the one hunk he can strip (record §5). **Verified** in a clean `--no-local` clone of `ced2c82`: 18/18, 0 unmeasured, results `23481eb88ba1`, manifest `cfa4d5b5fa67` (equal to the scrub tip's). **The fork's own gate run** on the last work commit `287a288` in a clean clone (4 receipts, load 8.5 at launch): 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, equal to S322's to S324's cited runs; output `bl113-fork-gate-output.txt`. **His two Phase 0 ticks, recorded by the claim and the trim's entries:** the trim (`b72e36b`, fold `26710a6`, `--cut 3`) and the push (`741584f`). **Phase 3C:** no fork learning row appended (D3 not triggered; rows considered #60, #46, #18); no row retired. **Nothing sent to `KJ5HST/methodology`; this session's work commits are not pushed:** `origin/main` is `741584f`, this session adds 7 with this commit. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S325 -- the PR composition plan's status line says BL-113's reduction commit is built
 
 `docs/planning/upstream-pr-composition-plan.md` (the status paragraph): "Next: BL-113's reduction commit" becomes "is built (`ced2c82`, `bl113-record.md`: the runner reads 23.5 tokens under its ceiling). Next: PR3." The plan stays under its declared 30,000 B (29,408 B). Model: Claude Sonnet 5.5.
