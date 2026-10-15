@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S323 -- D6's small commit: the four scripts (`d6-derive.py`, `d6-build.py`, `d6-measure.sh`, `d6-conflicts.sh`)
+
+In `docs/planning/pr-composition-evidence/`: the derivation (the unmeasured hunks, +7 / -4 in 3 files, read by importing `layer6c-build.py`), the builder (premises asserted, refuses on drift; carries HANDOFFS +4 / -1 and HOW_TO_USE +1 / -1, never writes the runner), the measure script (the runner's budget reading at each candidate commit, and the counterfactual) and the conflicts script (#94 and #92, before and after). Their outputs and the record follow. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S323 claim (in progress) -- D6's small commit on `pr2/candidate`: the three unmeasured-gate hunks
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he took D6's small commit (S322's recommended next step) and skipped the HANDOFFS trim (his BL-108 rule is "trim above 3", the count is 3). Phase 0: `HEAD` `22a89d2` equals `origin/main` (`0 0`), CHANGELOG frontier `HEAD` (0 undocumented commits, 0 merges), no pending receipt, `upstream/main` still `f34769f` (fork 1,974 ahead, 0 behind), `pr2/candidate` still `ab35e96` (19 commits); #94 and #92 have 0 comments, #93's one comment is his own (2026-10-05); dashboard 72/100, one high flag (`docs/planning/BACKLOG.md`, 60,492 B against 56,750 B); the local `.quality-gates-results.json` is stale (2026-10-10), so the receipt's `d7576eaf9b5b` is checked only against S322's clean-clone ledger entry, not re-run. **This session's one deliverable is D6's commit only:** the runner's 3E sentence, `starter-kit/HANDOFFS.md`'s paragraph and `HOW_TO_USE.md`'s 3E bullet (plan §7 D6, answered (a), not re-asked), derived first and read-only, one commit of 3 files on the local ref `pr2/candidate`, un-pushed. Not this session: the scrub, PR3 to PR5, BL-108, the `BACKLOG.md` size flag. Nothing is sent upstream. Closed by a NEW close-out entry (a committed entry is never rewritten). Model: Claude Sonnet 5.5.
