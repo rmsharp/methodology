@@ -257,6 +257,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-14-6.md` (2 record(s), 63,907 B → 41,022 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-14 → 2026-10-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-14-6.md`](docs/archive/HANDOFFS-through-2026-10-14-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-14-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-14-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,907 B → 41,022 B (−35.8%).
+
 ### 2026-10-15 · [BL-101] S324 -- his close-out answers and the push of the S324 work commits (\`origin/main\` \`c98fc19..585ca98\`)
 
 **His picker, three answers, each the recommended option:** push the session's commits to the fork; leave the trimmer's three proof-template comment lines and the assertion that matches them (PR2's text says so: \`starter-kit/methodology_trim.py:1697,1749,1760\`, \`tools/test_methodology_trim.py:1505\`); no third phase for the plan vocabulary left in prose. **The push (non-commit), his tick:** \`git push origin 585ca98:refs/heads/main\`, a fast-forward \`c98fc19..585ca98\` of 9 commits (the eight evidence and documentation commits and the close-out), read back with \`git ls-remote origin refs/heads/main\` (equal to \`585ca98\`) and \`git rev-list --left-right --count origin/main...HEAD\` (\`0 0\`); the fork only; \`pr2/candidate\` stays a local ref. **The receipt's items (3) and (6) in \`HANDOFFS.md\` are amended to say so** (a receipt is not a ledger entry; this entry is the record). **This commit is not pushed:** it touches the receipt, which is wider than his standing grant for a push record, so \`origin/main\` is \`585ca98\` and the next Phase 0 counts 1 ahead. Nothing sent to \`KJ5HST/methodology\`. Model: Claude Sonnet 5.5.
