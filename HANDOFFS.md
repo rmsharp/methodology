@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S324
+date: 2026-10-15
+status: pending
+active_task: **PR2, the scrub only: fork tokens and dangling fork-only paths removed from the candidate's files, as ONE commit on the local ref `pr2/candidate` (`5afc962`)** (`docs/planning/upstream-pr-composition-plan.md` §5 PR2 row and §7 D4; inputs `docs/planning/pr-composition-evidence/layer7b-measure-output.txt` §7, `layer6c-measure-output.txt` §7, `d6-measure-output.txt` §5), derived first and read-only, built in a scratch clone, un-pushed; nothing sent to `KJ5HST/methodology`. Decided at the picker, executed later: BL-113's option (a), a reduction commit on the candidate. Not this session: that reduction commit, PR3 to PR5, BL-108, the HANDOFFS trim, the `BACKLOG.md` size flag. (IN PROGRESS: claimed 2026-10-15)
+```
+
+```handoff
 session: S323
 date: 2026-10-15
 status: complete
