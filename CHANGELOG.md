@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S322 -- the BL-101 row and its detail record the last layer (`ab35e96`); next D6's small commit, then the scrub
+
+`docs/planning/BACKLOG.md` (+80 B) and `BACKLOG-DETAIL.md`: all ten Part 2 layers are built; PR3's first row is the candidate's `bin/sync` needing `--force` for 9 of 12 adopters. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S322 -- PR2's last layer, `bin/migrate-layout`, built on `pr2/candidate` (`18cda0f` to `ab35e96`): the measurements, the 12-adopter comparison, the record, the plan's status line
 
 The local ref moved by `git fetch <scratch clone> '+refs/heads/pr2/candidate:refs/heads/pr2/candidate'` and was read back equal (the ref, the clone's HEAD and the verified commit are one sha); two commits, 6 files, +4,483 / -2, three of the files the fork tip's bytes whole; the candidate is 19 commits over `upstream/main` (`f34769f`). **Over the 12 adopters, the candidate's tree against the fork tip's:** the migration columns equal in all twelve (24 of 27 columns), and the candidate's `bin/sync` needs `--force` for 9 of 12 where the fork's does not (the adopters hold earlier fork versions: PR3's first row). #94 still 3 files and 15 regions, #92 clean. Nothing sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
