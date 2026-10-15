@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S320
+date: 2026-10-14
+status: pending
+active_task: **PR2, Part 2's eighth layer only: the checkers' layout hunks** (`docs/planning/upstream-pr-composition-plan.md` §3 as amended by his S319 picker, option (b); `docs/planning/pr-composition-evidence/layer7-record.md` §6 named it): the layout hunks of `bin/check-ledger` and `bin/check-handoff` on upstream's blobs (`a96b641`, `d314c4d`), hand-built, plus a suite cut from the tip's `tools/test_checker_layouts.py`, on the local ref `pr2/candidate` (`0aa1897`), built in a scratch clone, un-pushed, as checkpoint commits of at most 5 files each; nothing sent to `KJ5HST/methodology`. NOT CHECKED at the claim (S319's handoff, to be derived first): which hunks the 280 tests need, the suite's count and time, whether the layer deletes the candidate's two `NOT_SCANNED_ALWAYS` entries and the layout suite's pin test. NOT this session: the prose layer, `bin/migrate-layout`, the `CHANGELOG.md` trim (his word), the scrub, PR3 to PR5.
+```
+
+```handoff
 session: S319
 date: 2026-10-14
 status: complete
