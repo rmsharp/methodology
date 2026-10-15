@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-115] S328 (after the close-out) -- his answer "B" to the runner-pointer wording, recorded as a backlog item
+
+After the close-out report he asked whether a very large `HANDOFFS.md` would make the protocol fail, then how a runner pointer to the distributed read instruction would read; I drafted three wordings (A 470 B, B 283 B, C 166 B), measured each against upstream's tip and the candidate, and he answered "B". No file but the backlog is touched: BL-115 (row in `docs/planning/BACKLOG.md`, detail in `docs/planning/BACKLOG-DETAIL.md#bl-115`) holds the exact wording, the placement, the trap it avoids (the format example matches a fence search in 4 of 6 adopter files) and the cost (upstream's runner reads 18,900 of 18,900 with it, the candidate's 18,977 of 18,900). `starter-kit/SESSION_RUNNER.md` is not edited; nothing is sent to `KJ5HST/methodology`. Not pushed: this commit changes more than the ledger. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S328 -- push record: S328's 5 commits to the fork `origin`, and his route for #95
 
 Pushed `981c33a..3acdaca` to `origin` (https://github.com/rmsharp/methodology), his tick at the close-out picker; read back: `git ls-remote origin refs/heads/main` is `3acdaca` and `git rev-list --left-right --count HEAD...origin/main` is `0 0`. At the same picker he chose route R1 for upstream issue #95 (`i95-record.md` §6): the NEXT session drafts a comment on #95, shows the text to him inline, and posts only on his go-ahead; no pull request unless the maintainer asks. Nothing is sent to `KJ5HST/methodology` and no comment is made on #95 yet. Model: Claude Sonnet 5.5.
