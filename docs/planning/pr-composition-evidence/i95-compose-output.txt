@@ -1,0 +1,102 @@
+# run at 2026-10-15T21:45:43Z by python3 -I docs/planning/pr-composition-evidence/i95-compose.py <scratch>; the script's own output follows
+i95-compose.py: the issue's suggested fix as a measuring instrument (upstream f34769f, candidate ced2c82)
+
+A. merge test: instrument on upstream's tip against the candidate (git merge-tree --write-tree, symmetric)
+   the new unit class goes at the end of tools/test_context_budget.py ('end') or before an existing class ('mid')
+   new test class at end, without the version bump: exit 1, 1 conflicted: tools/test_context_budget.py (1 region)
+   new test class at end, with the version bump   : exit 1, 2 conflicted: starter-kit/context_budget.py (1 region), tools/test_context_budget.py (1 region)
+   new test class at mid, without the version bump: merges cleanly (exit 0)
+   new test class at mid, with the version bump   : exit 1, 1 conflicted: starter-kit/context_budget.py (1 region)
+   files the instrument edits: 5: bin/tests.sh, starter-kit/CLAUDE_TEMPLATE.md, starter-kit/SESSION_NOTES.md, starter-kit/context_budget.py, tools/test_context_budget.py
+   for the 5-file cap per commit (SAFEGUARDS.md): those files plus the ledger entry the pre-commit hook requires = 6
+   the conflicting hunks, first region of each (ours = the instrument on upstream's tip, theirs = the candidate):
+      -- tools/test_context_budget.py (class at end, bump=False)
+         | <<<<<<< 48932745f683d05475705f1b422a534a3fe91fc4
+         | class TestLineCapIsMeasuredInBytes(unittest.TestCase):
+         |     """max_line_bytes names bytes and its message says B; it used to count characters, so a line
+         |     of three-byte characters passed a cap it exceeded (upstream issue 95, finding 4)."""
+         | 
+         |     def test_a_multibyte_line_over_the_cap_in_bytes_is_flagged(self):
+         |         with tempfile.TemporaryDirectory() as d:
+         |             Path(d, "t.md").write_text("x" * 40 + "\u2014" * 30 + "\n", encoding="utf-8")  # 70 characters, 13
+         |             r = cb.measure_file(d, {"path": "t.md", "max_line_bytes": 100})
+         |             self.assertEqual([f["kind"] for f in r["findings"]], ["line_bytes"])
+         |             self.assertIn("130 B", r["findings"][0]["msg"])
+         | 
+         |     def test_an_ascii_line_under_the_cap_is_not_flagged(self):
+         |         with tempfile.TemporaryDirectory() as d:
+         |             Path(d, "t.md").write_text("x" * 100 + "\n", encoding="utf-8")
+         |             r = cb.measure_file(d, {"path": "t.md", "max_line_bytes": 100})
+      -- starter-kit/context_budget.py (class at end, bump=True)
+         | <<<<<<< 1b41ee9112ad1c4e5347cdd22434ef1224a1070c
+         | VERSION = "1.3.2"
+         | CONFIG_NAME = ".context-budget.json"
+         | HISTORY_NAME = ".context-budget-history.jsonl"
+         | =======
+         | VERSION = "1.4.0"   # 1.4.0: the config and its history file live at the root or under methodology/
+         | CONFIG_NAME = ".context-budget.json"  # layout: ok -- the config's own name; where it lives is resolved below
+         | HISTORY_NAME = ".context-budget-history.jsonl"  # layout: ok -- the history file's own name; it lives beside t
+         | TOOL_NAME = "context_budget.py"  # layout: ok -- this tool's own name, cited in messages and found by the hook
+         | NEW_DIR = "methodology"
+         | RUNNER_NAME = "SESSION_RUNNER.md"  # layout: ok -- the framework anchor: where it is tracked decides a config 
+         | 
+         | # === LAYOUT ===
+         | # A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+         | # This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+         | 
+      -- tools/test_context_budget.py (class at end, bump=True)
+         | <<<<<<< 1b41ee9112ad1c4e5347cdd22434ef1224a1070c
+         | class TestLineCapIsMeasuredInBytes(unittest.TestCase):
+         |     """max_line_bytes names bytes and its message says B; it used to count characters, so a line
+         |     of three-byte characters passed a cap it exceeded (upstream issue 95, finding 4)."""
+         | 
+         |     def test_a_multibyte_line_over_the_cap_in_bytes_is_flagged(self):
+         |         with tempfile.TemporaryDirectory() as d:
+         |             Path(d, "t.md").write_text("x" * 40 + "\u2014" * 30 + "\n", encoding="utf-8")  # 70 characters, 13
+         |             r = cb.measure_file(d, {"path": "t.md", "max_line_bytes": 100})
+         |             self.assertEqual([f["kind"] for f in r["findings"]], ["line_bytes"])
+         |             self.assertIn("130 B", r["findings"][0]["msg"])
+         | 
+         |     def test_an_ascii_line_under_the_cap_is_not_flagged(self):
+         |         with tempfile.TemporaryDirectory() as d:
+         |             Path(d, "t.md").write_text("x" * 100 + "\n", encoding="utf-8")
+         |             r = cb.measure_file(d, {"path": "t.md", "max_line_bytes": 100})
+      -- starter-kit/context_budget.py (class at mid, bump=True)
+         | <<<<<<< 53ae423228dd89103bb31c3e767e24aac4c08df8
+         | VERSION = "1.3.2"
+         | CONFIG_NAME = ".context-budget.json"
+         | HISTORY_NAME = ".context-budget-history.jsonl"
+         | =======
+         | VERSION = "1.4.0"   # 1.4.0: the config and its history file live at the root or under methodology/
+         | CONFIG_NAME = ".context-budget.json"  # layout: ok -- the config's own name; where it lives is resolved below
+         | HISTORY_NAME = ".context-budget-history.jsonl"  # layout: ok -- the history file's own name; it lives beside t
+         | TOOL_NAME = "context_budget.py"  # layout: ok -- this tool's own name, cited in messages and found by the hook
+         | NEW_DIR = "methodology"
+         | RUNNER_NAME = "SESSION_RUNNER.md"  # layout: ok -- the framework anchor: where it is tracked decides a config 
+         | 
+         | # === LAYOUT ===
+         | # A project keeps its methodology files at its root (legacy) or under methodology/ (new).
+         | # This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+         | 
+
+B. fold test: the same edits on the candidate itself
+   every anchor exists exactly once on the candidate; the edits apply (numstat, + / - / path):
+      12  0  bin/tests.sh
+      2  0  starter-kit/CLAUDE_TEMPLATE.md
+      4  1  starter-kit/SESSION_NOTES.md
+      4  4  starter-kit/context_budget.py
+      18  0  tools/test_context_budget.py
+
+C. does the literal fix make day zero green?
+   new unit class on the fixed tool: exit 0  (OK)
+   the same class on the UNFIXED tool: exit 1, 1 failing test(s) (it is red where it should be)
+   new shell pass-control on the original seeds and tool (upstream tip): FAIL: untouched seeds are over the seed context budget (exit 2)
+   new shell pass-control on the issue's fix applied literally: FAIL: untouched seeds are over the seed context budget (exit 2)
+   the literal fix in a fresh project (untouched seeds): exit 2
+      CLAUDE.md [protected] the budget:protected block is only 182 B — it looks emptied
+      SESSION_NOTES.md: ok
+      LEARNINGS.md: unmeasured
+
+D. the issue's alternative: a placeholder long enough to clear the fence floor
+   shell pass-control with the placeholder padded to 801 characters: PASS: untouched seeds are within the seed context budget
+   the template grows by 620 B over the unpadded fenced one, and a never-customised project then passes the guard that exists to catch an emptied purpose

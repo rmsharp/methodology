@@ -1,0 +1,138 @@
+# run at 2026-10-15T21:45:39Z by python3 -I docs/planning/pr-composition-evidence/i95-dayzero.py <scratch>; the script's own output follows
+i95-dayzero.py: upstream issue #95 on three pinned trees
+
+=== upstream (f34769f)
+  blobs: SESSION_NOTES.md 63917c7, context-budget.json d0d363b, CLAUDE_TEMPLATE.md d9a111d, context_budget.py 22b8d40
+  seed SESSION_NOTES.md line 5: 317 characters, 321 bytes; `## ` headings: 1
+  notes: exit 2
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+  template: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+  control: exit 1
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: ok
+      LEARNINGS.md: unmeasured
+  fenced (the fenced Purpose body is 182 characters): exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected block is only 182 B — it looks emptied
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+  sync: bin/sync exit 0
+    as synced (no CLAUDE.md): exit 2
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+    with CLAUDE.md copied from CLAUDE_TEMPLATE.md: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+  sync-new: bin/sync has no --layout flag in this tree (not run)
+
+=== fork (981c33a)
+  blobs: SESSION_NOTES.md 63917c7, context-budget.json d0d363b, CLAUDE_TEMPLATE.md e0c35a8, context_budget.py f824ed6
+  seed SESSION_NOTES.md line 5: 317 characters, 321 bytes; `## ` headings: 1
+  notes: exit 2
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+  template: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+  control: exit 1
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: ok
+      LEARNINGS.md: unmeasured
+  fenced (the fenced Purpose body is 182 characters): exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected block is only 182 B — it looks emptied
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+  sync: bin/sync exit 0
+    as synced (no CLAUDE.md): exit 2
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+    with CLAUDE.md copied from CLAUDE_TEMPLATE.md: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+  sync-new: bin/sync exit 0
+    as synced (no CLAUDE.md): exit 1
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+    with CLAUDE.md copied from CLAUDE_TEMPLATE.md: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+
+=== candidate (ced2c82)
+  blobs: SESSION_NOTES.md 63917c7, context-budget.json d0d363b, CLAUDE_TEMPLATE.md e0c35a8, context_budget.py 997dcd9
+  seed SESSION_NOTES.md line 5: 317 characters, 321 bytes; `## ` headings: 1
+  notes: exit 2
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+  template: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+  control: exit 1
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: ok
+      LEARNINGS.md: unmeasured
+  fenced (the fenced Purpose body is 182 characters): exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected block is only 182 B — it looks emptied
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+  sync: bin/sync exit 0
+    as synced (no CLAUDE.md): exit 2
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+    with CLAUDE.md copied from CLAUDE_TEMPLATE.md: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: over
+          [line_bytes] 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+          [instrument] pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+      LEARNINGS.md: unmeasured
+  sync-new: bin/sync exit 0
+    as synced (no CLAUDE.md): exit 1
+      CLAUDE.md: unmeasured
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+    with CLAUDE.md copied from CLAUDE_TEMPLATE.md: exit 2
+      CLAUDE.md: over
+          [protected] the budget:protected fence is missing — the statement of purpose it guards may have been removed
+      SESSION_NOTES.md: unmeasured
+      LEARNINGS.md: unmeasured
+

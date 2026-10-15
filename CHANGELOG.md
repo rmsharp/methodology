@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S328 -- issue #95: the saved outputs of the three scripts (`68dae5a`)
+
+`i95-dayzero-output.txt`, `i95-adopters-output.txt` and `i95-compose-output.txt` beside the scripts, each from one serial run of the committed script with `python3 -I` (the first line of each is the UTC time of the run). Read from them: all four of the issue's findings reproduce on all three trees; the issue's own control passes; fencing the template's `## Purpose` placeholder alone leaves a fresh project at exit 2 (the fence block is 182 B against the 800 floor); measuring in bytes flips 0 lines at the 10 of 12 adopters that declare the cap; the four suggested changes, applied literally, merge cleanly with the candidate unless the version line is bumped on both sides or the new unit test class is appended where the candidate also appends. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S328 -- issue #95: the three measuring scripts (day zero on three trees, the 12 adopters, the fix as an instrument)
 
 `docs/planning/pr-composition-evidence/i95-dayzero.py` (the issue's repro, its control, the suggested template fence and the real `bin/sync` route, on upstream `f34769f`, the fork `981c33a` and the candidate `ced2c82`, legacy and new layout, read with the tool's own `--status --json`), `i95-adopters.py` (what measuring `max_line_bytes` in bytes would change at the 12 adopters' committed HEADs, read with `git show`, audited against the tool's own `measure_file`) and `i95-compose.py` (the issue's four suggested changes applied literally as exact-string edits in a scratch repository, then `git merge-tree` against the candidate, a fold onto the candidate, and a red-and-green run of the pass-control it suggests). The patch is a measuring instrument, not a proposed fix; nothing is written to the repository but the scripts. Outputs follow in their own commit. Model: Claude Sonnet 5.5.
