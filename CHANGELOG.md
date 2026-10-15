@@ -253,6 +253,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S322 -- the last layer's scripts (the builder re-based, the mutants, the measure script, the adopters' comparison)
+
+`layer7b-build.py` is the S319 draft with one change in code, the `COPIES` text (the checkers' layer appended two entries); `layer7b-mutate.py` aims mutants at what the layer adds and runs the real two gates over a red suite; `layer7b-measure.sh` prints the other measurements; `layer7b-adopters-compare.py` compares two runs of `migrate-12-adopters.py`. Scripts only: their outputs and the record follow. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-101] S322 claim (in progress) -- PR2 Part 2's last layer, `bin/migrate-layout`, on `pr2/candidate`
 
 CHANGELOG: pending. Operator said `go`, picked `bin/migrate-layout` at the Phase 0 picker (S321's recommended next step) and ticked all four go-aheads (done and read back in the entry below; the gate re-run read 18/18). Phase 0: CHANGELOG frontier `2daa9f8` (HEAD at the time), 0 undocumented commits, 0 merges, no pending receipt, `bin/check-ledger` and `bin/check-handoff` exit 0 (read bare); `upstream/main` still `f34769f`; #94 and #92 have 0 comments and 0 reviews, #93's one comment is his own (2026-10-05); dashboard 72/100, one high flag (`docs/planning/BACKLOG.md`, 60,014 B against 56,750 B). **This session's one deliverable is the `bin/migrate-layout` layer only:** the tool and its suite on the local ref `pr2/candidate` (`18cda0f`), derived first and read-only (the builder's `COPIES`, the paired gate over one command string, `timeout_seconds`, the file count and commit split, cap 5), built in a scratch clone as checkpoint commits, un-pushed. Not this session: D6's unmeasured-gate commit, the scrub, the `CHANGELOG.md` trim (his word), PR3 to PR5. Nothing is sent upstream. Closed by a NEW close-out entry (a committed entry is never rewritten). Model: Claude Sonnet 5.5.
