@@ -257,6 +257,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-15-2.md` (4 record(s), 80,594 B → 35,427 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-10-15 → 2026-10-15) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-15-2.md`](docs/archive/HANDOFFS-through-2026-10-15-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-15-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-15-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 80,594 B → 35,427 B (−56.0%).
+
 ### 2026-10-16 · [BL-101] S332 -- push record: S332's 4 commits to the fork `origin`, his tick at the close-out picker ("Push S332's 4 commits to fork origin")
 
 `git push origin main`: `55a35c2..36a466a` (the claim `c854572`, draft 8 `faffc98`, draft 9 with the record `d2cc1e9`, the close-out `36a466a`), read back with `git rev-list --left-right --count origin/main...HEAD` = `0 0`. `pr2/candidate` (`a62bfec`) is on no remote (`git ls-remote origin 'refs/heads/pr2/*'` lists none); nothing was sent to `KJ5HST/methodology`. The same picker ticked "Trim HANDOFFS to 3 receipts now" (the next entries) and chose "Run the missing check first" for the text (the next session). This entry is the ledger-only push record that his standing grant lets go to the fork unasked.
