@@ -1,0 +1,32 @@
+# run at 2026-10-16T02:04:28Z by python3 -I docs/planning/pr-composition-evidence/i95-comment-check.py <scratch>; the script's own output follows
+i95-comment-check.py: upstream main f34769f
+
+source lines the draft cites (starter-kit/context_budget.py):
+      384: long = [(i + 1, len(l)) for i, l in enumerate(lines) if len(l) > cap]
+      452: out["protected_bytes"] = len(body.encode())
+      453: if len(body.strip()) < spec.get("protected_min_bytes", 400):
+      455: f"the {fence} block is only {len(body.strip())} B — it looks emptied"})
+config values the draft cites (starter-kit/context-budget.json):
+      34: "protected_min_bytes": 800,
+      43: "max_line_bytes": 280,
+
+template Purpose placeholder: 182 characters, 182 bytes
+cases:
+  fenced: exit 2; CLAUDE.md over; the budget:protected block is only 182 B — it looks emptied
+  at-799: exit 2; CLAUDE.md over; the budget:protected block is only 799 B — it looks emptied
+      (padded to 799: 617 more characters than the placeholder)
+  at-800: exit 1; CLAUDE.md ok; no finding
+      (padded to 800: 618 more characters than the placeholder)
+  cjk-300: exit 2; CLAUDE.md over; the budget:protected block is only 300 B — it looks emptied
+      (the block is 300 characters and 900 bytes; a bytes count clears the 800 floor)
+  ascii-800: exit 1; CLAUDE.md ok; no finding
+
+the issue's control (seed SESSION_NOTES.md, line 5 wrapped, a `## Session History` heading):
+  exit 1; CLAUDE.md unmeasured; SESSION_NOTES.md ok; LEARNINGS.md unmeasured
+
+  PASS  fenced: exit 2, 'only 182 B'
+  PASS  at-799: refused
+  PASS  at-800: accepted
+  PASS  cjk-300: refused as 'only 300 B' though 900 bytes
+  PASS  ascii-800: accepted
+  PASS  control: exit 1 and SESSION_NOTES.md ok
