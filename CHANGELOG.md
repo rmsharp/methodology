@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-114] S329 -- his answers at the close-out picker, written into the receipt
+
+**The draft comment on #95: HOLD, he will edit it.** Nothing is posted; the next session waits for his edits, recomposes the whole text from them and shows it inline again before any post (the four choices inside it are his: the offer of a pull request, the lean in item 1, the footer, "12 projects of mine"; `i95-comment-record.md` §3). **The push: ticked**, done and recorded in the entry below (`de5ab27..981b534`, then the ledger-only record `4d94511`, `origin/main` equal, `0 0`). The S329 receipt's next steps (2), (5) and its `active_task` were amended to say both, so a successor reading only the receipt finds them; the amendment commit is local and not pushed (it touches `HANDOFFS.md`, so it is wider than the ledger-only push grant). Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-114] S329 -- push record: S329's 6 commits to the fork `origin`
 
 Pushed `de5ab27..981b534` (the HANDOFFS trim `59de21f` and its fold `fb002cd`, the claim `061bd02`, the checks `08d5c55`, the draft `e6c89d3`, the close-out `981b534`) to `origin` (https://github.com/rmsharp/methodology), his tick at the S329 close-out picker. Read back: `git ls-remote origin refs/heads/main` is `981b534f233f`, and `git rev-list --left-right --count HEAD...origin/main` is `0 0`. Nothing is sent to `KJ5HST/methodology`; the draft comment on #95 is not posted. A first attempt, by a sha I mistyped, failed with "src refspec ... does not match any" and pushed nothing; the second resolved the sha with `git rev-parse`. Model: Claude Sonnet 5.5.
