@@ -1,0 +1,14 @@
+# The PR's 181 trimmer tests (python3 tools/test_methodology_trim.py), 2026-10-16, in scratch worktrees of the PR head 972eb2c
+
+## unmodified PR head
+Ran 181 tests in 41.235s
+OK (skipped=2)
+
+## with prototype A+B (a recognised stub finalize exits 0; a stub marker for SESSION_NOTES.md) swapped in for starter-kit/methodology_trim.py
+Ran 181 tests in 41.692s
+FAILED (failures=4, skipped=2)
+failing tests:
+  FAIL: test_a_proof_older_than_the_stub_label_is_rederived_with_the_label_from_the_ledger_table (__main__.TestReverify)
+  FAIL: test_the_stub_marker_comes_from_the_ledger_table_by_live_basename (__main__.TestReverify)
+  FAIL: test_the_proofs_stub_note_carries_the_rule (__main__.TestTheTimingRuleIsStatedTheSameEverywhere)
+  FAIL: test_a_pending_stub_finalized_in_the_trim_commit_is_labelled_and_exits_4 (__main__.TestVerifyShNamesAStubFinalize)

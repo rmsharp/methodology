@@ -1,0 +1,68 @@
+HANDOFFS-through-2026-09-26-3.md         T=2e206a6  15 stub lines, 11 absent from the successor
+      absent: status: pending
+      absent: self_score: pending
+      absent: predecessor_score: pending
+      absent: active_task: `NEWS.Rmd` release-state sweep, stage 2 piece (b): mating-symbol placement/spacing entries in the Pedigree Diagram section. Owner picked 
+      absent: what_was_done: pending
+      absent: next_steps: pending
+      absent: key_files: pending
+      absent: gotchas: pending
+      ... 3 more
+SESSION_NOTES-through-2026-08-15.md      T=850e367  24 stub lines, 23 absent from the successor
+      absent: **Deliverable:** Lossless archive trim of `SESSION_NOTES.md` (found live in conversation
+      absent: 2026-08-15/16, user-directed at Phase 0) (IN PROGRESS)
+      absent: **Started:** 2026-08-16
+      absent: **Status:** Session claimed. Work beginning. PRE-RED investigation already found: the
+      absent: `CLAUDE.md`/`BACKLOG.md` framing of this item as "blocked by a fence-scanner defect" (S518) is
+      absent: now **stale** — `methodology_trim.py`'s `SESSION_NOTES.md` `LedgerSpec` shows both the original
+      absent: fence-scanner defect (S518) and the follow-on `\b`-boundary defect (S527/PROJECT_LEARNINGS.md
+      absent: Learning 533) were already fixed (S527/S528), and two archive rounds already ran successfully
+      ... 15 more
+SESSION_NOTES-through-2026-09-20-2.md    T=b528b8b  13 stub lines, 12 absent from the successor
+      absent: **Deliverable:** Prep D-2 — remove the two test-only reaches into the internal
+      absent: `.buildMatingUnitForest()` (`tests/testthat/test_modPedigree.R:1669` and `:1706`,
+      absent: verified current S738 — re-verify before editing), rewriting them through
+      absent: `makePedigreeMatingLayout()`'s public surface or a small exported accessor
+      absent: (IN PROGRESS)
+      absent: **Started:** 2026-09-21
+      absent: **Status:** Session claimed. Work beginning. CODE session — full TDD gates;
+      absent: the deliverable IS a test rewrite, so the RED/GREEN phase mapping gets agreed
+      ... 4 more
+SESSION_NOTES-through-2026-09-21-2.md    T=55da128  8 stub lines, 7 absent from the successor
+      absent: **Deliverable:** Issue #167 Slice 2 — `createColonySnapshot()` (strict TDD,
+      absent: plan §5 Slice 2 + §4 interface catalog) (IN PROGRESS)
+      absent: **Started:** 2026-09-21
+      absent: **Status:** Session claimed. Work beginning.
+      absent: **Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+      absent: (in progress); Phase 3F records the rest. Until close-out, this line is the
+      absent: crash breadcrumb for the next session's reconcile.
+SESSION_NOTES-through-2026-09-21.md      T=8b2e3f9  10 stub lines, 9 absent from the successor
+      absent: **Deliverable:** BACKLOG editorial compression pass (S518 recurring-maintenance
+      absent: item, `BACKLOG.md:181`) — starting with the "Pedigree diagram vs kinship2"
+      absent: section's regrowth check (`:280`); scope gate to follow once regrowth is
+      absent: measured (IN PROGRESS)
+      absent: **Started:** 2026-09-21
+      absent: **Status:** Session claimed. Work beginning.
+      absent: **Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+      absent: (in progress); Phase 3F records the rest. Until close-out, this line is the
+      ... 1 more
+SESSION_NOTES-through-2026-09-26-4.md    T=8c9c5ea  8 stub lines, 7 absent from the successor
+      absent: **Deliverable:** `NEWS.Rmd` release-state sweep stage 2 piece (c): connector routing, collision
+      absent: avoidance, and the Rectilinear sibling-bar entries (IN PROGRESS).
+      absent: **Started:** 2026-09-27.
+      absent: **Status:** Session claimed. Work beginning (claim written late -- see the `HANDOFFS.md` receipt's
+      absent: `active_task` disclosure: PRE-RED fact-finding and the PRE-RED->RED gate happened before this stub).
+      absent: **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+      absent: Phase 3F records the rest.
+SESSION_NOTES-through-2026-09-28-2.md    T=0fc874f  5 stub lines, 4 absent from the successor
+      absent: **Deliverable:** real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`) are treated as stand-ins for unknown parents (`BACKLOG.md`
+      absent: **Started:** 2026-09-28 ~22:50 UTC
+      absent: **Status:** Session claimed. Work beginning.
+      absent: **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line 
+SESSION_NOTES-through-2026-09-28.md      T=618e5c1  7 stub lines, 6 absent from the successor
+      absent: **Deliverable:** Rebuild the shipped `inst/extdata/examples/ExamplePedigree.txt` from
+      absent: `ExamplePedigree.csv` (the only text-format example; every age cell had been saved as an Excel
+      absent: date or `#####`, and id `15FEBR` as `15-Feb`), with a test and a `data-raw/` script (IN PROGRESS)
+      absent: **Started:** 2026-09-28
+      absent: **Status:** Session claimed. Work beginning (PRE-RED).
+      absent: **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line 
