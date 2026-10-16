@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S330 -- push record: S330's 4 commits to the fork `origin`, his word after the close-out ("push the 4 commits")
+
+`git push origin main`: `7ba1388..803f3f2` (the claim `0f74b2e`, the builder, record and saved run `88e4b63`, the draft text's figures `ab4f563`, the close-out `803f3f2`), read back with `git rev-list --left-right --count origin/main...HEAD` = `0 0`. The local ref `pr2/candidate` (`a62bfec`) is on no remote (`git ls-remote origin 'refs/heads/pr2/*'` lists none), and nothing was sent to `KJ5HST/methodology`. This entry is the ledger-only push record that his standing grant lets go to the fork unasked.
+
 ### 2026-10-15 · [BL-101] S330 close-out -- receipt complete (self 8, predecessor S329 scored 8), the fork's gate run saved, one correction in the record
 
 The `HANDOFFS.md` receipt is `status: complete`. **Phase 3E, the repository's own gate run** in a clean `--no-local` clone of `ab4f563` (the last work commit; `layer-verify.sh`, launched as `nohup ... &` and read from a done-file, about 33 minutes at a load of 8 to 130 from foreign processes): `quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4` (the ids S329 cited), the layout scanner 18 files and 0 sites, 5 of 172 shard proofs exit 1, **the same five August ones as S329's run (`diff` of the two sets: identical)**; saved as `docs/planning/pr-composition-evidence/fix32-fork-gate-output.txt` with the colour codes stripped. One correction in `fix32-record.md` §5: an amend re-run of `pr4-claims.sh` was written as "about 90 minutes", a guess; it took about 35 minutes (launched a little after 21:40, done-file at 22:16). Phase 3C appended no fork learning row (D3 not triggered; rows considered #61, #55, #53, #23, each already stating the lesson). Not pushed: this session's commits stay local until his tick; `pr2/candidate` is on no remote.
