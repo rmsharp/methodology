@@ -76,7 +76,41 @@ Reader D's own framing is the honest summary: "the structure is good, but the de
 ## 4. What is open for him
 
 1. **The text itself**: post as it is, change it, or hold. Draft 9 has no read; a fifth read costs about 85,000 subagent tokens and three minutes, and four reads have rated 5, 5, 6 and 5 of 10.
-2. **The check in §3 that I did not do** (the maintainer's own changes since `c8b9ddd`, against the whole files sent).
+2. **The check in §3 that I did not do: DONE at S333, §5.** Its two findings are his to settle (§5, F1 and F2).
 3. **A recommendation per decision, the reason for (b), the itemised dashboard changes** (§3).
 4. **A known false warning stays in the pull request**: the migration warns that the hook `context_budget.py install-hook` writes "will refuse the migration commit"; it does not. The text says so under "Known gaps". Fixing it before sending is a build session.
 5. Unchanged from `pr4-record.md` §5: D1 (the open findings and the waiver), D4 (#94 and #92), what the pull request carries besides the series, the push, PR5.
+
+## 5. S333: do the maintainer's own lines survive the whole files? (the check §3 left open)
+
+Scripts: `pr4-survive.py` (output `pr4-survive-output.txt`) and `pr4-oracle.sh` (output `pr4-oracle-output.txt`). Both read git objects only, from `f34769f` (upstream) and `a62bfec` (the candidate), so they give the same output from any checkout.
+
+**The answer.** He has changed nothing since `c8b9ddd`: `f34769f` (2026-10-02) is an ancestor of `c8b9ddd` (2026-10-06) and is still `upstream/main`, so no change of his can be lost *since* then. What can be lost is a line of his in `f34769f`'s copies that the 32 commits remove or rewrite. **Every such line is accounted for by a change the text names (two of them only in part), except one (F2), and the reason the text gives for removing two of his tests is wrong (F1): both are his to settle.** Upstream's own tests agree: 417 of the 422 in the three unit-test files for these tools do not fail against the candidate's code, and each of the five that do fails on a pinned version, a pinned piece of source text, an import list or a disclosed change.
+
+**What was counted.** The 32 commits remove or rewrite 1,152 lines of upstream's copies in 38 files (git's own deletion count; the script's total equals it). He wrote 487 of them (blame at `f34769f`; the authors `KJ5HST`, `Terrell Deppe`, `Terrell`); counting the dashboard's byte-identical twin once, 366 of 865. Of his 476 non-blank lines: 38 are still in the file as exact lines, 48 are the same line followed only by a `# layout: ok` comment, 31 are inside a longer or re-wrapped line (all 31 read by eye: reflowed prose, a lone `),`, and calls and returns that now carry the layout table or `out_dir`; none removes a behaviour of his) and **359 are gone (279 with the twin once)**. The trimmer has **0** of his lines: all four commits that touch it are the fork operator's. Each of the 279 is assigned a reason by file and line range in the script's table (a judgment, written out so it can be disputed one range at a time); none is left without one:
+
+| Reason | Lines | Where the text says so |
+|---|---|---|
+| the `methodology/` directory work (the resolver, names in constants, messages) | 113 | decision 1; "What a project sees" |
+| (e) the four tests removed | 59 | decision 2 (e) |
+| (a) `--sync [DIR]`, the `--force` gate, the stale-copy remedy | 32 | decision 2 (a) |
+| (c) one table for installed-source recognition | 25 | decision 2 (c) |
+| the ratchet's `timeout_seconds` | 16 | the `c8c0b21` bullet |
+| a version constant, its pin, the re-recorded bytes per token | 9 | decision 2, decision 4 |
+| the runner's task table (paths relative to the runner) | 7 | in part: the text names the first paragraph |
+| five gate thresholds raised (all `min`, so tighter) | 5 | in part: the `bbe0dc3` bullet says three; later commits raise the other two |
+| the dashboard's gate-history walk is first-parent (2.21.0) | 4 | **no** (F2) |
+| (b) `"methodology"` out of `EXCLUDE_DIRS` | 3 | decision 2 (b) |
+| `first_commit_date` reads the root commits | 3 | the `bbe0dc3` bullet |
+| `bin/tests.sh`: executable bit from the manifest, the skip count | 2 | the `bbe0dc3` bullet |
+| `starter-kit/HANDOFFS.md`: the unmeasured-gate rule | 1 | the `5afc962` bullet |
+
+**Upstream's tests as the oracle** (`pr4-oracle.sh`; some of the tests are his, some the fork operator's). The three unit-test files at `f34769f`, unchanged, run against the candidate's code: the ratchet 44 of 45 (the failure is `test_stdlib_only`: the import allow-list gained `signal`, `time`, `pathlib`); the budget tool 147 of 148 (`test_the_head_baseline_comes_from_heads_config_not_the_staged_one` pins the *source text* `f"HEAD:{CONFIG_NAME}"`; the candidate reads HEAD's config through `head_config_text(root)` and its copy of the test pins that; the behavioural tests of that class pass); the dashboard 226 of 229 **after one fixture line** (his `base_metrics` builds a metrics dict without `read_cap_watch`, which the candidate's new risk rows (d) index directly; without that line 14 tests raise `KeyError`; the candidate's test file adds the key). The three dashboard failures are `test_dashboard_version` (the pin), `test_stale_warning_leads_with_the_project_scoped_remedy` ((a)) and `test_every_framework_installed_source_name_has_a_signature` ((c)). Also: the ledger hook's selftest (his hook) has 17 labelled checks at `f34769f`; 16 appear word for word in the candidate's selftest (the 17th is reworded, "a `docs/archive/` shard" to "a shard in the legacy archive directory"), which passes (43 checks); all 34 numbered tests of `bin/tests.sh` are present with their titles (3 added); by name, **4 of upstream's 553 tests are absent from the candidate, the four the text names** (an earlier count of 10 was a renamed class, not a loss). The series raises five thresholds and adds six gates; it lowers none and removes none.
+
+**F1. (e) is exact about the count and loose about the reason.** The text says the three tests in `TestCliRemedyProportionality` go "because (a) replaces the remedy they assert". Only one of the three asserts a remedy and fails on the candidate's code (`cp ` in the warning). The other two pass on it: `test_bare_dry_run_refuses_instead_of_writing` (exit 2, nothing written), which the candidate's own Row 13 test also asserts, and **`test_a_normal_run_still_writes`**, a presence control for exactly the failure the first one could hide. For a copy kept at the project root the candidate has no counterpart: its only positive assertion that a plain run writes `dashboard.html` is for the `methodology/` layout (`tools/test_methodology_dashboard.py` at `a62bfec`, line 6795). Two ways to settle it, his: restore the two tests on the candidate (a build session: the head moves, `pr4-claims.sh` again, about 35 minutes, and `dashboard-unit-tests` can rise by 2), or change the sentence in (e) to say that two of the three assert behaviour the candidate keeps and are dropped anyway.
+
+**F2. A change to his code that the text does not itemise.** `_gate_manifest_history` and `has_manifest_history` walk the manifest's history with `git log --first-parent` (2.21.0). Effect: the comparison is one line of ancestry, so a merge of two lineages no longer prints a "floor lowered" nobody lowered, and a loosening resolved into a merge is compared with the line it landed on; a loosening made on a side branch is reported at the merge that carried it in. Decision 2 says the other changes in `bbe0dc3` are not itemised, so the text is not wrong, but it changes what his dashboard reports about the ratchet he wrote. One sentence in decision 2 would name it.
+
+**F3. Minor, no action proposed.** The runner's task table (7 of his lines) now gives workstream paths relative to the runner (`workstreams/DESIGN_WORKSTREAM.md`, not `docs/methodology/workstreams/...`); the text names the first paragraph, which is what resolves them for a legacy project (`SESSION_RUNNER.md` line 7).
+
+**Not checked.** `bin/tests.sh` at `f34769f` was not run against the candidate (7 minutes, 300 to 375 assertions; its four changed lines of his were read). The gone-line reasons are by range from reading each hunk, not by running anything; the first-parent walk was read, not run on a merged history. Files the candidate adds carry no upstream line to lose.

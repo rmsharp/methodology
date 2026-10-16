@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-101] S333 -- the check's record: `draft4-record.md` section 5 (do the maintainer's own lines survive the whole files?)
+
+The answer, in the record's words: he has changed nothing since `c8b9ddd` (`f34769f` is an ancestor of it and still `upstream/main`); of the lines of his that the 32 commits remove or rewrite, every one is accounted for by a change the text names, two of them in part, except one change to his dashboard (the gate-history walk is first-parent, 2.21.0; F2) and the text's reason for removing two of his tests is wrong (F1: `test_bare_dry_run_refuses_instead_of_writing` and `test_a_normal_run_still_writes` pass on the candidate's code; the second has no counterpart for a copy at the project root). Section 4 item 2 now points at section 5. The pull request's text is NOT changed: both findings are his to settle, and the text is at 20,117 B against its 20,000 B budget. Nothing is sent.
+
 ### 2026-10-16 · [BL-101] S333 -- the supersede check's two scripts and their saved output (`pr4-survive.py`, `pr4-oracle.sh`)
 
 `pr4-survive.py` lists every line of upstream's copies (`f34769f`) that the candidate (`a62bfec`) removes or rewrites, attributes it by `git blame` to its author, and assigns each of the maintainer's gone lines to a named reason by file and line range (exit 1 if one has none). `pr4-oracle.sh` runs upstream's dashboard, ratchet and budget-tool unit tests against the candidate's code in a scratch tree, with one printed fixture line changed in the dashboard file. Both read git objects only. Numbers: 1,152 lines removed (equals git's count), 487 his, 359 gone, 279 with the dashboard twin once, all assigned; 417 of 422 upstream unit tests do not fail on the candidate's code; 4 of 553 tests absent by name, the four the text names. Outputs: `pr4-survive-output.txt`, `pr4-oracle-output.txt`. Nothing is sent.
