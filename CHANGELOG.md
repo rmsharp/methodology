@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-101] S333 -- push record: this session's 6 commits to the fork `origin`, his tick at the close-out picker ("Push to the fork origin")
+
+`git push origin main`: `da20178..1ee4380` (the trim `8c41f6d`, the claim `e905d65`, the scripts `5f4e880`, the record `2ac9593`, his decisions `2a806d5`, the close-out `1ee4380`), read back with `git rev-list --left-right --count origin/main...HEAD` = `0 0` and `ls-remote` equal to `HEAD`. `pr2/candidate` (`a62bfec`) is on no remote. Nothing is sent to `KJ5HST/methodology`. The earlier push this session (`4ee7e06..da20178`, S332's three commits, ticked at the Phase 0 picker) is recorded in the claim entry.
+
 ### 2026-10-16 · [BL-101] S333 close-out -- the supersede check done (this entry resolves the claim `e905d65`, which stays `in progress` above): receipt complete, the fork's gate run saved
 
 Deliverable: the check S332 left open, answered in `draft4-record.md` section 5 with `pr4-survive.py` and `pr4-oracle.sh`. Findings F1 (the text's reason for removing two of his tests is wrong) and F2 (the first-parent walk is not itemised) and his answers (restore the two tests; name the walk) are in the receipt and the entry below; neither is done. Gate: 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, clean `--no-local` clone of `2ac9593`, 1,428 s, saved in `docs/planning/pr-composition-evidence/s333-fork-gate-output.txt`. Scores: predecessor (S332) 8, self 8. 3C: no fork learning row (rows considered: #50, #108, #24). The `HANDOFFS.md` receipt is complete (`status: complete`); the next Phase 0 offers the HANDOFFS trim (4 receipts at rest). Not pushed at the time of this entry; he ticked the push to the fork `origin`.
