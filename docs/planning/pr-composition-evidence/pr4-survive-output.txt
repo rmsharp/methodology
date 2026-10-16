@@ -1,0 +1,73 @@
+start c8b9ddda6c0b; upstream f34769f31ca3; candidate a62bfecf7812
+upstream is an ancestor of the start copy: True; upstream commits the start copy lacks: 0
+candidate over upstream: 32 commits; 47 files changed, 19826 insertions(+), 1152 deletions(-)
+maintainer = author matching /Terrell|KJ5HST/i
+
+file (the candidate changes it)                                                  lines removed   his his,nb  moved  noted   kept   gone
+.context-budget.json                                                          M     79       3     3      3      0      0      0      3
+.githooks/pre-commit                                                          M    287      63    26     26      1      0      1     24
+.quality-gates.json                                                           M     95       5     5      5      0      0      0      5
+HOW_TO_USE.md                                                                 M    953       4     3      3      0      0      1      2
+ITERATIVE_METHODOLOGY.md                                                      M    636       7     0      0      0      0      0      0
+bin/_manifest.py                                                              M    119       1     1      1      0      0      1      0
+bin/_manifest_reader.py                                                       M    145       7     7      6      6      0      0      0
+bin/check-handoff                                                             M    490      13     3      3      0      3      0      0
+bin/check-ledger                                                              M    124       5     5      5      0      0      0      5
+bin/check-links                                                               M    167      47     0      0      0      0      0      0
+bin/status                                                                    M    322      21     3      3      0      0      1      2
+bin/sync                                                                      M    430      32    18     18      0      0      3     15
+bin/tests.sh                                                                  M   1423      16     4      4      0      0      0      4
+starter-kit/BOOTSTRAP.md                                                      M    479      14     3      3      0      1      0      2
+starter-kit/CHANGELOG.md                                                      M     21       1     0      0      0      0      0      0
+starter-kit/CLAUDE_TEMPLATE.md                                                M     91       2     0      0      0      0      0      0
+starter-kit/HANDOFFS.md                                                       M    195       2     1      1      0      0      0      1
+starter-kit/RECOMMENDED_SKILLS.md                                             M    129      14     2      2      0      0      0      2
+starter-kit/SAFEGUARDS.md                                                     M    246       1     0      0      0      0      0      0
+starter-kit/SESSION_RUNNER.md                                                 M    397      11     7      7      0      0      0      7
+starter-kit/context_budget.py                                                 M   1493      18    16     16      0      2      0     14
+starter-kit/methodology_dashboard.py  (twin of tools/methodology_dashboard.p  M   3758     287   121    120     12     20      8     80
+starter-kit/methodology_trim.py                                               M   2181     105     0      0      0      0      0      0
+starter-kit/quality-gates.json                                                M     17       1     1      1      0      0      0      1
+starter-kit/quality_ratchet.py                                                M    592      59    59     59      0      2      8     49
+tools/methodology_dashboard.py                                                M   3758     287   121    120     12     20      8     80
+tools/test_context_budget.py                                                  M   1845       1     0      0      0      0      0      0
+tools/test_methodology_dashboard.py                                           M   3259     115    77     69      7      0      0     62
+tools/test_methodology_trim.py                                                M   2291       1     0      0      0      0      0      0
+tools/test_quality_ratchet.py                                                 M    464       1     1      1      0      0      0      1
+workstreams/ARCHITECTURE_WORKSTREAM.md                                        M    269       2     0      0      0      0      0      0
+workstreams/AUDIT_WORKSTREAM.md                                               M    252       1     0      0      0      0      0      0
+workstreams/DEVELOPMENT_WORKSTREAM.md                                         M    274       1     0      0      0      0      0      0
+workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md                    M    602       1     0      0      0      0      0      0
+workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md                      M    572       1     0      0      0      0      0      0
+workstreams/TEMPLATE_CAMPAIGN.md                                              M    285       1     0      0      0      0      0      0
+workstreams/TEMPLATE_WORKSTREAM.md                                            M    159       1     0      0      0      0      0      0
+----------------------------------------------------------------------------------------------------------------------
+TOTAL, both copies of the dashboard counted                                               1152   487    476     38     48     31    359
+TOTAL, the twin counted once                                                               865   366    356     26     28     23    279
+removed = lines of upstream's copy the candidate's diff removes or rewrites; its total (1152) equals git's own deletion count (1152).
+his = of those, written by the maintainer (blame at upstream); his,nb = non-blank; moved / noted / kept / gone as above.
+
+THE REASON FOR EACH GONE LINE (the twin counted once; the range table is in this script)
+reason        lines  what it is  --  where the text says so
+layout          113  the methodology/ directory work: files found through the layout resolver, names held in constants, messages and prose reworded for either layout  --  decision 1; 'What a project sees'; the commit list
+sync             32  (a) the dashboard's --sync [DIR], the --force gate on tracked or brand-new targets, the stale-copy remedy, and the help and messages that carry them  --  decision 2 (a)
+excl              3  (b) 'methodology' is no longer in EXCLUDE_DIRS  --  decision 2 (b)
+table            25  (c) installed-source recognition is one table; the name list is derived from it  --  decision 2 (c)
+tests_e          59  (e) the four tests removed  --  decision 2 (e)
+version           9  a version constant, the pin on it, or the re-recorded bytes-per-token  --  decision 2; decision 4
+timeout          16  the quality ratchet's timeout_seconds (commit c8c0b21)  --  the c8c0b21 bullet
+firstcommit       3  first_commit_date reads the root commits  --  the bbe0dc3 bullet
+thresholds        5  gate thresholds raised (all five are min gates, so a tightening)  --  in part: the bbe0dc3 bullet says three; the other two are raised by later commits
+testsh            2  bin/tests.sh: the executable bit derived from the manifest; the skip count in the summary  --  the bbe0dc3 bullet
+handoffs_rule     1  starter-kit/HANDOFFS.md: a run with unmeasured gates must be repaired or named  --  the 5afc962 bullet
+runner_table      7  starter-kit/SESSION_RUNNER.md: the workstream paths in the task table made relative to the runner  --  in part: the text names the first paragraph only
+firstparent       4  the dashboard's gate-manifest history walk reads the first-parent line (2.21.0)  --  NOT ITEMISED: decision 2 says the other changes in bbe0dc3 are not itemised
+(no reason)       0
+
+TESTS OF UPSTREAM'S TEST FILES THAT THE CANDIDATE NO LONGER HAS (by test name; a renamed class is not a loss)
+  docs/tutorials/sample-project/test_todo.py    7 tests, 0 absent in the candidate
+  tools/test_context_budget.py                148 tests, 0 absent in the candidate
+  tools/test_methodology_dashboard.py         229 tests, 4 absent in the candidate: test_a_normal_run_still_writes, test_bare_dry_run_refuses_instead_of_writing, test_every_framework_installed_source_name_has_a_signature, test_stale_warning_leads_with_the_project_scoped_remedy
+  tools/test_methodology_trim.py              124 tests, 0 absent in the candidate
+  tools/test_quality_ratchet.py                45 tests, 0 absent in the candidate
+  TOTAL                                       553 tests, 4 absent

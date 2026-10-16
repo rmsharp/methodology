@@ -1,0 +1,36 @@
+the one change to upstream's dashboard tests (base_metrics):
+   - "files": {"largest_files": []},
+   + "files": {"largest_files": [], "read_cap_watch": []},
+
+dashboard tests, upstream's file as it is            Ran 229 tests in 12.443s  -> FAILED (failures=2, errors=15)
+      ERROR: test_every_framework_installed_source_name_has_a_signature (__main__.TestFrameworkInstalledExclusion)
+      ERROR: test_a_clean_marker_raises_no_disclosure (__main__.TestFrameworkRisks)
+      ERROR: test_a_complete_corpus_raises_no_framework_risk (__main__.TestFrameworkRisks)
+      ERROR: test_a_framework_repo_that_keeps_its_ledger_is_not_flagged (__main__.TestFrameworkRisks)
+      ERROR: test_a_marker_contradiction_is_disclosed_on_either_axis (__main__.TestFrameworkRisks)
+      ERROR: test_an_incomplete_corpus_names_the_missing_members (__main__.TestFrameworkRisks)
+      ERROR: test_no_corpus_at_all_is_high_and_names_the_framework (__main__.TestFrameworkRisks)
+      ERROR: test_one_disclosure_even_when_both_axes_conflict (__main__.TestFrameworkRisks)
+      ERROR: test_the_adoption_risks_never_fire_on_a_framework_repo (__main__.TestFrameworkRisks) (score=0)
+      ERROR: test_the_adoption_risks_never_fire_on_a_framework_repo (__main__.TestFrameworkRisks) (score=40)
+      ERROR: test_the_adoption_risks_never_fire_on_a_framework_repo (__main__.TestFrameworkRisks) (score=105)
+      ERROR: test_the_ledger_risk_stays_reachable_for_a_framework_repo (__main__.TestFrameworkRisks)
+      ERROR: test_a_brand_new_adopter_is_not_scolded_for_a_ledger_it_has_not_owed_yet (__main__.TestMembershipRiskGating)
+      ERROR: test_a_repo_with_a_ledger_is_never_flagged (__main__.TestMembershipRiskGating)
+      ERROR: test_the_history_threshold_is_inclusive (__main__.TestMembershipRiskGating)
+      FAIL: test_stale_warning_leads_with_the_project_scoped_remedy (__main__.TestCliRemedyProportionality)
+      FAIL: test_dashboard_version (__main__.TestFmtRatioAndTwins)
+      error kinds:  1 AttributeError: module 'methodology_dashboard_under_test' has no attribute '_FRAMEWORK_FILE_SIGNATURES'; 14 KeyError: 'read_cap_watch';
+dashboard tests, with the one fixture line           Ran 229 tests in 13.275s  -> FAILED (failures=2, errors=1)
+      ERROR: test_every_framework_installed_source_name_has_a_signature (__main__.TestFrameworkInstalledExclusion)
+      FAIL: test_stale_warning_leads_with_the_project_scoped_remedy (__main__.TestCliRemedyProportionality)
+      FAIL: test_dashboard_version (__main__.TestFmtRatioAndTwins)
+quality-ratchet tests, upstream's file               Ran 45 tests in 10.152s  -> FAILED (failures=1)
+      FAIL: test_stdlib_only (__main__.TestToolInvariants)
+context-budget tests, upstream's file                Ran 148 tests in 5.821s  -> FAILED (failures=1, skipped=2)
+      FAIL: test_the_head_baseline_comes_from_heads_config_not_the_staged_one (__main__.TestPrecommitClassArm)
+
+the ledger hook's own selftest, the candidate's:
+pre-commit selftest: OK (43 checks)
+upstream's selftest has 17 labelled checks; 16 appear word for word in the candidate's (41 in all)
+   reworded: ledger: entries dropped with a docs/archive/ shard staged (a trim) -> pass
