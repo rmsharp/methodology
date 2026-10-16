@@ -1,0 +1,13 @@
+a project moved by this branch's sync (--layout new): exit 0
+  tracked files under methodology/: 30; tracked outside methodology/: 0
+== upstream's plain bin/sync on that project: exit 0
+  paths written: 30  (inside methodology/: 0, outside: 30)
+    e.g. .context-budget.json
+    e.g. .gitattributes
+    e.g. .quality-gates.json
+    e.g. BOOTSTRAP.md
+    e.g. CHANGELOG.md
+== this branch's plain bin/sync on that project: exit 0
+  paths written: 0  (inside methodology/: 0, outside: 0)
+
+pr4-moved done
