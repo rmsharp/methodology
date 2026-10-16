@@ -257,6 +257,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-15.md` (4 record(s), 84,380 B → 39,099 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-10-15 → 2026-10-15) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-15.md`](docs/archive/HANDOFFS-through-2026-10-15.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-15.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-15.md.verify.sh)
+rather than trusting a digest printed here. Live file 84,380 B → 39,099 B (−53.7%).
+
 ### 2026-10-15 · [BL-115] S328 -- push record: the BL-115 commit and the receipt amendment to the fork `origin`
 
 Pushed `6f7abb6..91bea10` to `origin` (https://github.com/rmsharp/methodology), his tick at the end-of-session picker; read back: `git ls-remote origin refs/heads/main` is `91bea10` and `git rev-list --left-right --count HEAD...origin/main` is `0 0` before this entry. Nothing is sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
