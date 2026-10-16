@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-115] S328 (end of session) -- the receipt amended to name BL-115 and the push record, so a successor reading only it finds them
+
+The newest `HANDOFFS.md` receipt (S328, 12,088 B against the 12,288 B limit, `bin/check-handoff` exit 0) gains: the post-close-out answers (a very large `HANDOFFS.md` does not make the protocol fail; he chose runner-pointer wording B, BL-115 `43ae1b1`), next step (2b) (BL-115's three calls, to be asked in the Phase 0 picker with the others) and the push record `6f7abb6` in its `commit:` slot. No other file changes; `starter-kit/SESSION_RUNNER.md` is not edited; nothing is sent to `KJ5HST/methodology`. At the end of the session the fork's own `context_budget.py --status` reads CLAUDE.md, `HANDOFFS.md`, `docs/planning/BACKLOG.md`, `docs/FORK_LEARNINGS.md`, the runner and SAFEGUARDS over their fork-config ceilings and the two totals over; CLAUDE.md was last touched at S282 (2026-10-08) and the others grew before S328 or by this session's receipts and rows, and the tool is in no gate (BL-113). Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-115] S328 (after the close-out) -- his answer "B" to the runner-pointer wording, recorded as a backlog item
 
 After the close-out report he asked whether a very large `HANDOFFS.md` would make the protocol fail, then how a runner pointer to the distributed read instruction would read; I drafted three wordings (A 470 B, B 283 B, C 166 B), measured each against upstream's tip and the candidate, and he answered "B". No file but the backlog is touched: BL-115 (row in `docs/planning/BACKLOG.md`, detail in `docs/planning/BACKLOG-DETAIL.md#bl-115`) holds the exact wording, the placement, the trap it avoids (the format example matches a fence search in 4 of 6 adopter files) and the cost (upstream's runner reads 18,900 of 18,900 with it, the candidate's 18,977 of 18,900). `starter-kit/SESSION_RUNNER.md` is not edited; nothing is sent to `KJ5HST/methodology`. Not pushed: this commit changes more than the ledger. Model: Claude Sonnet 5.5.
