@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-101] S333 -- his decisions on the check's two findings, recorded (neither carried out)
+
+At the close-out picker: **F1, restore the two dashboard tests** (`test_bare_dry_run_refuses_instead_of_writing`, `test_a_normal_run_still_writes`) on `pr2/candidate`; **F2, name the first-parent gate-history walk in one clause** in decision 2. Both change the text, so they are one later build session and a draft 10 (the restore moves the candidate's head from `a62bfec` and means `pr4-claims.sh` again). `draft4-record.md` section 5 carries his answers and the build's design point; one sentence about the thresholds is corrected there and in `pr4-survive.py` (`bbe0dc3` raises three, later commits raise those three again and two more). The text (draft 9) and the candidate are untouched. He also ticked the push of this session's commits to the fork `origin`.
+
 ### 2026-10-16 · [BL-101] S333 -- the check's record: `draft4-record.md` section 5 (do the maintainer's own lines survive the whole files?)
 
 The answer, in the record's words: he has changed nothing since `c8b9ddd` (`f34769f` is an ancestor of it and still `upstream/main`); of the lines of his that the 32 commits remove or rewrite, every one is accounted for by a change the text names, two of them in part, except one change to his dashboard (the gate-history walk is first-parent, 2.21.0; F2) and the text's reason for removing two of his tests is wrong (F1: `test_bare_dry_run_refuses_instead_of_writing` and `test_a_normal_run_still_writes` pass on the candidate's code; the second has no counterpart for a copy at the project root). Section 4 item 2 now points at section 5. The pull request's text is NOT changed: both findings are his to settle, and the text is at 20,117 B against its 20,000 B budget. Nothing is sent.

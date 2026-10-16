@@ -57,7 +57,7 @@ tests_e          59  (e) the four tests removed  --  decision 2 (e)
 version           9  a version constant, the pin on it, or the re-recorded bytes-per-token  --  decision 2; decision 4
 timeout          16  the quality ratchet's timeout_seconds (commit c8c0b21)  --  the c8c0b21 bullet
 firstcommit       3  first_commit_date reads the root commits  --  the bbe0dc3 bullet
-thresholds        5  gate thresholds raised (all five are min gates, so a tightening)  --  in part: the bbe0dc3 bullet says three; the other two are raised by later commits
+thresholds        5  gate thresholds raised (all five are min gates, so a tightening)  --  in part: the bbe0dc3 bullet says three; later commits raise those three again and two more
 testsh            2  bin/tests.sh: the executable bit derived from the manifest; the skip count in the summary  --  the bbe0dc3 bullet
 handoffs_rule     1  starter-kit/HANDOFFS.md: a run with unmeasured gates must be repaired or named  --  the 5afc962 bullet
 runner_table      7  starter-kit/SESSION_RUNNER.md: the workstream paths in the task table made relative to the runner  --  in part: the text names the first paragraph only

@@ -98,7 +98,7 @@ Scripts: `pr4-survive.py` (output `pr4-survive-output.txt`) and `pr4-oracle.sh` 
 | the ratchet's `timeout_seconds` | 16 | the `c8c0b21` bullet |
 | a version constant, its pin, the re-recorded bytes per token | 9 | decision 2, decision 4 |
 | the runner's task table (paths relative to the runner) | 7 | in part: the text names the first paragraph |
-| five gate thresholds raised (all `min`, so tighter) | 5 | in part: the `bbe0dc3` bullet says three; later commits raise the other two |
+| five gate thresholds raised (all `min`, so tighter) | 5 | in part: the `bbe0dc3` bullet says three; later commits raise those three again and two more |
 | the dashboard's gate-history walk is first-parent (2.21.0) | 4 | **no** (F2) |
 | (b) `"methodology"` out of `EXCLUDE_DIRS` | 3 | decision 2 (b) |
 | `first_commit_date` reads the root commits | 3 | the `bbe0dc3` bullet |
@@ -114,3 +114,5 @@ Scripts: `pr4-survive.py` (output `pr4-survive-output.txt`) and `pr4-oracle.sh` 
 **F3. Minor, no action proposed.** The runner's task table (7 of his lines) now gives workstream paths relative to the runner (`workstreams/DESIGN_WORKSTREAM.md`, not `docs/methodology/workstreams/...`); the text names the first paragraph, which is what resolves them for a legacy project (`SESSION_RUNNER.md` line 7).
 
 **Not checked.** `bin/tests.sh` at `f34769f` was not run against the candidate (7 minutes, 300 to 375 assertions; its four changed lines of his were read). The gone-line reasons are by range from reading each hunk, not by running anything; the first-parent walk was read, not run on a merged history. Files the candidate adds carry no upstream line to lose.
+
+**His answers at the S333 close-out (2026-10-16), neither carried out yet.** F1: **restore the two tests** on `pr2/candidate` (the upstream class is `git show f34769f:tools/test_methodology_dashboard.py` lines 2410 to 2482, its helper `_project` at 2423; the candidate's file has a "deliberately not carried" note in its place, which the build rewrites). F2: **name the first-parent walk in one clause** in decision 2. Both change draft 9, so they belong together in a draft 10 built after the restore. The restore moves the candidate's head from `a62bfec`, so `pr4-claims.sh` runs again and the text's figures (32 commits, the shortstat, `dashboard-unit-tests` 395 to 397) change; item (e) then reads "two of your tests are removed" (the `cp ` remedy test, because (a) replaces what it asserts, and the signature test, because of (c)). Where the restore lands is a design point for that build: a new top commit keeps the other 31 hashes, but `bbe0dc3` taken alone (decision 1's fallback) would still lack the two tests; putting it inside `bbe0dc3` rebuilds the 31 commits above it, which he declined once (the unticked rebuild offer).

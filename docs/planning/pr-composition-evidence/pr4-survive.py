@@ -43,7 +43,7 @@ BUCKETS = OrderedDict([
     ("timeout", ("the quality ratchet's timeout_seconds (commit c8c0b21)", "the c8c0b21 bullet")),
     ("firstcommit", ("first_commit_date reads the root commits", "the bbe0dc3 bullet")),
     ("thresholds", ("gate thresholds raised (all five are min gates, so a tightening)",
-                    "in part: the bbe0dc3 bullet says three; the other two are raised by later commits")),
+                    "in part: the bbe0dc3 bullet says three; later commits raise those three again and two more")),
     ("testsh", ("bin/tests.sh: the executable bit derived from the manifest; the skip count in the summary",
                 "the bbe0dc3 bullet")),
     ("handoffs_rule", ("starter-kit/HANDOFFS.md: a run with unmeasured gates must be repaired or named", "the 5afc962 bullet")),
