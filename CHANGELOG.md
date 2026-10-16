@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-115] S328 -- push record: the BL-115 commit and the receipt amendment to the fork `origin`
+
+Pushed `6f7abb6..91bea10` to `origin` (https://github.com/rmsharp/methodology), his tick at the end-of-session picker; read back: `git ls-remote origin refs/heads/main` is `91bea10` and `git rev-list --left-right --count HEAD...origin/main` is `0 0` before this entry. Nothing is sent to `KJ5HST/methodology`. Model: Claude Sonnet 5.5.
+
 ### 2026-10-15 · [BL-115] S328 (end of session) -- the receipt amended to name BL-115 and the push record, so a successor reading only it finds them
 
 The newest `HANDOFFS.md` receipt (S328, 12,088 B against the 12,288 B limit, `bin/check-handoff` exit 0) gains: the post-close-out answers (a very large `HANDOFFS.md` does not make the protocol fail; he chose runner-pointer wording B, BL-115 `43ae1b1`), next step (2b) (BL-115's three calls, to be asked in the Phase 0 picker with the others) and the push record `6f7abb6` in its `commit:` slot. No other file changes; `starter-kit/SESSION_RUNNER.md` is not edited; nothing is sent to `KJ5HST/methodology`. At the end of the session the fork's own `context_budget.py --status` reads CLAUDE.md, `HANDOFFS.md`, `docs/planning/BACKLOG.md`, `docs/FORK_LEARNINGS.md`, the runner and SAFEGUARDS over their fork-config ceilings and the two totals over; CLAUDE.md was last touched at S282 (2026-10-08) and the others grew before S328 or by this session's receipts and rows, and the tool is in no gate (BL-113). Model: Claude Sonnet 5.5.
