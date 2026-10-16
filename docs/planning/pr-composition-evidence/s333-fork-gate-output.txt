@@ -1,0 +1,30 @@
+S333 gate run: python3 starter-kit/quality_ratchet.py --run in a clean --no-local clone of 2ac9593 (the record commit, the last commit before the close-out's
+documentation edits), core.hooksPath .githooks, launched with nohup and read from a done-file; 1,428 s at a load average of 7 to 27 (other sessions on the machine). exit 0.
+Commits after 2ac9593 before the close-out: 2a806d5 (the record's answers paragraph, one phrase in pr4-survive.py and its output, the ledger); the close-out adds the receipt, its ledger entry and this file.
+
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mquality gates — run[0m  [32m[1m18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mgate                                    rule    measured  status[0m
+  tests-sh-passed                       >= 503         503  [32mpass[0m
+  tests-sh-failed                         <= 0           0  [32mpass[0m
+  dashboard-unit-tests                  >= 397         397  [32mpass[0m
+  context-budget-unit-tests             >= 163         163  [32mpass[0m
+  trimmer-unit-tests                    >= 218         218  [32mpass[0m
+  close-out-report-unit-tests            >= 82          82  [32mpass[0m
+  ratchet-unit-tests                    >= 120         120  [32mpass[0m
+  layout-unit-tests                      >= 75          75  [32mpass[0m
+  checker-layout-unit-tests              >= 15          15  [32mpass[0m
+  sync-layout-unit-tests                 >= 82          82  [32mpass[0m
+  migrate-layout-unit-tests             >= 280         280  [32mpass[0m
+  layout-literals                         <= 0           0  [32mpass[0m
+  check-links                             <= 0           0  [32mpass[0m
+  check-learnings                         <= 0           0  [32mpass[0m
+  check-handoff-all                       <= 0           0  [32mpass[0m
+  check-ledger                            <= 0           0  [32mpass[0m
+  commit-msg-selftest                     <= 0           0  [32mpass[0m
+  pre-commit-selftest                     <= 0           0  [32mpass[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mcite in the receipt:[0m quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4
+

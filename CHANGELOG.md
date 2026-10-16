@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-101] S333 close-out -- the supersede check done (this entry resolves the claim `e905d65`, which stays `in progress` above): receipt complete, the fork's gate run saved
+
+Deliverable: the check S332 left open, answered in `draft4-record.md` section 5 with `pr4-survive.py` and `pr4-oracle.sh`. Findings F1 (the text's reason for removing two of his tests is wrong) and F2 (the first-parent walk is not itemised) and his answers (restore the two tests; name the walk) are in the receipt and the entry below; neither is done. Gate: 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, clean `--no-local` clone of `2ac9593`, 1,428 s, saved in `docs/planning/pr-composition-evidence/s333-fork-gate-output.txt`. Scores: predecessor (S332) 8, self 8. 3C: no fork learning row (rows considered: #50, #108, #24). The `HANDOFFS.md` receipt is complete (`status: complete`); the next Phase 0 offers the HANDOFFS trim (4 receipts at rest). Not pushed at the time of this entry; he ticked the push to the fork `origin`.
+
 ### 2026-10-16 · [BL-101] S333 -- his decisions on the check's two findings, recorded (neither carried out)
 
 At the close-out picker: **F1, restore the two dashboard tests** (`test_bare_dry_run_refuses_instead_of_writing`, `test_a_normal_run_still_writes`) on `pr2/candidate`; **F2, name the first-parent gate-history walk in one clause** in decision 2. Both change the text, so they are one later build session and a draft 10 (the restore moves the candidate's head from `a62bfec` and means `pr4-claims.sh` again). `draft4-record.md` section 5 carries his answers and the build's design point; one sentence about the thresholds is corrected there and in `pr4-survive.py` (`bbe0dc3` raises three, later commits raise those three again and two more). The text (draft 9) and the candidate are untouched. He also ticked the push of this session's commits to the fork `origin`.
