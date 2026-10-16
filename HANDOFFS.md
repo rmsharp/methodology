@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S331
+date: 2026-10-15
+status: pending
+active_task: **Recompose PR4's text** (`docs/planning/upstream-pr-body.md`, draft 4) in plain, formal language, at his word ("Yes, recompose the whole text now") after he found draft 3 too full of jargon: define or drop every term the maintainer would not know, keep the `@KJ5HST:` salutation and no greeting, say how much of the change reaches a project (19 files, +2,959 / -530 of 19,826 added lines) and what it costs a session (about +70 tokens, the same run time), re-derive every figure, save the scripts and outputs behind the new ones, then a fresh reader reads the FROZEN draft before it is shown to him inline. Local only; NOTHING is sent to `KJ5HST/methodology`; his approval of the text, D1, D4 and PR5 stay his.
+```
+
+```handoff
 session: S330
 date: 2026-10-15
 status: complete
