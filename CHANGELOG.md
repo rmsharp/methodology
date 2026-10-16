@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-101] S332 -- the S332 receipt amended to say what was done after its close-out (the push, the HANDOFFS trim and its fold) and what is next (the CHANGELOG trim)
+
+Two sentences of the `HANDOFFS.md` S332 receipt: `active_task` no longer lists the push and both trims as undone (it names the push `55a35c2..36a466a` with its ledger-only record `4ee7e06`, and the trim `d58a798` with its fold, as done at his picker ticks), and `next_steps` item (4) now offers ONE trim at the next Phase 0, `CHANGELOG.md`, which stands at 194,642 B against a 196,608 B trigger (the HANDOFFS trim's two entries took it from 191,885 B), so the next claim crosses it. HANDOFFS holds 3 receipts at rest (S332, S331, S330). Nothing else in the receipt changed. Not pushed: this amendment, the trim and its fold are not ledger-only commits.
+
 ### 2026-10-16 · [ad hoc] S332 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `d58a798`, ticked at the S332 close-out picker)
 
 The trim: `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --cut 3 --force`, then `--write` (the dry run was not denied by the auto-mode classifier): S329's, S328's, S327's and S326's receipts to `docs/archive/HANDOFFS-through-2026-10-15-2.md`, 7 receipts to 3 (S332, S331, S330), 80,594 B to 35,427 B; the shard's own proof exit 0 before the commit and again after the fold, `bin/check-handoff` and `bin/check-ledger` exit 0 at each. The tool printed the two expected notices (`CUT_STRADDLES_DAY`, `SHARD_NAME_DISAMBIGUATED`) and `FRONTMATTER_FIELD_ABSENT` (this file's header declares no receipt count, on purpose). The fold, in its own commit as the index's rule says: the pointer block (three lines and a blank) left `HANDOFFS.md` (80,594 B to 35,427 B to 34,971 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 4 | 2026-10-15 → 2026-10-15 | HANDOFFS-through-2026-10-15-2.md | v1.8.0 |`). Not pushed: the trim and the fold are not ledger-only commits, so they wait for his tick.
