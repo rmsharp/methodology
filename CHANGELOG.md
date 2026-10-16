@@ -257,6 +257,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-15 · [BL-101] S330 -- his push word written into the receipt (two sentences amended)
+
+The `HANDOFFS.md` receipt said the push of this session's commits was not done and was his; both sentences now say it was pushed at his word (`7ba1388..803f3f2`, then the push record `ec021d4`, read back `0 0`) and that this amendment commit is local. Nothing else in the receipt changed. Not pushed: the amendment is not a ledger-only commit, so it waits for his tick, as S329's did.
+
 ### 2026-10-15 · [BL-101] S330 -- push record: S330's 4 commits to the fork `origin`, his word after the close-out ("push the 4 commits")
 
 `git push origin main`: `7ba1388..803f3f2` (the claim `0f74b2e`, the builder, record and saved run `88e4b63`, the draft text's figures `ab4f563`, the close-out `803f3f2`), read back with `git rev-list --left-right --count origin/main...HEAD` = `0 0`. The local ref `pr2/candidate` (`a62bfec`) is on no remote (`git ls-remote origin 'refs/heads/pr2/*'` lists none), and nothing was sent to `KJ5HST/methodology`. This entry is the ledger-only push record that his standing grant lets go to the fork unasked.
