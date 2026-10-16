@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S334
+date: 2026-10-16
+status: pending
+active_task: **The rewrite of upstream PR #94's title and body** (IN PROGRESS), made the session's deliverable at his instruction ("Let's call the work you have done and currently finishing up serve as your deliverable. Save this rewrite for later use. In the next session, we work on improving this PR."). **The claim is LATE:** Phase 0 was reported and its picker went unanswered because he asked about the PR text instead ("can PR #94 be edited to be more clear?"); this stub was not written before the work, and the close-out says so. The text goes under `docs/planning/pr94-rewrite/` with its evidence; nothing is posted to `KJ5HST/methodology` and PR #94 is unchanged.
+```
+
+```handoff
 session: S333
 date: 2026-10-16
 status: complete
