@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-101] S333 claim (in progress) -- the supersede check: do the maintainer's changes to the dashboard and the trimmer survive the whole files PR4 sends
+
+CHANGELOG: pending. Taken at his Phase 0 picker answers: "Run the supersede check (Recommended)", and for the side actions "Trim CHANGELOG.md first" and "Push the 3 local commits to the fork origin". Done first, at those ticks: the push `4ee7e06..da20178` (`d58a798`, `35e8f08`, `da20178`; read back `0 0`, `ls-remote` equal), then the trim `8c41f6d` (the tool's entry is directly above; `--cut 2026-10-15`, 195,479 B to 39,455 B, no `--force` needed, shard proof exit 0 in the tree and both checkers exit 0; the suite in a clean clone of `8c41f6d` is running from the scratchpad and its result goes in the close-out). Phase 0: `HEAD` `da20178` equal to `origin/main` after the push, both ledger frontiers at `HEAD`, 0 undocumented, 0 merges, no pending receipt, `upstream/main` still `f34769f`, issues #95 and #93 and pull requests #94 and #92 with no comment from anyone but him, dashboard 72/100. Scope: the check named at `docs/planning/pr-composition-evidence/draft4-record.md:70` (upstream's `f34769f` copy of the dashboard and the trimmer against the whole files `pr2/candidate` `a62bfec` sends): a saved script, its output and a record entry; read-only on the candidate; the pull request's text changes only if the check finds a loss, and then only after it is shown to him; nothing is sent to `KJ5HST/methodology`.
+
 ### 2026-10-16 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-15.md` (126 record(s), 195,479 B → 39,455 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.

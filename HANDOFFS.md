@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S333
+date: 2026-10-16
+status: pending
+active_task: **The supersede check** at his Phase 0 picker answers (IN PROGRESS): do the maintainer's own changes to the dashboard and the ledger trimmer survive the whole files that PR4 sends (`docs/planning/pr-composition-evidence/draft4-record.md:70`). Done first, at his ticks: the push of S332's three local commits to the fork `origin` (`4ee7e06..da20178`, read back `0 0`) and the `CHANGELOG.md` trim `8c41f6d` (195,479 B to 39,455 B). Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S332
 date: 2026-10-16
 status: complete
