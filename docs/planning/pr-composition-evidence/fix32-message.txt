@@ -1,0 +1,21 @@
+docs: correct four statements the series left stale in a gate reason, a comment and a header
+
+Each was true of an earlier tree or of upstream's and stopped being true here; none changes behaviour.
+
+- .quality-gates.json, layout-literals: the reason said bin/check-handoff and bin/check-ledger are not
+  scanned and have no layout reading. The scanner takes every file in bin/ except bin/_manifest.py and
+  bin/tests.sh, and both checkers resolve their ledger through the embedded resolver. The reason now says
+  what the scan covers.
+- .quality-gates.json, layout-unit-tests: the reason said 74 tests are measured against a floor of 76;
+  `python3 tools/test_layout_resolver.py` runs 76.
+- methodology_dashboard.py (starter-kit/ and its identical tools/ twin): the comment above the stale-copy
+  warning said the safe per-project remedy is one `cp`; the warning prints a `--sync` scoped to the
+  project, so the comment says that.
+- bin/migrate-layout: the header's exit list stopped at 3. An apply that commits and then finds its
+  after-checks differ from its before-checks, or the tree dirty, returns 4 and keeps the commit.
+
+Only the two reasons, one comment and the docstring change: the manifest's keys, thresholds and commands
+are equal, the dashboard and the migration tool have the same syntax tree once the docstring is set
+aside, and the two dashboard copies are still byte-identical. No version number moves.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
