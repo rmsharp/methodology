@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S329
+date: 2026-10-15
+status: pending
+active_task: **Draft the comment on upstream issue #95** (his Phase 0 picker, 2026-10-15; route R1 of `docs/planning/pr-composition-evidence/i95-record.md` §6): one local file under `docs/planning/pr-composition-evidence/`, pasted in full for his review; carries the three facts the issue lacks (§3.1 fix 3 alone leaves day zero at exit 2, §3.2 the fence floor's characters-for-bytes slip, §3.3 a fresh `--layout new` project leaves `SESSION_NOTES.md` unmeasured). NOTHING is posted to `KJ5HST/methodology`: posting is his separate go-ahead.
+```
+
+```handoff
 session: S328
 date: 2026-10-15
 status: complete
