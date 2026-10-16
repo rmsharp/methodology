@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S332
+date: 2026-10-16
+status: pending
+active_task: **Cut PR4's text (draft 8) to a byte budget** at his picker answers after S331 closed ("Cut it, then one more read"; the rebuild offer in decision 1 not ticked, so it comes out): from 25,959 B to 20,000 B or less by the readers' cut list (the commit table, the 12-projects paragraph, the conflict paragraph), the resolver and migration bullets tightened, nothing added except one sentence that keeps the Test 15 disclosure; the four decisions stay self-contained; then a fresh reader reads the FROZEN draft with a brief that names the maintainer's vocabulary. Local only; NOTHING is sent to `KJ5HST/methodology`; his approval of the text, D1, D4 and PR5 stay his.
+```
+
+```handoff
 session: S331
 date: 2026-10-15
 status: complete
