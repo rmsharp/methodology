@@ -1,0 +1,96 @@
+# The ORIGINAL proofs, run as written, for the same 10 shards (the #93 repository at 82433662)
+
+################ CHANGELOG-through-2026-08-10.md
+source : the trim commit 0929172
+records: 289 before = 1 retained + 288 archived (1 entry injected by the trim)
+checked: L1, L2/footer, L2/front-matter, L3
+FAIL: L2 FRONT MATTER leaked 2 line(s) into the shard, first: '## Size, and when to archive'
+
+################ HANDOFFS-through-2026-09-26-3.md
+source : the trim commit 2e206a6
+records: 6 before = 1 retained + 4 archived; added by the trim commit: 1
+   MISSING: session: S790
+   added  : session: S790
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.
+
+################ HANDOFFS-through-2026-09-26.md
+source : the trim commit a118c70
+records: 7 before = 3 retained + 4 archived; added by the trim commit: 0
+checked: L1, L2/front-matter, L3
+FAIL: L2 FRONT MATTER leaked 1 line(s) into the shard, first: 'python3 methodology_trim.py --file HANDOFFS.md --check'
+
+################ SESSION_NOTES-through-2026-08-15.md
+source : the trim commit 850e367
+records: 78 before = 3 retained + 76 archived (0 entry injected by the trim)
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 record count 79 != 78
+
+################ SESSION_NOTES-through-2026-09-20-2.md
+source : the trim commit b528b8b
+records: 15 before = 1 retained + 13 archived; added by the trim commit: 2
+   MISSING: ### What Session 745 Did
+   added  : ### Session 744 Handoff Evaluation (by Session 745)
+   added  : ### What Session 745 Did
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.
+
+################ SESSION_NOTES-through-2026-09-21-2.md
+source : the trim commit 55da128
+records: 14 before = 2 retained + 11 archived; added by the trim commit: 2
+   MISSING: ### What Session 758 Did
+   added  : ### Session 757 Handoff Evaluation (by Session 758)
+   added  : ### What Session 758 Did
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.
+
+################ SESSION_NOTES-through-2026-09-21.md
+source : the trim commit 8b2e3f9
+records: 16 before = 1 retained + 14 archived; added by the trim commit: 2
+   MISSING: ### What Session 752 Did
+   added  : ### Session 751 Handoff Evaluation (by Session 752)
+   added  : ### What Session 752 Did
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.
+
+################ SESSION_NOTES-through-2026-09-26-4.md
+source : the trim commit 8c9c5ea
+records: 7 before = 1 retained + 5 archived; added by the trim commit: 2
+   MISSING: ### What Session 791 Did
+   added  : ### Session 790 Handoff Evaluation (by Session 791)
+   added  : ### What Session 791 Did
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.
+
+################ SESSION_NOTES-through-2026-09-28-2.md
+source : the trim commit 0fc874f
+records: 13 before = 2 retained + 10 archived; added by the trim commit: 2
+   MISSING: ### What Session 806 Did
+   added  : ### Session 805 Handoff Evaluation (by Session 806)
+   added  : ### What Session 806 Did
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.
+
+################ SESSION_NOTES-through-2026-09-28.md
+source : the trim commit 618e5c1
+records: 16 before = 2 retained + 13 archived; added by the trim commit: 2
+   MISSING: ### What Session 801 Did
+   added  : ### Session 800 Handoff Evaluation (by Session 801)
+   added  : ### What Session 801 Did
+checked: L1, L2/front-matter, L3
+FAIL: L1 records-zone concatenation is not byte-identical
+FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's own practice bundles a session's close-out finalize edit into the same commit as an archive write, so the frontier record can legitimately differ between this commit's parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt finalize, not real data loss.

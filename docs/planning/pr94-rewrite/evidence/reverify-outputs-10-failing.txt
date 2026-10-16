@@ -1,0 +1,140 @@
+# --reverify output (PR-branch trimmer, 972eb2c) for the 10 proofs that fail as written; the #93 repository at 82433662, sweep of 2026-10-16
+
+################ CHANGELOG-through-2026-08-10.md
+== docs/archive/CHANGELOG-through-2026-08-10.md ==
+  [REVERIFY_BANNER] docs/archive/CHANGELOG-through-2026-08-10.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.1.2): ledger CHANGELOG.md, record kind heading, footer separator. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename CHANGELOG.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 0 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 0929172
+    | records: 289 before = 1 retained + 288 archived; added by the trim commit: 1
+    |    added  : ### 2026-08-10 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-10.m
+    | checked: L1, L2/footer, L2/front-matter, L3
+    | OK: L1, L2/footer, L2/front-matter, L3 hold for docs/archive/CHANGELOG-through-2026-08-10.md
+
+################ HANDOFFS-through-2026-09-26-3.md
+== docs/archive/HANDOFFS-through-2026-09-26-3.md ==
+  [REVERIFY_BANNER] docs/archive/HANDOFFS-through-2026-09-26-3.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger HANDOFFS.md, record kind fence, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): supplied from this tool's ledger table by the live basename HANDOFFS.md: '^status: pending\\s*$'
+  [REVERIFY_VERDICT] exit 4 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 2e206a6
+    | records: 6 before = 1 retained + 4 archived; added by the trim commit: 1
+    |    MISSING: session: S790
+    |    added  : session: S790
+    | checked: L1, L2/front-matter, L3
+    | FAIL: record 0 was a pending stub (606 B) and was finalized in the trim commit; the other 5 record(s) are byte-identical across the move, in order, and L2 holds
+    | NOTE: exit 4, not 1: a recognised stub finalize is NAMED, but it is still a FAIL, because a real loss can have this exact shape too. The proof certifies that nothing but record 0 changed and that record 0 was a stub; it cannot certify that the finalized text is right. To avoid it, trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit.
+
+################ HANDOFFS-through-2026-09-26.md
+== docs/archive/HANDOFFS-through-2026-09-26.md ==
+  [REVERIFY_BANNER] docs/archive/HANDOFFS-through-2026-09-26.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger HANDOFFS.md, record kind fence, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): supplied from this tool's ledger table by the live basename HANDOFFS.md: '^status: pending\\s*$'
+  [REVERIFY_VERDICT] exit 0 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit a118c70
+    | records: 7 before = 3 retained + 4 archived; added by the trim commit: 0
+    | checked: L1, L2/front-matter, L3
+    | OK: L1, L2/front-matter, L3 hold for docs/archive/HANDOFFS-through-2026-09-26.md
+
+################ SESSION_NOTES-through-2026-08-15.md
+== docs/archive/SESSION_NOTES-through-2026-08-15.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-08-15.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.1.2): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 850e367
+    | records: 78 before = 1 retained + 76 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 594 Did
+    |    added  : ### Session 593 Handoff Evaluation (by Session 594)
+    |    added  : ### What Session 594 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss
+
+################ SESSION_NOTES-through-2026-09-20-2.md
+== docs/archive/SESSION_NOTES-through-2026-09-20-2.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-20-2.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit b528b8b
+    | records: 15 before = 1 retained + 13 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 745 Did
+    |    added  : ### Session 744 Handoff Evaluation (by Session 745)
+    |    added  : ### What Session 745 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss
+
+################ SESSION_NOTES-through-2026-09-21-2.md
+== docs/archive/SESSION_NOTES-through-2026-09-21-2.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-21-2.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 55da128
+    | records: 14 before = 2 retained + 11 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 758 Did
+    |    added  : ### Session 757 Handoff Evaluation (by Session 758)
+    |    added  : ### What Session 758 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss
+
+################ SESSION_NOTES-through-2026-09-21.md
+== docs/archive/SESSION_NOTES-through-2026-09-21.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-21.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 8b2e3f9
+    | records: 16 before = 1 retained + 14 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 752 Did
+    |    added  : ### Session 751 Handoff Evaluation (by Session 752)
+    |    added  : ### What Session 752 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss
+
+################ SESSION_NOTES-through-2026-09-26-4.md
+== docs/archive/SESSION_NOTES-through-2026-09-26-4.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-26-4.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 8c9c5ea
+    | records: 7 before = 1 retained + 5 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 791 Did
+    |    added  : ### Session 790 Handoff Evaluation (by Session 791)
+    |    added  : ### What Session 791 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss
+
+################ SESSION_NOTES-through-2026-09-28-2.md
+== docs/archive/SESSION_NOTES-through-2026-09-28-2.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-28-2.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 0fc874f
+    | records: 13 before = 2 retained + 10 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 806 Did
+    |    added  : ### Session 805 Handoff Evaluation (by Session 806)
+    |    added  : ### What Session 806 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss
+
+################ SESSION_NOTES-through-2026-09-28.md
+== docs/archive/SESSION_NOTES-through-2026-09-28.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-28.md: re-derived by methodology_trim.py v1.7.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename SESSION_NOTES.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit 618e5c1
+    | records: 16 before = 2 retained + 13 archived; added by the trim commit: 2
+    |    MISSING: ### What Session 801 Did
+    |    added  : ### Session 800 Handoff Evaluation (by Session 801)
+    |    added  : ### What Session 801 Did
+    | checked: L1, L2/front-matter, L3
+    | FAIL: L1 records-zone concatenation is not byte-identical
+    | FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+    | NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was edited in the same commit as the archive write, so it differs between this commit's parent and itself. That bundling is not this framework's practice: trim while record 0 is complete -- before the claim, or after the finalize is committed -- never in the same commit. This does NOT confirm losslessness -- a real loss can have this exact shape -- so diff record 0 by hand to be sure it is a finalize and not data loss

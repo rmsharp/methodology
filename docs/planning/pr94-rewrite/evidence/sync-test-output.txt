@@ -1,0 +1,58 @@
+# bin/sync from the PR branch (972eb2c, a scratch worktree) against a scratch project whose methodology_trim.py is the #93 repository's copy (v1.5.0 plus its own SESSION_NOTES.md table entry), 2026-10-16
+
+## python3 bin/sync --source local --dry-run PROJECT      (exit code 2)
+sync: $SCRATCH/syncproj
+  source:  local ($SCRATCH/pr94wt)
+  mode:    commit
+  version: v4.2-3-g972eb2c
+  (dry-run: no changes will be written)
+
+  ERROR: the following files have local modifications that don't match
+  any canonical or historical version and would be overwritten:
+    methodology_trim.py
+
+  The recommended pattern (see plan §3.2) is to move per-project
+  customizations into CLAUDE.md's 'Project-Specific Methodology
+  Adaptations' section, keeping synced files byte-identical to canonical.
+
+  To proceed anyway and overwrite local changes, pass --force.
+  To inspect the drift first:
+    diff $SCRATCH/syncproj/methodology_trim.py $SCRATCH/pr94wt/starter-kit/methodology_trim.py
+
+## python3 bin/sync --source local --dry-run --force PROJECT   (exit code 0)
+sync: $SCRATCH/syncproj
+  source:  local ($SCRATCH/pr94wt)
+  mode:    commit
+  version: v4.2-3-g972eb2c
+  (dry-run: no changes will be written)
+  files:
+    SESSION_RUNNER.md: would write
+    FRAMEWORK_LEARNINGS.md: would write
+    SAFEGUARDS.md: would write
+    RECOMMENDED_SKILLS.md: would write
+    CONTEXT_TEMPLATE.md: would write
+    CLAUDE_TEMPLATE.md: would write
+    BOOTSTRAP.md: would write
+    methodology_dashboard.py: would write
+    methodology_trim.py: would write
+    context_budget.py: would write
+    quality_ratchet.py: would write
+    SESSION_NOTES.md: would create
+    CHANGELOG.md: would create
+    HANDOFFS.md: would create
+    ROADMAP.md: would create
+    .context-budget.json: would create
+    .quality-gates.json: would create
+    .gitattributes: would create
+    docs/methodology/ITERATIVE_METHODOLOGY.md: would write
+    docs/methodology/HOW_TO_USE.md: would write
+    docs/methodology/FRAMEWORK_APPARATUS.md: would write
+    docs/methodology/workstreams/DESIGN_WORKSTREAM.md: would write
+    docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: would write
+    docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: would write
+    docs/methodology/workstreams/AUDIT_WORKSTREAM.md: would write
+    docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: would write
+    docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md: would write
+    docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: would write
+    docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: would write
+    docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md: would write

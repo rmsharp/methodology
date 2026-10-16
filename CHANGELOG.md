@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-98] S334 -- saved outputs, part 2: `--reverify` and original-proof output for the 10 failing shards, and the `bin/sync` local-edit test (`docs/planning/pr94-rewrite/evidence/`)
+
+`reverify-outputs-10-failing.txt` and `original-proof-outputs-10-failing.txt` hold the full output of the PR-branch `--reverify` and of the original proofs for the 10 shards that fail as written (each original prints exactly one of three distinguishing failure lines; two of them pass under `--reverify`). `sync-test-output.txt` holds `bin/sync` run from the PR branch against a scratch project with the #93 repository's edited `methodology_trim.py`: exit 2 and an error naming the file without `--force`, "would write" with it (dry runs; the scratch project was unchanged). The scratch paths are written as `$SCRATCH`.
+
 ### 2026-10-16 · [BL-98] S334 -- saved outputs, part 1: the prototype sweeps, the stub-survival check, the test run on the prototype (`docs/planning/pr94-rewrite/evidence/`)
 
 `sweepA.tsv`: with a stub marker for `SESSION_NOTES.md` (`^\*\*Status:\*\* Session claimed\b.*$`, matched as a prefix) `--reverify` gives 46 at exit 0 and all 8 others at exit 4, none at exit 1. `sweepAB.tsv`: if a recognised stub finalize also exits 0 (reverses decision D2), 54 of 54 at exit 0. `stub-survival-output.txt`: in the 8 shards the finished record keeps only the stub's identifying lines; the rest of the stub is absent as whole lines (23 of 24 in the shard whose stub carried prose), so no check of that kind could certify them. `protoAB-test-failures.txt`: the PR's 181 trimmer tests are OK on the unmodified branch (41 s, 2 skipped) and 177 pass with prototype A+B; the 4 that fail assert exit 4 or the label (decision D2); the real-loss tests still pass. Scratch prototypes only; no mutation run on them, so this shows feasibility, not that the change is safe to ship.
