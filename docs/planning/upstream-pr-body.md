@@ -2,7 +2,7 @@
 
 **Status: DRAFT 3, not frozen, nothing sent.** Draft 1 is `ef98e78` and draft 2 `a6ad168`; a fresh reviewer read each and the revisions follow those reads
 ([`pr-composition-evidence/pr4-record.md`](pr-composition-evidence/pr4-record.md)). Everything below the rule is the text that would be posted:
-the title on its own line, then the body. Written for `KJ5HST/methodology` from the local branch `pr2/candidate` at `ced2c82` (31 commits over
+the title on its own line, then the body. Written for `KJ5HST/methodology` from the local branch `pr2/candidate` at `a62bfec` (32 commits over
 `upstream/main` `f34769f`). Every number in it is printed by a command named beside it; the re-runs are `pr4-claims.sh`, `pr4-fixture.sh`,
 `pr4-mergefile.sh`, `pr4-supersede.sh` and `pr4-first-commit.sh` in [`pr-composition-evidence/`](pr-composition-evidence/), each with its output, and
 the text is read by `pr4-body-check.py`.
@@ -11,7 +11,7 @@ the text is read by `pr4-body-check.py`.
 
 **Title:** A methodology/ directory for a project's framework files, and bin/migrate-layout to move a project there
 
-@KJ5HST: this gives a project's framework files one directory, `methodology/`, instead of two places, and makes every tool read either. A project that does nothing keeps its paths, but its next `bin/sync` still brings new versions of 19 files. It is large (31 commits, +19,821 / -1,150) and about two fifths of it (+8,461 of the added lines, in `bbe0dc3` and `c8c0b21`) is earlier work of mine, 1,566 of those lines the same work as #94, so this description starts with what I am asking you to decide.
+@KJ5HST: this gives a project's framework files one directory, `methodology/`, instead of two places, and makes every tool read either. A project that does nothing keeps its paths, but its next `bin/sync` still brings new versions of 19 files. It is large (32 commits, +19,826 / -1,152) and about two fifths of it (+8,461 of the added lines, in `bbe0dc3` and `c8c0b21`) is earlier work of mine, 1,566 of those lines the same work as #94, so this description starts with what I am asking you to decide.
 
 ## What I am asking you to decide
 
@@ -45,7 +45,7 @@ It also fixes one defect: `git log --reverse --format=%ai -1` applies `-1` befor
 
 ## How to read it
 
-31 commits, 47 files (38 changed, 9 new): `git diff --shortstat f34769f HEAD`, `git rev-list --count f34769f..HEAD`. Three commits touch more than 5 files: `bbe0dc3` 9, `14ef959` 7, `fd96593` 6. The numbers in this description are the head's; while building I ran the suite and the gates in a clean clone at the last commit of each group below, and I did not re-run every commit alone.
+32 commits, 47 files (38 changed, 9 new): `git diff --shortstat f34769f HEAD`, `git rev-list --count f34769f..HEAD`. Three commits touch more than 5 files: `bbe0dc3` 9, `14ef959` 7, `fd96593` 6. The numbers in this description are the head's; while building I ran the suite and the gates in a clean clone at the last commit of each group below, and I did not re-run every commit alone.
 
 | Commits | What |
 |---|---|
@@ -60,6 +60,7 @@ It also fixes one defect: `git log --reverse --format=%ai -1` applies `-1` befor
 | `5afc962` | a cited gate run that reads unmeasured gates must be repaired or name them (`starter-kit/HANDOFFS.md`, `HOW_TO_USE.md`; 5 lines) |
 | `c933b0f` to `28f99a7` | ten commits that take out references only my fork can resolve: seven in comments and docstrings (no program token changes), three in text a program prints. Skippable as a run. At least 56 added lines of that kind remain (the pattern does not look for my phase codes), 36 of them starting with `#` or `//`, some naming things your own trimmer already carries (`git diff f34769f HEAD -- . ':!docs' \| grep -E '^\+[^+]' \| grep -cE 'BL-[0-9]+\|\bS[0-9]{2,3}\b\|\bD[0-9]{1,2}\b\|Learning #[0-9]+'`) |
 | `ced2c82` | `python3 starter-kit/context_budget.py --status` read `SESSION_RUNNER.md` as over its token ceiling after the documents commits; this drops one duplicated example command (84 B). It also changes three lines of `.context-budget.json` (the file's density, its measured size and a note), which **loosens that gate's line by 43 B**; that hunk is separable |
+| `a62bfec` | four statements the series left stale, in text only: the `layout-literals` gate's reason said two checkers are not scanned (they are), the `layout-unit-tests` reason said 74 tests against a floor of 76 (it runs 76), a dashboard comment named `cp` where the warning prints a `--sync` scoped to the project, and `bin/migrate-layout`'s header omitted its exit 4. No code path or threshold changes |
 
 ## What a project sees
 
@@ -91,7 +92,7 @@ Each in a clean `--no-local` clone of the pull request's head (0 dirty paths), s
 | no root path is written into a tool | `python3 bin/check-layout-literals` | not present | 15 files, 0 unacknowledged sites; 138 lines carry a same-line `# layout: ok -- <reason>`; the manifest and `bin/tests.sh` are exempt by name |
 | one resolver, byte for byte | `python3 tools/test_layout_resolver.py` | not present | 76 tests OK; 11 copies, each equal to the module |
 | every frozen proof (the `.verify.sh` the trimmer writes beside an archived shard) gives the verdict it gave | `bash <proof>` for each tracked `*.verify.sh` | exit 0 (the one tracked proof) | exit 0 (the same proof) |
-| no gate threshold in `.quality-gates.json` is lowered | the ratchet's own comparison, `quality_ratchet.compare`, each commit against its parent | | 0 refusals over 31 commits; gates 12 to 18, five floors raised (the `ced2c82` density is in `.context-budget.json`, not a gate) |
+| no gate threshold in `.quality-gates.json` is lowered | the ratchet's own comparison, `quality_ratchet.compare`, each commit against its parent | | 0 refusals over 32 commits; gates 12 to 18, five floors raised (the `ced2c82` density is in `.context-budget.json`, not a gate) |
 
 The unit suites behind the gate (a floor is a gate's minimum): dashboard 395 tests (upstream's floor 229), trimmer 218 (124), quality ratchet 120 (45), context budget 163 (148), and four new: layout 76, checkers 11, sync 82, migration 280.
 
@@ -102,7 +103,7 @@ The unit suites behind the gate (a floor is a gate's minimum): dashboard 395 tes
 - **Windows, your machine, hooks armed in another clone, a project's own CI.** This repository has no CI, so every check is local.
 - **My own suite as a whole.** Some of its blocks read this repository's ledgers, backlog and archive as fixtures and cannot run on your tree; they are not carried, so `bin/tests.sh` here is yours plus the changes above.
 - **Enforcement of the rule in `5afc962`.** Its check is in my version of `bin/check-handoff`, which is not carried, so the rule is prose; `SESSION_RUNNER.md`'s own sentence for it is left out because that file is at its token ceiling.
-- **A `CHANGELOG.md` entry, or a change to `README.md` or `CLAUDE.md`** (which list the files). The 31 commits were made without your pre-commit hook, which would require a ledger entry in each; say if you want one entry and I will add it. I have not bumped the framework's release version; release notes would be a separate pull request after a merge, as with #92.
+- **A `CHANGELOG.md` entry, or a change to `README.md` or `CLAUDE.md`** (which list the files). The 32 commits were made without your pre-commit hook, which would require a ledger entry in each; say if you want one entry and I will add it. I have not bumped the framework's release version; release notes would be a separate pull request after a merge, as with #92.
 - **How to merge it.** A merge commit or a rebase keeps the ten reference-removal commits skippable as a run; a squash does not.
 
 Known gaps from the 12 projects, open:

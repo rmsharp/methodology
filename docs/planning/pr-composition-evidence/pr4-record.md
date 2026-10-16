@@ -21,7 +21,9 @@ local ref `pr2/candidate` at `ced2c82`, upstream's tip `f34769f`. Re-runs: `pr4-
    checkers are not scanned, and they are; the `layout-unit-tests` `why` says "74 is measured" against a floor of 76; the dashboard's comment above the stale-copy
    warning says the safe action is one `cp` while the code prints `--sync`; `bin/migrate-layout`'s header lists exits 0 to 3 and omits 4. All are text. A fix commit makes
    the series 32 commits and moves the head's shortstat and the gate's two ids, so `pr4-claims.sh` is re-run after it.
-5. **Not ready to send:** his approval of the text; the four fixes and the re-run; D1's open rows and #94 / #92 are his calls (section 5).
+   **Superseded 2026-10-15: all four are fixed at `a62bfec` and the claims re-run ([`fix32-record.md`](fix32-record.md)); of the gate's two ids only the manifest's moved.** The
+   paragraph above is left as written at the time.
+5. **Not ready to send:** his approval of the text (the four fixes and the re-run are since done, `a62bfec`); D1's open rows and #94 / #92 are his calls (section 5).
 
 ## 2. Section 6's claims, re-run on `ced2c82` (clean `--no-local` clones, serial, exits read bare)
 
@@ -75,7 +77,7 @@ Not a claim of section 6 but the first thing a reader asks: the suite and the ga
    He may waive, fix first, or wait for the adopter sessions.
 3. **D4: #94 and #92.** Both open, no comment (`gh`, 2026-10-15). The default: wait for them to merge or be answered before the push; if #94 is still open then, ask whether to stack
    on it or state that this supersedes it (closing it is outward). The text asks the maintainer the same question.
-4. **The four text defects in the candidate:** fix before PR5 (recommended; a build session, then `pr4-claims.sh` again, then the text's figures), or send as they are.
+4. **The four text defects in the candidate:** fix before PR5 (recommended; a build session, then `pr4-claims.sh` again, then the text's figures), or send as they are. *Taken 2026-10-15: fixed at `a62bfec`, see [`fix32-record.md`](fix32-record.md).*
 5. **What the pull request carries besides the series.** D4's default says the register, the plan and the records; the candidate holds no such commit, those documents are written in
    the fork's shorthand (session numbers, backlog and plan codes on nearly every line), and the text links the fork's evidence directory instead. Recommended: do not carry them.
 6. **A `CHANGELOG.md` entry in the pull request:** the plan leaves the ledgers out and the text says so and offers one. Add one (as #91 did) or leave it to the maintainer.
