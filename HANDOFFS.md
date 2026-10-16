@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S330
+date: 2026-10-15
+status: pending
+active_task: **The build session on `pr2/candidate`** (his Phase 0 picker, 2026-10-15; his call 4 in `docs/planning/pr-composition-evidence/pr4-record.md` §5): the 32nd commit on the local ref, fixing the four text defects of §1 item 4 (the `layout-literals` gate's `why`, the `layout-unit-tests` `why`, the dashboard's stale-copy comment, `bin/migrate-layout`'s exit list), then `pr4-claims.sh` re-run on it. Local only; NOTHING is sent to `KJ5HST/methodology`; PR4's text approval, D1, D4 and PR5 stay his.
+```
+
+```handoff
 session: S329
 date: 2026-10-15
 status: complete
