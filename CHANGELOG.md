@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-15-3.md` (2 record(s), 57,214 B → 36,679 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-15 → 2026-10-15) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-15-3.md`](docs/archive/HANDOFFS-through-2026-10-15-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-15-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-15-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,214 B → 36,679 B (−35.9%).
+
 ### 2026-10-16 · [BL-98] S334 close-out -- the PR #94 rewrite saved, not posted (this entry resolves the claim `88f4d9e`, which stays `in progress` above): receipt complete, BL-116 added, the fork's gate run saved
 
 Deliverable: the rewrite of upstream PR #94's title and body, saved in `docs/planning/pr94-rewrite/` (`body.md` draft 7, `title.txt`, `original-body.md`, `README.md`, `evidence/`) at his instruction; the claim was written late, after most of the work, and the receipt says so. His question about the 8 of 54 proofs that still come out wrong is answered in `README.md` and `BACKLOG-DETAIL.md` §BL-116 with the prototype numbers (a `SESSION_NOTES.md` stub marker: all 8 exit 4; also a recognised stub finalize exiting 0: 54 of 54 exit 0, 177 of the PR's 181 trimmer tests passing) and the reason decision D2 is not free (the finished record rewrites the stub's text in all 8). Gate: 18/18, 0 unmeasured, results `d7576eaf9b5b`, manifest `a690abd884d4`, clean `--no-local` clone of `83f5dd0`, about 21 minutes, saved in `docs/planning/pr94-rewrite/evidence/s334-fork-gate-output.txt`. Scores: predecessor (S333) 8, self 7. 3C: no fork learning row (rows considered: #47, #21, #74). BL-116 (improve PR #94, the next session's work) is added to `BACKLOG.md` and `BACKLOG-DETAIL.md` and BL-98's row points at it; `BACKLOG.md` grew by about 330 tokens and was already over its reported ceiling. The `HANDOFFS.md` receipt is complete (`status: complete`); the next Phase 0 offers the `HANDOFFS.md` trim (5 receipts at rest). Nothing is posted to `KJ5HST/methodology`; PR #94 is unchanged. Not pushed at the time of this entry.
