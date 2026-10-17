@@ -51,6 +51,8 @@ One commit per change, each with its own tests and its own record in `CHANGELOG.
 
 What Commit 4 does not change: a recognised stub finalize stays a FAIL at exit 4 (see "What remains"); the verdicts for the two existing ledgers (measured on the 174 frozen shards of the contributor's fork, every exit code the same under 1.7.0 and 1.8.0).
 
+**Commit 5 (`TRIM_VERSION` 1.8.1): an abort before the proof's checks exits 3, not 1.** A proof that cannot read an artifact from git (a partial or shallow clone that lacks the trim commit's parent; a blob fetch that fails) ended in `sys.exit("verify: cannot read ...")`, which exits 1, the FAIL code, so a proof that had compared nothing read as a trim that lost something; the sweep behind this PR saw it once (exit 0 on the re-run). Every such abort now prints its reason and exits 3, the code the `--reverify` legend gives "the proof did not finish". Frozen proofs are unchanged; `--reverify` renders today's template and reads 3. Four tests on a depth-1 clone of a trimmed repository; the `trimmer-unit-tests` gate 199 → 203; the 54 proofs read the same under 1.8.1 as under 1.8.0.
+
 ## Where to read closely
 
 `--reverify` reads values out of a proof file that belongs to the repository being checked, so the file's text is not trusted. `--reverify` places some of the values into an unquoted shell assignment and the rest into Python, in the proof that it then runs, so a value containing shell or Python code would run. The reading is therefore strict, not a loose pattern match:

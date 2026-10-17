@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-118] S337 -- the record after the push: `pr94-rewrite/README.md`'s status line, §Built at S337's heading and its push paragraph marked done, the `body.md` row (draft 9, 28,118 B); `body.md` is the posted text
+
+Record-only, after the two outward actions above; `bin/check-links` exit 0.
+
 ### 2026-10-17 · [BL-118] S337 -- after the close-out, at his picker: the fifth commit pushed to PR #94 and its body PATCHed with the Commit 5 paragraph, both read back; BL-118 CLOSED, BL-119 raised (the same abort in the fork's own trimmer and the candidate)
 
 Pre-flight: PR #94 at `2308553`, open, 0 comments, 0 reviews; the posted body equal to the saved `docs/planning/pr94-rewrite/body.md` (27,328 B) after one trailing newline; the local branch at `1082d3b`. **(1)** `git push origin fix/trim-verify-false-red-issue93`, a fast-forward: PR #94's head read back `1082d3b11e6073faf5f3e6154c8816e399e7d315`, five commits. **(2)** `gh api -X PATCH repos/KJ5HST/methodology/pulls/94 -F body=@<file>`: the "Commit 5" paragraph (788 B, verbatim from the record's quoted draft at `README.md:124`) inserted after Commit 4's closing paragraph, 27,328 B to 28,118 B, read back equal; the title unchanged. The saved copy `body.md` is now the posted text (draft 9). **BL-118 CLOSED** (the three edits: the index row out of `BACKLOG.md`, the id into §Completed items' list, the completed row into `BACKLOG-COMPLETED.md`; the detail's outcome paragraph). **BL-119 raised:** the fork's own `starter-kit/methodology_trim.py` on `main` and `pr2/candidate` carry the same `show()` abort; the version question (the fork's 1.8.0 against #94's 1.8.1) and PR5's decision 3 re-measure against `1082d3b` go with it. The S337 receipt's next step (3) and gotcha (1) carry a marked amendment (done after the close-out; the receipt's `commit:` slot is unchanged). Both backlog proofs, `bin/check-handoff`, `bin/check-ledger` and `bin/check-links` exit 0 (run below, before the commit).
