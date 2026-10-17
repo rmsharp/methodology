@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-16-2.md` (1 record(s), 47,704 B → 37,397 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-16 → 2026-10-16) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-16-2.md`](docs/archive/HANDOFFS-through-2026-10-16-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-16-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-16-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,704 B → 37,397 B (−21.6%).
+
 ### 2026-10-17 · [BL-101] S336 -- push record: this session's commits to the fork `origin`, his tick at the Phase 0 picker
 
 `git push origin main`, `8f493a4..51d9065` (the trim `8c6f624`, the fold `f7edb47`, the claim `2efe2c8`, the build and draft 10 `9ecd0a8`, the claims run and the records `150e1bf`, his answers `8d7316e`, the close-out `51d9065`); read back `0 0` and `ls-remote` equal. The fork only: nothing to `KJ5HST/methodology`; `pr2/candidate` (`cfcc713`) stays local. This entry's own push follows under the standing grant for a ledger-only push record.
