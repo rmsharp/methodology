@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-116] S335 -- the PR text, draft 8 (title and body), the sync test's output and the evidence index
+
+`docs/planning/pr94-rewrite/body.md` is draft 8 (27328 B; draft 7 was 20,651 B): the Summary and Background, a Commit 4 paragraph, "What remains, and why the 8 stay FAILs" with a fourth table column, the Evidence (tests 199, gates 12/12, `bin/tests.sh` 261/0, the 17 mutants, the sweep 46/8/0, the fork's 174 shards, the 12 adopters, sync, merge) and the Adopter impact (a third ledger, the Class A arm at the root, the edited-copy case after a forced sync, the proof's longer output) changed; his S334 rules kept (every term defined at first use, every count with its denominator, no bare "it"). `title.txt` names the three things the PR does and the file it adds to the table. **Draft 8 has had no cold read.** `evidence/sync-test-1.8.0.txt` (a fresh project receives both files byte-identical at 1.8.0; the #93 repository's edited copy still exits 2 without `--force`; after a forced sync the canonical entry reads that repository's notes file as its own entry did, 42 records). `evidence/README.md` gains the S335 table and the reproduction of the build's checks. Nothing is posted.
+
 ### 2026-10-16 · [BL-116] S335 -- saved outputs, part 2: the 8 labelled `--reverify` outputs with their diffs, the trimmer suite, `bin/tests.sh` and the gate run in the clean clone
 
 `evidence/reverify-outputs-8-labelled-1.8.0.txt` (each of the 8 carries the specific `FAIL:` line, the `NOTE:` and a `DIFF:` block of 30 to 176 lines), `evidence/trimmer-suite-1.8.0.txt` (199 tests, OK, 2 skipped, 37.5 s), `evidence/tests-sh-1.8.0.txt` (261 passed, 0 failed, in a clean `--no-local` clone of `2308553` with `core.hooksPath .githooks`), `evidence/ratchet-run-1.8.0.txt` (12/12 pass · 0 fail · 0 unmeasured · results `28a2fdac6745` · manifest `dfb478526806`; the two runs took under 6 minutes together at a load of 6 to 8).

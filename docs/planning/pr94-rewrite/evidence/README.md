@@ -41,3 +41,31 @@ python3 -I docs/planning/pr94-rewrite/evidence/stub_survival.py "$SCRATCH/adopte
 ```
 
 The clone is partial, so the first sweep fetches blobs from GitHub on demand (about ten minutes); later sweeps read the cached blobs (under a minute). To run the PR's tests against a prototype, make a throwaway worktree of `972eb2c`, copy the prototype over its `starter-kit/methodology_trim.py`, run `python3 tools/test_methodology_trim.py`, and remove the worktree.
+
+## Added at S335 (2026-10-16): the build of the fourth commit, `2308553`
+
+Everything below was run on 2026-10-16 against the build worktree at `2308553` (the local branch `fix/trim-verify-false-red-issue93-v2`), the #93 repository at `82433662`, this fork's own frozen shards, and the 12 adopters' live notes files under `~/Development/`. Nothing here changes this repository's tracked files, the PR, or the #93 repository.
+
+| File | What it is |
+|---|---|
+| `0001-trim-1.8.0.patch` | The build commit `2308553` as a patch (`git format-patch -1`), applicable with `git am` onto `972eb2c`. The branch is local only; this file keeps the change if the branch is lost. |
+| `marker_measure.py` / `marker-measure-output.tsv` | The two candidate stub markers (the status line alone; the status line plus the `(IN PROGRESS)` tag) on the #93 repository's seven real stubs and the records that replaced them. Both match all 7 stubs and none of the 7 replacements. |
+| `adopter_claim_lines.py` / `adopter-claim-lines-output.tsv` | Every record in the 12 adopters' live notes files that still carries the Phase 1B status line, with its position and whether it keeps the tag: 3 finished records in 3 adopters carry the line, 2 of them without the tag; the other hits are live record-0 stubs. |
+| `adopter_check.sh` / `adopter-check-output.txt` | `methodology_trim.py --file SESSION_NOTES.md --check` (read-only) with the 1.8.0 tool on each adopter's notes file: 10 parse, 1 `NO_RECORDS`, 1 `GRAMMAR_MISMATCH`. |
+| `mutants_s335.py` / `mutants-s335-output.txt` | The mutation round on the new layer: 17 mutants, 17 killed, the intended test among the failures in every case. Takes the worktree root as its argument. |
+| `fork_shards_compare.sh` / `fork-shards-old-vs-new.tsv` | `--reverify` exit codes for this fork's 174 frozen shards under the PR tip's tool (1.7.0) and the build's (1.8.0): identical. |
+| `sweep-after-1.8.0.tsv` | `--reverify` exit code for each of the #93 repository's 54 shards under 1.8.0 (`sweep_after.sh`): 46 at 0, 8 at 4. |
+| `reverify-outputs-8-labelled-1.8.0.txt` | The full `--reverify` output for the 8 shards 1.8.0 labels exit 4, each with its `DIFF:` block. |
+| `trimmer-suite-1.8.0.txt` | `python3 tools/test_methodology_trim.py` at `2308553`: 199 tests, OK, 2 skipped. |
+| `tests-sh-1.8.0.txt` / `ratchet-run-1.8.0.txt` | `bin/tests.sh` and `quality_ratchet.py --run` in a clean `--no-local` clone of `2308553` with `core.hooksPath .githooks`: the summaries. |
+| `sync-test-1.8.0.txt` | `bin/sync --source local` from the build worktree into a fresh project (byte-identical, 1.8.0), against the #93 repository's edited trimmer (exit 2; `--force` would write), and after a forced sync (the canonical entry reads that repository's notes file as its own entry did). |
+
+Reproduce the build's checks (from the repository root; `$SCRATCH` any empty directory; the clone from the recipe above):
+
+```
+git worktree add $SCRATCH/pr94wt fix/trim-verify-false-red-issue93-v2          # or: git worktree add $SCRATCH/pr94wt 972eb2c && git -C $SCRATCH/pr94wt am docs/planning/pr94-rewrite/evidence/0001-trim-1.8.0.patch
+(cd $SCRATCH/pr94wt && python3 tools/test_methodology_trim.py)                   # 199 tests
+python3 -I docs/planning/pr94-rewrite/evidence/mutants_s335.py $SCRATCH/pr94wt    # 17 killed
+bash docs/planning/pr94-rewrite/evidence/sweep_after.sh "$SCRATCH/adopter/repo" "$SCRATCH/pr94wt/starter-kit/methodology_trim.py" "$SCRATCH/outNew" "$SCRATCH/adopter/shards.txt"
+python3 -I docs/planning/pr94-rewrite/evidence/marker_measure.py "$SCRATCH/adopter/repo"
+```
