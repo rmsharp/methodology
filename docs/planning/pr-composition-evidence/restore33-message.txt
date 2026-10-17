@@ -1,0 +1,18 @@
+test(dashboard): restore two of upstream's CLI tests the series dropped with their class; dashboard-unit-tests 395 to 397
+
+Upstream's TestCliRemedyProportionality (issue #67 / PR #73) has three tests. The series dropped all three
+and left a note saying the `--sync [DIR]` design replaced the remedy they assert. That is true of one:
+test_stale_warning_leads_with_the_project_scoped_remedy asserts a literal `cp ` in the stale-copy warning,
+and this branch's warning prints a `--sync` scoped to the one project. The other two assert behaviour this
+branch keeps, and pass on its code unchanged: a bare `--dry-run` exits 2 and writes neither dashboard.html
+nor dashboard_history.jsonl (the existing Row 13 test asserts the same through a temp-copied script), and a
+plain `--no-open` run writes dashboard.html, the presence control without which a scanner that refused
+every invocation would still pass the first. For a copy kept at the project root this file had no such
+positive assertion; its only one is for a copy under methodology/.
+
+Restored as upstream wrote them (`git show f34769f:tools/test_methodology_dashboard.py`, the class header
+through the second test, unchanged), with the class's setUp, tearDown and _project helper; the note now
+names the one test not carried and why. The dashboard-unit-tests floor rises 395 to 397, a tightening.
+No code path changes; the two tests ran green here before the commit.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>

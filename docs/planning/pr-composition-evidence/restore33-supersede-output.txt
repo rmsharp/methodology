@@ -1,0 +1,377 @@
+#94 head 230855376417; its merge-base with upstream f34769f31; the candidate is cfcc713
+files #94 changes: .quality-gates.json, CHANGELOG.md, FRAMEWORK_APPARATUS.md, starter-kit/methodology_trim.py, tools/test_methodology_trim.py
+starter-kit/methodology_trim.py: #94 adds 506 lines; absent from the candidate as exact lines: 77
+      TRIM_VERSION = "1.8.0"   # 1.8.0: issue #93, the gap the first three left -- seven of the adopter's
+                               # ten failing proofs are SESSION_NOTES.md shards, a ledger the table did
+                               # not list, so no stub marker reached them and `--reverify` could print
+                               # only the generic failures. SESSION_NOTES.md joins LEDGERS: the runner's
+                               # two record shapes (`### What Session N Did`, `### Session N-1 Handoff
+                               # Evaluation (by Session N)`), no footer, and a stub marker that needs
+                               # BOTH Phase 1B lines -- the `**Status:** Session claimed` line and the
+                               # `(IN PROGRESS)` tag -- because a finished record in 3 of 12 measured
+                               # adopters still carries the first. The proof now prints a unified diff of
+                               # record 0 against the record that replaced it whenever the frontier was
+                               # edited in the trim commit (exit 4 or exit 1), so a reader can judge in
+                               # seconds what the proof cannot. Minor, not patch: a third ledger the tool
+                               # can trim, and new proof output. The two existing ledgers' verdicts are
+                               # unchanged.
+                               # and end red with nothing lost (BL-27 refused to excuse it: a real loss can
+      def _session_notes_date(text):
+          # No single canonical date field: the runner's stub writes `**Started:**`; adopters also write
+          # `**Started/Completed:**`, `**Completed:**` or `**Date:**`. A labelled date first, then the first
+          # bare YYYY-MM-DD anywhere in the record, else None. Used only to LABEL a shard's span in its
+          # header and pointer text -- never compared against anything L1/L2/L3 assert.
+          m = re.search(r"\*\*(?:Started(?:/Completed)?|Completed|Date)\s*:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
+              return m.group(1)
+          m = re.search(r"\d{4}-\d{2}-\d{2}", text)
+          return m.group(0) if m else None
+          # The session-notes file: the runner's Phase 1B claim stub and its Phase 3A and 3D records. The
+          # seed calls the file transient, and the seed's own last line says session history accumulates
+          # below it; an adopter holds hundreds of records (the one issue #93 reports on: 577 headings),
+          # and seven of that adopter's ten failing proofs were shards of this file, which had no table
+          # entry and so no stub marker. The grammar is the runner's own: two heading shapes start a
+          # record and nothing else does, so the seed's `### What You Must Do` stays front matter and a
+          # `###` sub-heading inside a session's write-up rides inside that record.
+          "SESSION_NOTES.md": LedgerSpec(
+              basename="SESSION_NOTES.md",
+              # `\b` guards the "Did" branch only; the evaluation branch ends in a literal `)`.
+              record_start=re.compile(
+                  r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did\b)"),
+              # Declared to have no footer -- the seed's closing line sits ABOVE the records -- and the
+              # declaration is asserted by classify_zones(): a standalone `---` with content after the
+              # last record is refused by name, never swept into a record about to move.
+              date_of_record=_session_notes_date,
+              # Heading-keyed, like CHANGELOG.md, so the probe subsumes a negation (see that entry).
+              # What Phase 1B writes and Phase 3D overwrites: a `**Deliverable:** ... (IN PROGRESS)` line
+              # and a `**Status:** Session claimed. Work beginning.` line. BOTH are required, found anywhere
+              # in the record (the tag's line can wrap, and four of the seven real stubs appended text to
+              # the status line), and the status line must START a line, so a record that quotes it
+              # mid-line is not a stub. Measured over 12 adopters' live notes files: a FINISHED record in 3
+              # of them still carries the status line, and 2 of those 3 records dropped the tag, so the
+              # line alone would have called them stubs. All 7 of the adopter's real stubs match both
+              # parts; none of the records that replaced them does.
+              stub_marker=re.compile(r"(?ms)\A(?=.*^\*\*Status:\*\* Session claimed\b)(?=.*\(IN PROGRESS\))", re.M),
+      import difflib, os, re, subprocess, sys
+      # FRAMEWORK_APPARATUS.md says a trim earns its own commit, and issue #93 measured what it costs --
+      successor = (next(a for a in added_records if anchor(a) == anchor(absent_records[0]))
+                   if frontier_edit else None)
+          # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 -- labelled, not excused.
+      if frontier_edit:
+          # Issue #93's first suggestion. The proof cannot judge an edit to record 0 -- a stub finalize and
+          # a real loss have the same shape -- but a reader shown the edit can, in seconds. Printed for both
+          # shapes the frontier note covers (the recognised stub finalize, exit 4, and the generic edit,
+          # exit 1) and for nothing else: a record other than the frontier that differs is a plain loss,
+          # and a diff would dress it up. Output only; it changes no verdict and no exit status.
+          diff = list(difflib.unified_diff(absent_records[0].splitlines(keepends=True),
+                                           successor.splitlines(keepends=True),
+                                           fromfile="record 0 before the trim commit (its parent)",
+                                           tofile="record 0 in the trim commit"))
+          print("DIFF: record 0, before the trim commit (-) against the record that replaced it (+), "
+                "%d line(s):" % len(diff))
+          for ln in diff:
+              sys.stdout.write(ln if ln.endswith("\n") else ln + "\n")
+          # (true of every entry in LEDGERS today); a pattern that did would need a different encoding.
+          m = re.search(r"methodology_trim\.py v([0-9][0-9.]*[0-9])", text)
+                                        "%s is not in the form methodology_trim.py writes it: %s"
+                                        % (key, line[:70]))
+                     "%s: re-derived by methodology_trim.py v%s from the grammar lifted out of its frozen "
+                     % (shard_rel, TRIM_VERSION, g["version"] or "?", g["live"], g["kind"], g["footer"]))
+                  print("methodology_trim.py: --reverify is read-only and takes its own shard; it cannot "
+                        "be combined with %s." % ", ".join(clash), file=sys.stderr)
+tools/test_methodology_trim.py: #94 adds 1558 lines; absent from the candidate as exact lines: 294
+              sn_seed = (REPO / "starter-kit" / "SESSION_NOTES.md").read_text(encoding="utf-8")
+              self.assertEqual(records_of(sn_seed, mod.LEDGERS["SESSION_NOTES.md"]), [],
+                               "a freshly seeded notes file has no records")
+      # design and a control built that way passes for the wrong reason: it can never fail.
+      # BL-27 refused to excuse a bundled frontier edit ("a real loss can have this exact shape"), and
+      # this keeps that: the verdict stays a FAIL. What changes is that the proof can now tell
+      # tamper is made BEFORE the one commit: the proof reads the trim commit's own
+      # contents.
+                  self.assertIn("FAIL:", v.stdout, "labelled, but still a FAIL: " + v.stdout)
+              """NARROWED control -- the real-loss shape BL-27 protected: record 0 was a COMPLETE
+              receipt before the trim and differs after it. Exit 1, the BL-27 note, never relabelled."""
+      # template (the whole-line `leaked` test, the stub label) never reaches a proof already written, and
+              self.assertEqual(mod.stub_pattern_for("SESSION_NOTES.md"),
+                               mod.LEDGERS["SESSION_NOTES.md"].stub_marker.pattern,
+                               "SESSION_NOTES.md has an entry since 1.8.0, and it declares a marker")
+              self.assertEqual(mod.stub_pattern_for("PROJECT_LEARNINGS.md"), "",
+      # Issue #93, the gap the first three commits left -- SESSION_NOTES.md joins the ledger table.
+      # The runner's Phase 1B writes a stub into SESSION_NOTES.md (`### What Session [N] Did`, a
+      # `**Deliverable:** ... (IN PROGRESS)` line and `**Status:** Session claimed. Work beginning.`) and
+      # Phase 3D overwrites it in place, exactly as it does the `status: pending` receipt in HANDOFFS.md.
+      # The seed calls the file transient, and its own last line says session history accumulates below
+      # it: the adopter #93 reports on holds 577 record headings. Seven of that adopter's ten failing
+      # proofs are SESSION_NOTES.md shards whose trim commit also finalized the stub, and the proof could
+      # not name them because the table had no entry and so no stub marker. These tests give the ledger
+      # its entry, pin the marker's two-part shape (measured: a finished record in 3 of 12 adopters still
+      # carries the claim line, so the line alone does not mark a stub), and assert the diff the proof now
+      # prints whenever record 0 was edited in the trim commit, so a reader can judge in seconds what the
+      # proof itself cannot.
+      SN_STUB_BODY = ("**Deliverable:** the task of session %d (IN PROGRESS)\n"
+                      "**Started:** 2026-01-%02d\n"
+                      "**Status:** Session claimed. Work beginning.\n"
+                      "**Ledger:** `CHANGELOG: pending` -- the claim commit's entry says (in progress).\n")
+      SN_DONE_BODY = ("**Deliverable:** the task of session %d, done\n"
+                      "**Started:** 2026-01-%02d\n"
+                      "**Status:** complete\n"
+                      "**Commits:** `%040x`\n"
+                      "%s\n")
+      def sn_spec():
+          return mod.LEDGERS["SESSION_NOTES.md"]
+      def make_session_notes_repo(tmp, n_sessions=5, body=600, stub=False):
+          """A repo holding SESSION_NOTES.md in the runner's shape (newest on top: for each session its
+          `### What Session N Did` record and, below it, the `### Session N-1 Handoff Evaluation (by
+          Session N)` record it wrote at Phase 3A), plus a minimal CHANGELOG.md for check_P1/P1a, seeded in
+          ONE commit. The front matter carries the seed's non-record `###` heading on purpose: it must stay
+          front matter. With `stub=True`, record 0 is the Phase 1B stub."""
+              "# Changelog\n\nFront matter.\n\n---\n\n## 2026-01\n\n"
+              "### 2026-01-01 · [ad hoc] seed entry\n\nbody\n\n", encoding="utf-8")
+          recs = []
+          for i in range(n_sessions, 0, -1):
+              if stub and i == n_sessions:
+                  did = "### What Session %d Did\n" % i + SN_STUB_BODY % (i, i) + "\n"
+                  did = "### What Session %d Did\n" % i + SN_DONE_BODY % (i, i, i, "x" * body) + "\n"
+              recs.append(did)
+              if i > 1:
+                  recs.append("### Session %d Handoff Evaluation (by Session %d)\n"
+                              "**Score:** 8/10. What helped: the key files.\n\n" % (i - 1, i))
+          front = ("# Session Notes\n\n**Purpose:** continuity between sessions.\n\n---\n\n"
+                   "## ACTIVE TASK\n**Task:** x\n\n### What You Must Do\n[instructions]\n\n---\n\n"
+                   "*Session history accumulates below this line. Newest session at the top.*\n\n")
+          (p / "SESSION_NOTES.md").write_text(front + "".join(recs), encoding="utf-8")
+      class TestSessionNotesIsATrimmableLedger(unittest.TestCase):
+          N = 5           # sessions in the fixture: 5 "did" records + 4 evaluations = 9 records
+          CUT = "4"       # keep the newest 4 records
+          # --- the entry -----------------------------------------------------------------------------
+          def test_the_table_declares_SESSION_NOTES_with_the_runners_two_record_shapes(self):
+              sn = sn_spec()
+              self.assertEqual(sn.record_kind, "heading")
+              self.assertEqual(sn.footer_mode, "none")
+              for ok in ("### What Session 7 Did", "### What Session 1007 Did",
+                         "### Session 6 Handoff Evaluation (by Session 7)"):
+                  self.assertIsNotNone(sn.record_start.match(ok), ok)
+              for no in ("### What You Must Do", "### How You Will Be Evaluated", "### What Session 7 Didn't",
+                         "## What Session 7 Did", "#### What Session 7 Did", "### Session 7 Handoff Evaluation"):
+                  self.assertIsNone(sn.record_start.match(no), no)
+              self.assertIsNotNone(sn.stub_marker, "the whole point: a stub marker for the notes file")
+              self.assertIsNone(mod.LEDGERS["CHANGELOG.md"].stub_marker, "control: CHANGELOG.md still declares none")
+              self.assertEqual(sn.regenerated, [], "the notes file carries no field the trimmer rewrites")
+          def test_the_stub_marker_needs_both_the_claim_line_and_the_in_progress_tag(self):
+              """MEASURED, not assumed: in 3 of 12 adopters a FINISHED record still carries the Phase 1B
+              status line; 2 of those 3 records dropped `(IN PROGRESS)`. The marker needs both, so the
+              line alone does not make a finished record a stub."""
+              m = sn_spec().stub_marker
+              both = "### What Session 9 Did\n**Deliverable:** d (IN PROGRESS)\n**Status:** Session claimed. Work beginning.\n"
+              self.assertIsNotNone(m.search(both))
+              appended = both.replace("Work beginning.", "Work beginning. PRE-RED investigation found more.")
+              self.assertIsNotNone(m.search(appended), "four of the seven real stubs append text to the line")
+              line_only = "### What Session 7 Did\n**Deliverable:** d, done\n**Status:** Session claimed. Work beginning.\n"
+              self.assertIsNone(m.search(line_only), "a finished record that kept the claim line is not a stub")
+              tag_only = "### What Session 7 Did\n**Deliverable:** d (IN PROGRESS)\n**Status:** complete\n"
+              self.assertIsNone(m.search(tag_only), "the tag alone is not a stub either")
+              quoted = "### What Session 7 Did\n**Deliverable:** d (IN PROGRESS)\nIt said `**Status:** Session claimed` once.\n"
+              self.assertIsNone(m.search(quoted), "the status line must start a line, a mid-line quote is not one")
+          def test_the_date_of_a_record_is_its_labelled_date_else_the_first_date_else_none(self):
+              d = sn_spec().date_of_record
+              self.assertEqual(d("### What Session 3 Did\nsee 2025-12-31\n**Started:** 2026-01-05\n"), "2026-01-05",
+                               "the labelled date wins over an earlier bare one")
+              self.assertEqual(d("### What Session 3 Did\n**Started/Completed:** 2026-01-06\n"), "2026-01-06")
+              self.assertEqual(d("### Session 2 Handoff Evaluation (by Session 3)\nread on 2026-01-07.\n"), "2026-01-07")
+              self.assertIsNone(d("### Session 2 Handoff Evaluation (by Session 3)\nno date here\n"))
+          # --- the fixture, proved first ------------------------------------------------------------
+          def test_the_fixture_partitions_into_front_matter_and_the_expected_records(self):
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  text = (p / "SESSION_NOTES.md").read_text(encoding="utf-8")
+                  z = mod.classify_zones(text, sn_spec(), mod.Result("x"))
+                  self.assertEqual(len(z.starts), 2 * self.N - 1)
+                  self.assertIn("### What You Must Do", z.front, "a non-record ### heading stays front matter")
+                  self.assertTrue(z.records()[0].startswith("### What Session %d Did\n" % self.N))
+                  self.assertEqual(z.footer, "", "declared footer_mode none, and the fixture has none")
+                  self.assertEqual(z.front + "".join(z.records()) + z.footer, text, "the zones partition the file")
+          def test_the_seed_notes_file_holds_zero_records_and_zero_probe_hits_and_reads_as_fresh(self):
+              seed = (REPO / "starter-kit" / "SESSION_NOTES.md").read_text(encoding="utf-8")
+              self.assertEqual(records_of(seed, sn_spec()), [], "a freshly seeded notes file has no records")
+              self.assertEqual(probe_hits_of(seed, sn_spec()), [],
+                               "the shipped seed must produce zero content-probe hits")
+                  (p / "SESSION_NOTES.md").write_text(seed, encoding="utf-8")
+                  (p / "CHANGELOG.md").write_text("# Changelog\n\n---\n\n## 2026-01\n\n", encoding="utf-8")
+                  sh(p, "git", "init", "-q", "."); sh(p, "git", "config", "user.email", "t@t")
+                  sh(p, "git", "config", "user.name", "T"); sh(p, "git", "add", "-A"); sh(p, "git", "commit", "-qm", "seed")
+                  r = ev(p, "SESSION_NOTES.md", check=True)
+                  self.assertIn("NO_RECORDS", r.codes, r.codes)
+                  self.assertNotIn("GRAMMAR_MISMATCH", r.codes)
+          # --- a trim, end to end -------------------------------------------------------------------
+              r = run_trim(p, "--file", "SESSION_NOTES.md", "--cut", self.CUT, "--write", "--today", "2026-02-01")
+              for code in ("[L1_OK]", "[L2_OK]", "[L3_OK]", "[P1A_OK]"):
+              shards = sorted((p / "docs" / "archive").glob("SESSION_NOTES-through-*.md"))
+              return shards[0]
+          def _commit(self, p, msg="trim"):
+          def _finalize_stub(self, p, keep_claim_line=False, keep_tag=False, evaluation=True, extra=None):
+              """Phase 3D: overwrite record 0 (the stub) in place with the finished record and, as 3A does,
+              write the evaluation of the predecessor's handoff as a record of its own above it."""
+              live = p / "SESSION_NOTES.md"
+              stub = "### What Session %d Did\n" % self.N + SN_STUB_BODY % (self.N, self.N) + "\n"
+              self.assertIn(stub, t, "control: the fixture must hold the stub as record 0")
+              done = SN_DONE_BODY % (self.N, self.N, self.N, "the finished write-up")
+              if keep_tag:
+                  done = done.replace(", done\n", " (IN PROGRESS)\n")
+              if keep_claim_line:
+                  done = done.replace("**Status:** complete\n", "**Status:** Session claimed. Work beginning. Then finished.\n")
+              finished = "### What Session %d Did\n" % self.N + done + "\n"
+              if evaluation:
+                  finished = ("### Session %d Handoff Evaluation (by Session %d)\n**Score:** 7/10.\n\n"
+                              % (self.N - 1, self.N)) + finished
+              t2 = t.replace(stub, finished, 1)
+              if extra:
+                  old, new = extra
+                  self.assertIn(old, t2, "control: the extra edit must find its text")
+                  t2 = t2.replace(old, new, 1)
+          def test_a_trim_writes_a_shard_whose_proof_holds_before_and_after_the_commit(self):
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  self.assertTrue(shard.read_text(encoding="utf-8").startswith("# SESSION_NOTES.md — archive: 2026-01-"))
+                  proof = (p / (str(shard.relative_to(p)) + ".verify.sh")).read_text(encoding="utf-8")
+                  self.assertIn('RECORD_START = r"%s"' % sn_spec().record_start.pattern, proof)
+                  self.assertIn("STUB_PATTERN = %r" % sn_spec().stub_marker.pattern, proof)
+                  cl = (p / "CHANGELOG.md").read_text(encoding="utf-8")
+                  self.assertIn("Ledger trim: `SESSION_NOTES.md`", cl, "the trim's entry lands in CHANGELOG.md")
+                  pre = self._proof(p, shard)
+                  self.assertNotIn("DIFF", pre.stdout, "nothing was edited, so no diff is printed")
+                  post = self._proof(p, shard)
+                  self.assertEqual(post.returncode, 0, post.stdout)
+                  rv = run_trim(p, "--reverify", shard.relative_to(p).as_posix())
+                  self.assertEqual(rv.returncode, 0, rv.stdout)
+          def test_a_Phase_1B_stub_finalized_in_the_trim_commit_is_labelled_exits_4_and_shows_the_diff(self):
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  before = (p / "SESSION_NOTES.md").read_text(encoding="utf-8")
+                  stub_bytes = len(mod.classify_zones(before, sn_spec(), mod.Result("x")).records()[0].encode("utf-8"))
+                  self._finalize_stub(p)
+                  self.assertIn("was a pending stub (%d B)" % stub_bytes, v.stdout, v.stdout)
+                  self.assertIn("the other %d record(s) are byte-identical" % (2 * self.N - 2), v.stdout, v.stdout)
+                  self.assertNotIn("L1 records-zone concatenation is not byte-identical", v.stdout)
+                  self.assertNotIn("MISSING from live+shard", v.stdout)
+                  self.assertNotIn("OK:", v.stdout)
+                  self.assertIn("NOTE: exit 4, not 1:", v.stdout)
+                  self.assertIn(TIMING_RULE, v.stdout)
+                  # the diff: what the stub said, what replaced it
+                  self.assertIn("DIFF: record 0", v.stdout, v.stdout)
+                  self.assertIn("-**Status:** Session claimed. Work beginning.", v.stdout, v.stdout)
+                  self.assertIn("-**Deliverable:** the task of session %d (IN PROGRESS)" % self.N, v.stdout)
+                  self.assertIn("+**Status:** complete", v.stdout, v.stdout)
+                  self.assertIn("@@", v.stdout, "a unified diff carries hunk headers")
+                  self.assertLess(v.stdout.index("NOTE: exit 4"), v.stdout.index("DIFF: record 0"),
+                                  "the verdict and its note come first, the diff after")
+          def test_the_diff_also_prints_for_the_generic_frontier_edit_and_for_a_HANDOFFS_stub(self):
+              """The diff is for the reader's eyes in BOTH cases the frontier note covers: a recognised
+              stub finalize (exit 4) and the generic record-0 edit (exit 1). It is not a judgement."""
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  live = p / "SESSION_NOTES.md"
+                  t2 = t.replace("**Status:** complete\n", "**Status:** complete, amended\n", 1)
+                  self._commit(p, "trim + a complete record 0 edited")
+                  self.assertNotIn("pending stub", v.stdout)
+                  self.assertIn("DIFF: record 0", v.stdout, v.stdout)
+                  self.assertIn("-**Status:** complete\n", v.stdout)
+                  self.assertIn("+**Status:** complete, amended\n", v.stdout)
+                  self.assertIn("DIFF: record 0", v.stdout, v.stdout)
+                  self.assertIn("-status: pending\n", v.stdout)
+                  self.assertIn("+status: complete\n", v.stdout)
+          def test_no_diff_prints_when_a_record_other_than_the_frontier_is_edited(self):
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  live = p / "SESSION_NOTES.md"
+                  old = "### Session %d Handoff Evaluation (by Session %d)\n**Score:** 8/10." % (self.N - 1, self.N)
+                  self.assertIn(old, t, "control: record 1 must be present and retained")
+                  live.write_text(t.replace(old, old + " Amended.", 1), encoding="utf-8")
+                  self._commit(p, "trim + record 1 edited")
+                  self.assertNotIn("DIFF", v.stdout, "the diff is for record 0 only; another record is a plain loss")
+          # --- narrowed controls: the label must not cover these ------------------------------------
+          def test_a_finished_record_that_kept_the_claim_line_and_the_tag_is_not_called_finalized(self):
+              """The successor still matches the marker (both parts), so this is an edit while pending."""
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  self._finalize_stub(p, keep_claim_line=True, keep_tag=True)
+                  self.assertNotIn("pending stub", v.stdout)
+                  self.assertIn("NOTE:", v.stdout)
+                  self.assertIn("DIFF: record 0", v.stdout)
+          def test_a_finished_record_that_kept_only_the_claim_line_is_a_recognised_finalize(self):
+              """The adopter case measured today: the line survives, the tag does not. The two-part
+              marker no longer matches the successor, so the finalize IS recognised (exit 4)."""
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  self._finalize_stub(p, keep_claim_line=True)
+                  self.assertIn("was a pending stub", v.stdout)
+          def test_a_record_0_with_the_claim_line_but_no_tag_was_never_a_stub(self):
+              """NARROWED: a record 0 that carries the status line but not `(IN PROGRESS)` does not match
+              the marker, so its edit in the trim commit is the generic shape, exit 1, never labelled."""
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  live = p / "SESSION_NOTES.md"
+                  t2 = t.replace("the task of session %d (IN PROGRESS)\n" % self.N, "the task of session %d\n" % self.N, 1)
+                  self.assertNotEqual(t2, t, "control: the tag must be removed from the stub")
+                  self.assertIsNone(sn_spec().stub_marker.search(
+                      mod.classify_zones(t2, sn_spec(), mod.Result("x")).records()[0]), "control: not a stub to the marker")
+                  t3 = live.read_text(encoding="utf-8").replace("**Status:** Session claimed. Work beginning.\n",
+                                                                 "**Status:** complete\n", 1)
+                  live.write_text(t3, encoding="utf-8")
+                  self.assertNotIn("pending stub", v.stdout)
+          def test_a_complete_record_0_edited_in_the_trim_commit_still_exits_1_with_no_label(self):
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  live = p / "SESSION_NOTES.md"
+                  live.write_text(t.replace("**Status:** complete\n", "**Status:** complete (edited)\n", 1), encoding="utf-8")
+                  self.assertNotIn("pending stub", v.stdout)
+                  self.assertIn("BL-27", v.stdout)
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  self._finalize_stub(p, extra=("**Score:** 8/10. What helped: the key files.",
+                                                "**Score:** 8/10. What helped: the key files. TAMPERED"))
+                  self.assertNotIn("pending stub", v.stdout)
+          # --- the write-time guard and the frozen-proof re-derivation ------------------------------
+          def test_the_write_time_guard_fires_for_a_notes_stub_at_record_0(self):
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  r = ev(p, "SESSION_NOTES.md", cut=self.CUT)
+                  self.assertIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+                  self.assertIn("DRY_RUN", r.codes, "advisory: the dry run still completes")
+                  q = ev(make_session_notes_repo(tempfile.mkdtemp(dir=tmp), n_sessions=self.N), "SESSION_NOTES.md", cut=self.CUT)
+                  self.assertNotIn("FRONTIER_PENDING_STUB", q.codes, "control: a complete record 0 is quiet")
+          # --- round 2 of the mutation check: two behaviours no test above named --------------------
+          def test_a_notes_file_in_another_shape_is_refused_as_a_grammar_mismatch_not_reported_empty(self):
+              """F1's failure shape, for the third ledger: a notes file that keys its sessions on dated
+              `##` headings parses to zero records; under both size limits, only the probe stands between
+              it and a silent `NO_RECORDS` at exit 0. One adopter's live file has exactly this shape."""
+              other = "# Session Notes\n\n" + "".join(
+                  "## Session %d — 2026-01-%02d\n\n- did a thing\n- learned a thing\n\n" % (i, i) for i in range(1, 13))
+              self.assertEqual(records_of(other, sn_spec()), [], "control: zero records under the grammar")
+              self.assertLess(len(other.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES, "control: under the byte limit")
+              self.assertLess(len(other.splitlines()), mod.SEED_PLAUSIBLE_MAX_LINES, "control: under the line limit")
+              self.assertEqual(len(probe_hits_of(other, sn_spec())), 12, "control: the probe sees the 12 dated headings")
+              r = evaluate_text(self, "SESSION_NOTES.md", other, check=True)
+              self.assertIn("GRAMMAR_MISMATCH", r.codes, r.codes)
+              self.assertNotIn("NO_RECORDS", r.codes, "a file with records in another shape is not an empty one")
+          def test_a_root_notes_file_takes_the_class_a_arm_and_a_nested_one_does_not(self):
+              """The notes file is newest-on-top like the other two ledgers, so at the repository root it
+              is the Class A ledger the relaxed arm was made for; nested, it keeps the one-read cap."""
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  root = ev(p, "SESSION_NOTES.md", check=True)
+                  self.assertIn("TRIGGER_READ", root.codes, root.codes)
+                  self.assertTrue(root.trigger.class_a, "a root notes file classifies as Class A")
+                  self.assertEqual(root.trigger.read_fire_at, mod.CLASS_A_FIRE_BYTES)
+                  p = make_session_notes_repo(tmp, n_sessions=self.N)
+                  (p / "nested").mkdir()
+                  (p / "SESSION_NOTES.md").rename(p / "nested" / "SESSION_NOTES.md")
+                  sh(p, "git", "add", "-A"); sh(p, "git", "commit", "-qm", "nest")
+                  nest = ev(p, "nested/SESSION_NOTES.md", check=True)
+                  self.assertIn("TRIGGER_READ", nest.codes, nest.codes)
+                  self.assertFalse(nest.trigger.class_a, "a nested notes file keeps the tighter arm")
+                  self.assertEqual(nest.trigger.read_fire_at, mod.READ_CAP_BYTES)
+          def test_reverify_of_a_proof_written_before_the_marker_substitutes_it_from_the_table(self):
+              """The #93 shape: a 1.5.0 proof of a SESSION_NOTES.md shard whose trim commit finalized the
+              stub. Frozen, it prints the generic failures (exit 1); re-derived, the marker comes from the
+              table by basename and the finalize is named (exit 4)."""
+                  p = make_session_notes_repo(tmp, n_sessions=self.N, stub=True)
+                  shard_path = self._trim(p)
+                  self._finalize_stub(p)
+                  rv = TestReverify()
+                  rv._rewrite_proof(p, shard, rv._as_written_before_the_stub_label, "rewritten as 1.5.x wrote it")
+                  self.assertNotIn("STUB_PATTERN", rv._proof_path(p, shard).read_text(encoding="utf-8"))
+                  frozen = sh(p, "bash", str(rv._proof_path(p, shard)))
+                  self.assertEqual(frozen.returncode, 1, frozen.stdout)
+                  r = run_trim(p, "--reverify", shard)
+                  self.assertIn("was a pending stub", r.stdout)
+                  self.assertIn("SESSION_NOTES.md", r.stdout, "the substitution names the basename it was keyed by")
+                  self.assertIn("DIFF: record 0", r.stdout)
+.quality-gates.json: #94 adds 1 lines; absent from the candidate as exact lines: 1
+            "threshold": 199,
