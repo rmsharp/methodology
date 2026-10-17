@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-118] S337 -- `BACKLOG.md`'s BL-118 row reads BUILT at S337, not pushed; fork learning #109 appended (an abort path inherits the language's default exit code; 1,381 B; `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` exit 0, 94 rows, 0 over 1,500 B)
+
+The fourth of four. Phase 3C's retirement rule (D3 of the retirement plan): no row retired; considered #62 (a spent exit code) and #30 (facts baked into an exported check), neither enforced by a gate or restated by a later row. The completed-items proof exit 0. Nothing sent.
+
 ### 2026-10-17 · [BL-118] S337 -- the fifth commit's record: `ratchet-run-1.8.1.txt` (12/12), `pr94-rewrite/README.md` §Built at S337 (with the drafted "Commit 5" paragraph, not posted, and the status line brought current), `evidence/README.md` §Added at S337, and the BL-118 detail paragraph (BUILT, not pushed)
 
 The third of four; `bin/check-links` exit 0 with every evidence file it names present; the detail proof exit 0. Nothing sent.
