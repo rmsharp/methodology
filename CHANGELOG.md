@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-116] S335 -- saved outputs, part 1: the adopters' claim-line census and `--check`, this fork's 174 shards under both versions, the 54-proof sweep under 1.8.0
+
+`evidence/adopter-claim-lines-output.tsv` (3 finished records in 3 of 12 adopters carry the status line, 2 without the tag; the other hits are live record-0 stubs), `evidence/adopter-check-output.txt` (10 parse, 1 `NO_RECORDS`, 1 `GRAMMAR_MISMATCH`, 0 zone refusals), `evidence/fork-shards-old-vs-new.tsv` (174 rows; every exit code equal under 1.7.0 and 1.8.0: 169 at 0, 2 at 1, 1 at 4, 2 at 3), `evidence/sweep-after-1.8.0.tsv` (54 rows: 46 at exit 0, 8 at exit 4). The first sweep read one shard at exit 1 from a transient blob fetch failure in the partial clone; the re-run of that shard read 0 under both versions and this file is the clean second sweep.
+
 ### 2026-10-16 · [BL-116] S335 -- the build commit as a patch, the mutation round and its output, the marker measurement's output
 
 `evidence/0001-trim-1.8.0.patch` (commit `2308553` from `git format-patch`, so the change survives the loss of the local branch; `git am` onto `972eb2c`), `evidence/mutants_s335.py` and `evidence/mutants-s335-output.txt` (17 mutants on the new layer: each part of the marker, the grammar's branches and word boundary, the footer, the date function's two steps, the table lookup, seven on the diff; 17 killed, the intended test among the failures every time; a second round added two tests for behaviours no test named), `evidence/marker-measure-output.tsv` (both markers match all 7 real stubs and none of their 7 replacements).
