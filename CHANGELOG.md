@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-118] S337 -- push record: the two post-close-out commits to the fork `origin`, under his close-out tick for this session's commits
+
+`git push origin main`: `origin/main` b9d83c5 to `f573be2` (BL-118's closure and BL-119, the record); read back equal to `HEAD`. The fork remote only. This entry's own commit is ledger-only and is pushed under the standing grant for push records.
+
 ### 2026-10-17 · [BL-118] S337 -- the record after the push: `pr94-rewrite/README.md`'s status line, §Built at S337's heading and its push paragraph marked done, the `body.md` row (draft 9, 28,118 B); `body.md` is the posted text
 
 Record-only, after the two outward actions above; `bin/check-links` exit 0.
