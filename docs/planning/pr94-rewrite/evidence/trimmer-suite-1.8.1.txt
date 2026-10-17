@@ -1,0 +1,328 @@
+test_a_shard_file_that_cannot_be_read_is_the_same_abort (__main__.TestAnAbortBeforeTheChecksIsNotAVerdict)
+The other read before the checks: with the trim uncommitted the proof reads the live file ... ok
+test_control_the_fixture_is_the_field_case (__main__.TestAnAbortBeforeTheChecksIsNotAVerdict)
+Prove the fixture first: the clone holds exactly the trim commit, names it as the shard's ... ok
+test_reverify_reports_the_abort_as_exit_3_not_as_a_fail (__main__.TestAnAbortBeforeTheChecksIsNotAVerdict) ... ok
+test_the_frozen_proof_exits_3_with_its_reason_and_no_verdict (__main__.TestAnAbortBeforeTheChecksIsNotAVerdict) ... ok
+test_FIXTURE_the_derived_shard_name_really_is_taken_before_the_second_cut (__main__.TestEndToEnd)
+Fixture control. Asserts the COLLISION EXISTS before anything asserts what happens to ... ok
+test_NARROWED_shard_only_collision_check_passes_the_shard_case_and_loses_the_proof (__main__.TestEndToEnd)
+The plausible weaker implementation: disambiguate on the SHARD path alone. It resolves ... ok
+test_P1_refuses_when_the_undocumented_set_is_non_empty (__main__.TestEndToEnd) ... ok
+test_P1a_fires_when_the_ledger_did_NOT_gain_exactly_one_entry (__main__.TestEndToEnd)
+Drives the post-condition RED directly. Without this the whole check can be deleted and ... ok
+test_P1a_keeps_the_trim_from_hiding_itself (__main__.TestEndToEnd)
+After a trim commit the ledger frontier IS that commit, so the undocumented set is ... ok
+test_a_colliding_shard_name_is_disambiguated_and_the_earlier_shard_is_untouched (__main__.TestEndToEnd)
+BL-41's fix. The earlier shard's BYTES are the invariant; the refusal was only one way ... ok
+test_a_free_name_is_used_verbatim_and_reports_no_disambiguation (__main__.TestEndToEnd)
+Negative control: always-suffixing would pass every test above. The plain name must ... ok
+test_a_stray_proof_with_no_shard_is_also_never_clobbered (__main__.TestEndToEnd)
+The shard and its .verify.sh are written as a pair; an interrupted run can leave the ... ok
+test_an_unconfigured_file_gets_no_generic_fallback (__main__.TestEndToEnd) ... ok
+test_batched_write_is_a_usage_error (__main__.TestEndToEnd) ... ok
+test_check_never_writes_even_with_write (__main__.TestEndToEnd) ... ok
+test_disambiguation_is_bounded_and_still_REFUSES_at_the_bound (__main__.TestEndToEnd)
+Write-once is retained, not removed. Past the bound the tool refuses exactly as before, ... ok
+test_dry_run_is_the_default_and_writes_nothing (__main__.TestEndToEnd) ... ok
+test_srf_abstains_out_loud_before_a_first_archive (__main__.TestEndToEnd) ... ok
+test_srf_red_refuses_and_force_overrides (__main__.TestEndToEnd) ... ok
+test_the_bound_refusal_is_FATAL_and_not_merely_reported (__main__.TestEndToEnd)
+THE ONE PLACE THIS FILE ASSERTS ON EXIT STATUS, AND THE DEPARTURE IS DELIBERATE. ... ok
+test_the_disambiguated_shard_holds_THIS_cut_s_records_not_a_copy_of_the_first (__main__.TestEndToEnd)
+A disambiguation that wrote an empty file, or re-wrote the first shard's contents under ... ok
+test_the_generated_proof_passes_before_and_after_the_commit (__main__.TestEndToEnd) ... ok
+test_the_proof_goes_RED_when_the_live_file_loses_a_retained_record (__main__.TestEndToEnd) ... ok
+test_the_proof_goes_RED_when_the_shard_is_tampered_with (__main__.TestEndToEnd)
+The tamper must land on a record that is ACTUALLY IN THE SHARD. The first draft of this ... ok
+test_write_produces_a_shard_a_proof_and_an_uncommitted_tree (__main__.TestEndToEnd) ... ok
+test_L2_fixture_can_actually_exhibit_the_loss_it_stands_for (__main__.TestFixtureControls)
+The insight the original fork-history version carried, kept and made portable. ... ok
+test_L2_fixture_really_carries_a_footer_worth_pinning (__main__.TestFixtureControls)
+A fixture nobody has checked is an assumption. SYNTHETIC_CHANGELOG is only a fixture for ... ok
+test_L3_fixture_is_a_partition_that_bundled_an_edit_with_the_move (__main__.TestFixtureControls)
+The counts DO partition, so any L3 failure is about record BYTES, not a miscount. That ... ok
+test_a_fence_blind_scan_would_have_trimmed_the_seed (__main__.TestFixtureControls)
+NARROWED: drop fence-awareness and the day-one hazard reappears. ... ok
+test_seed_files_hold_zero_records_under_the_declared_grammar (__main__.TestFixtureControls)
+Fence-awareness control. Both seeds contain record-shaped lines that are NOT records. ... ok
+test_the_frozen_seed_fixture_is_the_seed_as_shipped_before_ledger_format_2 (__main__.TestFixtureControls)
+Prove the fixture first: it is frozen, so it must still be exactly those bytes. ... ok
+test_NARROWED_a_fence_blind_probe_would_refuse_our_own_shipped_seed (__main__.TestGrammarMismatch)
+Drop fence-awareness from the probe and day one breaks for every adopter — on the seed ... ok
+test_NARROWED_a_size_only_implementation_misses_both_real_shapes (__main__.TestGrammarMismatch)
+Delete the probe and the two shapes F1 found survive at adopter-plausible sizes. ... ok
+test_NARROWED_an_unanchored_probe_would_flag_dated_prose (__main__.TestGrammarMismatch)
+`search(r'\d{4}-\d{2}-\d{2}')` anywhere on the line is too loose. ... ok
+test_a_documentation_example_quoting_the_sentinel_cannot_seal_a_real_ledger (__main__.TestGrammarMismatch)
+The sentinel check is fence-aware, like both signals beside it. ... ok
+test_a_file_of_exactly_the_byte_ceiling_is_NOT_refused (__main__.TestGrammarMismatch)
+The `>` edge. Without this, `>` and `>=` are indistinguishable. ... ok
+test_a_file_of_exactly_the_seed_plausibility_line_ceiling_is_NOT_refused (__main__.TestGrammarMismatch) ... ok
+test_a_file_over_the_byte_ceiling_is_refused_with_zero_probe_hits (__main__.TestGrammarMismatch)
+Isolates the byte signal: no dates anywhere, so only size can fire. ... ok
+test_a_file_over_the_read_cap_is_refused_even_though_it_is_under_budget (__main__.TestGrammarMismatch)
+Isolates the line signal: 2,402 short lines, 33 KB, no dates. ... ok
+test_a_hand_rolled_empty_ledger_with_no_sentinel_is_still_exit_0 (__main__.TestGrammarMismatch)
+Copied from ../airqino/CHANGELOG.md, a real 324 B seed that is NOT ours. ... ok
+test_a_receipt_ledger_in_the_wrong_shape_is_refused_by_the_probe (__main__.TestGrammarMismatch)
+The receipt ledger's PROBE, exercised behaviourally rather than by a fixture control. ... ok
+test_a_receipt_ledger_that_kept_its_sentinel_while_filling_up_is_still_refused (__main__.TestGrammarMismatch)
+The receipt ledger's half of the conjunction, and it is not hypothetical. ... ok
+test_a_sealed_seed_that_grew_past_the_byte_ceiling_is_refused (__main__.TestGrammarMismatch)
+Size was never exemptible, and still is not now that nothing is. ... ok
+test_a_seed_that_gained_a_real_entry_in_the_wrong_grammar_is_refused (__main__.TestGrammarMismatch)
+The sentinel is a conjunction, exactly as the seed's own comment states it. ... ok
+test_a_table_row_ledger_under_both_size_limits_is_refused_by_the_probe_alone (__main__.TestGrammarMismatch)
+Shape of ../wsfct/CHANGELOG.md — 1,239,085 B, entries as table rows under 8 `## YYYY-MM` ... ok
+test_an_em_dash_ledger_under_both_size_limits_is_refused_by_the_probe_alone (__main__.TestGrammarMismatch)
+RED against the shipped tool, which answers [NO_RECORDS] at exit 0. ... ok
+test_bare_session_blocks_with_no_headings_are_refused_by_the_negation_alone (__main__.TestGrammarMismatch)
+The gap that existed while `negations` was computed and then thrown away. ... ok
+test_dated_PROSE_in_a_sealed_seed_does_not_trip_the_probe (__main__.TestGrammarMismatch)
+Two independent guards, and this asserts BOTH are needed. ... ok
+test_the_quoted_line_is_bounded (__main__.TestGrammarMismatch)
+A real table-row ledger stores 900+ character rows; ZONE_UNCLASSIFIED bounds at 400. ... ok
+test_the_refusal_names_the_evidence_instead_of_reassuring (__main__.TestGrammarMismatch)
+F1's core complaint was the WORDING, not only the code: the message reassured. ... ok
+test_the_shipped_CHANGELOG_seed_is_still_reported_as_a_fresh_seed (__main__.TestGrammarMismatch) ... ok
+test_the_shipped_HANDOFFS_seed_is_still_reported_as_a_fresh_seed (__main__.TestGrammarMismatch) ... ok
+test_the_mismatch_fixtures_are_UNDER_both_size_signals (__main__.TestGrammarMismatchFixtureControls)
+This is what makes them tests of the PROBE rather than tests of the size rule. ... ok
+test_the_mismatch_fixtures_really_do_fail_the_declared_grammar (__main__.TestGrammarMismatchFixtureControls)
+Both fixtures must hold zero records under the grammar AND real content under the probe. ... ok
+test_the_seed_fixtures_are_reachable_and_are_the_shipped_seeds (__main__.TestGrammarMismatchFixtureControls) ... ok
+test_the_seed_fixtures_hold_zero_records_AND_zero_probe_hits (__main__.TestGrammarMismatchFixtureControls)
+The seed is only a control if BOTH halves hold: no records, and nothing that looks like one. ... ok
+test_NARROWED_length_only_L1_passes_the_operand_swap (__main__.TestL1)
+A plausible weaker L1 — compare byte LENGTH — is green on the real defect above. ... ok
+test_green_on_a_clean_partition (__main__.TestL1) ... ok
+test_red_on_an_archive_that_edited_a_retained_record (__main__.TestL1)
+The shape `7a71df0` had: counts partition, one retained record altered. L1 must refuse ... ok
+test_red_on_the_operand_order_the_design_specifies (__main__.TestL1)
+The ratified §4.2 formula puts the shard FIRST. These ledgers are newest-on-top, so that ... ok
+test_red_when_a_record_is_dropped (__main__.TestL1) ... ok
+test_red_when_a_record_is_duplicated (__main__.TestL1) ... ok
+test_NARROWED_footer_identical_only_passes_the_duplication (__main__.TestL2)
+The plausible weaker L2 — 'is the footer still in the live file?' — is green while the ... ok
+test_a_declared_regenerated_field_is_permitted_and_confined (__main__.TestL2) ... skipped "fixture absent: the live root HANDOFFS.md carries no match for HANDOFFS.md's declared regenerated-count field"
+test_a_regenerated_field_does_not_license_an_edit_elsewhere (__main__.TestL2) ... skipped "fixture absent: the live root HANDOFFS.md carries no match for HANDOFFS.md's declared regenerated-count field"
+test_green_when_the_footer_stays_live_and_out_of_the_shard (__main__.TestL2) ... ok
+test_red_when_front_matter_changes_outside_the_declared_spans (__main__.TestL2) ... ok
+test_red_when_the_footer_is_DUPLICATED_into_the_shard (__main__.TestL2)
+Isolates the 'absent from the shard' clause: live keeps it, the shard also gets it. The ... ok
+test_red_when_the_footer_migrates_into_the_shard (__main__.TestL2)
+The `020ba3f` loss, reproduced: footer gone from live, present in the shard. ... ok
+test_red_when_the_pointer_block_is_missing (__main__.TestL2) ... ok
+test_NARROWED_count_only_L3_passes_the_real_event (__main__.TestL3)
+The plausible weaker L3 — 'do the counts partition?' — is green on the event that ... ok
+test_green_on_a_pure_partition_of_the_same_fixture (__main__.TestL3) ... ok
+test_red_on_a_boundary_shift_that_L1_cannot_see (__main__.TestL3)
+L3's independent value: move a line from the end of one record to the start of the next. ... ok
+test_red_on_the_real_event_that_edited_a_retained_record (__main__.TestL3) ... ok
+test_red_when_order_is_reversed (__main__.TestL3) ... ok
+test_END_TO_END_a_real_write_lands_between_the_cap_and_the_class_a_stop (__main__.TestPhaseC2ClassAThreshold)
+THE STRONGEST FORM OF THIS CLASS'S CENTRAL ASSERTION, and the only one that exercises ... ok
+test_a_class_a_trim_cuts_back_to_96_KiB_not_to_the_one_read_cap (__main__.TestPhaseC2ClassAThreshold)
+THE ASSERTION THAT WOULD HAVE CAUGHT A FIRE-ONLY CHANGE. ... ok
+test_is_root_class_a_is_a_path_question_not_a_basename_question (__main__.TestPhaseC2ClassAThreshold)
+OPERATOR DECISION, Phase C2. LEDGERS is resolved by BASENAME at any depth ... ok
+test_is_root_class_a_returns_False_rather_than_raising_on_a_foreign_path (__main__.TestPhaseC2ClassAThreshold)
+It routes to the tighter arm on anything it cannot resolve, and does not explode. ... ok
+test_no_ledger_can_stop_above_the_hard_refusal_at_any_budget (__main__.TestPhaseC2ClassAThreshold)
+Plan §9's C2 criterion, and the `--budget-bytes` guard restated at the new value. ... ok
+test_read_fire_at_and_read_stop_at_are_both_class_aware (__main__.TestPhaseC2ClassAThreshold)
+KILLS the half-application this class exists for: moving the fire and not the stop. ... ok
+test_root_and_nested_ledgers_of_IDENTICAL_SIZE_get_opposite_verdicts (__main__.TestPhaseC2ClassAThreshold)
+THE DISCRIMINATING CASE, and the only one that proves the scoping does anything. ... ok
+test_the_check_row_reports_the_threshold_actually_in_force (__main__.TestPhaseC2ClassAThreshold)
+A row that prints READ_CAP_BYTES for a file the trigger no longer keys on is arithmetic ... ok
+test_the_class_a_arm_sits_below_the_hard_refusal_with_real_margin (__main__.TestPhaseC2ClassAThreshold)
+Plan §3 caveat 1: fire BELOW READ_REFUSE_BYTES, never at it. A trigger set at the ... ok
+test_the_default_is_the_conservative_arm (__main__.TestPhaseC2ClassAThreshold)
+A Trigger nobody classified must get the TIGHTER threshold. Forgetting to classify has ... ok
+test_the_fire_stop_coincidence_is_intentional_not_accidental (__main__.TestPhaseC2ClassAThreshold)
+The byte arm and the Class A read arm land on the same two numbers today. ... ok
+test_the_three_constants_are_the_ratified_values (__main__.TestPhaseC2ClassAThreshold)
+KILLS: any of the three moving without a session deciding to move it. ... ok
+test_a_frozen_red_proof_is_rederived_green_and_the_frozen_proof_is_left_alone (__main__.TestReverify)
+The headline. Cause 2's false red: an archived record QUOTES a front-matter line ... ok
+test_a_grammar_line_not_in_the_form_the_template_writes_is_refused (__main__.TestReverify) ... ok
+test_a_grammar_line_that_appears_twice_is_refused (__main__.TestReverify) ... ok
+test_a_lossless_trims_proof_rederives_green_and_the_banner_says_what_it_is (__main__.TestReverify) ... ok
+test_a_missing_bash_is_reported_not_a_traceback (__main__.TestReverify) ... ok
+test_a_missing_shard_and_a_shard_outside_a_repository_are_refused (__main__.TestReverify) ... ok
+test_a_proof_killed_by_a_signal_is_never_reported_as_holding (__main__.TestReverify)
+subprocess reports a signal death as a NEGATIVE status. Left alone it would read as 'no ... ok
+test_a_proof_missing_any_required_grammar_line_is_refused_naming_the_line (__main__.TestReverify) ... ok
+test_a_proof_older_than_the_stub_label_is_rederived_with_the_label_from_the_ledger_table (__main__.TestReverify)
+A frozen proof carries no STUB_PATTERN (it predates 1.6.0), so a re-derive that read the ... ok
+test_a_proof_that_names_a_different_shard_is_refused (__main__.TestReverify) ... ok
+test_a_proof_with_no_regen_line_lifts_with_an_empty_list_and_says_so (__main__.TestReverify)
+Proofs older than 1.1.2 have no REGEN_PATTERNS. That is not a refusal -- the grammar ... ok
+test_a_python_expression_in_the_REGEN_or_STUB_line_is_refused_and_never_runs (__main__.TestReverify) ... ok
+test_a_python_payload_in_the_RECORD_START_line_is_refused_and_never_runs (__main__.TestReverify) ... ok
+test_a_shard_whose_own_file_name_carries_a_shell_payload_is_refused_and_never_runs (__main__.TestReverify)
+The shard NAME is the other unquoted splice. A name that equals what its proof says ... ok
+test_a_shard_with_no_proof_beside_it_is_refused (__main__.TestReverify) ... ok
+test_a_shell_payload_in_the_LIVE_line_is_refused_and_never_runs (__main__.TestReverify) ... ok
+test_every_frozen_proof_this_repository_holds_can_be_lifted (__main__.TestReverify) ... ok
+test_help_lists_the_flag (__main__.TestReverify) ... ok
+test_it_refuses_to_be_combined_with_a_flag_that_writes_or_selects_a_ledger (__main__.TestReverify) ... ok
+test_it_runs_from_a_subdirectory_and_with_an_absolute_shard_path (__main__.TestReverify) ... ok
+test_it_works_on_a_shard_in_another_repository_from_anywhere (__main__.TestReverify) ... ok
+test_it_writes_nothing_on_a_green_a_red_and_a_refused_shard (__main__.TestReverify) ... ok
+test_rendering_from_the_lifted_grammar_is_byte_identical_to_build_verify (__main__.TestReverify)
+The strongest pin on the refactor: a template change that the lift cannot read, or a ... ok
+test_the_distributed_prose_names_the_flag_and_what_its_verdict_is (__main__.TestReverify) ... ok
+test_the_lift_reads_back_what_build_verify_writes_for_every_ledger_spec (__main__.TestReverify) ... ok
+test_the_proof_path_is_accepted_in_place_of_the_shard (__main__.TestReverify) ... ok
+test_the_stub_marker_comes_from_the_ledger_table_by_live_basename (__main__.TestReverify) ... ok
+test_a_cut_key_that_would_nest_the_shard_is_refused (__main__.TestReviewRegressions) ... ok
+test_a_footered_ledger_keeps_its_footer_live_and_out_of_the_shard (__main__.TestReviewRegressions)
+W7: with no footer in any end-to-end fixture, L2's footer clauses were unreachable from ... ok
+test_a_footered_ledger_refuses_when_the_footer_would_migrate (__main__.TestReviewRegressions) ... ok
+test_a_same_month_trim_works (__main__.TestReviewRegressions)
+Every synthetic fixture crosses a month boundary (2026-01 records, --today 2026-02-01), ... ok
+test_srf_reports_both_boundaries_and_the_refusal_uses_the_most_recent (__main__.TestReviewRegressions)
+The design's one explicitly-labelled departure from H3. Every other fixture creates a ... ok
+test_the_footer_moved_clause_sees_through_the_rebase (__main__.TestReviewRegressions)
+A footer swept into the records zone is transformed on its way into the shard, so a ... ok
+test_the_month_boundary_is_reported_not_silently_misfiled (__main__.TestReviewRegressions) ... ok
+test_the_proof_catches_a_front_matter_line_deleted_after_the_trim (__main__.TestReviewRegressions)
+Design §4.2's L2 has a front-matter half; the first proof script had none, and printed ... ok
+test_the_proof_names_the_clauses_it_actually_ran (__main__.TestReviewRegressions) ... ok
+test_the_transform_is_exercised_end_to_end (__main__.TestReviewRegressions)
+The e2e fixtures previously had zero links inside records, so `transform_record` was the ... ok
+test_the_trigger_needs_no_baseline_to_decide (__main__.TestReviewRegressions)
+What replaced the abstention machinery. The line RATE needed a baseline commit to ... ok
+test_a_Phase_1B_stub_finalized_in_the_trim_commit_is_labelled_exits_4_and_shows_the_diff (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_a_complete_record_0_edited_in_the_trim_commit_still_exits_1_with_no_label (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_a_finished_record_that_kept_only_the_claim_line_is_a_recognised_finalize (__main__.TestSessionNotesIsATrimmableLedger)
+The adopter case measured today: the line survives, the tag does not. The two-part ... ok
+test_a_finished_record_that_kept_the_claim_line_and_the_tag_is_not_called_finalized (__main__.TestSessionNotesIsATrimmableLedger)
+The successor still matches the marker (both parts), so this is an edit while pending. ... ok
+test_a_notes_file_in_another_shape_is_refused_as_a_grammar_mismatch_not_reported_empty (__main__.TestSessionNotesIsATrimmableLedger)
+F1's failure shape, for the third ledger: a notes file that keys its sessions on dated ... ok
+test_a_record_0_with_the_claim_line_but_no_tag_was_never_a_stub (__main__.TestSessionNotesIsATrimmableLedger)
+NARROWED: a record 0 that carries the status line but not `(IN PROGRESS)` does not match ... ok
+test_a_root_notes_file_takes_the_class_a_arm_and_a_nested_one_does_not (__main__.TestSessionNotesIsATrimmableLedger)
+The notes file is newest-on-top like the other two ledgers, so at the repository root it ... ok
+test_a_stub_finalize_beside_an_edit_to_another_record_is_not_labelled (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_a_trim_writes_a_shard_whose_proof_holds_before_and_after_the_commit (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_no_diff_prints_when_a_record_other_than_the_frontier_is_edited (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_reverify_of_a_proof_written_before_the_marker_substitutes_it_from_the_table (__main__.TestSessionNotesIsATrimmableLedger)
+The #93 shape: a 1.5.0 proof of a SESSION_NOTES.md shard whose trim commit finalized the ... ok
+test_the_date_of_a_record_is_its_labelled_date_else_the_first_date_else_none (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_the_diff_also_prints_for_the_generic_frontier_edit_and_for_a_HANDOFFS_stub (__main__.TestSessionNotesIsATrimmableLedger)
+The diff is for the reader's eyes in BOTH cases the frontier note covers: a recognised ... ok
+test_the_fixture_partitions_into_front_matter_and_the_expected_records (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_the_seed_notes_file_holds_zero_records_and_zero_probe_hits_and_reads_as_fresh (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_the_stub_marker_needs_both_the_claim_line_and_the_in_progress_tag (__main__.TestSessionNotesIsATrimmableLedger)
+MEASURED, not assumed: in 3 of 12 adopters a FINISHED record still carries the Phase 1B ... ok
+test_the_table_declares_SESSION_NOTES_with_the_runners_two_record_shapes (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_the_write_time_guard_fires_for_a_notes_stub_at_record_0 (__main__.TestSessionNotesIsATrimmableLedger) ... ok
+test_the_constant_the_writer_uses_carries_the_rule (__main__.TestTheTimingRuleIsStatedTheSameEverywhere) ... ok
+test_the_distributed_prose_carries_the_rule (__main__.TestTheTimingRuleIsStatedTheSameEverywhere) ... ok
+test_the_proofs_generic_frontier_note_carries_the_rule_and_not_the_retired_claim (__main__.TestTheTimingRuleIsStatedTheSameEverywhere) ... ok
+test_the_proofs_stub_note_carries_the_rule (__main__.TestTheTimingRuleIsStatedTheSameEverywhere) ... ok
+test_the_template_no_longer_asserts_bundling_is_this_repositorys_practice (__main__.TestTheTimingRuleIsStatedTheSameEverywhere) ... ok
+test_a_record_carrying_an_already_relative_target_is_refused (__main__.TestTransform) ... ok
+test_links_inside_fences_and_code_spans_are_untouched (__main__.TestTransform)
+The code-span target must be ROOT-RELATIVE, or the assertion is inert. ... ok
+test_only_root_relative_targets_are_rebased (__main__.TestTransform) ... ok
+test_round_trip_is_the_identity_on_a_record_corpus (__main__.TestTransform) ... ok
+test_the_naive_key_would_corrupt_absolute_urls (__main__.TestTransform)
+NARROWED: key on `](` alone, which is what the design measured as corrupting 14 URLs. ... ok
+test_fires_if_either_metric_fires (__main__.TestTrigger) ... ok
+test_the_byte_form_is_a_level_with_hysteresis_and_terminates (__main__.TestTrigger) ... ok
+test_the_line_form_transplanted_onto_bytes_is_unreachable (__main__.TestTrigger)
+Design §5.2, mechanised: 'cut until back above 30' cannot be satisfied on the byte ... ok
+test_the_read_cap_arm_can_stop_and_is_not_vestigial (__main__.TestTrigger)
+`read_ok` is the looser arm at the SHIPPED budget, so a test that only exercises the ... ok
+test_the_read_cap_is_derived_and_not_a_written_literal (__main__.TestTrigger)
+Phase B's structural promise: no opaque boundary is published. If someone replaces the ... ok
+test_an_append_style_edit_that_keeps_the_original_line_as_a_substring_still_fails_L2 (__main__.TestVerifyShAppendTamperEvadesSubstringCheck) ... ok
+test_the_regenerated_field_carve_out_still_works_after_the_fix (__main__.TestVerifyShAppendTamperEvadesSubstringCheck)
+NARROWED control — the exact-line-set fix must not turn field_reversible's own carve-out ... ok
+test_NARROWED_tolerating_ADDS_must_not_tolerate_a_LOSS (__main__.TestVerifyShBundledAddsAreMeasuredNotAssumed)
+The plausible weak implementation — 'ignore any count mismatch' — passes the test above ... ok
+test_NARROWED_tolerating_ADDS_must_not_tolerate_a_REORDER (__main__.TestVerifyShBundledAddsAreMeasuredNotAssumed)
+The other plausible weak implementation — compare record MULTISETS and drop the ... ok
+test_a_trim_commit_that_also_adds_records_still_proves_lossless (__main__.TestVerifyShBundledAddsAreMeasuredNotAssumed)
+The BL-36 case itself. Adding entries to the ledger in the trim commit says nothing ... ok
+test_the_proof_reports_what_the_commit_added_rather_than_staying_silent (__main__.TestVerifyShBundledAddsAreMeasuredNotAssumed)
+A proof that tolerates additions must SAY which ones, or it has quietly widened what it ... ok
+test_the_template_no_longer_bakes_a_positional_INJECTED_constant (__main__.TestVerifyShBundledAddsAreMeasuredNotAssumed)
+Coupling guard, not a presence grep: the tests above all run through the generated ... ok
+test_the_verdict_does_not_depend_on_HOW_MANY_records_the_commit_added (__main__.TestVerifyShBundledAddsAreMeasuredNotAssumed)
+Kills the whole family of 'bump the constant' mutants. INJECTED=1 happens to be right ... ok
+test_a_non_frontier_record_edit_bundled_into_trim_commit_gets_no_such_label (__main__.TestVerifyShHandoffFalsePositives)
+NARROWED control for fix 2 — the label must not spread to a record that is not the ... ok
+test_an_undeclared_front_matter_edit_still_fails_L2_even_with_the_field_regenerated (__main__.TestVerifyShHandoffFalsePositives)
+NARROWED control for fix 1 — the exemption must not become a blanket permit. An edit ... ok
+test_frontier_record_edit_bundled_into_trim_commit_still_fails_but_is_labelled (__main__.TestVerifyShHandoffFalsePositives)
+Fix 2. This repo's own established practice (S61/S63/S64): a session's frontier receipt ... ok
+test_regenerated_front_matter_field_no_longer_false_fails_verify_sh (__main__.TestVerifyShHandoffFalsePositives)
+Fix 1. The trim's own regenerated receipt-count line changes on every archive by ... ok
+test_a_front_matter_line_copied_whole_into_the_shards_front_matter_still_fails_L2 (__main__.TestVerifyShLeakedTestsWholeLines)
+NARROWED control -- the fix must not become 'never report a leak'. A whole front-matter ... ok
+test_a_front_matter_line_quoted_mid_line_in_the_shards_own_front_matter_is_not_a_leak (__main__.TestVerifyShLeakedTestsWholeLines)
+NARROWED control for the OTHER half of the clause: the shard's front matter is also tested ... ok
+test_a_front_matter_line_that_is_a_whole_line_of_an_archived_record_still_fails_L2 (__main__.TestVerifyShLeakedTestsWholeLines)
+NARROWED control -- the record half of the clause. Dropping `ln in <record lines>` while ... ok
+test_a_short_front_matter_line_repeated_whole_in_a_record_is_not_a_leak (__main__.TestVerifyShLeakedTestsWholeLines)
+NARROWED control for the length filter: the fix keeps `> 24`. `# Handoff Receipts` is 18 ... ok
+test_an_archived_record_quoting_a_front_matter_line_mid_line_is_not_a_leak (__main__.TestVerifyShLeakedTestsWholeLines)
+The false red itself. The archived record contains the front-matter line, in backticks, ... ok
+test_a_complete_record_0_edited_in_the_trim_commit_still_exits_1_with_no_stub_label (__main__.TestVerifyShNamesAStubFinalize)
+NARROWED control -- the real-loss shape BL-27 protected: record 0 was a COMPLETE ... ok
+test_a_ledger_that_declares_no_stub_marker_labels_nothing_and_says_so (__main__.TestVerifyShNamesAStubFinalize)
+NARROWED control. CHANGELOG.md's record 0 is seeded as a claim-shaped `(in progress)` ... ok
+test_a_pending_stub_finalized_in_the_trim_commit_is_labelled_and_exits_4 (__main__.TestVerifyShNamesAStubFinalize) ... ok
+test_a_stub_finalize_beside_a_front_matter_edit_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
+NARROWED control -- the label also needs L2 to hold. A front-matter line lost in the ... ok
+test_a_stub_finalize_beside_a_reorder_of_other_records_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
+NARROWED control for the ORDER half of 'the other records are byte-identical'. Once the ... ok
+test_a_stub_finalize_beside_an_edit_to_another_record_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
+NARROWED control -- 'the other N records are byte-identical' must be TRUE for the label ... ok
+test_a_stub_that_is_still_pending_after_the_trim_is_not_called_finalized (__main__.TestVerifyShNamesAStubFinalize)
+NARROWED control. The label says FINALIZED, so it must not stamp a stub that was merely ... ok
+test_the_proofs_grammar_carries_the_ledgers_stub_pattern (__main__.TestVerifyShNamesAStubFinalize)
+The marker must travel IN the proof (a frozen script cannot consult a ledger table), on ... ok
+test_a_shard_that_silently_drops_a_record_is_REFUSED_before_the_write (__main__.TestWritePathIsActuallyGated)
+The defect: assertions were wired to records[:k] + records[k:] == records, an identity. ... ok
+test_a_trim_that_drops_the_footer_is_REFUSED (__main__.TestWritePathIsActuallyGated)
+Proves L2 is wired to the ARTIFACT, not to the input. With `assert_L2` handed the ... ok
+test_control_a_footered_ledger_trims_cleanly (__main__.TestWritePathIsActuallyGated) ... ok
+test_control_the_unmutated_write_path_passes (__main__.TestWritePathIsActuallyGated) ... ok
+test_the_recorded_size_is_the_size_of_the_file_actually_written (__main__.TestWritePathIsActuallyGated)
+The entry states the live file's post-trim size, and the entry is IN that file. ... ok
+test_a_checkout_that_converts_line_endings_is_not_read_as_a_finalize (__main__.TestWriteTimeGuardForAStubFinalize)
+NARROWED control for the CRLF fold. HEAD's stub is still in the ledger below a new record, ... ok
+test_a_clean_ledger_with_a_complete_record_0_is_silent (__main__.TestWriteTimeGuardForAStubFinalize) ... ok
+test_a_ledger_that_declares_no_stub_marker_is_silent (__main__.TestWriteTimeGuardForAStubFinalize)
+CHANGELOG.md declares no marker: a claim entry reading (in progress) at record 0 is a FINAL ... ok
+test_a_pending_stub_at_record_0_fires_the_guard_and_names_both_ways_out (__main__.TestWriteTimeGuardForAStubFinalize) ... ok
+test_a_record_prepended_above_a_committed_stub_does_not_fire_the_other_order (__main__.TestWriteTimeGuardForAStubFinalize)
+NARROWED control for order B. HEAD's stub is still in the ledger, one position down, so ... ok
+test_a_stub_finalized_in_the_tree_but_not_committed_fires_the_other_order (__main__.TestWriteTimeGuardForAStubFinalize) ... ok
+test_a_stub_that_is_not_the_frontier_is_silent (__main__.TestWriteTimeGuardForAStubFinalize)
+A pending record BELOW record 0 is not what a trim commit would finalize. ... ok
+test_an_edit_to_a_record_that_was_never_a_stub_is_not_this_guards_business (__main__.TestWriteTimeGuardForAStubFinalize)
+A COMPLETE record 0 edited in the tree is the real-loss shape; the proof handles it and ... ok
+test_an_untracked_ledger_still_fires_order_A (__main__.TestWriteTimeGuardForAStubFinalize)
+No HEAD version of the ledger: order B cannot be judged, but order A needs only the working ... ok
+test_an_untracked_ledger_with_a_complete_record_0_skips_order_B_without_crashing (__main__.TestWriteTimeGuardForAStubFinalize)
+NARROWED control for the missing-HEAD branch. With a COMPLETE record 0 order A does not ... ok
+test_the_advised_order_gives_a_passing_proof (__main__.TestWriteTimeGuardForAStubFinalize)
+The message's way out must WORK: finalize and commit, then trim in its own commit. ... ok
+test_the_guard_does_not_refuse_the_write (__main__.TestWriteTimeGuardForAStubFinalize) ... ok
+test_a_four_backtick_wrapper_hides_its_inner_handoff_fence (__main__.TestZones) ... ok
+test_handoff_trailing_prose_belongs_to_its_record (__main__.TestZones) ... ok
+test_unclassified_trailing_content_aborts_a_footer_none_family (__main__.TestZones) ... ok
+
+----------------------------------------------------------------------
+Ran 203 tests in 35.887s
+
+OK (skipped=2)

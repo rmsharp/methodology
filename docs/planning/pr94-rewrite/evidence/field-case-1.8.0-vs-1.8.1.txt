@@ -1,0 +1,48 @@
+# The field case, reproduced on the #93 repository's partial clone (2026-10-17, S337).
+# The promisor remote was pointed at a dead path (git remote set-url origin /nonexistent/promisor) so the
+# blob the proof needs for the trim commit's parent could not be fetched; the shard is the one S335 saw
+# read a false FAIL. Four runs; the exit code follows each. The frozen proof is the same bytes in both halves.
+
+## 1. The frozen proof as shipped, dead remote (exit 1)
+fatal: '/nonexistent/promisor' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: could not fetch ed8c4d3af18d1cc309d473c58af0c74c0c1a15e9 from promisor remote
+verify: cannot read 7a55e1986aaa7c0ed28310975da2c5add1044382^:SESSION_NOTES.md
+
+## 2. --reverify with 1.8.0 (2308553), dead remote (exit 1)
+== docs/archive/SESSION_NOTES-through-2026-09-26-2.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-26-2.md: re-derived by methodology_trim.py v1.8.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): supplied from this tool's ledger table by the live basename SESSION_NOTES.md: '(?ms)\\A(?=.*^\\*\\*Status:\\*\\* Session claimed\\b)(?=.*\\(IN PROGRESS\\))'
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | fatal: '/nonexistent/promisor' does not appear to be a git repository
+    | fatal: Could not read from remote repository.
+    | 
+    | Please make sure you have the correct access rights
+    | and the repository exists.
+    | fatal: could not fetch ed8c4d3af18d1cc309d473c58af0c74c0c1a15e9 from promisor remote
+    | verify: cannot read 7a55e1986aaa7c0ed28310975da2c5add1044382^:SESSION_NOTES.md
+
+## 3. The frozen proof as shipped, dead remote, after the fix (exit 1: frozen, unchanged bytes)
+fatal: '/nonexistent/promisor' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: could not fetch ed8c4d3af18d1cc309d473c58af0c74c0c1a15e9 from promisor remote
+verify: cannot read 7a55e1986aaa7c0ed28310975da2c5add1044382^:SESSION_NOTES.md
+
+## 4. --reverify with 1.8.1 (1082d3b), dead remote (exit 3)
+== docs/archive/SESSION_NOTES-through-2026-09-26-2.md ==
+  [REVERIFY_BANNER] docs/archive/SESSION_NOTES-through-2026-09-26-2.md: re-derived by methodology_trim.py v1.8.1 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger SESSION_NOTES.md, record kind heading, footer none. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): supplied from this tool's ledger table by the live basename SESSION_NOTES.md: '(?ms)\\A(?=.*^\\*\\*Status:\\*\\* Session claimed\\b)(?=.*\\(IN PROGRESS\\))'
+  [REVERIFY_VERDICT] exit 3 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | fatal: '/nonexistent/promisor' does not appear to be a git repository
+    | fatal: Could not read from remote repository.
+    | 
+    | Please make sure you have the correct access rights
+    | and the repository exists.
+    | fatal: could not fetch ed8c4d3af18d1cc309d473c58af0c74c0c1a15e9 from promisor remote
+    | verify: cannot read 7a55e1986aaa7c0ed28310975da2c5add1044382^:SESSION_NOTES.md -- the proof did not finish; this is not a verdict (exit 3)
