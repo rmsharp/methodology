@@ -527,10 +527,13 @@ read-only apart from the reconcile backfill.
 
 **Trim while record 0 is complete — before the claim, or after the finalize is committed — never in
 the commit that finalizes it.** A session's claim leaves record 0 of `HANDOFFS.md` as a
-`status: pending` stub that close-out overwrites in place. A trim that lands in that same commit
-makes the generated `.verify.sh` read the receipt as *edited*, because its pre-trim bytes are the
-stub: the proof ends red (exit 4, named as a stub finalize since nothing else went missing, but
-still a FAIL) with nothing lost. `methodology_trim.py` warns when it sees the state coming
+`status: pending` stub, and record 0 of `SESSION_NOTES.md` as the Phase 1B stub (a
+`**Deliverable:** … (IN PROGRESS)` line and a `**Status:** Session claimed` line); close-out
+overwrites both in place. A trim that lands in that same commit makes the generated `.verify.sh`
+read the record as *edited*, because its pre-trim bytes are the stub: the proof ends red (exit 4,
+named as a stub finalize since nothing else went missing, but still a FAIL) with nothing lost, and
+it prints the diff of the stub against the record that replaced it, so a reader can see in seconds
+what the proof cannot judge. `methodology_trim.py` warns when it sees the state coming
 (`FRONTIER_PENDING_STUB`, `FRONTIER_FINALIZE_UNCOMMITTED`); the warning is advisory and refuses
 nothing. A `.verify.sh` already written is frozen and never changes; to ask what today's template
 says about an old shard, run `methodology_trim.py --reverify <shard>` — read-only, it prints a verdict

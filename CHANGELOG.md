@@ -44,6 +44,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-16 · [issue #93] `SESSION_NOTES.md` joins the ledger table, and the proof prints the record-0 diff (`TRIM_VERSION` 1.8.0)
+
+- **Action:** closes the gap the three commits above leave in [issue #93](https://github.com/KJ5HST/methodology/issues/93):
+  seven of the ten failing proofs in the adopter repository it reports on (`rmsharp/nprcgenekeepr`) are `SESSION_NOTES.md`
+  shards, and `--reverify` could print only the generic L1/L3 failures for them, because the ledger table had no entry for
+  that file and so no stub marker. `starter-kit/methodology_trim.py`'s `LEDGERS` gains `SESSION_NOTES.md`: the runner's two
+  record shapes (`### What Session N Did`, `### Session N-1 Handoff Evaluation (by Session N)`), no footer, a best-effort
+  record date (`**Started:**` and its labelled variants, else the first date in the record), and a stub marker that requires
+  BOTH Phase 1B lines, the `**Status:** Session claimed` line and the `(IN PROGRESS)` tag, anywhere in the record with the
+  status line starting a line. The two-part shape is measured, not assumed: over 12 adopters' live notes files a finished
+  record in 3 of them still carries the status line, and 2 of those 3 dropped the tag, so the line alone would have called
+  finished records stubs; all 7 of the adopter's real stubs match both parts, and none of the records that replaced them
+  does. The generated proof, and so `--reverify`, now prints a unified diff of record 0 against the record that replaced it
+  whenever the frontier was edited in the trim commit, for the recognised stub finalize (exit 4) and the generic edit (exit
+  1) alike and for nothing else: output, not a verdict, so no exit status changes (issue #93's first suggestion).
+  `FRAMEWORK_APPARATUS.md`'s timing-rule paragraph names the notes stub and the diff. `tools/test_methodology_trim.py`:
+  `TestSessionNotesIsATrimmableLedger`, 18 tests (the grammar and the marker's two parts, the fixture proved first, the
+  seed read as fresh, a trim end to end with the proof before and after the commit, the labelled finalize with its diff,
+  four narrowed controls including the measured adopter shape, the write-time guard, the 1.5.0-proof re-derivation, a
+  grammar mismatch refused loudly, the Class A arm at the root only), and two existing tests updated from the old truth;
+  199 tests (2 skipped), up from 181; the `trimmer-unit-tests` gate 181 → 199, a tightening. Measured on that adopter's 54
+  proofs: `--reverify` reads 46 at exit 0 and 8 at exit 4, none at exit 1 (the branch at the commit above: 46 / 1 / 7);
+  the 174 frozen shards of the contributor's fork (`rmsharp/methodology`) keep their verdicts under both versions; a
+  read-only `--check` of the 12 adopters' notes files parses 10, reads one as a fresh seed and refuses one in another shape
+  by name. A minor release: a third ledger the tool can trim, and new proof output. What it does not do: a recognised stub
+  finalize stays a FAIL at exit 4, by the decision recorded under 1.6.0, because the proof can see that a stub was replaced
+  and not what the replacement dropped.
+
 ### 2026-10-05 · [issue #93] `methodology_trim.py --reverify <shard>` re-derives a frozen proof under today's template, read-only (`TRIM_VERSION` 1.7.0)
 
 - **Action:** answers the third of the three causes in [issue #93](https://github.com/KJ5HST/methodology/issues/93): a

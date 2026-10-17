@@ -52,7 +52,22 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.7.0"   # 1.7.0: issue #93, cause 3 — a proof is a FROZEN artifact, so a fix to the
+TRIM_VERSION = "1.8.0"   # 1.8.0: issue #93, the gap the first three left -- seven of the adopter's
+                         # ten failing proofs are SESSION_NOTES.md shards, a ledger the table did
+                         # not list, so no stub marker reached them and `--reverify` could print
+                         # only the generic failures. SESSION_NOTES.md joins LEDGERS: the runner's
+                         # two record shapes (`### What Session N Did`, `### Session N-1 Handoff
+                         # Evaluation (by Session N)`), no footer, and a stub marker that needs
+                         # BOTH Phase 1B lines -- the `**Status:** Session claimed` line and the
+                         # `(IN PROGRESS)` tag -- because a finished record in 3 of 12 measured
+                         # adopters still carries the first. The proof now prints a unified diff of
+                         # record 0 against the record that replaced it whenever the frontier was
+                         # edited in the trim commit (exit 4 or exit 1), so a reader can judge in
+                         # seconds what the proof cannot. Minor, not patch: a third ledger the tool
+                         # can trim, and new proof output. The two existing ledgers' verdicts are
+                         # unchanged.
+                         #
+                         # 1.7.0: issue #93, cause 3 — a proof is a FROZEN artifact, so a fix to the
                          # template (1.5.1's whole-line `leaked`, 1.6.0's stub label) never reaches a
                          # proof already written, and an adopter holds red proofs of lossless trims
                          # with no way to ask what today's template says. `--reverify <shard>` lifts
@@ -364,6 +379,18 @@ def _handoff_date(text):
     return m.group(1) if m else None
 
 
+def _session_notes_date(text):
+    # No single canonical date field: the runner's stub writes `**Started:**`; adopters also write
+    # `**Started/Completed:**`, `**Completed:**` or `**Date:**`. A labelled date first, then the first
+    # bare YYYY-MM-DD anywhere in the record, else None. Used only to LABEL a shard's span in its
+    # header and pointer text -- never compared against anything L1/L2/L3 assert.
+    m = re.search(r"\*\*(?:Started(?:/Completed)?|Completed|Date)\s*:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
+    if m:
+        return m.group(1)
+    m = re.search(r"\d{4}-\d{2}-\d{2}", text)
+    return m.group(0) if m else None
+
+
 LEDGERS = {
     "CHANGELOG.md": LedgerSpec(
         basename="CHANGELOG.md",
@@ -424,6 +451,38 @@ LEDGERS = {
         # Ledger), so such an entry is a FINAL record: every claim in this repo's own ledger still
         # reads (in progress).
         stub_marker=re.compile(r"^status: pending\s*$", re.M),
+    ),
+    # The session-notes file: the runner's Phase 1B claim stub and its Phase 3A and 3D records. The
+    # seed calls the file transient, and the seed's own last line says session history accumulates
+    # below it; an adopter holds hundreds of records (the one issue #93 reports on: 577 headings),
+    # and seven of that adopter's ten failing proofs were shards of this file, which had no table
+    # entry and so no stub marker. The grammar is the runner's own: two heading shapes start a
+    # record and nothing else does, so the seed's `### What You Must Do` stays front matter and a
+    # `###` sub-heading inside a session's write-up rides inside that record.
+    "SESSION_NOTES.md": LedgerSpec(
+        basename="SESSION_NOTES.md",
+        record_kind="heading",
+        # `\b` guards the "Did" branch only; the evaluation branch ends in a literal `)`.
+        record_start=re.compile(
+            r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did\b)"),
+        # Declared to have no footer -- the seed's closing line sits ABOVE the records -- and the
+        # declaration is asserted by classify_zones(): a standalone `---` with content after the
+        # last record is refused by name, never swept into a record about to move.
+        footer_mode="none",
+        date_of_record=_session_notes_date,
+        regenerated=(),
+        content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
+        # Heading-keyed, like CHANGELOG.md, so the probe subsumes a negation (see that entry).
+        seed_negation=None,
+        # What Phase 1B writes and Phase 3D overwrites: a `**Deliverable:** ... (IN PROGRESS)` line
+        # and a `**Status:** Session claimed. Work beginning.` line. BOTH are required, found anywhere
+        # in the record (the tag's line can wrap, and four of the seven real stubs appended text to
+        # the status line), and the status line must START a line, so a record that quotes it
+        # mid-line is not a stub. Measured over 12 adopters' live notes files: a FINISHED record in 3
+        # of them still carries the status line, and 2 of those 3 records dropped the tag, so the
+        # line alone would have called them stubs. All 7 of the adopter's real stubs match both
+        # parts; none of the records that replaced them does.
+        stub_marker=re.compile(r"(?ms)\A(?=.*^\*\*Status:\*\* Session claimed\b)(?=.*\(IN PROGRESS\))", re.M),
     ),
 }
 
@@ -1309,7 +1368,7 @@ SHARD=@@SHARD@@
 TRIM_SHA="$(git log --diff-filter=A -1 --format=%H -- "$SHARD" 2>/dev/null)"
 export LIVE SHARD TRIM_SHA
 python3 - <<'PYEOF_VERIFY'
-import os, re, subprocess, sys
+import difflib, os, re, subprocess, sys
 from collections import Counter
 
 RECORD_KIND = "@@KIND@@"
@@ -1646,8 +1705,9 @@ frontier_edit = (len(absent_records) == 1 and br and absent_records[0] == br[0]
 # one missing and the edit keeps the generic note and exit 1, which is what BL-27 protected: a
 # record 0 that was COMPLETE before the trim and differs after it is a real-loss shape.
 stub_finalized = False
+successor = (next(a for a in added_records if anchor(a) == anchor(absent_records[0]))
+             if frontier_edit else None)
 if fails and frontier_edit and STUB is not None and STUB.search(absent_records[0]):
-    successor = next(a for a in added_records if anchor(a) == anchor(absent_records[0]))
     other_fails = [f for f in fails if not (f.startswith("L1 ") or f.startswith("L3 "))]
     stub_finalized = (not STUB.search(successor) and not other_fails and rebuilt == br[1:])
 
@@ -1690,6 +1750,20 @@ for f in fails:
     print("FAIL:", f)
 for n in notes:
     print("NOTE:", n)
+if frontier_edit:
+    # Issue #93's first suggestion. The proof cannot judge an edit to record 0 -- a stub finalize and
+    # a real loss have the same shape -- but a reader shown the edit can, in seconds. Printed for both
+    # shapes the frontier note covers (the recognised stub finalize, exit 4, and the generic edit,
+    # exit 1) and for nothing else: a record other than the frontier that differs is a plain loss,
+    # and a diff would dress it up. Output only; it changes no verdict and no exit status.
+    diff = list(difflib.unified_diff(absent_records[0].splitlines(keepends=True),
+                                     successor.splitlines(keepends=True),
+                                     fromfile="record 0 before the trim commit (its parent)",
+                                     tofile="record 0 in the trim commit"))
+    print("DIFF: record 0, before the trim commit (-) against the record that replaced it (+), "
+          "%d line(s):" % len(diff))
+    for ln in diff:
+        sys.stdout.write(ln if ln.endswith("\n") else ln + "\n")
 if fails:
     sys.exit(4 if stub_finalized else 1)
 # State what actually ran, never a blanket claim: on a ledger with no footer the footer clause is
@@ -1711,7 +1785,7 @@ def render_verify(live_rel, shard_rel, kind, record_start, fence_info, footer_mo
     # holds one. repr() doubles each backslash; the generated script parses that back as a normal
     # (non-raw) Python string literal, which un-doubles it — the round trip restores the exact
     # pattern .compile() would see. Safe only because no config pattern contains a quote character
-    # (true of both entries in LEDGERS today); a pattern that did would need a different encoding.
+    # (true of every entry in LEDGERS today); a pattern that did would need a different encoding.
     # The stub marker travels the same way, as one repr()'d string ('' when the spec declares none),
     # under the same caveat.
     out = VERIFY_TEMPLATE
