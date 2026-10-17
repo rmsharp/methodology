@@ -1,6 +1,6 @@
 # The text of the one upstream pull request (draft 9)
 
-**Status: DRAFT 10, not frozen, nothing sent.** Draft 10 is draft 9 (`d2cc1e9`) with his two S333 decisions carried out ([`draft4-record.md`](pr-composition-evidence/draft4-record.md) §5: F1, the two tests restored on the branch by `cfcc713`, so item (e) names two tests;
+**Status: DRAFT 10, APPROVED by the operator as the pull request's text (S336 picker, 2026-10-17), frozen at `150e1bf`; nothing sent, PR5 (the push and the opening) comes after D1 and D4 at his go-ahead.** The body is 20,863 B, 863 B over the 20,000 B budget he set at S332, kept at his word: the additions are his two decisions and decision 3 re-measured. Draft 10 is draft 9 (`d2cc1e9`) with his two S333 decisions carried out ([`draft4-record.md`](pr-composition-evidence/draft4-record.md) §5: F1, the two tests restored on the branch by `cfcc713`, so item (e) names two tests;
 F2, decision 2 names the first-parent walk in one clause), decision 3 re-measured against PR #94's head since 2026-10-17 (`2308553`, four commits, not three), and every figure re-derived on the new tip; the
 changes are the record's §6. Draft 9 was draft 8 (`faffc98`, 19,990 B, itself draft 7 cut by 23% at his direction, "Cut it, then one more read") with a fourth reader's findings applied. The history: draft 1 is
 `ef98e78`, draft 2 `a6ad168`, draft 3 `025afed` (and `ab4f563` with its figures); drafts 4 to 6 (`d5bb53b`, `9becf89`, `dfc31ab`) and draft 8 were each read by a fresh agent (5, 5, 6 and 5 of 10); drafts 7
