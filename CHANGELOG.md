@@ -261,6 +261,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-118] S335 -- raised: a generated proof that cannot read an artifact from git exits 1, the FAIL code, where --reverify promises 3
+
+Found in the first 54-shard sweep of the 1.8.0 trimmer: one shard read exit 1 with `verify: cannot read 7a55e19^:SESSION_NOTES.md` after a transient promisor-remote fetch failure in the partial clone; exit 0 on re-run under both versions. `VERIFY_TEMPLATE`'s `show()` calls `sys.exit("verify: cannot read ...")`, which exits 1. Offered to him as "Hold: fix the exit-3 finding first" at the picker; he chose to post without it, so it is a row: the fix is exit 3 with the message on stderr, a test with an unreadable ref, a mutant; fork-side first, a fifth PR commit being outward.
+
+### 2026-10-17 · [BL-117] S335 -- raised at his tick: a performance session for the fork's own tooling, with today's measured baselines
+
+He asked twice in this session whether performance-improvement opportunities were being looked for; the answer was no, not inside one deliverable, and he ticked the row at the picker. The row and its detail carry the baselines measured today (the trimmer suite 199 tests in 37.5 s; the 54-shard sweep under 2 minutes cached and about 10 minutes cold; the fork's gate run 20 min 56 s for 18 gates; upstream's 12 gates with `bin/tests.sh` under 6 minutes) and three candidate targets, none measured as a bottleneck; the session's rule is profile first, change one thing, re-measure, and a speed-up that changes a verdict or a count is a defect.
+
+### 2026-10-17 · [BL-116] S335 -- BL-116 closed: the index row out, the completed row in, the detail carries the closing state; BL-98's row names the fourth commit
+
+`docs/planning/BACKLOG.md`: the BL-116 row removed (the id stays in the record); BL-98's row gains the S335 state (the fourth commit on PR #94, the draft-8 text, 46 / 8 / 0, still a watch item). `docs/planning/BACKLOG-COMPLETED.md`: one `✅ DONE 2026-10-17 (S335)` row after BL-107's. `docs/planning/BACKLOG-DETAIL.md` §BL-116: the closing paragraph (the decisions, the build, the measurements, the two outward actions, what stays open). `BACKLOG-COMPLETED.md.verify.sh` run after the edit (see the commit). `BACKLOG.md` was already over its reported 25,000-token ceiling at Phase 0 and grows by two rows here (no declared gate caps it).
+
+### 2026-10-17 · [BL-116] S335 -- outward action, his "Post now" at the picker: PR #94's title and body set to the saved draft-8 text
+
+`gh api -X PATCH repos/KJ5HST/methodology/pulls/94 -f title="$(cat docs/planning/pr94-rewrite/title.txt)" -F body=@docs/planning/pr94-rewrite/body.md`, exit 0, after the push had been read back. Read back with `gh pr view 94 --json title,body`: the title equals `title.txt`; the body equals `body.md` byte for byte (27,325 characters, 27,328 bytes), GitHub's `updatedAt` 2026-10-17T05:14:47Z. The old title was `fix(trim): generated proofs stop reading red on lossless trims, and --reverify re-derives a frozen one (refs #93)`; the old body is kept as `docs/planning/pr94-rewrite/original-body.md`. Draft 8 had no cold read; he read it inline, asked whether to hold it for a performance session (no: performance work is a separate commit and session), and ticked "Post now".
+
+### 2026-10-17 · [BL-116] S335 -- outward action, his "Post now" at the picker: the fourth commit pushed onto PR #94's head branch
+
+`git push origin fix/trim-verify-false-red-issue93-v2:fix/trim-verify-false-red-issue93`: `972eb2c..2308553`, a fast-forward (the commit's parent is the PR's old tip). Pre-flight first: PR #94 at `972eb2c` with 0 comments and 0 reviews, `origin`'s branch at `972eb2c`, `upstream/main` at `f34769f`, the local branch an ancestor-preserving descendant. Read back: `git ls-remote origin refs/heads/fix/trim-verify-false-red-issue93` = `2308553764174551424be1fef971a0b93dc85aff`, and `gh pr view 94 --json headRefOid` the same; GitHub lists the PR's four commits `68d8a06`, `965f136`, `972eb2c`, `2308553`. The local branch `fix/trim-verify-false-red-issue93` (without `-v2`) still points at `972eb2c`.
+
 ### 2026-10-16 · [BL-116] S335 -- the record: his four decisions, the fourth commit on the local branch, what was measured, the two things to know, the posting steps
 
 `docs/planning/pr94-rewrite/README.md` recomposed: the status (draft 8; `2308553` on a local branch; not pushed, not posted), the section "Decided and built at S335" (the decisions, where the change is and the patch that keeps it, what the commit changes by `--numstat`, the marker's measured shape and my own "4 of 12" miscount corrected to 3, the measurements table with the evidence file for each row, the version-number collision with this fork's 1.8.0, and a finding not fixed: a proof that cannot read an artifact from git exits 1, the same code as a FAIL, where 3 is promised), and "Posting it" with the push of the branch (a fast-forward of the PR's head) before the title and body edit, each read back and each his go-ahead. The S334 sections stay as the record of that session.
