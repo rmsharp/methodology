@@ -1,0 +1,23 @@
+# bin/tests.sh in a clean --no-local clone of 2308553 (core.hooksPath .githooks), 2026-10-16 (S335). Load average 6 to 8.
+
+real	2m19.484s
+user	1m7.518s
+sys	0m58.759s
+== Summary: 261 passed, 0 failed ==
+
+## failed or skipped rows, if any
+  PASS: dry-run skipped SESSION_RUNNER
+  PASS: dry-run skipped .gitignore
+== Test 9: github source (needs the network; skipped if the repository is unreachable) ==
+  PASS: status: pending fails by default
+  PASS: context_budget --selftest: all gates observed failing and passing
+  PASS: quality_ratchet --selftest: every gate observed failing and passing
+  PASS: check-ledger: a duplicated entry heading fails
+  PASS: check-ledger: a heading with no source tag fails
+  PASS: check-ledger: a heading with two source tags fails
+  PASS: check-ledger: a heading without the date prefix fails
+  PASS: check-ledger: orphaned text under a month heading fails
+  PASS: check-ledger: a surviving conflict marker fails
+  PASS: check-ledger: the seed sentinel left in a ledger with entries fails
+  PASS: github status compares against the source's manifest and names the skipped row
+== Summary: 261 passed, 0 failed ==

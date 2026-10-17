@@ -1,0 +1,9 @@
+# python3 tools/test_methodology_trim.py at 2308553 (the build worktree), 2026-10-16 (S335); the first run read 197 before round 2 added two tests
+
+real	0m37.600s
+user	0m18.940s
+sys	0m16.137s
+----------------------------------------------------------------------
+Ran 199 tests in 37.520s
+
+OK (skipped=2)

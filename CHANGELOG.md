@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-116] S335 -- saved outputs, part 2: the 8 labelled `--reverify` outputs with their diffs, the trimmer suite, `bin/tests.sh` and the gate run in the clean clone
+
+`evidence/reverify-outputs-8-labelled-1.8.0.txt` (each of the 8 carries the specific `FAIL:` line, the `NOTE:` and a `DIFF:` block of 30 to 176 lines), `evidence/trimmer-suite-1.8.0.txt` (199 tests, OK, 2 skipped, 37.5 s), `evidence/tests-sh-1.8.0.txt` (261 passed, 0 failed, in a clean `--no-local` clone of `2308553` with `core.hooksPath .githooks`), `evidence/ratchet-run-1.8.0.txt` (12/12 pass · 0 fail · 0 unmeasured · results `28a2fdac6745` · manifest `dfb478526806`; the two runs took under 6 minutes together at a load of 6 to 8).
+
 ### 2026-10-16 · [BL-116] S335 -- saved outputs, part 1: the adopters' claim-line census and `--check`, this fork's 174 shards under both versions, the 54-proof sweep under 1.8.0
 
 `evidence/adopter-claim-lines-output.tsv` (3 finished records in 3 of 12 adopters carry the status line, 2 without the tag; the other hits are live record-0 stubs), `evidence/adopter-check-output.txt` (10 parse, 1 `NO_RECORDS`, 1 `GRAMMAR_MISMATCH`, 0 zone refusals), `evidence/fork-shards-old-vs-new.tsv` (174 rows; every exit code equal under 1.7.0 and 1.8.0: 169 at 0, 2 at 1, 1 at 4, 2 at 3), `evidence/sweep-after-1.8.0.tsv` (54 rows: 46 at exit 0, 8 at exit 4). The first sweep read one shard at exit 1 from a transient blob fetch failure in the partial clone; the re-run of that shard read 0 under both versions and this file is the clean second sweep.
