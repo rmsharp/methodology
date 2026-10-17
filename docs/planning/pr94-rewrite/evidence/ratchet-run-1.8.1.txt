@@ -1,0 +1,20 @@
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mquality gates — run[0m  [32m[1m12/12 pass · 0 fail · 0 unmeasured · results cb7ffb255deb · manifest 072b6ca7f1a0[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mgate                                    rule    measured  status[0m
+  tests-sh-passed                       >= 261         261  [32mpass[0m
+  tests-sh-failed                         <= 0           0  [32mpass[0m
+  dashboard-unit-tests                  >= 229         229  [32mpass[0m
+  context-budget-unit-tests             >= 148         148  [32mpass[0m
+  trimmer-unit-tests                    >= 203         203  [32mpass[0m
+  ratchet-unit-tests                     >= 45          45  [32mpass[0m
+  check-links                             <= 0           0  [32mpass[0m
+  check-learnings                         <= 0           0  [32mpass[0m
+  check-handoff-all                       <= 0           0  [32mpass[0m
+  check-ledger                            <= 0           0  [32mpass[0m
+  commit-msg-selftest                     <= 0           0  [32mpass[0m
+  pre-commit-selftest                     <= 0           0  [32mpass[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mcite in the receipt:[0m quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results cb7ffb255deb · manifest 072b6ca7f1a0
+

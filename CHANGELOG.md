@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-118] S337 -- the fifth commit's record: `ratchet-run-1.8.1.txt` (12/12), `pr94-rewrite/README.md` §Built at S337 (with the drafted "Commit 5" paragraph, not posted, and the status line brought current), `evidence/README.md` §Added at S337, and the BL-118 detail paragraph (BUILT, not pushed)
+
+The third of four; `bin/check-links` exit 0 with every evidence file it names present; the detail proof exit 0. Nothing sent.
+
 ### 2026-10-17 · [BL-118] S337 -- the fifth commit's measurements saved: `trimmer-suite-1.8.1.txt` (203 tests OK), `field-case-1.8.0-vs-1.8.1.txt` (the four runs with their exit codes), `sweep-after-1.8.1.tsv` (46 at 0, 8 at 4, 0 at 1) and `tests-sh-1.8.1.txt` (261 passed) into `docs/planning/pr94-rewrite/evidence/`
 
 The second of this session's four evidence-and-record commits (the first carries the build's entry below); the per-commit cap of five files (`SAFEGUARDS.md`) is why the drop is split. Nothing sent.

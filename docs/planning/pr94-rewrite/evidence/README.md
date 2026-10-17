@@ -69,3 +69,28 @@ python3 -I docs/planning/pr94-rewrite/evidence/mutants_s335.py $SCRATCH/pr94wt  
 bash docs/planning/pr94-rewrite/evidence/sweep_after.sh "$SCRATCH/adopter/repo" "$SCRATCH/pr94wt/starter-kit/methodology_trim.py" "$SCRATCH/outNew" "$SCRATCH/adopter/shards.txt"
 python3 -I docs/planning/pr94-rewrite/evidence/marker_measure.py "$SCRATCH/adopter/repo"
 ```
+
+## Added at S337 (2026-10-17): the build of the fifth commit, `1082d3b`
+
+Everything below was run on 2026-10-17 against a scratch `--no-local` clone at `2308553` (then at `1082d3b`), a fresh partial clone of the #93 repository at `82433662` (`--filter=blob:none`, sparse-checked-out as `sweep.sh` does), and a clean `--no-local` clone of `1082d3b` with `core.hooksPath .githooks`. Nothing here changes the PR: the commit is on the local branch `fix/trim-verify-false-red-issue93` and in the patch below.
+
+| File | What it is |
+|---|---|
+| `0002-trim-1.8.1.patch` | The build commit `1082d3b` as a patch (`git format-patch -1`), applicable with `git am` onto `2308553`. |
+| `bl118-build.py` | The builder: refuses unless the four files it edits are the blobs `2308553` holds, applies exact-once text replacements (the version and its history paragraph, `unfinished(why)` in the template, the test class, the gate, the apparatus sentence), refuses a line over 100 characters, and writes nothing on any refusal. Takes the clone root. Its first run refused on a 102-character line of its own. |
+| `bl118-mutants.py` / `bl118-mutants-output.txt` | The mutation round on the new layer: 6 mutants, 6 killed, the intended test among the failures in every case. Takes the worktree root. |
+| `trimmer-suite-1.8.1.txt` | `python3 tools/test_methodology_trim.py` at `1082d3b`: 203 tests, OK, 2 skipped, 36 s. |
+| `field-case-1.8.0-vs-1.8.1.txt` | The field case on the #93 repository's partial clone with the promisor remote pointed at a dead path: the frozen proof and `--reverify` under 1.8.0 exit 1 (`verify: cannot read 7a55e19^:SESSION_NOTES.md`); `--reverify` under 1.8.1 exits 3 with the same reason and no `FAIL:`; the frozen proof's bytes are unchanged and it still exits 1. Four runs with their exit codes. Needs an uncached parent blob: run it before a sweep (a sweep caches the blobs) or on a fresh partial clone. |
+| `sweep-after-1.8.1.tsv` | `--reverify` exit code for each of the 54 shards under 1.8.1 (`sweep_after.sh`): 46 at 0, 8 at 4, identical row by row to `sweep-after-1.8.0.tsv`. |
+| `tests-sh-1.8.1.txt` / `ratchet-run-1.8.1.txt` | `bin/tests.sh` (261 passed, 0 failed) and `quality_ratchet.py --run` (12/12 pass · 0 fail · 0 unmeasured (results `cb7ffb255deb`, manifest `072b6ca7f1a0`; `trimmer-unit-tests` measured 203 against 203; 3 min 5 s at a load of 7.6 to 8.6)) in a clean `--no-local` clone of `1082d3b` with `core.hooksPath .githooks`: the full outputs. |
+
+Reproduce (from the repository root; `$SCRATCH` any empty directory; the #93 clone from the recipe above):
+
+```
+git clone -q --no-local . $SCRATCH/pr94c && git -C $SCRATCH/pr94c checkout -q 2308553 && git -C $SCRATCH/pr94c config core.hooksPath .githooks
+python3 -I docs/planning/pr94-rewrite/evidence/bl118-build.py $SCRATCH/pr94c           # 4 files edited, nothing committed
+(cd $SCRATCH/pr94c && python3 tools/test_methodology_trim.py)                          # 203 tests
+python3 -I docs/planning/pr94-rewrite/evidence/bl118-mutants.py $SCRATCH/pr94c          # 6 killed
+(cd $SCRATCH/adopter/repo && git remote set-url origin /nonexistent/promisor && python3 -I $SCRATCH/pr94c/starter-kit/methodology_trim.py --reverify docs/archive/SESSION_NOTES-through-2026-09-26-2.md; echo exit=$?; git remote set-url origin https://github.com/rmsharp/nprcgenekeepr.git)   # exit=3 while the parent blob is uncached
+bash docs/planning/pr94-rewrite/evidence/sweep_after.sh "$SCRATCH/adopter/repo" "$SCRATCH/pr94c/starter-kit/methodology_trim.py" "$SCRATCH/out181" "$SCRATCH/adopter/shards.txt"   # 46 at 0, 8 at 4
+```
