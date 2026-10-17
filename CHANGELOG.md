@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-118] S337 close-out -- BL-118 built on a local copy of PR #94's branch (`1082d3b`, 1.8.1: an abort before the proof's checks exits 3, not 1), not pushed (this entry resolves the claim `6a7e1ce`, which stays `in progress` above): receipt complete, the fork's gate run saved
+
+Phase 3: the predecessor's handoff (S336) scored 8 and this session 8 (both in the receipt); Phase 3C appended fork learning #109 and retired no row (D3; rows considered #62 and #30; in the fourth evidence-and-record commit `c68d732`); the receipt in `HANDOFFS.md` is complete; `bin/check-handoff`, `bin/check-ledger` and `bin/check-links` exit 0 on this tree. The fork's gate run, in a clean `--no-local` clone of `c68d732` (the last work commit; this entry's commit changes `HANDOFFS.md`, this file and adds the saved output, no code): 18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4 (1187 s, about 20 min, at a load average of 5.27, 6.19, 7.20 at the start and 5.55, 5.91, 6.38 at the end); saved as `docs/planning/pr94-rewrite/evidence/s337-fork-gate-output.txt`. The one upstream pull request's text (`upstream-pr-body.md`) is unchanged and still states both trimmers at 1.8.0 against #94's head `2308553`; it goes stale only if `1082d3b` is pushed. Nothing is sent to `KJ5HST/methodology`; the push of this session's commits to the fork `origin` (ticked at the Phase 0 picker) follows this commit and is recorded in its own entry.
+
 ### 2026-10-17 · [BL-118] S337 -- `BACKLOG.md`'s BL-118 row reads BUILT at S337, not pushed; fork learning #109 appended (an abort path inherits the language's default exit code; 1,381 B; `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` exit 0, 94 rows, 0 over 1,500 B)
 
 The fourth of four. Phase 3C's retirement rule (D3 of the retirement plan): no row retired; considered #62 (a spent exit code) and #30 (facts baked into an exported check), neither enforced by a gate or restated by a later row. The completed-items proof exit 0. Nothing sent.
