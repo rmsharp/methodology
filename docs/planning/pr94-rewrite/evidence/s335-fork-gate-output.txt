@@ -1,0 +1,29 @@
+S335 gate run: python3 starter-kit/quality_ratchet.py --run in a clean --no-local clone of 616cd46 (the last work commit before the close-out), core.hooksPath .githooks, launched with nohup and read from a done-file; 20 min 56 s at a load average of 6 to 8.5. exit 0.
+Commits after 616cd46: the close-out only (the two ledgers, the three backlog files, this file); no code changed. The branch commit 2308553 (PR #94's fourth) is on the PR branch, not on main; its own gate run is evidence/ratchet-run-1.8.0.txt.
+
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 503         503  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 218         218  pass
+  close-out-report-unit-tests            >= 82          82  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 75          75  pass
+  checker-layout-unit-tests              >= 15          15  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results d7576eaf9b5b · manifest a690abd884d4
+
