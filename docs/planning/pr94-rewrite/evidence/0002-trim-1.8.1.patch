@@ -1,0 +1,242 @@
+From 1082d3b11e6073faf5f3e6154c8816e399e7d315 Mon Sep 17 00:00:00 2001
+From: "R. Mark Sharp" <rmsharp@me.com>
+Date: Sat, 17 Oct 2026 14:08:43 -0500
+Subject: [PATCH] fix(trim): an abort before the proof's checks exits 3, not 1,
+ the FAIL code (issue #93; 1.8.1)
+
+The generated proof's show() ended in sys.exit("verify: cannot read ..."), which prints the text
+and exits 1 -- the FAIL code -- so a proof that could not read an artifact from git, and so had
+compared nothing, read as a trim that lost something. Seen once in the adopter's 54-shard
+--reverify sweep: a blob fetch from the partial clone's promisor remote failed and one shard read
+FAIL; exit 0 on the re-run. Every abort before the checks (a git show that fails, a live or shard
+file that cannot be read) now prints its reason to stderr and exits 3, the code the shell head
+already uses and the code --reverify's legend gives "the proof did not finish". Frozen proofs keep
+their bytes; --reverify renders today's template and reads 3 there. 203 tests (from 199), gate
+199 -> 203; 6 mutants killed. On the adopter's 54 proofs: 46 exit 0, 8 exit 4, every shard as
+under 1.8.0; with the promisor remote dead, --reverify reads 3 where 1.8.0 read 1.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+---
+ .quality-gates.json             |  2 +-
+ CHANGELOG.md                    | 22 +++++++++
+ FRAMEWORK_APPARATUS.md          |  4 +-
+ starter-kit/methodology_trim.py | 35 ++++++++++++--
+ tools/test_methodology_trim.py  | 82 +++++++++++++++++++++++++++++++++
+ 5 files changed, 139 insertions(+), 6 deletions(-)
+
+diff --git a/.quality-gates.json b/.quality-gates.json
+index 9444b1f..f5276f7 100644
+--- a/.quality-gates.json
++++ b/.quality-gates.json
+@@ -38,7 +38,7 @@
+     {
+       "name": "trimmer-unit-tests",
+       "direction": "min",
+-      "threshold": 199,
++      "threshold": 203,
+       "command": "python3 tools/test_methodology_trim.py",
+       "extract": "Ran (\\d+) tests"
+     },
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 4fa8dbb..42f8c92 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -44,6 +44,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
+ 
+ ## 2026-10
+ 
++### 2026-10-17 · [issue #93] An abort before the proof's checks exits 3, "the proof did not finish", not 1, the FAIL code (`TRIM_VERSION` 1.8.1)
++
++- **Action:** closes a gap the fourth commit's own sweep exposed in [issue #93](https://github.com/KJ5HST/methodology/issues/93):
++  the generated proof's `show()` ended in `sys.exit("verify: cannot read ...")`, which prints the text and exits 1, the FAIL
++  code, so a proof that could not read an artifact from git -- and so had compared nothing -- read as a trim that lost
++  something. Seen once in the 54-shard `--reverify` sweep of the adopter repository (`rmsharp/nprcgenekeepr`): a blob fetch
++  from the partial clone's promisor remote failed, `docs/archive/SESSION_NOTES-through-2026-09-26-2.md` read exit 1, and the
++  re-run read 0. In `VERIFY_TEMPLATE` every abort before the checks -- a `git show` that fails, a live or shard file that
++  cannot be read -- now goes through one `unfinished(why)`: the reason to stderr and exit 3, the code the proof's shell head
++  already uses when it cannot reach the repository root and the code `--reverify`'s legend gives "the proof did not finish".
++  Frozen proofs keep their bytes (exit 1 where they always did); `--reverify` renders today's template, so it reads 3 there.
++  Reproduced on that adopter's clone with the promisor remote pointed at a dead path: the frozen proof and `--reverify` under
++  1.8.0 both exit 1 with `verify: cannot read 7a55e19^:SESSION_NOTES.md`; under 1.8.1 `--reverify` exits 3 with the same
++  reason and no `FAIL:` line. `FRAMEWORK_APPARATUS.md`'s `--reverify` sentence gains the case. `tools/test_methodology_trim.py`:
++  `TestAnAbortBeforeTheChecksIsNotAVerdict`, 4 tests on a depth-1 clone of a trimmed repository (the trim commit's parent
++  absent: the field case, not a mock): the fixture proved first (the same proof holds where the parent is readable), the
++  frozen proof at exit 3 with its reason and neither `FAIL:` nor `OK:`, `--reverify` at exit 3, and a shard file that cannot
++  be read as the same abort; 203 tests (2 skipped), up from 199; the `trimmer-unit-tests` gate 199 → 203, a tightening; 6
++  mutants (exit 1 restored in `show()`, `unfinished()` at 1 and at 0, `readf()` unguarded, the reason unprinted, its words
++  dropped) all killed by the intended test. Measured on that adopter's 54 proofs with the remote alive: `--reverify` reads 46
++  at exit 0 and 8 at exit 4, every shard the same code as under 1.8.0. A patch release: no verdict on a readable tree changes.
++
+ ### 2026-10-16 · [issue #93] `SESSION_NOTES.md` joins the ledger table, and the proof prints the record-0 diff (`TRIM_VERSION` 1.8.0)
+ 
+ - **Action:** closes the gap the three commits above leave in [issue #93](https://github.com/KJ5HST/methodology/issues/93):
+diff --git a/FRAMEWORK_APPARATUS.md b/FRAMEWORK_APPARATUS.md
+index 0e2363a..7b2f43e 100644
+--- a/FRAMEWORK_APPARATUS.md
++++ b/FRAMEWORK_APPARATUS.md
+@@ -537,7 +537,9 @@ what the proof cannot judge. `methodology_trim.py` warns when it sees the state
+ (`FRONTIER_PENDING_STUB`, `FRONTIER_FINALIZE_UNCOMMITTED`); the warning is advisory and refuses
+ nothing. A `.verify.sh` already written is frozen and never changes; to ask what today's template
+ says about an old shard, run `methodology_trim.py --reverify <shard>` — read-only, it prints a verdict
+-that is a claim about today's logic, not about the artifact that was shipped.
++that is a claim about today's logic, not about the artifact that was shipped. A proof that cannot
++read an artifact from git (a shallow or partial clone without the trim commit's parent) exits 3
++and prints no verdict, never a `FAIL:` line; run it where the history is present.
+ 
+ **Not everything that grows can be archived this way.** Archiving moves *history*. A file that grows
+ because someone keeps adding *procedure* has no past to move — extract a section to a sibling file
+diff --git a/starter-kit/methodology_trim.py b/starter-kit/methodology_trim.py
+index c9464c9..5382d2c 100644
+--- a/starter-kit/methodology_trim.py
++++ b/starter-kit/methodology_trim.py
+@@ -52,7 +52,21 @@ import sys
+ import tempfile
+ from pathlib import Path
+ 
+-TRIM_VERSION = "1.8.0"   # 1.8.0: issue #93, the gap the first three left -- seven of the adopter's
++TRIM_VERSION = "1.8.1"   # 1.8.1: issue #93, the abort code -- a proof that could not read an
++                         # artifact from git ended in `sys.exit("verify: cannot read ...")`, which
++                         # prints the text and exits 1, the FAIL code, so a proof that had compared
++                         # nothing read as a trim that lost something (seen once in a 54-shard
++                         # `--reverify` sweep over a partial clone: one blob fetch failed and the
++                         # shard read FAIL; exit 0 on the re-run). Every abort before the checks --
++                         # a `git show` that fails, a live or shard file that cannot be read -- now
++                         # prints its reason to stderr and exits 3: the code the shell head already
++                         # uses when it cannot reach the repository root, and the code the legend
++                         # of `--reverify` gives "the proof did not finish". Patch, not minor: no
++                         # verdict on any readable tree changes, frozen proofs keep their bytes, and
++                         # `--reverify` renders today's template, so it reads 3 where a frozen
++                         # script read 1.
++                         #
++                         # 1.8.0: issue #93, the gap the first three left -- seven of the adopter's
+                          # ten failing proofs are SESSION_NOTES.md shards, a ledger the table did
+                          # not list, so no stub marker reached them and `--reverify` could print
+                          # only the generic failures. SESSION_NOTES.md joins LEDGERS: the runner's
+@@ -1502,16 +1516,29 @@ def zones(text):
+     return "".join(lines[:starts[0]]), recs, "".join(lines[foot:])
+ 
+ 
++def unfinished(why):
++    # An abort BEFORE the checks is not a verdict. `sys.exit("<text>")` prints the text and exits
++    # 1, which is this script's FAIL code, so a proof that had compared nothing read as a trim that
++    # lost something. Exit 3 is "the proof did not finish": the code the shell head above uses when
++    # it cannot reach the repository root, and the code `--reverify`'s legend gives this case.
++    sys.stderr.write("verify: %s -- the proof did not finish; this is not a verdict (exit 3)\n"
++                     % why)
++    sys.exit(3)
++
++
+ def show(ref, path):
+     p = subprocess.run(["git", "show", "%s:%s" % (ref, path)], stdout=subprocess.PIPE)
+     if p.returncode:
+-        sys.exit("verify: cannot read %s:%s" % (ref, path))
++        unfinished("cannot read %s:%s" % (ref, path))
+     return p.stdout.decode("utf-8")
+ 
+ 
+ def readf(path):
+-    with open(path, "r", encoding="utf-8", newline="") as fh:
+-        return fh.read()
++    try:
++        with open(path, "r", encoding="utf-8", newline="") as fh:
++            return fh.read()
++    except OSError as e:
++        unfinished("cannot read %s (%s)" % (path, e.strerror or e))
+ 
+ 
+ LIVE, SHARD = os.environ["LIVE"], os.environ["SHARD"]
+diff --git a/tools/test_methodology_trim.py b/tools/test_methodology_trim.py
+index 33ff654..4a36324 100644
+--- a/tools/test_methodology_trim.py
++++ b/tools/test_methodology_trim.py
+@@ -3845,5 +3845,87 @@ class TestSessionNotesIsATrimmableLedger(unittest.TestCase):
+ 
+ 
+ 
++# =============================================================================================
++# Issue #93, the abort code (the fork's BL-118). An abort BEFORE the checks is not a verdict. The
++# proof's `show()` ended in `sys.exit("verify: cannot read ...")`, which prints the text and exits
++# 1 -- the FAIL code -- so a proof that had compared nothing read as a trim that lost something.
++# Seen once in a 54-shard `--reverify` sweep over a partial clone: one blob fetch failed, the shard
++# read FAIL, and the re-run read 0. The fixture plants the field case rather than mocking it: a
++# depth-1 clone of a trimmed repository holds the trim commit and not its parent, so
++# `git show <trim>^:<ledger>` cannot be answered there and can everywhere else.
++# =============================================================================================
++
++class TestAnAbortBeforeTheChecksIsNotAVerdict(unittest.TestCase):
++
++    def _trimmed_and_shallow(self, tmp):
++        """TestReverify's fixture (make_handoff_repo, trimmed at --cut 2, committed), plus a depth-1
++        clone of it in which the trim commit is the only commit. Returns (source repo, clone, shard
++        path relative to either root, as the proof names it)."""
++        src = make_handoff_repo(str(Path(tmp) / "src"))
++        r = run_trim(src, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
++        self.assertIn("[WROTE]", r.stdout, r.stdout)
++        sh(src, "git", "add", "-A")
++        sh(src, "git", "commit", "-qm", "trim")
++        shard = sorted((src / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
++        shard = shard.relative_to(src).as_posix()
++        clone = Path(tmp) / "shallow"
++        c = sh(Path(tmp), "git", "clone", "-q", "--depth", "1", "file://" + str(src.resolve()),
++               str(clone))
++        self.assertEqual(c.returncode, 0, c.stdout)
++        return src, clone, shard
++
++    def test_control_the_fixture_is_the_field_case(self):
++        """Prove the fixture first: the clone holds exactly the trim commit, names it as the shard's
++        adding commit and cannot show its parent -- and the SAME proof holds in the full repository,
++        so the missing parent is the only difference the other tests see."""
++        with tempfile.TemporaryDirectory() as tmp:
++            src, clone, shard = self._trimmed_and_shallow(tmp)
++            self.assertEqual(sh(clone, "git", "rev-list", "--count", "HEAD").stdout.strip(), "1")
++            trim = sh(clone, "git", "log", "--diff-filter=A", "-1", "--format=%H", "--", shard)
++            self.assertEqual(trim.stdout.strip(), sh(clone, "git", "rev-parse", "HEAD").stdout.strip())
++            self.assertNotEqual(sh(clone, "git", "show", "HEAD^:HANDOFFS.md").returncode, 0,
++                                "the parent must be unreadable here, or the fixture proves nothing")
++            full = sh(src, "bash", shard + ".verify.sh")
++            self.assertEqual(full.returncode, 0, full.stdout)
++            self.assertIn("OK:", full.stdout)
++
++    def test_the_frozen_proof_exits_3_with_its_reason_and_no_verdict(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            _src, clone, shard = self._trimmed_and_shallow(tmp)
++            r = sh(clone, "bash", shard + ".verify.sh")
++            self.assertEqual(r.returncode, 3, r.stdout)
++            self.assertIn("verify: cannot read", r.stdout)
++            self.assertIn("did not finish", r.stdout)
++            self.assertNotIn("FAIL:", r.stdout, "a proof that compared nothing has no FAIL to report")
++            self.assertNotIn("OK:", r.stdout, "and no OK either: it is not a verdict")
++
++    def test_reverify_reports_the_abort_as_exit_3_not_as_a_fail(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            _src, clone, shard = self._trimmed_and_shallow(tmp)
++            r = run_trim(clone, "--reverify", shard)
++            self.assertEqual(r.returncode, 3, r.stdout)
++            self.assertIn("[REVERIFY_VERDICT]", r.stdout)
++            self.assertIn("exit 3 (0:", r.stdout, "the legend's own 3: the proof did not finish")
++            self.assertIn("verify: cannot read", r.stdout)
++            self.assertNotIn("FAIL:", r.stdout)
++
++    def test_a_shard_file_that_cannot_be_read_is_the_same_abort(self):
++        """The other read before the checks: with the trim uncommitted the proof reads the live file
++        and the shard from the working tree, and a shard that is not there is an abort, not a FAIL."""
++        with tempfile.TemporaryDirectory() as tmp:
++            p = make_handoff_repo(tmp)
++            r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
++            self.assertIn("[WROTE]", r.stdout, r.stdout)
++            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
++            ok = sh(p, "bash", str(shard) + ".verify.sh")
++            self.assertEqual(ok.returncode, 0, "control: the uncommitted trim's proof holds\n" + ok.stdout)
++            shard.unlink()
++            r = sh(p, "bash", str(shard) + ".verify.sh")
++            self.assertEqual(r.returncode, 3, r.stdout)
++            self.assertIn("verify: cannot read", r.stdout)
++            self.assertIn(shard.name, r.stdout)
++            self.assertNotIn("FAIL:", r.stdout)
++
++
+ if __name__ == "__main__":
+     unittest.main(verbosity=2)
+-- 
+2.50.1
+

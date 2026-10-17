@@ -1,0 +1,7 @@
+KILLED   show() aborts with sys.exit(text) again (exit 1)               by 2 test(s)  intended test FAILED
+KILLED   unfinished() exits 1                                           by 3 test(s)  intended test FAILED
+KILLED   unfinished() exits 0                                           by 3 test(s)  intended test FAILED
+KILLED   readf() reads without the guard                                by 1 test(s)  intended test FAILED
+KILLED   the reason line is not printed                                 by 3 test(s)  intended test FAILED
+KILLED   'did not finish' dropped from the reason                       by 1 test(s)  intended test FAILED
+6 killed, 0 survived, 0 invalid, of 6
