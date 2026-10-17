@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [ad hoc] S336 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `8c6f624`, ticked at the S336 Phase 0 picker)
+
+The trim: `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --cut 3 --force`, then `--write`: S332's receipt to `docs/archive/HANDOFFS-through-2026-10-16.md`, 4 receipts to 3 (S335, S334, S333), 46,967 B to 37,989 B; the shard's own proof exit 0 before the commit and again after the fold, `bin/check-handoff` and `bin/check-ledger` exit 0 at each. The tool printed `CUT_STRADDLES_DAY` (S333's retained receipt is also dated 2026-10-16, so the shard name is a span label, not a day boundary) and `FRONTMATTER_FIELD_ABSENT` (this file's header declares no receipt count, on purpose). The fold, in its own commit as the index's rule says: the pointer block (three lines and a blank) left `HANDOFFS.md` (37,989 B to 37,541 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-16 → 2026-10-16 | HANDOFFS-through-2026-10-16.md | v1.8.0 |`). The retention rule in the front matter still says N=2 and `--cut 2`; the S322 decision (BL-108, trim above 3) is applied here as the last three trims applied it, and the edit to the rule stays BL-108's. **Also at his tick, local only, no commit:** the stale local branch `fix/trim-verify-false-red-issue93` (at `972eb2c`) was fast-forwarded to `2308553`, the tip `origin` serves as PR #94's head (`972eb2c` is its ancestor), and the local `-v2` branch that held that tip was deleted; nothing on any remote changed. Not pushed: the trim and the fold are not ledger-only commits, so they wait for the close-out push he ticked.
+
 ### 2026-10-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-16.md` (1 record(s), 46,967 B → 37,989 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
