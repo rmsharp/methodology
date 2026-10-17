@@ -1,15 +1,15 @@
-# The rewrite of upstream PR #94's title and body — saved text, evidence, and what to improve next (S334, 2026-10-16)
+# Upstream PR #94: the rewritten title and body, the fourth commit that closes the 8-of-54 gap, and the evidence (S334 and S335, 2026-10-16)
 
-**Status: saved, NOT posted.** Upstream pull request #94 (`KJ5HST/methodology`, the fix for issue #93) is unchanged: open since 2026-10-05, tip `972eb2c`, base `upstream/main` `f34769f`, no comment or review from anyone. Editing its title or body, pushing to its branch, or commenting on it is an outward action: each one needs his explicit go-ahead (BL-98's row says so).
+**Status: the text is draft 8 and the fourth commit is built on a local branch (`2308553`); NOT pushed, NOT posted.** Upstream pull request #94 (`KJ5HST/methodology`, the fix for issue #93) is unchanged: open since 2026-10-05, tip `972eb2c`, base `upstream/main` `f34769f`, no comment or review from anyone (checked again at S335's Phase 0). Pushing to its branch, editing its title or body, or commenting on it is an outward action: each one needs his explicit go-ahead (BL-98's row says so).
 
-He asked for the rewrite on 2026-10-16 ("can PR #94 be edited to be more clear? I find it hard to read."), corrected it term by term, and then made it this session's deliverable: "Let's call the work you have done and currently finishing up serve as your deliverable. Save this rewrite for later use. In the next session, we work on improving this PR." So this directory is the deliverable of S334. The improvement is S335's.
+He asked for the rewrite on 2026-10-16 ("can PR #94 be edited to be more clear? I find it hard to read."), corrected it term by term, and then made it this session's deliverable: "Let's call the work you have done and currently finishing up serve as your deliverable. Save this rewrite for later use. In the next session, we work on improving this PR." So this directory is the deliverable of S334. S335 took his four decisions and built the fourth commit; see "Decided and built at S335" below.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `title.txt` | The proposed title, one line (the old one is quoted in the section "Posting it" below). |
-| `body.md` | The proposed body, exactly as it would be posted (draft 7, 20,651 B). |
+| `title.txt` | The proposed title, one line (the old one is quoted in the section "Posting it" below); changed at S335. |
+| `body.md` | The proposed body, exactly as it would be posted (draft 8, 27,328 B; draft 7 was 20,651 B). |
 | `original-body.md` | The body as it stood on 2026-10-16 (5,770 B), for diffing: `diff original-body.md body.md`. |
 | `evidence/` | The scripts and saved outputs behind the numbers in `body.md` and in this record. `evidence/README.md` says what each file is. |
 
@@ -47,7 +47,7 @@ Real flaws the reads found in the drafts (not wording): the text called all 10 f
 
 **Not independently established:** that the 10 failing trims lost nothing. That rests on #93's authors' hand diffs, plus the proofs' own finding that only record 0 differs. No script judges whether a replaced stub held anything of value (see the next section).
 
-## The gap he asked about: 8 of the 54 proofs still come out wrong
+## The gap he asked about at S334: 8 of the 54 proofs still came out wrong
 
 His question: "You still have erroneous results. Were you not able to develop a script that correctly classified all of the 54 proofs? Do you have a plan to close that gap?" The answer, with numbers:
 
@@ -67,30 +67,49 @@ A first marker, end-anchored (`... Work beginning\.\s*$`), caught only 3 of the 
 
 **Why D2 is not a free change:** in all 8 shards the finished record rewrites the stub's text. Apart from the identifying line or lines (the heading of a `SESSION_NOTES.md` record; the fence, `session:` and `date:` lines of a receipt), none of the stub's lines survives as a whole line in the finished record (`evidence/stub-survival-output.txt`: for example 23 of 24 stub lines are absent in the shard whose stub carried "PRE-RED investigation already found…"; in the `HANDOFFS.md` shard 11 of 15 are absent, most of them `X: pending` placeholder fields plus the reworded `active_task:` line). So no automatic "the stub's prose survives" check can certify them, and exit 0 would mean the proof certifies replaced stub prose it has not read. #93's authors judged by hand that nothing of value was lost; a proof cannot.
 
-## What to decide and build next (S335)
+## Decided and built at S335 (2026-10-16): the gap is closed on a local branch, not pushed, not posted
 
-Decisions that are his (each changes what the PR means):
+**His four decisions, at the S335 picker (each the recommended option):** (1) D2 stays as decided at S263: a recognised stub finalize is a labelled FAIL at exit 4, never exit 0. (2) A `SESSION_NOTES.md` stub marker comes from a canonical entry in the trimmer's ledger table, not from a `--reverify` option. (3) The proof prints the whole unified diff of the stub against the record that replaced it. (4) The body keeps #93's three causes where it restates the issue and describes what remains by the one finalize pattern.
 
-1. **D2.** Keep a recognised stub finalize a FAIL (exit 4), or let it pass (exit 0 with the note). #93's own suggestion allowed "an OK line with the note". The prototype says it is feasible; the cost is that the proof then certifies a replaced stub it has not read.
-2. **Where a `SESSION_NOTES.md` stub marker comes from.** (a) A `SESSION_NOTES.md` entry in the canonical ledger table (the #93 repository's own entry, `methodology_trim.py:377` at its commit `82433662`, is the starting point; this widens the canonical trimmer to a third ledger); (b) a `--stub-marker REGEX` option on `--reverify` (narrow; helps existing shards only, a trim of the file still needs a table entry); (c) neither.
-3. **Whether the proof should print the unified diff of the stub against the finished record 0.** This is the first suggestion in #93 and the PR did not implement it. With it, keeping D2 (i) still lets a reviewer confirm each of the 8 in seconds. It is independent of 1 and 2.
-4. **Framing.** BL-98's row says "Two classes, not #93's three" (2 are the L2 substring test; 8 are a close-out commit that also trims, checked mechanically). `body.md` keeps #93's three causes and explains that the cause-3 shard has the finalize pattern too. The two-class framing would shorten "What still fails".
+**Where the change is.** Local branch `fix/trim-verify-false-red-issue93-v2`, tip `2308553`, one commit on top of PR #94's tip `972eb2c` (so the PR's chain would read `68d8a06`, `965f136`, `972eb2c`, `2308553` on `upstream/main` `f34769f`). The branch exists only in this clone: a worktree under the session scratchpad built it, and the commit is in this repository's object store, reachable by the branch. The same commit as a patch, in case the branch is lost: [`evidence/0001-trim-1.8.0.patch`](evidence/0001-trim-1.8.0.patch) (`git am` onto `972eb2c`). PR #94 is unchanged (open, head `972eb2c`, no comment or review from anyone, checked at this session's Phase 0).
 
-Then the build, one session, only after the decisions: change the trimmer on a local copy of the PR branch `fix/trim-verify-false-red-issue93` (tip `972eb2c`; also on `origin`), with tests and controls (the real-loss shapes above must still fail); a mutation round on the changed layer (the fork's `docs/planning/issue93-evidence/mutants_p2.py`, layer 1, is the model); vet in a scratch clone under upstream's own hooks; re-run `evidence/sweep_after.sh` (target: all 54 as decided); update `body.md` (the "What still fails" and Summary text change); show the text to him inline before any post.
+**What the commit changes** (5 files, +537 / −10 by `git diff --numstat`): `starter-kit/methodology_trim.py` (+78 / −4: `TRIM_VERSION` 1.8.0 and its history paragraph; `_session_notes_date`; the `SESSION_NOTES.md` entry in `LEDGERS` with the two-part stub marker; the proof template imports `difflib`, computes the record that replaced record 0 whenever the frontier was edited, and prints the diff after the `FAIL:` and `NOTE:` lines); `tools/test_methodology_trim.py` (+423 / −1: `TestSessionNotesIsATrimmableLedger`, 18 tests, and two existing tests moved off the old truth that `SESSION_NOTES.md` has no entry); `FRAMEWORK_APPARATUS.md` (the timing-rule paragraph names the notes stub and the diff); `.quality-gates.json` (`trimmer-unit-tests` 181 → 199); `CHANGELOG.md` (one `[issue #93]` entry in upstream's format). The tests were written first and seen red against the unchanged tool (18 tests: 9 failures, 9 errors, all `NO_CONFIG` or a missing key), then the tool was changed.
 
-## Posting it (needs his go-ahead; read each back)
+**The marker's shape was measured before it was chosen.** On the #93 repository's seven real `SESSION_NOTES.md` stubs (record 0 at each trim commit's parent), both candidate markers, the status line alone and the status line plus the `(IN PROGRESS)` tag, match every stub and none of the seven records that replaced them (`evidence/marker-measure-output.tsv`). On the live notes files of the 12 adopters, a finished record in 3 of them still carries the status line, and 2 of those 3 records dropped the tag (`evidence/adopter-claim-lines-output.tsv`): the line alone would have called those two finished records stubs. So the marker requires both. (I first told him "4 of 12" in this session; the count that distinguishes finished records from live stubs is 3, and the comments, tests, the branch's ledger entry and the body say 3.)
 
-Check first that #94 has not moved (`gh pr view 94 -R KJ5HST/methodology --json headRefOid,comments,reviews,updatedAt`): the text states facts about tip `972eb2c` and `upstream/main` `f34769f`. Then, from the repository root:
+**Measured, at `2308553`:**
+
+| What | Result | Where |
+|---|---|---|
+| `tools/test_methodology_trim.py` | 199 tests, OK, 2 skipped, 37.5 s (181 before the commit) | `evidence/trimmer-suite-1.8.0.txt` |
+| `bin/tests.sh` in a clean `--no-local` clone under the branch's own hooks | 261 passed, 0 failed | `evidence/tests-sh-1.8.0.txt` |
+| `quality_ratchet.py --run` in that clone (upstream's 12 gates) | 12/12 pass · 0 fail · 0 unmeasured (results `28a2fdac6745`, manifest `dfb478526806`); with `bin/tests.sh` under 6 minutes at a load of 6 to 8 | `evidence/ratchet-run-1.8.0.txt` |
+| The #93 repository's 54 proofs under `--reverify` | 46 at exit 0, 8 at exit 4, 0 at exit 1 (PR tip: 46 / 1 / 7); every exit-4 output carries the label and the diff (30 to 176 diff lines) | `evidence/sweep-after-1.8.0.tsv`, `evidence/reverify-outputs-8-labelled-1.8.0.txt` |
+| This fork's 174 frozen shards under 1.7.0 and 1.8.0 | every exit code the same (169 at 0, 2 at 1, 1 at 4, 2 at 3); the diff appears in the exit-4 output and in the one exit-1 output whose record 0 was edited | `evidence/fork-shards-old-vs-new.tsv` |
+| `--check` on the 12 adopters' live notes files | 10 parse (3 to 85 records), 1 `NO_RECORDS` (a seed), 1 `GRAMMAR_MISMATCH` (another heading shape), 0 zone refusals | `evidence/adopter-check-output.txt` |
+| Mutation round on the new layer, 17 mutants | 17 killed, 0 survived; the intended test among the failures in every case; a second round added the two tests for behaviours no test named (a grammar mismatch refused loudly; the Class A arm at the root only) | `evidence/mutants_s335.py`, `evidence/mutants-s335-output.txt` |
+| `bin/sync --source local` into a fresh project | `methodology_trim.py` and `FRAMEWORK_APPARATUS.md` byte-identical, version 1.8.0; the #93 repository's edited copy still exits 2 without `--force`; after a forced sync the canonical entry reads that repository's notes file as its own entry did (42 records, same header) | `evidence/sync-test-1.8.0.txt` |
+| `git merge-tree` against PR #92's branch (`fa2bb5d`) and against `upstream/main` | no conflict for either (exit 0) | this record |
+
+**Two things to know.** (1) **The version number collides with this fork's own 1.8.0.** The fork's `starter-kit/methodology_trim.py` is already 1.8.0 (BL-101 P3, the `methodology/` directory layout, `ee89b24`), a different change that upstream does not have. The PR follows upstream's sequence (1.5.0, 1.5.1, 1.6.0, 1.7.0, 1.8.0); when the directory plan's pull request is composed on top of this one, the fork's layout change takes the next number. Not in the body: it is this fork's bookkeeping, not the maintainer's. (2) **A finding, not fixed, outside this session's scope:** the proof exits 1 when it cannot read an artifact from git (`sys.exit("verify: cannot read ...")` in the template's `show()`), the same exit code as a FAIL. The first sweep today produced exactly one such false exit 1, from a transient blob fetch failure in the partial clone ("could not fetch ... from promisor remote"); the re-run read exit 0 under both versions, and the clean re-run of all 54 is the one recorded above. A proof that did not finish should exit 3, which is what `--reverify` already promises for that case ("3: the proof did not finish"). A second small commit on the branch, or a backlog row; his call.
+
+**The text.** [`body.md`](body.md) is draft 8 (27,328 B; draft 7 was 20,651 B): the Summary and Background, a Commit 4 paragraph, "What remains, and why the 8 stay FAILs" (with a fourth table column), the Evidence and the Adopter impact changed; the rest is draft 7's. **Draft 8 has had no cold read**; his reading is the test. [`title.txt`](title.txt) changed: the new title names the three things the PR does and the file it adds to the table.
+
+## Posting it (his go-ahead for each step; read each back)
+
+The body states facts at `2308553` and `upstream/main` `f34769f`. First check that #94 has not moved (`gh pr view 94 -R KJ5HST/methodology --json headRefOid,comments,reviews,updatedAt`; the head must still be `972eb2c`). Then, from the repository root:
 
 ```
+git push origin fix/trim-verify-false-red-issue93-v2:fix/trim-verify-false-red-issue93   # a fast-forward of the PR's head branch; PR #94 moves to 2308553
+gh pr view 94 -R KJ5HST/methodology --json headRefOid --jq .headRefOid                   # read back: 2308553764174551424be1fef971a0b93dc85aff
 gh api -X PATCH repos/KJ5HST/methodology/pulls/94 \
   -f title="$(cat docs/planning/pr94-rewrite/title.txt)" \
   -F body=@docs/planning/pr94-rewrite/body.md
-gh pr view 94 -R KJ5HST/methodology --json title,body --jq '.title, (.body|length)'   # read back
+gh pr view 94 -R KJ5HST/methodology --json title,body --jq '.title, (.body|length)'   # read back: the title, and 27328
 ```
 
-The old title was: `fix(trim): generated proofs stop reading red on lossless trims, and --reverify re-derives a frozen one (refs #93)`. Use `gh api -X PATCH`, not `gh pr edit`, and read both fields back before reporting.
+The old title was: `fix(trim): generated proofs stop reading red on lossless trims, and --reverify re-derives a frozen one (refs #93)`. Use `gh api -X PATCH`, not `gh pr edit`, and read both fields back before reporting. The push and the edit are two outward actions; each is its own go-ahead.
 
 ## Scratch-only artifacts and limits
 
-The prototypes (`trim_protoA.py`, `trim_protoAB.py`) were generated by `evidence/make_prototypes.py` and are not saved; regenerate them. The #93 repository was cloned (partial, sparse) into the session scratchpad, not into this repository. Nothing was pushed or posted. The `pr94` ref used to read the PR head was removed; `git fetch upstream pull/94/head` recreates the objects.
+The S334 prototypes (`trim_protoA.py`, `trim_protoAB.py`) were generated by `evidence/make_prototypes.py` and are not saved; regenerate them. The #93 repository was cloned (partial, sparse) into each session's scratchpad, not into this repository, and is gone with the session; `evidence/README.md` has the recipe. S335's build worktree (`$SCRATCH/pr94wt`) is a worktree of this repository on the local branch `fix/trim-verify-false-red-issue93-v2`; `git worktree remove` it when done, the branch and its commit stay. A partial clone fetches blobs on demand, and one such fetch failed once in S335's first sweep (see "Two things to know"); re-run a changed verdict before believing it. Nothing was pushed or posted. The `pr94` ref used at S334 to read the PR head was removed; `git fetch upstream pull/94/head` recreates the objects.
