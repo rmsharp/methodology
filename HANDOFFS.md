@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S337
+date: 2026-10-17
+status: pending
+active_task: **BL-118, the generated proof's abort exits 3, not 1** (IN PROGRESS), taken at his Phase 0 picker: one commit on a local copy of PR #94's branch `fix/trim-verify-false-red-issue93` (`2308553`) in which the proof template's `show()` and any other abort before the checks print to stderr and exit 3 (the "did not finish" code `--reverify` promises) instead of 1 (the FAIL code); a test that plants an unreadable ref, a mutant that restores exit 1, the trimmer suite, `bin/tests.sh` and the ratchet in a clean clone, and the #93 repository's 54 proofs under `--reverify`. The commit stays local; a push to #94 is his go-ahead. Nothing is sent to `KJ5HST/methodology`. The `HANDOFFS.md` trim (`787ad83`) and its fold (`499b436`) were done before this claim.
+```
+
+```handoff
 session: S336
 date: 2026-10-17
 status: complete
