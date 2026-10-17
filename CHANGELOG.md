@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [BL-116] S335 -- push record: the correction commit `acb080a` to the fork `origin`
+
+`git push origin main`: `eff5681..acb080a`, read back with `git rev-list --left-right --count origin/main...HEAD` = `0 0`. Nothing goes to `KJ5HST/methodology`. A ledger-only push record, which his standing grant lets go to the fork unasked.
+
 ### 2026-10-17 · [BL-116] S335 -- a correction after the close-out: BL-116's id added to the §Completed items list in `BACKLOG.md`; the completed-items proof read exit 1 at `01bb954` and the script did not stop
 
 `docs/planning/BACKLOG-COMPLETED.md.verify.sh` printed `FAIL C6 reachability since the move: no id in docs/planning/BACKLOG.md for BL-116` before the backlog commit `01bb954`; the close-out script captured the exit code into its output and went on to commit and push (`1f20fb4`, `eff5681`) because nothing gated on it. Closing an item here is three edits, not two: the index row out, the id into the hand-maintained list under §Completed items, the completed row in; the second was missing. Fixed: `**BL-116**` appended to that list after `**BL-107**`; the proof now exits 0 (C1 to C6 OK). The S335 receipt's `runtime_smoke` and `what_was_done` are amended to say so (the receipt had claimed the proof exit 0). A memory note records the rule: every checker in a scripted sequence gets an explicit stop on non-zero. Pushed after this commit with its own record; his tick for the session's commits covers it.
