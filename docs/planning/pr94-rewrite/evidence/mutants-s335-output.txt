@@ -1,0 +1,18 @@
+KILLED   marker needs only the status line                              by 4 test(s)  intended test FAILED
+KILLED   marker needs only the tag                                      by 2 test(s)  intended test FAILED
+KILLED   status line not anchored at a line start                       by 2 test(s)  intended test FAILED
+KILLED   no marker for SESSION_NOTES.md                                 by 10 test(s)  intended test FAILED
+KILLED   record grammar drops the evaluation branch                     by 6 test(s)  intended test FAILED
+KILLED   record grammar drops the word boundary after Did               by 2 test(s)  intended test FAILED
+KILLED   footer declared as separator                                   by 2 test(s)  intended test FAILED
+KILLED   record date: labelled date ignored                             by 2 test(s)  intended test FAILED
+KILLED   record date: fallback dropped                                  by 2 test(s)  intended test FAILED
+KILLED   stub_pattern_for ignores the table                             by 3 test(s)  intended test FAILED
+KILLED   diff never printed                                             by 5 test(s)  intended test FAILED
+KILLED   diff printed for any missing record                            by 2 test(s)  intended test FAILED
+KILLED   diff printed only for the recognised finalize                  by 3 test(s)  intended test FAILED
+KILLED   diff reversed (after against before)                           by 3 test(s)  intended test FAILED
+KILLED   diff header line dropped                                       by 5 test(s)  intended test FAILED
+KILLED   diff lines not written                                         by 3 test(s)  intended test FAILED
+KILLED   successor is the first added record, not the one with record 0's anchor by 3 test(s)  intended test FAILED
+17 killed, 0 survived, 0 invalid, of 17

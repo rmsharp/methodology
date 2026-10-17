@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-16 · [BL-116] S335 -- the build commit as a patch, the mutation round and its output, the marker measurement's output
+
+`evidence/0001-trim-1.8.0.patch` (commit `2308553` from `git format-patch`, so the change survives the loss of the local branch; `git am` onto `972eb2c`), `evidence/mutants_s335.py` and `evidence/mutants-s335-output.txt` (17 mutants on the new layer: each part of the marker, the grammar's branches and word boundary, the footer, the date function's two steps, the table lookup, seven on the diff; 17 killed, the intended test among the failures every time; a second round added two tests for behaviours no test named), `evidence/marker-measure-output.tsv` (both markers match all 7 real stubs and none of their 7 replacements).
+
 ### 2026-10-16 · [BL-116] S335 -- the evidence scripts for the fourth commit: the marker measurement, the adopters' claim-line census, the adopters' `--check`, the fork-shard comparison
 
 `docs/planning/pr94-rewrite/evidence/`: `marker_measure.py` (the two candidate stub markers on the #93 repository's seven real stubs and their replacements), `adopter_claim_lines.py` (every record in the 12 adopters' live notes files that still carries the Phase 1B status line, and whether it keeps the tag), `adopter_check.sh` (`--check`, read-only, of a trimmer on each adopter's notes file), `fork_shards_compare.sh` (`--reverify` exit codes of two trimmer versions over this fork's frozen shards). All read-only; their outputs follow in the next commits.
