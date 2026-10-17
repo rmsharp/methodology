@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S336
+date: 2026-10-17
+status: pending
+active_task: **PR4's build session (BL-101)** (IN PROGRESS), taken at his Phase 0 picker: a 33rd commit on the local ref `pr2/candidate` (`a62bfec`) restoring the maintainer's `test_bare_dry_run_refuses_instead_of_writing` and `test_a_normal_run_still_writes` and raising `dashboard-unit-tests` 395 to 397 (his S333 decision F1), `pr4-claims.sh` re-run on the new tip with PR #94's head `2308553`, then draft 10 of `docs/planning/upstream-pr-body.md` (item (e) says two tests; decision 2 names the first-parent walk, his F2; the figures re-derived), shown inline and his answer asked. Nothing is sent to `KJ5HST/methodology`. The `HANDOFFS.md` trim (`8c6f624`), its fold (`f7edb47`) and the local branch tidy were done before this claim.
+```
+
+```handoff
 session: S335
 date: 2026-10-16
 status: complete
