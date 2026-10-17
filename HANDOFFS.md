@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S335
+date: 2026-10-16
+status: pending
+active_task: **Improve upstream PR #94, the fix for issue #93 (BL-116)** (IN PROGRESS), taken at his Phase 0 picker. First his four decisions on the 8 of the #93 repository's 54 proofs that `--reverify` still reports wrong (D2; where a `SESSION_NOTES.md` stub marker comes from; whether the proof prints the record-0 diff; the framing), then the build on a local copy of the PR branch `fix/trim-verify-false-red-issue93` (`972eb2c`): the trimmer change with tests and controls, a mutation round, a vetting in a scratch clone under upstream's own hooks, the 54-proof sweep, a new `body.md` shown inline. Nothing is sent to `KJ5HST/methodology`; a push, a body edit and a comment are each his go-ahead. The `HANDOFFS.md` trim (`a3c5c84`) and its fold (`9318b63`) were done before this claim.
+```
+
+```handoff
 session: S334
 date: 2026-10-16
 status: complete
