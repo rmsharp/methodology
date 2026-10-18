@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-120] S338 -- DECLINED by the operator at the close-out picker ("Leave it"): the fork code in PR #94's pushed test comment stays
+
+Three edits as closing an item takes: the row out of `docs/planning/BACKLOG.md`, the id into §Completed items' list, a `DECLINED` row in `BACKLOG-COMPLETED.md` (the completed-items proof exit 0, run and read), and the detail marked declined. The reasons were given with the options: one comment in a test, no behaviour; any change is a public push to #94 that notifies the maintainer; the combined pull request may supersede #94. Revisit only if #94 gets another commit for another reason. The S338 receipt in `HANDOFFS.md` now records his three answers (draft 11 approved, BL-120 declined, the push ticked). The push of fork `main` to `origin` follows, with its own push-record entry.
+
 ### 2026-10-18 · [BL-119] S338 -- his answers at the close-out picker: draft 11 APPROVED as the held text of the one upstream pull request; nothing sent
 
 Shown the exact new passages first (decision 3, the `3cba1e5` bullet, the commit-list sentence, the figure changes), he chose "Approve draft 11". The status line of `docs/planning/upstream-pr-body.md` now says APPROVED (S338 picker, 2026-10-18), replacing draft 10, which stays recoverable as `git show 8d7316e:docs/planning/upstream-pr-body.md`; the body is unchanged by this (21,486 B; `pr4-body-check.py` against `3cba1e5` exit 0 again). `bl119-record.md` §8 records the approval and that `bl119-draft11-build.py` still produces the "awaiting approval" wording (the approval is one hand edit). PR5 (the push and the opening) still waits on his two plan decisions, D1 and D4. His other two answers are in the next entry.
