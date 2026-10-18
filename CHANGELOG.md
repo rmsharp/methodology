@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-119] S338 -- push record: fork `main` pushed to the fork `origin` at his close-out tick (`7a0b473` to `871ce59`, 13 commits), head read back
+
+Pre-flight: `origin` is `https://github.com/rmsharp/methodology.git` (the fork), its `main` still `7a0b473` and an ancestor of `HEAD` (a fast-forward). `git push origin main`, exit 0; `git ls-remote origin refs/heads/main` read back `871ce594ac612c3e0f52aee4e67bf24f4855cb52`, equal to local `HEAD`. Not touched: `KJ5HST/methodology` (`upstream/main` still `f34769f`; PR #94 still at `1082d3b`, 0 comments, 0 reviews), and `pr2/candidate` and `refs/pr2/candidate-before-bl119` stay local refs (no ref of that name on `origin`). This entry is the CHANGELOG-only push record his standing grant lets go to `origin` unasked.
+
 ### 2026-10-18 · [BL-120] S338 -- DECLINED by the operator at the close-out picker ("Leave it"): the fork code in PR #94's pushed test comment stays
 
 Three edits as closing an item takes: the row out of `docs/planning/BACKLOG.md`, the id into §Completed items' list, a `DECLINED` row in `BACKLOG-COMPLETED.md` (the completed-items proof exit 0, run and read), and the detail marked declined. The reasons were given with the options: one comment in a test, no behaviour; any change is a public push to #94 that notifies the maintainer; the combined pull request may supersede #94. Revisit only if #94 gets another commit for another reason. The S338 receipt in `HANDOFFS.md` now records his three answers (draft 11 approved, BL-120 declined, the push ticked). The push of fork `main` to `origin` follows, with its own push-record entry.
