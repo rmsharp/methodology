@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-119] S338 close-out -- BL-119 closed, BL-120 raised, the receipt complete; nothing sent
+
+BL-119 closed in three edits: its row out of `docs/planning/BACKLOG.md`, its id into §Completed items' list, its completed row into `BACKLOG-COMPLETED.md` (the completed-items proof exit 0, run and read), and its detail marked DONE. **BL-120 raised** (a row and a detail paragraph): PR #94's pushed fifth commit carries the fork-only code `BL-118` in one test comment; the options are his and any change to #94 is an outward action. The receipt in `HANDOFFS.md` is `complete`: self-score 8, predecessor (S337) 8, the six requirements and the gate citation (`18/18 pass · 0 fail · 0 unmeasured · results 51eb96ff6a98 · manifest 7e1f0d1576e4`, from the clean-clone run of `5f09130`). Phase 3C: no row appended to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule (D3) was not triggered; the rows considered are named in the receipt. Open for him, asked at the close-out picker: draft 11 (approve, or keep draft 10), BL-120, and the push of fork `main` to `origin` (11 commits ahead including this one). Not pushed; `pr2/candidate` stays a local ref.
+
 ### 2026-10-18 · [BL-119] S338 -- the PR #94 record's Version note brought current, the evidence index's S338 section, and the Phase 0 dashboard row
 
 `docs/planning/pr94-rewrite/README.md`'s Version paragraph said the fork's own trimmer and the candidate "are not fixed by this commit" and that the one-PR text says both trimmers are 1.8.0; it now says what S338 did (both at 1.8.1, `5f09130` and `3cba1e5`, the text draft 11). `evidence/README.md` gains §Added at S338: every `bl119-*` file with what it is, and a reproduce block, run once exactly as written before this commit (build exit 0, 222 tests, 8 killed and 1 survived as meant). `dashboard_history.jsonl`: the row Phase 0 step 5 appended (72/100, 1 high-risk project, 2,558 commits).
