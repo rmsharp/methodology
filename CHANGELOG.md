@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-101] S339 -- his close-out picker answers: D4 stands on the corrected figures, the push of fork `main` is ticked, the full gate run is declined; nothing sent upstream
+
+Shown the corrected wait-time figures (#83 is the maintainer's own pull request; his longest wait is #84's 13.6 days; #92 at 15 days is already past it), he answered that **D4 stands: keep waiting, ask again on or after 2026-10-25** (the waiver entry above recorded the answer as first given; this entry is the confirmation, and `d1-d4-record.md` section 3 and the receipt now say so). He ticked the push of fork `main` to the fork's `origin` (five commits, `e946a101` to `2bf8c2d7`, then this entry) and declined the 18-gate run: the receipt's citation stays S338's run of `5f09130`. Nothing was posted, pushed or edited at `KJ5HST/methodology`.
+
 ### 2026-10-18 · [BL-101] S339 close-out -- D1 and D4 answered and recorded, the receipt complete; nothing sent
 
 Deliverable: his two answers to the one-pull-request plan's remaining decisions, laid out with the facts first and recorded (commit `7d00d29e`; the waiver entry above is section 7.6's "ledger says so"). The `HANDOFFS.md` receipt is `status: complete` (`bin/check-handoff` exit 0). **Phase 3E:** no runtime behaviour changed; the fast checkers exit 0 (`check-ledger`, `check-handoff`, `check-links`, `check-learnings`, the completed-items proof, the shard's proof, `pr4-body-check.py`); **the 18-gate `quality_ratchet.py --run` was NOT run** (load 18, three other sessions open), and the receipt cites S338's run of `5f09130` and says so. **Phase 3C:** no row appended to `docs/FORK_LEARNINGS.md`; rows considered #42 and #25. A wait-time figure I stated at the picker was wrong (#83 is the maintainer's own pull request) and is corrected in the record and in the waiver entry; whether his D4 answer stands is asked at the close-out picker. Nothing was posted, pushed or edited upstream.

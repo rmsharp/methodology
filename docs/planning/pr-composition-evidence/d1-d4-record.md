@@ -65,8 +65,8 @@ days is not a review wait.
 **Correction of what I said at the picker (S339).** I told him "the longest wait was #83 at 15 days, which is where #92 is now" and
 that one more week "takes #92 past the longest earlier wait". Both are wrong: #83 is the maintainer's own pull request (14.9 days,
 merged by them), the longest wait for one of his is #84's 13.6 days, and #92 is already past it. He chose the wait on that
-statement. The choice is recorded as he gave it; whether it stands on the corrected figures is asked at the S339 close-out
-picker, and the wait is date-limited so the correction costs at most a week.
+statement. The choice was recorded as he gave it. **At the S339 close-out picker he was shown the corrected figures and confirmed that it stands**
+(keep waiting, ask again on or after 2026-10-25); the wait is date-limited, so the correction costs at most a week.
 
 **What the wait is, and is not.** `CLAUDE.md` §Contributing upstream: a rule about sequence and batching, never a suspension. The wait
 has an end, **2026-10-25** (then #92 is 22 days old and #94 20). Every Phase 0 still reads `gh pr list`, `gh issue list` and
