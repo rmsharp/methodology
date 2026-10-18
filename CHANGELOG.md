@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-17.md` (1 record(s), 47,659 B → 37,944 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-17 → 2026-10-17) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-17.md`](docs/archive/HANDOFFS-through-2026-10-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-17.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,659 B → 37,944 B (−20.4%).
+
 ### 2026-10-18 · [ad hoc] S339 -- push record: fork main to the fork origin at his close-out tick (`e946a101` to `87ec7d01`), head read back
 
 `git push origin main` fast-forwarded the fork's `origin` (`rmsharp/methodology`) by six commits: the trim `37cc7717`, its fold `f2294c58`, the claim `2be18304`, the record `7d00d29e`, the close-out `2bf8c2d7` and his answers `87ec7d01`. Read back: `git ls-remote origin refs/heads/main` and `git rev-parse HEAD` both `87ec7d01`, `git rev-list --left-right --count origin/main...HEAD` `0 0`. `upstream/main` was read after the push and is still `f34769f`. Nothing was sent to `KJ5HST/methodology`.
