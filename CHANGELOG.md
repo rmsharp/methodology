@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-16-3.md` (1 record(s), 48,176 B → 37,465 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-16 → 2026-10-16) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-16-3.md`](docs/archive/HANDOFFS-through-2026-10-16-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-16-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-16-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 48,176 B → 37,465 B (−22.2%).
+
 ### 2026-10-17 · [BL-118] S337 -- push record: the two post-close-out commits to the fork `origin`, under his close-out tick for this session's commits
 
 `git push origin main`: `origin/main` b9d83c5 to `f573be2` (BL-118's closure and BL-119, the record); read back equal to `HEAD`. The fork remote only. This entry's own commit is ledger-only and is pushed under the standing grant for push records.
