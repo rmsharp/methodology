@@ -1,0 +1,23 @@
+BL-119, the pull request candidate (pr2/candidate, 3cba1e5): the field case on a depth-1 clone.
+Clone: git clone --depth 1 file://<repo> at 3cba1e5 (1 commit; the trim commit's parent is absent).
+Shard: docs/archive/CHANGELOG-through-2026-09-30.md (its proof is frozen).
+
+== 1. the frozen proof: bash docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh  -> exit 1
+fatal: invalid object name '3cba1e50d01233dc0a9f937741037d43994dbced^'.
+verify: cannot read 3cba1e50d01233dc0a9f937741037d43994dbced^:CHANGELOG.md
+
+== 2. --reverify under 1.8.0 (the old trimmer, copied into the clone)  -> exit 1
+== docs/archive/CHANGELOG-through-2026-09-30.md ==
+  [REVERIFY_BANNER] docs/archive/CHANGELOG-through-2026-09-30.md: re-derived by methodology_trim.py v1.8.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger CHANGELOG.md, record kind heading, footer separator. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename CHANGELOG.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | fatal: invalid object name '3cba1e50d01233dc0a9f937741037d43994dbced^'.
+    | verify: cannot read 3cba1e50d01233dc0a9f937741037d43994dbced^:CHANGELOG.md
+
+== 3. --reverify under 1.8.1 (the new trimmer, copied into the same clone)  -> exit 3
+== docs/archive/CHANGELOG-through-2026-09-30.md ==
+  [REVERIFY_BANNER] docs/archive/CHANGELOG-through-2026-09-30.md: re-derived by methodology_trim.py v1.8.1 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger CHANGELOG.md, record kind heading, footer separator. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename CHANGELOG.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 3 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | fatal: invalid object name '3cba1e50d01233dc0a9f937741037d43994dbced^'.
+    | verify: cannot read 3cba1e50d01233dc0a9f937741037d43994dbced^:CHANGELOG.md -- the proof did not finish; this is not a verdict (exit 3)
