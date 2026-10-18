@@ -1,6 +1,6 @@
 # BL-119: the same abort fix on fork `main` and on the pull request candidate, and draft 11 of the one-PR text (2026-10-18)
 
-**Status: BUILT and measured, nothing sent.** Session S338, resumed on 2026-10-18 after the session that claimed it (2026-10-17) stopped before landing any change. Two commits carry the fix, one on fork `main` (`5f09130`) and one on the local pull request candidate `pr2/candidate` (`3cba1e5`, its 34th commit; the old tip is pinned as `refs/pr2/candidate-before-bl119`, `cfcc713`). The one-PR text (`../upstream-pr-body.md`) is now **draft 11, not yet approved**; draft 10, which he approved, is `git show 8d7316e:docs/planning/upstream-pr-body.md`. Every number below is printed by a command whose output is saved beside this file or in `../pr94-rewrite/evidence/` (`bl119-*`).
+**Status: BUILT and measured, nothing sent.** Session S338, resumed on 2026-10-18 after the session that claimed it (2026-10-17) stopped before landing any change. Two commits carry the fix, one on fork `main` (`5f09130`) and one on the local pull request candidate `pr2/candidate` (`3cba1e5`, its 34th commit; the old tip is pinned as `refs/pr2/candidate-before-bl119`, `cfcc713`). The one-PR text (`../upstream-pr-body.md`) is now **draft 11, approved by him at the S338 close-out picker (2026-10-18)**; draft 10, which he had approved, is `git show 8d7316e:docs/planning/upstream-pr-body.md`. Every number below is printed by a command whose output is saved beside this file or in `../pr94-rewrite/evidence/` (`bl119-*`).
 
 ## 1. What was wrong, in plain words
 
@@ -73,6 +73,6 @@ Left as they were, on purpose: the evidence table's other rows (all re-measured 
 
 ## 8. Next, and his
 
-1. **Draft 11:** approve it, or keep draft 10 for now. Draft 10's text describes a branch that no longer exists (`cfcc713`, 33 commits) and a pull request that has moved on (`2308553`), so it should not be used for PR5 unchanged.
-2. **BL-120:** whether to remove the code from #94's pushed comment.
+1. **Draft 11: approved** (S338 close-out picker, 2026-10-18); it is the held text for PR5. Draft 10 described a branch that no longer exists (`cfcc713`, 33 commits) and a pull request that had moved on (`2308553`). The approval is the one hand edit to the status line; `bl119-draft11-build.py` still produces the "awaiting approval" wording.
+2. **BL-120: declined** at the same picker ("Leave it"): the comment in #94 stays; reword it only if #94 gets another commit for another reason.
 3. PR5 itself (the push and the opening) is still after D1 and D4, each his call.

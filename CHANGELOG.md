@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-119] S338 -- his answers at the close-out picker: draft 11 APPROVED as the held text of the one upstream pull request; nothing sent
+
+Shown the exact new passages first (decision 3, the `3cba1e5` bullet, the commit-list sentence, the figure changes), he chose "Approve draft 11". The status line of `docs/planning/upstream-pr-body.md` now says APPROVED (S338 picker, 2026-10-18), replacing draft 10, which stays recoverable as `git show 8d7316e:docs/planning/upstream-pr-body.md`; the body is unchanged by this (21,486 B; `pr4-body-check.py` against `3cba1e5` exit 0 again). `bl119-record.md` §8 records the approval and that `bl119-draft11-build.py` still produces the "awaiting approval" wording (the approval is one hand edit). PR5 (the push and the opening) still waits on his two plan decisions, D1 and D4. His other two answers are in the next entry.
+
 ### 2026-10-18 · [BL-119] S338 close-out -- BL-119 closed, BL-120 raised, the receipt complete; nothing sent
 
 BL-119 closed in three edits: its row out of `docs/planning/BACKLOG.md`, its id into §Completed items' list, its completed row into `BACKLOG-COMPLETED.md` (the completed-items proof exit 0, run and read), and its detail marked DONE. **BL-120 raised** (a row and a detail paragraph): PR #94's pushed fifth commit carries the fork-only code `BL-118` in one test comment; the options are his and any change to #94 is an outward action. The receipt in `HANDOFFS.md` is `complete`: self-score 8, predecessor (S337) 8, the six requirements and the gate citation (`18/18 pass · 0 fail · 0 unmeasured · results 51eb96ff6a98 · manifest 7e1f0d1576e4`, from the clean-clone run of `5f09130`). Phase 3C: no row appended to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule (D3) was not triggered; the rows considered are named in the receipt. Open for him, asked at the close-out picker: draft 11 (approve, or keep draft 10), BL-120, and the push of fork `main` to `origin` (11 commits ahead including this one). Not pushed; `pr2/candidate` stays a local ref.
