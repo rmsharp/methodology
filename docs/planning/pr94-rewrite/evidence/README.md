@@ -94,3 +94,28 @@ python3 -I docs/planning/pr94-rewrite/evidence/bl118-mutants.py $SCRATCH/pr94c  
 (cd $SCRATCH/adopter/repo && git remote set-url origin /nonexistent/promisor && python3 -I $SCRATCH/pr94c/starter-kit/methodology_trim.py --reverify docs/archive/SESSION_NOTES-through-2026-09-26-2.md; echo exit=$?; git remote set-url origin https://github.com/rmsharp/nprcgenekeepr.git)   # exit=3 while the parent blob is uncached
 bash docs/planning/pr94-rewrite/evidence/sweep_after.sh "$SCRATCH/adopter/repo" "$SCRATCH/pr94c/starter-kit/methodology_trim.py" "$SCRATCH/out181" "$SCRATCH/adopter/shards.txt"   # 46 at 0, 8 at 4
 ```
+
+## Added at S338 (2026-10-18): BL-119, the fifth commit's change on fork `main` and on the candidate
+
+The same fix as `1082d3b` (the proof's abort before its checks exits 3, not 1; `TRIM_VERSION` 1.8.1) ported onto the layout trimmer: fork `main` `5f09130` and the candidate `pr2/candidate` `3cba1e5` (its 34th commit). The record is `docs/planning/pr-composition-evidence/bl119-record.md`; the claims run on the candidate and decision 3's figures are `bl119-claims-output.txt`, `bl119-decision3.sh` and `bl119-decision3-output.txt` in that directory. The `main` outputs were saved by the session that claimed BL-119 on 2026-10-17, in a scratch clone that is gone; S338 reproduced them on 2026-10-18 in fresh clones (the mutant output and the sweep byte for byte, the suite but for its timing line).
+
+| File | What it is |
+|---|---|
+| `bl119-build.py` | The builder for a tree that carries the layout trimmer: refuses unless the four files are the blobs of the pinned commit, copies the new text blocks out of `bl118-build.py` as text, applies exact-once replacements (and the one edit `1082d3b` did not need, the template pin's mapping of the abort block), refuses a line over 100 characters, writes nothing on any refusal. `python3 bl119-build.py <clone-root> <pinned-commit>`. |
+| `bl119-mutants.py` | The mutation round: 9 mutants one at a time (the first six are `bl118-mutants.py`'s; then a template byte outside the abort block, one inside it, and one the pin normalises away, which must survive), the trimmer restored byte for byte. `python3 bl119-mutants.py <clone-root>`. |
+| `bl119-field-case.sh` | The depth-1 clone procedure as a script: the frozen proof, then `--reverify` under the old and the new trimmer. `bash bl119-field-case.sh <label> <repo> <shard> <old-trimmer> <new-trimmer> <scratch-dir>`. |
+| `fork_shards_compare.sh` | (Changed.) An optional 5th argument names the repository to sweep, so the sweep can run in a clean clone while the live tree takes commits. |
+| `bl119-main-trimmer-suite-1.8.1.txt`, `bl119-candidate-trimmer-suite-1.8.1.txt` | `python3 tools/test_methodology_trim.py`: 222 tests OK, 2 skipped, on each tree. |
+| `bl119-main-mutants-output.txt`, `bl119-candidate-mutants-output.txt` | 8 killed (each by its intended test), 1 survived as meant, 0 invalid, 0 unexpected, of 9; the two files are byte-identical. |
+| `bl119-main-field-case-1.8.0-vs-1.8.1.txt`, `bl119-candidate-field-case-1.8.0-vs-1.8.1.txt` | Frozen proof 1; `--reverify` under 1.8.0 1; under 1.8.1 3, the same reason text and no `FAIL:`. |
+| `bl119-main-fork-shards-1.8.0-vs-1.8.1.tsv`, `bl119-candidate-archived-piece-1.8.0-vs-1.8.1.tsv` | `--reverify` exit under each version: 177 pieces on `main`, equal in every row (172 at 0, 2 at 1, 2 at 3, 1 at 4); the candidate's one piece 0 and 0. |
+| `bl119-main-gate-output.txt` | `layer-verify.sh` on `5f09130` in a clean clone: ratchet 18/18, 0 unmeasured, results `51eb96ff6a98`, manifest `7e1f0d1576e4`; 23 min 1 s. |
+
+Reproduce on `main` (from the repository root; `$SCRATCH` any empty directory):
+
+```
+git clone -q --no-local . $SCRATCH/m && git -C $SCRATCH/m checkout -q 6907c53
+python3 -I docs/planning/pr94-rewrite/evidence/bl119-build.py $SCRATCH/m 6907c53    # 4 files edited, nothing committed
+(cd $SCRATCH/m && python3 tools/test_methodology_trim.py)                            # 222 tests
+python3 -I docs/planning/pr94-rewrite/evidence/bl119-mutants.py $SCRATCH/m           # 8 killed, 1 survived as meant
+```
