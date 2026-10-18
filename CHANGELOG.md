@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-101] S339 claim (in progress) -- settle D1 and D4, the two open decisions before the one upstream pull request; nothing sent
+
+CHANGELOG: pending. Taken at his Phase 0 picker answers: "Settle D1 and D4 (Recommended)" and, for the side action, "Yes, trim now (Recommended)" (done first: the trim `37cc7717` and its fold `f2294c58`, both before this claim). The deliverable: his answers to the pull-request plan's two remaining decisions (`docs/planning/upstream-pr-composition-plan.md` section 7), laid out in plain language with the facts each rests on read from the sources (the open findings and what each blocks for D1; the state of PR #92 and PR #94 for D4), then recorded. No upstream action: PR #94, PR #92, issues #93 and #95 and `upstream/main` (`f34769f`) were read-only at Phase 0 and nothing was posted, pushed or edited. The Phase 0 dashboard run (72/100, 1 high-risk flag, the same as S338) appended its line to `dashboard_history.jsonl`, which rides this claim commit.
+
 ### 2026-10-18 · [ad hoc] S339 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `37cc7717`, ticked at the S339 Phase 0 picker)
 
 The trim: `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --cut 3 --force`, then `--write`: S335's receipt to `docs/archive/HANDOFFS-through-2026-10-16-4.md`, 4 receipts to 3 (S338, S337, S336), 48,829 B to 38,541 B; the shard's own proof exit 0 before the commit, `bin/check-handoff` and `bin/check-ledger` exit 0. The dry run took 5 seconds (the earlier ones took over 2 minutes). The tool printed `SHARD_NAME_DISAMBIGUATED` (the `-4` suffix) and `FRONTMATTER_FIELD_ABSENT`, both expected. The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-16 → 2026-10-16 | HANDOFFS-through-2026-10-16-4.md | v1.8.1 |`). Taken before the session claim, as the retention rule says.

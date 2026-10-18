@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S339
+date: 2026-10-18
+status: pending
+active_task: **Settle D1 and D4, the two open decisions before the one upstream pull request (PR5)** (IN PROGRESS), taken at his Phase 0 picker answer "Settle D1 and D4 (Recommended)": D1 = may the pull request go while some of his open findings from the `methodology/` directory move stay open (waive them) or must they close first; D4 = keep waiting for the maintainer's answer on PR #92 and PR #94 (the default) or stop waiting. The deliverable is his two answers recorded in `docs/planning/upstream-pr-composition-plan.md` section 7, with the facts each rests on read from the sources. Nothing is sent to `KJ5HST/methodology`. The `HANDOFFS.md` trim (`37cc7717`) and its fold (`f2294c58`) were done before this claim.
+```
+
+```handoff
 session: S338
 date: 2026-10-18
 status: complete
