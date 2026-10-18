@@ -1,7 +1,9 @@
 #!/bin/bash
 # For every frozen shard in THIS fork: --reverify exit under the PR tip's trimmer (1.7.0) and under the changed one (1.8.0).
+# S338 (BL-119): an optional 5th argument names the repository to sweep (default: the live fork), so the
+# sweep can run in a clean clone while the live tree takes commits. Arguments 1-4 are unchanged.
 S=$1; OLD=$2; NEW=$3; OUT=$4
-cd /Users/rmsharp/Development/methodology || exit 9
+cd "${5:-/Users/rmsharp/Development/methodology}" || exit 9
 rm -f "$OUT/done" "$OUT/compare.tsv"
 for s in $(git ls-files 'docs/archive/*.md' | grep -E '/(HANDOFFS|CHANGELOG)-through-'); do
   python3 -I "$OLD" --reverify "$s" > "$OUT/$(basename $s).old.txt" 2>&1; a=$?
