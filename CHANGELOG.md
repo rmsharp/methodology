@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-16-4.md` (1 record(s), 48,829 B → 38,541 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-16 → 2026-10-16) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-16-4.md`](docs/archive/HANDOFFS-through-2026-10-16-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-16-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-16-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 48,829 B → 38,541 B (−21.1%).
+
 ### 2026-10-18 · [BL-119] S338 -- push record: fork `main` pushed to the fork `origin` at his close-out tick (`7a0b473` to `871ce59`, 13 commits), head read back
 
 Pre-flight: `origin` is `https://github.com/rmsharp/methodology.git` (the fork), its `main` still `7a0b473` and an ancestor of `HEAD` (a fast-forward). `git push origin main`, exit 0; `git ls-remote origin refs/heads/main` read back `871ce594ac612c3e0f52aee4e67bf24f4855cb52`, equal to local `HEAD`. Not touched: `KJ5HST/methodology` (`upstream/main` still `f34769f`; PR #94 still at `1082d3b`, 0 comments, 0 reviews), and `pr2/candidate` and `refs/pr2/candidate-before-bl119` stay local refs (no ref of that name on `origin`). This entry is the CHANGELOG-only push record his standing grant lets go to `origin` unasked.
