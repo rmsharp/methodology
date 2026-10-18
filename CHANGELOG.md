@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-18 · [BL-119] S338 -- the outputs for fork `main` (`5f09130`): the suite, the nine-mutant round, the field case, the 177-piece sweep
+
+Four saved outputs, `bl119-main-*` under `docs/planning/pr94-rewrite/evidence/`, written by the claimed session in a scratch clone that no longer exists. Reproduced today in fresh clones of `6907c53` plus the build: the mutant output and the sweep are byte-identical to the saved files, the suite output differs from the saved one only in its timing line, and the field case gives the same three exits (frozen proof 1, `--reverify` under 1.8.0 1, under 1.8.1 3; the commit hash in the proof's message is the clone's head). The numbers: 222 tests OK (2 skipped, as before); 8 of 9 mutants killed, each by its intended test, the ninth the equivalent change the template pin must let through; 177 archived pieces, the same exit under 1.8.0 and 1.8.1 in every one (172 at 0, 2 at 1, 2 at 3, 1 at 4).
+
 ### 2026-10-18 · [BL-119] S338 -- the builder, the mutation round, a field-case script and the sweep script's one new argument, kept as evidence
 
 Four files under `docs/planning/pr94-rewrite/evidence/`. `bl119-build.py` (ports `1082d3b`'s hunks onto a tree with the layout trimmer; refuses on drift, writes four files, no ledger entry) and `bl119-mutants.py` (nine mutants, one at a time, the trimmer restored byte for byte) were written by the claimed session before it stopped and were left untracked; both ran again today, unchanged, against fork `main` at `6907c53` and against the candidate at `cfcc713`, and refused nowhere. New: `bl119-field-case.sh`, the depth-1 clone procedure the claimed session ran by hand, as a script so it can be run for the candidate. `fork_shards_compare.sh` gains an optional 5th argument, the repository to sweep (default unchanged; arguments 1 to 4 as before), so the sweep runs in a clean clone while the live tree takes commits.

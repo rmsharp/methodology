@@ -1,0 +1,11 @@
+KILLED   show() aborts with sys.exit(text) again (exit 1)                   by 3 test(s)  intended test FAILED
+KILLED   unfinished() exits 1                                               by 4 test(s)  intended test FAILED
+KILLED   unfinished() exits 0                                               by 4 test(s)  intended test FAILED
+KILLED   readf() reads without the guard                                    by 2 test(s)  intended test FAILED
+KILLED   the reason line is not printed                                     by 4 test(s)  intended test FAILED
+KILLED   'did not finish' dropped from the reason                           by 2 test(s)  intended test FAILED
+KILLED   a template byte OUTSIDE the abort block changes                    by 1 test(s)  intended test FAILED
+KILLED   a template byte INSIDE the abort block changes (the comment's word) by 1 test(s)  intended test FAILED
+SURVIVED the indomain() return line changes, equivalently (the pin allows it)
+trimmer restored byte-for-byte: True
+8 killed, 1 survived, 0 invalid, 0 unexpected, of 9
