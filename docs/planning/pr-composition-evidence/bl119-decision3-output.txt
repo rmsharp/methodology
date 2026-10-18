@@ -1,0 +1,21 @@
+# S338 (BL-119): bash docs/planning/pr-composition-evidence/bl119-decision3.sh, 2026-10-18, with fork main at f569197f (git objects only).
+######## candidate cfcc713 against #94 at 2308553
+  the candidate: exit 1; 4 file(s), 22 region(s): .quality-gates.json=1 FRAMEWORK_APPARATUS.md=1 starter-kit/methodology_trim.py=12 tools/test_methodology_trim.py=8
+  bbe0dc3 alone: exit 1; 4 file(s), 13 region(s): .quality-gates.json=1 FRAMEWORK_APPARATUS.md=1 starter-kit/methodology_trim.py=5 tools/test_methodology_trim.py=6
+  starter-kit/methodology_trim.py: #94 adds 506 lines; absent from the candidate as exact lines: 77
+  tools/test_methodology_trim.py: #94 adds 1558 lines; absent from the candidate as exact lines: 294
+  .quality-gates.json: #94 adds 1 lines; absent from the candidate as exact lines: 1
+######## candidate cfcc713 against #94 at 1082d3b
+  the candidate: exit 1; 4 file(s), 22 region(s): .quality-gates.json=1 FRAMEWORK_APPARATUS.md=1 starter-kit/methodology_trim.py=12 tools/test_methodology_trim.py=8
+  bbe0dc3 alone: exit 1; 4 file(s), 13 region(s): .quality-gates.json=1 FRAMEWORK_APPARATUS.md=1 starter-kit/methodology_trim.py=5 tools/test_methodology_trim.py=6
+  starter-kit/methodology_trim.py: #94 adds 536 lines; absent from the candidate as exact lines: 100
+  tools/test_methodology_trim.py: #94 adds 1640 lines; absent from the candidate as exact lines: 353
+  .quality-gates.json: #94 adds 1 lines; absent from the candidate as exact lines: 1
+######## candidate 3cba1e5 against #94 at 1082d3b
+  the candidate: exit 1; 4 file(s), 22 region(s): .quality-gates.json=1 FRAMEWORK_APPARATUS.md=1 starter-kit/methodology_trim.py=12 tools/test_methodology_trim.py=8
+  bbe0dc3 alone: exit 1; 4 file(s), 13 region(s): .quality-gates.json=1 FRAMEWORK_APPARATUS.md=1 starter-kit/methodology_trim.py=5 tools/test_methodology_trim.py=6
+  starter-kit/methodology_trim.py: #94 adds 536 lines; absent from the candidate as exact lines: 77
+  tools/test_methodology_trim.py: #94 adds 1640 lines; absent from the candidate as exact lines: 295
+  .quality-gates.json: #94 adds 1 lines; absent from the candidate as exact lines: 1
+######## candidate 3cba1e5 against #92 at fa2bb5d
+  the candidate: exit 0; 0 file(s), 0 region(s):
