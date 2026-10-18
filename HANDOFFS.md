@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S340
+date: 2026-10-18
+status: pending
+active_task: **Review the backlog: the interactions between its 75 open items, where a proposed fix should change because of a neighbour, and a recommended order** (IN PROGRESS), taken at his instruction after the Phase 0 report ("review the backlog - examining interactions between BL items seeking to improve proposed changes and preferred BL item order"). The deliverable is one review document, `docs/planning/backlog-interaction-review-2026-10-18.md`; it proposes and edits no backlog file. Nothing is sent to `KJ5HST/methodology`. The `HANDOFFS.md` trim (`c099cd28`) and its fold (`3945af8f`) were done before this claim.
+```
+
+```handoff
 session: S339
 date: 2026-10-18
 status: complete
