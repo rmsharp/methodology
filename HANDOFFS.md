@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S338
+date: 2026-10-17
+status: pending
+active_task: **BL-119, the proof's abort exits 3, not 1, in the fork's own trimmer and in the candidate** (IN PROGRESS), taken at his Phase 0 picker answers ("BL-119: same abort in the fork's trimmer" and "Both trees at 1.8.1"): PR #94's fifth commit `1082d3b` (`unfinished(why)` in the proof template, the `show()` and `readf()` aborts routed through it, four tests, the apparatus sentence, the gate count) ported onto fork `main` (a fork commit, layout 1.8.0 to 1.8.1, gate 218 to 222) and onto `pr2/candidate` (a 34th commit, 1.8.0 to 1.8.1), then the one-PR text re-measured against `1082d3b` (`pr4-claims.sh` with `HEAD94=1082d3b HEAD92=fa2bb5d`). Nothing is sent to `KJ5HST/methodology`; `pr2/candidate` stays local. The `HANDOFFS.md` trim (`5f157fb`) and its fold (`7d1fae7`) were done before this claim.
+```
+
+```handoff
 session: S337
 date: 2026-10-17
 status: complete
