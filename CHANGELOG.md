@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-17 · [ad hoc] S338 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `5f157fb`, ticked at the S338 Phase 0 picker)
+
+The trim: `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --cut 3 --force`, then `--write`: S334's receipt to `docs/archive/HANDOFFS-through-2026-10-16-3.md`, 4 receipts to 3 (S337, S336, S335), 48,176 B to 37,465 B; the shard's own proof exit 0 before the commit, `bin/check-handoff` and `bin/check-ledger` exit 0. The tool printed `CUT_STRADDLES_DAY`, `SHARD_NAME_DISAMBIGUATED` (the `-3` suffix) and `FRONTMATTER_FIELD_ABSENT`, all expected. The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-16 → 2026-10-16 | HANDOFFS-through-2026-10-16-3.md | v1.8.0 |`). The retention rule in the front matter still says N=2 and `--cut 2`; the S322 decision (BL-108, trim above 3) is applied here as the last trims applied it, and the edit to the rule stays BL-108's. Not pushed: the trim and the fold are not ledger-only commits.
+
 ### 2026-10-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-16-3.md` (1 record(s), 48,176 B → 37,465 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
