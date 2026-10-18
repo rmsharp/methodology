@@ -54,7 +54,21 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.8.0"   # 1.8.0: BL-101 P3 (the methodology/ directory plan, section 7.2, coupling C7) -- a ledger
+TRIM_VERSION = "1.8.1"   # 1.8.1: issue #93, the abort code -- a proof that could not read an
+                         # artifact from git ended in `sys.exit("verify: cannot read ...")`, which
+                         # prints the text and exits 1, the FAIL code, so a proof that had compared
+                         # nothing read as a trim that lost something (seen once in a 54-shard
+                         # `--reverify` sweep over a partial clone: one blob fetch failed and the
+                         # shard read FAIL; exit 0 on the re-run). Every abort before the checks --
+                         # a `git show` that fails, a live or shard file that cannot be read -- now
+                         # prints its reason to stderr and exits 3: the code the shell head already
+                         # uses when it cannot reach the repository root, and the code the legend
+                         # of `--reverify` gives "the proof did not finish". Patch, not minor: no
+                         # verdict on any readable tree changes, frozen proofs keep their bytes, and
+                         # `--reverify` renders today's template, so it reads 3 where a frozen
+                         # script read 1.
+                         #
+                         # 1.8.0: BL-101 P3 (the methodology/ directory plan, section 7.2, coupling C7) -- a ledger
                          # may sit under methodology/. Where a shard goes and how a link is rebased now come
                          # from the DIRECTORY of the ledger being trimmed (`layout_for`): a root ledger keeps
                          # docs/archive/ and the two-level prefix, exactly as before and byte for byte; a
@@ -1546,16 +1560,29 @@ def zones(text):
     return "".join(lines[:starts[0]]), recs, "".join(lines[foot:])
 
 
+def unfinished(why):
+    # An abort BEFORE the checks is not a verdict. `sys.exit("<text>")` prints the text and exits
+    # 1, which is this script's FAIL code, so a proof that had compared nothing read as a trim that
+    # lost something. Exit 3 is "the proof did not finish": the code the shell head above uses when
+    # it cannot reach the repository root, and the code `--reverify`'s legend gives this case.
+    sys.stderr.write("verify: %s -- the proof did not finish; this is not a verdict (exit 3)\n"
+                     % why)
+    sys.exit(3)
+
+
 def show(ref, path):
     p = subprocess.run(["git", "show", "%s:%s" % (ref, path)], stdout=subprocess.PIPE)
     if p.returncode:
-        sys.exit("verify: cannot read %s:%s" % (ref, path))
+        unfinished("cannot read %s:%s" % (ref, path))
     return p.stdout.decode("utf-8")
 
 
 def readf(path):
-    with open(path, "r", encoding="utf-8", newline="") as fh:
-        return fh.read()
+    try:
+        with open(path, "r", encoding="utf-8", newline="") as fh:
+            return fh.read()
+    except OSError as e:
+        unfinished("cannot read %s (%s)" % (path, e.strerror or e))
 
 
 LIVE, SHARD = os.environ["LIVE"], os.environ["SHARD"]
