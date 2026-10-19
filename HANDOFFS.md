@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S341
+date: 2026-10-19
+status: pending
+active_task: **Answer the maintainer's comment on PR #92 (the v4.2 version notes)** (IN PROGRESS), taken at the operator's Phase 0 picker answer "Answer PR 92 (Recommended)" and the instruction left by S340 ("examine and respond to comments on PR #92 in the next session"). The deliverable is one response package, `docs/planning/pr92-response-2026-10-19.md`: his points checked against the code, the requested edits made on a local branch cut from `origin/docs/release-v4.2` and checked there, and the exact text of the reply, the PR description and the Release body, shown before anything is sent. The comment on PR #94 was read at Phase 0 and is not this session's task. **Nothing is sent to `KJ5HST/methodology`.** The `HANDOFFS.md` trim (`74054ce2`) and its fold (`557be7ee`) were done before this claim.
+```
+
+```handoff
 session: S340
 date: 2026-10-18
 status: complete
