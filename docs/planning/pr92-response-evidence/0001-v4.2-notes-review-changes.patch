@@ -1,0 +1,80 @@
+From 8a232bb76b1db0292940be1140aa0ec76cdfdf76 Mon Sep 17 00:00:00 2001
+From: "R. Mark Sharp" <rmsharp@me.com>
+Date: Mon, 19 Oct 2026 11:21:29 -0500
+Subject: [PATCH] docs(release): v4.2 notes describe only what shipped, record
+ the release, point adopters at the checkout
+
+Addresses the review of this PR:
+
+- README.md and CLAUDE.md no longer present two defects as fixed by v4.2. Running the clone's
+  manifest and the seed-relabel overwrite existed only in 9b69070 on the PR #91 branch, which is not
+  in v4.1; they were removed in fa44be6 before the merge. The bullets now say why the manifest is
+  read as data and what the refusal prevents.
+- CHANGELOG.md gains the release's own entry (tag type, commit, publish time, gate line), as v3.8,
+  v4.0 and v4.1 have.
+- The adopter line says that sync itself delivers only the 2.11.3 dashboard: nothing under bin/ is
+  distributed, so D8 reaches an adopter when they update their methodology checkout.
+- Wording: "is or lies inside .git" and "names no file (.)"; the merge date is 2026-10-02; the three
+  non-blocking points are the approval round's.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ CHANGELOG.md | 9 +++++++++
+ CLAUDE.md    | 2 +-
+ README.md    | 8 ++++----
+ 3 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 7f9e6732..0039a4ca 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -51,6 +51,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
+   (261 passed / 0 failed; ratchet 12/12). The release itself: [`CLAUDE.md` §Versioning](CLAUDE.md#versioning) v4.2
+   (pointer, not re-narrated).
+ 
++### 2026-10-03 · [ad hoc] Recorded: v4.2 tagged and released by rmsharp
++
++- **Action (non-commit):** rmsharp tagged `v4.2` at `f34769f` (a lightweight tag; v3.8–v4.1 are annotated) and
++  published its [GitHub Release v4.2](https://github.com/KJ5HST/methodology/releases/tag/v4.2) (created
++  2026-10-03T01:37:10Z, published 02:55:21Z), with the README and §Versioning entries deferred to the release
++  documentation entry above. Gate run at the tagged commit: 261 passed / 0 failed; ratchet 12/12. The tag stays at
++  `f34769f` when those notes merge: a moved tag does not reach clones that already hold it. The release:
++  [`CLAUDE.md` §Versioning](CLAUDE.md#versioning) v4.2.
++
+ ### 2026-10-03 · [ad hoc] PR #91: comment to rmsharp that his three approval points were fixed before the merge
+ 
+ - **Action (non-commit):** S39, after its close-out, with the operator's OK on the full text:
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 2bb707c1..1ae75e0d 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -121,4 +121,4 @@ Key additions by version:
+ 
+ - **v4.1:** **Fan-out to many agents becomes a named session shape — many hands, one closer, one writer per working tree.** The parallel-sessions plan (`docs/planning/parallel-sessions-plan.md`, PR #83; its twelve decisions ratified with amendments in §8A by S27 under the operator's delegation) implemented in sessions S28–S36. **(1) The contract** — `ITERATIVE_METHODOLOGY.md` §Parallel Actors: Shape A, one session with many hands (the vertical-slice gates a–d plus (e) one closer, (f) disjoint write scopes, (g) serial integration), and Shape B, many sessions on their own branches or worktrees joined by merge (`S<N>-<seq>` identities off the trunk, a merge as one action with one receipt and a merged-PR ledger check, cross-line scoring); Principle 9 gains *many hands, one closer*; **FM #29 "Shared-state interference"** appended (FMs 1–28 byte-unchanged; **the count moves 28 → 29**) with its Degradation row; a SAFEGUARDS Blast-Radius row, *one writer per working tree*; **Learning #17**. The runner and SAFEGUARDS additions were paid by reduction and measured by doubled reads: the pair reads 24,844.5 tokens, under the 25,000 read cap, where a draft the density estimate passed had read over it. **(2) The ledgers merge** — new SEED `starter-kit/gitattributes` → `.gitattributes` (`bin/_manifest.py` 29 → 30): `merge=union` for `CHANGELOG.md` and the two `.jsonl` histories, deliberately **not** `HANDOFFS.md` — measured: union fuses two prepended receipts into one block at exit 0 under git's default and `zdiff3` styles — whose conflicts resolve keep-both with `git merge-file --union --diff3`. GitHub's merge button ignores the driver (measured on probe PR #90): merge locally. New canonical-only `bin/check-ledger`, declared as a 12th gate in `.quality-gates.json`; `bin/check-handoff` refuses a key repeated in one block (a fused receipt had passed as one clean receipt) and accepts one live pending receipt per line of sessions; the canonical pre-commit hook refuses an edit to a committed `CHANGELOG.md` entry. **(3) Tools** — `context_budget.py` 1.3.1 finds a project's transcripts from a linked worktree; `DASHBOARD_VERSION` 2.11.1 → 2.11.2 (accounts for the new seed). **(4) Both shapes dogfooded** — the docs sweep ran as a Shape A fan-out (four read-only workers returning content; 0 of their claims wrong on re-derivation), and two concurrent sessions ran in linked worktrees and were merged locally (exit 0, then exit 1 on `HANDOFFS.md` alone, resolved by the recipe); the one defect they found — a merging session's early claim failing every concurrent line's receipt check — is the per-line pending rule above. Housekeeping: `CHANGELOG.md` trimmed into `docs/archive/`, PR #77 backfilled. **Not in this release:** D8 (`--source=github` iterates the source's manifest) awaits review in PR #91. **Adopters** receive the flight-manual section, runner and SAFEGUARDS changes and the `.gitattributes` seed — only where no `.gitattributes` exists, otherwise `BOOTSTRAP.md` Step 10 gives the three lines; the `HANDOFFS.md` seed's new paragraph reaches new projects only, and the rule it states lives in the synced flight manual. `bin/tests.sh` 215 → 243. **No phase, no quality gate of the twelve, no workstream change; Principle 9 amended by one paragraph and Phase 1 step 4 by one clause; the failure-mode count moves 28 → 29.** Shipped as annotated tag + GitHub Release `v4.1`.
+ 
+-- **v4.2:** **`--source=github` installs from the source's own manifest** — D8 of the parallel-sessions plan, the item v4.1 left out (PR #91, rmsharp's review: three non-blocking points, all addressed before merge on 2026-10-03). `bin/sync` and `bin/status` read the manifest of the repository they clone instead of this checkout's, so a source newer than the checkout installs its own file list. **The manifest is read as data, never run:** new `bin/_manifest_reader.py` parses the clone's `bin/_manifest.py` with `ast` and takes `DISTRIBUTION`, `SEED_FORMAT_MARKERS` and the two label strings as literals, which is why `_manifest.py` is documented as literal data, one plain assignment per name. **Unsafe rows are refused before anything is written:** a disposition other than this checkout's `tracked` or `seed` stops the run and names the rows (a source labelling seeds differently had overwritten an adopter's `CHANGELOG.md` at exit 0 with no `--force`; `bin/status` read an unknown label as a seed and under-reported drift, and now refuses the same way); a `src` or `dest` that is absolute, has a drive letter, climbs out with `..`, is `.git` or `.`, or contains a NUL byte is refused, as is a manifest that changes a name it binds. `DASHBOARD_VERSION` 2.11.2 → 2.11.3 (dotfile names in `CONFIG_EXTS` are categorized as config). `bin/tests.sh` 243 → 261 (new Tests 32 and 34); the declared gates stay at 12. **No phase, failure mode, quality gate, or workstream change.** **Adopters:** re-run `bin/sync`; an unreadable source manifest now stops with one line and a hint (`--source=local`) and writes nothing. Shipped as tag + GitHub Release `v4.2`, tagged at `f34769f`.
++- **v4.2:** **`--source=github` installs from the source's own manifest** — D8 of the parallel-sessions plan, the item v4.1 left out (PR #91; rmsharp's approval left three non-blocking points, all addressed before the merge on 2026-10-02). `bin/sync` and `bin/status` read the manifest of the repository they clone instead of this checkout's, so a source newer than the checkout installs its own file list. **The manifest is read as data, never run:** new `bin/_manifest_reader.py` parses the clone's `bin/_manifest.py` with `ast` and takes `DISTRIBUTION`, `SEED_FORMAT_MARKERS` and the two label strings as literals, which is why `_manifest.py` is documented as literal data, one plain assignment per name. **Unsafe rows are refused before anything is written:** a disposition other than this checkout's `tracked` or `seed` stops the run and names the rows (without it, a source labelling seeds differently would have its seeds written over an adopter's own copies; `bin/status` refuses the same way); a `src` or `dest` that is absolute, has a drive letter, climbs out with `..`, is or lies inside `.git`, names no file (`.`), or contains a NUL byte is refused, as is a manifest that changes a name it binds. `DASHBOARD_VERSION` 2.11.2 → 2.11.3 (dotfile names in `CONFIG_EXTS` are categorized as config). `bin/tests.sh` 243 → 261 (new Tests 32 and 34); the declared gates stay at 12. **No phase, failure mode, quality gate, or workstream change.** **Adopters:** update your methodology checkout, then re-run `bin/sync` (sync itself delivers only the 2.11.3 dashboard); with the updated checkout, an unreadable source manifest stops with one line and a hint (`--source=local`) and writes nothing. Shipped as tag + GitHub Release `v4.2`, tagged at `f34769f`.
+diff --git a/README.md b/README.md
+index a6248516..e1b37bb7 100644
+--- a/README.md
++++ b/README.md
+@@ -289,12 +289,12 @@ The framework is agent-independent — it works with any AI coding agent that su
+ 
+ **`--source=github` installs from the source's own manifest.** The item v4.1 left out ([#91](https://github.com/KJ5HST/methodology/pull/91)): `bin/sync` and `bin/status` now install and compare against the manifest of the repository they clone, not this checkout's, so a source newer than your checkout is installed with its own file list.
+ 
+-- **The manifest is read as data, never run** — new `bin/_manifest_reader.py` parses the clone's `bin/_manifest.py` with `ast` and reads its constants as literals; code in a cloned manifest no longer runs during a sync. `bin/_manifest.py` is documented as literal data, one plain assignment per name.
+-- **Unsafe rows are refused before anything is written** — a row whose disposition is not `tracked` or `seed` stops the run and names the rows. This closes a defect where a source that labelled seeds differently could overwrite an adopter's own `CHANGELOG.md` with exit 0 and no `--force`; `bin/status` had the mirror-image bug and now refuses the same way.
+-- **Path checks** — a `src` or `dest` that is absolute, has a drive letter, climbs out with `..`, is `.git` or `.`, or contains a NUL byte is refused, as is a manifest that changes a name it binds.
++- **The manifest is read as data, never run** — because the source's manifest now decides what is written and where, new `bin/_manifest_reader.py` parses it with `ast` and reads its constants as literals. `bin/_manifest.py` is documented as literal data, one plain assignment per name.
++- **Unsafe rows are refused before anything is written** — a row whose disposition is not `tracked` or `seed` stops the run and names the rows. Without this, a source that labelled seeds differently would have its seeds written over an adopter's own copies. `bin/status` refuses the same way.
++- **Path checks** — a `src` or `dest` that is absolute, has a drive letter, climbs out with `..`, is or lies inside `.git`, names no file (`.`), or contains a NUL byte is refused, as is a manifest that changes a name it binds.
+ - **Dashboard 2.11.3** — dotfile names listed in `CONFIG_EXTS` are categorized as config.
+ 
+-**Updating.** Re-run `bin/sync`. A source whose manifest cannot be read stops with one line and a hint (`--source=local` syncs from a full checkout) and writes nothing.
++**Updating.** Update your methodology checkout, then re-run `bin/sync`; sync itself delivers only the 2.11.3 dashboard. With the updated checkout, a source whose manifest cannot be read stops with one line and a hint (`--source=local` syncs from a full checkout) and writes nothing.
+ 
+ **No phase, failure mode, quality gate, or workstream change.** `bin/tests.sh` 243 → 261; declared gates stay at 12.
+ 
+-- 
+2.56.0
+

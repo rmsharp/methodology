@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S341 -- PR #92 response, evidence 1 of 3: the patch of the local edit commit, the claim-check script and its output, the gate output; nothing sent
+
+The maintainer's comment on PR #92 asked for three edits and a tag answer. `8a232bb7` (local branch `docs/release-v4.2`, cut from `origin/docs/release-v4.2` `fa2bb5d`, NOT pushed) makes them; its patch is saved here. `verify-claims.sh` re-derives each factual claim of the comment from git alone (read-only): all hold. The gate on `8a232bb7` in a clean `--no-local` clone: 12/12 pass, results `10df8059439f`, manifest `5986cf638fb1` (the pair the maintainer reports), `bin/tests.sh` 261 passed / 0 failed. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-19 · [ad hoc] S341 claim (in progress) -- answer the maintainer's comment on PR #92 (the v4.2 version notes): fix the text on a local copy of the PR branch and draft the reply; nothing sent
 
 CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "Answer PR 92 (Recommended)" and "Yes, trim first (Recommended)" (the trim `74054ce2` and its fold `557be7ee` done first). The deliverable: one response package to the maintainer's comment on PR #92 (`issuecomment-6257621669`, 2026-10-19T01:19:30Z), in `docs/planning/pr92-response-2026-10-19.md`: each of the maintainer's points checked against the code (done at Phase 0; every one holds), the three requested edits and the three small ones made on a local branch cut from `origin/docs/release-v4.2` (`fa2bb5d`) and checked there, and the exact text of the reply comment, the edited PR description and the edited Release body, shown to the operator before anything is sent. The comment on PR #94 (`issuecomment-6258571753`) was read in full at Phase 0 and is not this session's task. Nothing sent to `KJ5HST/methodology`: no push to the PR branch, no comment, no edit of the PR description or the published Release, no tag change. The Phase 0 dashboard run (72/100, 1 high-risk flag, as before) appended its line to `dashboard_history.jsonl`, which rides this claim commit.

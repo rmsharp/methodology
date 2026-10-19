@@ -1,0 +1,35 @@
+== 1. The two defects existed only in 9b69070 (PR #91 branch), never in v4.1
+9b69070 ancestor of v4.1: exit 1 (0 = yes, 1 = no)
+9b69070 ancestor of v4.2: exit 0 (0 = yes, 1 = no)
+-- v4.1 bin/sync imports the checkout's own manifest (:15) and iterates it (:297)
+from _manifest import DISTRIBUTION, TRACKED, SEED  # noqa: E402  (bin/ on sys.path)
+    for src, dest, disp in DISTRIBUTION:
+-- v4.1 bin/status does the same (:28, :254)
+from _manifest import DISTRIBUTION, TRACKED, SEED_FORMAT_MARKERS  # noqa: E402  (bin/ on sys.path)
+    for src, _dest, disp in DISTRIBUTION:
+-- bin/_manifest_reader.py exists in v4.1? (no output = no)
+(absent)
+-- 9b69070's bin/sync executes the clone's manifest
+125:    spec = importlib.util.spec_from_file_location("_source_manifest", str(path))
+128:    spec.loader.exec_module(module)
+== 2. Release-entry precedents, and the rule that each non-commit action gets its own entry
+164:### 2026-10-01 · [ad hoc] v4.1 tagged and released
+576:### 2026-10-01 · [ad hoc] v4.0 tagged and released
+592:### 2026-10-01 · [ad hoc] Recorded: v3.8 tagged and released by rmsharp on 2026-09-30
+439:hook checks, so each commit carries its own entry, and each non-commit action gets one of its own.
+== 3. Nothing under bin/ is distributed; the only distributed file changed v4.1..v4.2
+DISTRIBUTION rows: 30
+sources under bin/: []
+changed v4.1..v4.2 and distributed: ['starter-kit/methodology_dashboard.py']
+v4.1 DASHBOARD_VERSION = "2.11.2"
+v4.2 DASHBOARD_VERSION = "2.11.3"
+== 4. The tag: v4.2 lightweight, v3.8-v4.1 annotated; v3.8's tag stayed put while its docs landed in 2f911c9
+v3.8 tag 6b29d3df
+v4.0 tag 2f911c98
+v4.1 tag 1e018d18
+v4.2 commit 
+2f911c9 2026-10-01T16:52:34-04:00 docs(release): v4.0 — CLAUDE.md §Versioning and README What's New for v3.8 and v4.0
+== 5. Small points
+    if any(part.lower() == ".git" for part in parsed.parts):
+        return "is inside .git"
+merge e107356 committed 2026-10-02T21:25:24-04:00
