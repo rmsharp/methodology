@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S341 -- PR #92 response, evidence 2 of 3: the reply comment and the PR description, before and after; nothing sent
+
+`reply-comment.md` is the text to post; `pr92-body-current.md` is the PR description as published (read-only fetch) and `pr92-body-new.md` replaces its tag paragraph (the tag stays at `f34769f`), its ledger-entry count and its review-changes paragraph. Both outward texts were scanned for fork-only terms (BL-, session numbers, the fork): none. Nothing sent.
+
 ### 2026-10-19 · [ad hoc] S341 -- PR #92 response, evidence 1 of 3: the patch of the local edit commit, the claim-check script and its output, the gate output; nothing sent
 
 The maintainer's comment on PR #92 asked for three edits and a tag answer. `8a232bb7` (local branch `docs/release-v4.2`, cut from `origin/docs/release-v4.2` `fa2bb5d`, NOT pushed) makes them; its patch is saved here. `verify-claims.sh` re-derives each factual claim of the comment from git alone (read-only): all hold. The gate on `8a232bb7` in a clean `--no-local` clone: 12/12 pass, results `10df8059439f`, manifest `5986cf638fb1` (the pair the maintainer reports), `bin/tests.sh` 261 passed / 0 failed. Nothing sent to `KJ5HST/methodology`.
