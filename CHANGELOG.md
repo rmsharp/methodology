@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S341 -- PR #92 response, evidence 3 of 3: the response document and the Release body, before and after; nothing sent
+
+`docs/planning/pr92-response-2026-10-19.md` holds the checks, the change, the order of the four outward steps (push, description, Release body, comment; each read back before the next) and what is open (PR #94's comment). `release-v4.2-current.md` is the published Release body and `release-v4.2-new.md` replaces the three sentences, the path-check line and the Updating line; the tag is untouched. Nothing sent.
+
 ### 2026-10-19 · [ad hoc] S341 -- PR #92 response, evidence 2 of 3: the reply comment and the PR description, before and after; nothing sent
 
 `reply-comment.md` is the text to post; `pr92-body-current.md` is the PR description as published (read-only fetch) and `pr92-body-new.md` replaces its tag paragraph (the tag stays at `f34769f`), its ledger-entry count and its review-changes paragraph. Both outward texts were scanned for fork-only terms (BL-, session numbers, the fork): none. Nothing sent.
