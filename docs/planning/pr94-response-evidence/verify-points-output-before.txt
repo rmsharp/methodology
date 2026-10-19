@@ -1,0 +1,37 @@
+trimmer: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/21894c74-104b-41ca-864e-bd1af13d6b20/scratchpad/pr94-wt/starter-kit/methodology_trim.py
+
+== 4a  trim committed alone while record 0 is a pending stub
+   trimmer printed FRONTIER_PENDING_STUB: True
+   proof exit: 0
+   OK: L1, L2/front-matter, L3 hold for docs/archive/HANDOFFS-through-2026-01-04.md
+
+== 4b  an ACTIVE TASK (front matter) edit in the trim commit
+   trimmer printed [L2_OK]: True
+   proof exit: 1
+   FAIL: L2 FRONT MATTER lost 1 line(s), first: 'ACTIVE TASK: alpha'
+
+== 5   a complete record 0 that LOST data, with a stray `status: pending` line in the parent
+   proof exit: 4 (4 = labelled a recognised stub finalize; 1 = a plain FAIL)
+   FAIL: record 0 was a pending stub (34284 B) and was finalized in the trim commit; the other 5 record(s) are byte-identical across the move, in order, and L2 holds
+   NOTE: exit 4, not 1: a recognised stub finalize is NAMED, but it is still a FAIL, because a real loss can have this exact shape too. The proof certifies that nothing but record 0 changed and that reco
+   DIFF: record 0, before the trim commit (-) against the record that replaced it (+), 19 line(s):
+
+== 6   a passing proof whose PREFIX is "../"
+   frozen proof as written: exit 0
+   --reverify: exit 1
+     [REVERIFY_BANNER] archive/CHANGELOG-through-2026-01-28.md: re-derived by methodology_trim.py v1.8.1 from the grammar lifted out of its frozen proof (written by v1.8.1): ledger CHANGELOG.md, record k
+     [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+
+== 7   a carriage return in the frozen proof's RECORD_START line
+   --reverify exit: 1 (1 = read as a FAIL; 3 = the proof did not finish)
+     [REVERIFY_BANNER] docs/archive/HANDOFFS-through-2026-01-04.md: re-derived by methodology_trim.py v1.8.1 from the grammar lifted out of its frozen proof (writt
+     [REVERIFY_VERDICT] exit 1 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own out
+       | SyntaxError: unterminated string literal (detected at line 5)
+
+== 8   record 0 edited AND two archived records reordered, in one trim commit
+   proof exit: 1
+   FAIL: L1 records-zone concatenation is not byte-identical
+   FAIL: L3 1 record(s) present before the trim are MISSING from live+shard afterwards
+   NOTE: the only missing record is the frontier one (position 0, newest), and an added record carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record
+   DIFF: record 0, before the trim commit (-) against the record that replaced it (+), 11 line(s):
+   names a reorder anywhere in the output: False

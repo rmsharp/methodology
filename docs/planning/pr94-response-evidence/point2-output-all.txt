@@ -1,0 +1,12 @@
+trimmer: up_trim.py
+frozen proof   : exit 0, planted modules that ran: ['subprocess']
+--reverify     : exit 2, planted modules that ran: none
+
+trimmer: pr94-wt/starter-kit/methodology_trim.py
+frozen proof   : exit 0, planted modules that ran: ['difflib', 'subprocess']
+--reverify     : exit 0, planted modules that ran: ['difflib', 'subprocess']
+
+trimmer: r2-wt/starter-kit/methodology_trim.py
+frozen proof   : exit 0, planted modules that ran: none
+--reverify     : exit 0, planted modules that ran: none
+

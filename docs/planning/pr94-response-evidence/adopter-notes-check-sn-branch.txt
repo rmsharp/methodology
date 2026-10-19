@@ -1,0 +1,12 @@
+airqino                    methodology/SESSION_NOTES.md exit=0 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+chat_verification          methodology/SESSION_NOTES.md exit=1 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+church_growth              methodology/SESSION_NOTES.md exit=1 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+claude_work                SESSION_NOTES.md             exit=0 codes: NO_RECORDS 
+dalia_martinez_funeral     SESSION_NOTES.md             exit=0 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+feedback-loop-comparison   methodology/SESSION_NOTES.md exit=3 codes: GRAMMAR_MISMATCH 
+model_project_constructor  SESSION_NOTES.md             exit=1 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+mts-system                 SESSION_NOTES.md             exit=0 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+nprcgenekeepr              methodology/SESSION_NOTES.md exit=0 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+Philippians                SESSION_NOTES.md             exit=0 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 
+vscode_quarto_ext          methodology/SESSION_NOTES.md exit=0 codes: TRIGGER_READ TRIGGER_BYTES SRF CHECK 
+wsfct                      SESSION_NOTES.md             exit=1 codes: TRIGGER_READ TRIGGER_BYTES SRF_UNDEFINED CHECK 

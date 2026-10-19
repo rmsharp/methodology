@@ -1,0 +1,15 @@
+trimmer: sn-wt/starter-kit/methodology_trim.py
+
+== 1. each stub marker searched over a 400,000-line record with no marker in it
+   CHANGELOG.md     declares no marker
+   HANDOFFS.md      0.134 s, matched: False
+   SESSION_NOTES.md 0.172 s, matched: False
+
+== 2. a symlink where the proof reads a file
+   shard is a symlink, trim uncommitted: proof exit 0; last line: OK: L1, L2/front-matter, L3 hold for docs/archive/HANDOFFS-through-2026-01-04.md
+   shard is a symlink, trim committed  : proof exit 1; last line: FAIL: L3 4 record(s) present before the trim are MISSING from live+shard afterwards
+   live  is a symlink, trim uncommitted: proof exit 0; last line: OK: L1, L2/front-matter, L3 hold for docs/archive/HANDOFFS-through-2026-01-04.md
+   live  is a symlink, trim committed  : proof exit 1; last line: FAIL: L3 2 record(s) present before the trim are MISSING from live+shard afterwards
+
+== 3. repo-local git config that would run a program
+   proof exit 0; a configured program ran: False

@@ -1,0 +1,4 @@
+CHANGELOG-through-2026-10-14.md	as written 0	PR head --reverify 1	fixed --reverify 3
+  [REVERIFY_NOT_LIFTABLE] CHANGELOG-through-2026-10-14.md.verify.sh: PREFIX is "../" in the frozen proof; this tool's template writes "../../" (a shard two directories below the root): the shard's links were rebased for a different depth, so re-deriving it here would be a verdict about neither
+HANDOFFS-through-2026-10-14.md	as written 0	PR head --reverify 0	fixed --reverify 3
+  [REVERIFY_NOT_LIFTABLE] HANDOFFS-through-2026-10-14.md.verify.sh: PREFIX is "../" in the frozen proof; this tool's template writes "../../" (a shard two directories below the root): the shard's links were rebased for a different depth, so re-deriving it here would be a verdict about neither

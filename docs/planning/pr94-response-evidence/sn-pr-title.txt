@@ -1,0 +1,1 @@
+feat(trim): add SESSION_NOTES.md to the trimmer's ledger table (issue #93)

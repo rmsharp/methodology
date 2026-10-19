@@ -1,0 +1,4 @@
+trimmer: r2-wt/starter-kit/methodology_trim.py
+proof exit: 1
+FAIL: HANDOFFS.md is absent from cffec9c646ff4a7911e1712e53efe6a72b3eca34, a commit this clone can read: there is nothing to account for the records against
+(script exit 0)

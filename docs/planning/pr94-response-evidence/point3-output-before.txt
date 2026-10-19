@@ -1,0 +1,27 @@
+trimmer: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/21894c74-104b-41ca-864e-bd1af13d6b20/scratchpad/pr94-wt/starter-kit/methodology_trim.py
+
+== A  runner-shaped notes file, 123325 B, 1308 lines
+   context_budget --status: exit 2
+        SESSION_NOTES.md                     123,325 B   120,000 B  [31mover[0m
+        [31m[1mSESSION_NOTES.md[0m — 123,325 B exceeds the 120,000 B ceiling by 3,325
+        [31m[1mSESSION_NOTES.md[0m — 1,309 lines exceeds the 400 line ceiling
+        [31m[1mSESSION_NOTES.md[0m — 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+        [31m[1mSESSION_NOTES.md[0m — ≈42,090 tokens exceeds the 25,000-token ceiling by 17,090 — at 2.9300 B/token (config)
+        [31m[1mSESSION_NOTES.md[0m — pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
+   methodology_trim --check: exit 0
+      == SESSION_NOTES.md ==
+        [TRIGGER_READ] 123,325 B against a 196,608 B Class A archive threshold (this file is a ROOT ledger the trimmer can act on, so the arm is denominated against the 262,144 B hard refusal, not against the one-read cap). FOR REFERENC
+        [TRIGGER_BYTES] 123,325 B against a 196,608 B budget
+        [SRF_UNDEFINED] no prior archive — SRF is undefined before a ledger's first archive (H3's own stated limit). Abstaining rather than computing a zero.
+        [CHECK] trigger does not fire
+
+== B  249840 B; the newest 135 of 160 records say `did` (lowercase), the other 25 say `Did`
+   methodology_trim dry run: exit 0
+      == SESSION_NOTES.md ==
+        [TRIGGER_READ] 249,840 B against a 196,608 B Class A archive threshold (this file is a ROOT ledger the trimmer can act on, so the arm is denominated against the 262,144 B hard refusal, not against the one-read cap). FOR REFERENC
+        [TRIGGER_BYTES] 249,840 B against a 196,608 B budget
+        [SRF_UNDEFINED] no prior archive — SRF is undefined before a ledger's first archive (H3's own stated limit). Abstaining rather than computing a zero.
+        [L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+        [L2_OK] zones pinned; front-matter diff confined to declared changes
+        [L3_OK] 25 record(s) partitioned; every one byte-identical across the move
+        [DRY_RUN] would archive 24 of 25 record(s) (2026-01-02 → 2026-01-25) to docs/archive/SESSION_NOTES-through-2026-01-25.md; live 249,840 B → 213,031 B. Nothing written — pass --write.

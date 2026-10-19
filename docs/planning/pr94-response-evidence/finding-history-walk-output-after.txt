@@ -1,0 +1,4 @@
+trimmer: r2-wt/starter-kit/methodology_trim.py
+control (store intact)           : exit 0, OK: L1, L2/front-matter, L3 hold for docs/archive/HANDOFFS-through-2026-01-04.md
+parent's root tree missing       : exit 3, verify: cannot walk the history for docs/archive/HANDOFFS-through-2026-01-04.md -- the proof did not finish; t
+   the proof says it compared: False
