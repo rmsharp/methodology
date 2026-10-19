@@ -1,7 +1,8 @@
+NOTE: the commit hashes below are the current ones. Every round here was run on the trees of the commits before a one-line comment was reworded in commit 6 (which replayed commits 6 to 14); the trees differ only in that comment line, so the rounds stand. The old hashes are on the local branches pr94-r2-before-reword and pr94-sn-before-reword.
 Mutation rounds for the review-response commits. Each block: the commit, then every mutant with KILLED or SURVIVED and the first failing test.
 A mutant is KILLED when the tests named for the round fail with it applied. Run by scratchpad/mutate.py (applies one textual change, runs the named test classes, restores the file).
 
-=== 909eafb  point 1: exit 3 only for an unreadable ref or object
+=== 38419e9  point 1: exit 3 only for an unreadable ref or object
 KILLED    absent() exits 3 instead of 1   FAIL: test_a_live_ledger_missing_from_the_working_tree_is_a_fail_with_the_trim_uncommitted (__main__.TestAPathMissingFromAReadableCommitIsAFail)
 KILLED    absent() prints no FAIL line   FAIL: test_a_live_ledger_missing_from_the_working_tree_is_a_fail_with_the_trim_uncommitted (__main__.TestAPathMissingFromAReadableCommitIsAFail)
 KILLED    a path missing from a readable tree is the abort again   FAIL: test_a_trim_commit_that_also_deletes_the_live_ledger_is_a_fail_not_an_abort (__main__.TestAPathMissingFromAReadableCommitIsAFail)
@@ -12,13 +13,13 @@ KILLED    an unreadable blob is a FAIL   FAIL: test_a_blob_this_clone_cannot_rea
 KILLED    an unreadable ref is a FAIL   FAIL: test_a_ref_this_clone_cannot_read_is_still_the_abort (__main__.TestAPathMissingFromAReadableCommitIsAFail)
 restored; 8 mutants, 8 killed, 0 survived
 
-=== 8aa6da7  point 2: python3 -I -
+=== 159e600  point 2: python3 -I -
 KILLED    the proof runs plain `python3 -` again   FAIL: test_a_proof_written_now_runs_no_planted_module (__main__.TestAPlantedModuleDoesNotRunInTheProof)
 KILLED    `-E` (ignore PYTHON* only) instead of `-I`   FAIL: test_a_proof_written_now_runs_no_planted_module (__main__.TestAPlantedModuleDoesNotRunInTheProof)
 KILLED    `-s` (no user site) instead of `-I`   FAIL: test_a_proof_written_now_runs_no_planted_module (__main__.TestAPlantedModuleDoesNotRunInTheProof)
 restored; 3 mutants, 3 killed, 0 survived
 
-=== 5aaebdb  point 5: the HANDOFFS stub marker scoped to its fence
+=== 261a7b2  point 5: the HANDOFFS stub marker scoped to its fence
 KILLED    the old whole-record marker is back   FAIL: test_a_complete_receipt_is_not_a_stub_whatever_follows_its_fence (__main__.TestTheHandoffsStubMarkerIsScopedToItsFence)
 KILLED    the fence-closing guard is dropped   FAIL: test_a_complete_receipt_is_not_a_stub_whatever_follows_its_fence (__main__.TestTheHandoffsStubMarkerIsScopedToItsFence)
 KILLED    trailing space and CR no longer tolerated   FAIL: test_a_trailing_space_or_a_crlf_ending_still_marks_it (__main__.TestTheHandoffsStubMarkerIsScopedToItsFence)
@@ -27,26 +28,26 @@ KILLED    the start anchor is dropped   FAIL: test_a_complete_receipt_is_not_a_s
 KILLED    the line-start requirement is dropped   FAIL: test_the_proofs_grammar_carries_the_ledgers_stub_pattern (__main__.TestVerifyShNamesAStubFinalize)
 restored; 6 mutants, 6 killed, 0 survived
 
-=== c7785c9  point 6: --reverify refuses a PREFIX it cannot honour
+=== ec4e7df  point 6: --reverify refuses a PREFIX it cannot honour
 KILLED    any PREFIX value is accepted   FAIL: test_a_prefix_of_another_depth_is_refused_by_name_not_read_as_a_fail (__main__.TestReverifyRefusesAPrefixItCannotHonour)
 KILLED    a missing PREFIX line is not refused   FAIL: test_a_proof_with_no_prefix_line_is_refused (__main__.TestReverifyRefusesAPrefixItCannotHonour)
 KILLED    the form check is dropped   FAIL: test_a_prefix_line_in_another_form_or_twice_is_refused (__main__.TestReverifyRefusesAPrefixItCannotHonour)
 restored; 3 mutants, 3 killed, 0 survived
 
-=== 4d32f7e  point 7: CR or NUL in RECORD_START
+=== ad46648  point 7: CR or NUL in RECORD_START
 KILLED    the old shape (only the newline excluded)   FAIL: test_a_carriage_return_in_record_start_is_refused_not_a_crash_read_as_a_fail (__main__.TestReverifyRefusesARecordStartItCannotSplice)
 KILLED    the CR is allowed again   FAIL: test_a_carriage_return_in_record_start_is_refused_not_a_crash_read_as_a_fail (__main__.TestReverifyRefusesARecordStartItCannotSplice)
 KILLED    the NUL is allowed again   FAIL: test_a_nul_in_record_start_is_refused_not_a_traceback (__main__.TestReverifyRefusesARecordStartItCannotSplice)
 restored; 3 mutants, 3 killed, 0 survived
 
-=== b0c6fa3  point 8: the frontier note and diff only when no other record moved
+=== d53f68f  point 8: the frontier note and diff only when no other record moved
 KILLED    the generic note is shown beside a reorder again   FAIL: test_a_reorder_beside_the_edit_withdraws_the_note_and_the_diff_and_names_the_reorder (__main__.TestTheFrontierNoteAndDiffAreForTheFrontierAlone)
 KILLED    the diff is printed beside a reorder again   FAIL: test_a_reorder_beside_the_edit_withdraws_the_note_and_the_diff_and_names_the_reorder (__main__.TestTheFrontierNoteAndDiffAreForTheFrontierAlone)
 KILLED    others_intact is always true   FAIL: test_a_reorder_beside_the_edit_withdraws_the_note_and_the_diff_and_names_the_reorder (__main__.TestTheFrontierNoteAndDiffAreForTheFrontierAlone)
 KILLED    others_intact compares the wrong slice   FAIL: test_control_record_0_edited_alone_keeps_the_note_and_the_diff (__main__.TestTheFrontierNoteAndDiffAreForTheFrontierAlone)
 restored; 4 mutants, 4 killed, 0 survived
 
-=== 156e495  point 9, BEFORE the new tests (the maintainer's mutant M1 survives; M7 is equivalent)
+=== 252613c  point 9, BEFORE the new tests (the maintainer's mutant M1 survives; M7 is equivalent)
 SURVIVED  M1 narrowed to `L2 FRONT MATTER lost` (the maintainer's)   
 KILLED    M2 narrowed to `L2 FRONT MATTER leaked`   FAIL: test_a_stub_finalize_beside_a_front_matter_edit_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
 KILLED    M3 other_fails always empty   FAIL: test_a_stub_finalize_beside_a_front_matter_edit_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
@@ -56,7 +57,7 @@ KILLED    M6 narrowed to `L2 FOOTER migrated`   FAIL: test_a_stub_finalize_besid
 SURVIVED  M7 the whole L2 family only   
 restored; 7 mutants, 5 killed, 2 survived
 
-=== 156e495  point 9, AFTER the new tests
+=== 252613c  point 9, AFTER the new tests
 KILLED    M1 narrowed to `L2 FRONT MATTER lost` (the maintainer's)   FAIL: test_a_footer_migrated_into_the_shard_beside_a_finalize_is_not_labelled (__main__.TestTheStubLabelNeedsEveryKindOfOtherFailureToBeAbsent)
 KILLED    M2 narrowed to `L2 FRONT MATTER leaked`   FAIL: test_a_stub_finalize_beside_a_front_matter_edit_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
 KILLED    M3 other_fails always empty   FAIL: test_a_stub_finalize_beside_a_front_matter_edit_is_not_labelled (__main__.TestVerifyShNamesAStubFinalize)
@@ -68,14 +69,14 @@ KILLED    M9 lost, leaked and the altered footer, not the migrated one   FAIL: t
 SURVIVED  M7 EQUIVALENT: the whole L2 family (every non-L1/L3 failure starts with L2)   
 restored; 9 mutants, 8 killed, 1 survived
 
-=== 5172db2  point 4, first half: the timing rule
+=== 5741d2e  point 4, first half: the timing rule
 KILLED    the old constant is back   FAIL: test_the_constant_does_not_claim_the_trim_must_wait_for_a_complete_record (__main__.TestTheTimingRuleIsTheOneTheProofEnforces)
 KILLED    the pending-stub warning advises against a safe order again   FAIL: test_the_write_time_warning_says_the_trim_is_fine_in_a_commit_of_its_own (__main__.TestTheTimingRuleIsTheOneTheProofEnforces)
 KILLED    the stub note carries the old rule   FAIL: test_the_constant_does_not_claim_the_trim_must_wait_for_a_complete_record (__main__.TestTheTimingRuleIsTheOneTheProofEnforces)
 KILLED    the generic note carries the old rule   FAIL: test_the_constant_does_not_claim_the_trim_must_wait_for_a_complete_record (__main__.TestTheTimingRuleIsTheOneTheProofEnforces)
 restored; 4 mutants, 4 killed, 0 survived
 
-=== c3e926b  the extra finding: a failed history walk
+=== 1670c5d  the extra finding: a failed history walk
 KILLED    the failed walk is ignored again   FAIL: test_control_a_committed_trim_is_proved_against_its_commit (__main__.TestAFailedHistoryWalkIsNotAnUncommittedTrim)
 KILLED    the failed walk exits 1 (the FAIL code)   FAIL: test_a_history_walk_that_fails_is_the_abort_not_a_pass (__main__.TestAFailedHistoryWalkIsNotAnUncommittedTrim)
 restored; 2 mutants, 2 killed, 0 survived

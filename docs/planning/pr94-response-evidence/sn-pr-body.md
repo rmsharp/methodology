@@ -1,6 +1,6 @@
 ## Summary
 
-This adds `SESSION_NOTES.md` to the trimmer's ledger table (`LEDGERS` in `starter-kit/methodology_trim.py`), so `methodology_trim.py` can trim it and so `--reverify` can name a stub finalize in a `SESSION_NOTES.md` shard. It was part of #94's fourth commit until you asked for it to be separate. It is one commit on top of #94's branch, `895c7bd`, so it needs #94 first; terms (trimmer, proof, shard, stub, finalize, record 0, `--reverify`) are as defined there.
+This adds `SESSION_NOTES.md` to the trimmer's ledger table (`LEDGERS` in `starter-kit/methodology_trim.py`), so `methodology_trim.py` can trim it and so `--reverify` can name a stub finalize in a `SESSION_NOTES.md` shard. It was part of #94's fourth commit until you asked for it to be separate. It is one commit on top of #94's branch, `8de50d2`, so it needs #94 first; terms (trimmer, proof, shard, stub, finalize, record 0, `--reverify`) are as defined there.
 
 ## What it adds
 

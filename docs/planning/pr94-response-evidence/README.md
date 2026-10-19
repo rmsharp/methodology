@@ -38,8 +38,8 @@ Run each with `python3 -I`. The `.py` helpers here (`mutate.py`, `excise_sn.py`,
 
 | File | What it is |
 |---|---|
-| `gate-output-pr94-r2-c3e926b.txt` | `quality_ratchet.py --run` in a clean `--no-local` clone of `pr94-r2`: 12 of 12, results `b49e29a9e5ea`, manifest `06181a10ec42`. |
-| `gate-output-pr94-sn-895c7bd.txt` | The same for `pr94-sn`: 12 of 12, results `e56bb08a3c66`, manifest `c9460f6eeb2e`. |
+| `gate-output-pr94-r2-1670c5d.txt` | `quality_ratchet.py --run` in a clean `--no-local` clone of `pr94-r2`: 12 of 12, results `b49e29a9e5ea`, manifest `06181a10ec42`. |
+| `gate-output-pr94-sn-8de50d2.txt` | The same for `pr94-sn`: 12 of 12, results `e56bb08a3c66`, manifest `c9460f6eeb2e`. |
 | `mutation-rounds.txt` | Every mutation round run today, mutant by mutant, with the first failing test; the three survivors are the maintainer's M1 before its tests existed and the equivalent M7 (before and after). |
 
 ## Texts

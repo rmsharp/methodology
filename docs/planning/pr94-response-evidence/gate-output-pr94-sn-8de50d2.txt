@@ -1,13 +1,13 @@
 
 ──────────────────────────────────────────────────────────────────────────
-  quality gates — run  12/12 pass · 0 fail · 0 unmeasured · results b49e29a9e5ea · manifest 06181a10ec42
+  quality gates — run  12/12 pass · 0 fail · 0 unmeasured · results e56bb08a3c66 · manifest c9460f6eeb2e
 ──────────────────────────────────────────────────────────────────────────
   gate                                    rule    measured  status
   tests-sh-passed                       >= 261         261  pass
   tests-sh-failed                         <= 0           0  pass
   dashboard-unit-tests                  >= 229         229  pass
   context-budget-unit-tests             >= 148         148  pass
-  trimmer-unit-tests                    >= 227         227  pass
+  trimmer-unit-tests                    >= 245         245  pass
   ratchet-unit-tests                     >= 45          45  pass
   check-links                             <= 0           0  pass
   check-learnings                         <= 0           0  pass
@@ -16,9 +16,9 @@
   commit-msg-selftest                     <= 0           0  pass
   pre-commit-selftest                     <= 0           0  pass
 ──────────────────────────────────────────────────────────────────────────
-  cite in the receipt: quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results b49e29a9e5ea · manifest 06181a10ec42
+  cite in the receipt: quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results e56bb08a3c66 · manifest c9460f6eeb2e
 
 
-real	3m49.343s
-user	1m48.465s
-sys	1m36.839s
+real	4m57.039s
+user	2m18.906s
+sys	2m8.239s
