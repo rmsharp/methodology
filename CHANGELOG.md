@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-18.md` (1 record(s), 46,723 B → 35,351 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-18 → 2026-10-18) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-18.md`](docs/archive/HANDOFFS-through-2026-10-18.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-18.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-18.md.verify.sh)
+rather than trusting a digest printed here. Live file 46,723 B → 35,351 B (−24.3%).
+
 ### 2026-10-19 · [ad hoc] S341 -- push record: fork `main` to the fork `origin` at the operator's close-out tick (`d257f721` to `1b0b5e45`), head read back
 
 Non-commit action, on the operator's close-out tick ("Yes, push main"): `git push origin main:main`, a fast-forward of 13 commits (S340's five and S341's eight: the trim, its fold, the claim, three evidence commits, the record of the four PR #92 steps, the close-out). Read back: `git ls-remote origin refs/heads/main` `1b0b5e45` equal to the local head, and `git rev-list --left-right --count origin/main...main` read `0 0`. It reaches the operator's fork only; nothing went to `KJ5HST/methodology` except the four PR #92 steps recorded above. This record's own commit is pushed under the standing grant for a changelog-only push record.
