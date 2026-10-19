@@ -261,6 +261,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S341 -- PR #92: reply comment posted (`issuecomment-6272223306`), on the operator's go-ahead for the exact text
+
+Non-commit action, `gh pr comment 92 -R KJ5HST/methodology --body-file docs/planning/pr92-response-evidence/reply-comment.md`, 2026-10-19T16:39:50Z. It answers the maintainer's comment `issuecomment-6257621669`: the three changes made, the tag left at `f34769f`, the Release body edited, the gate result. Read back: equal to the draft. The comment on PR #94 (`issuecomment-6258571753`) is not answered.
+
+### 2026-10-19 · [ad hoc] S341 -- Release v4.2 (published by the operator on 2026-10-03): body replaced, tag untouched
+
+Non-commit action, `gh release edit v4.2 -R KJ5HST/methodology --notes-file docs/planning/pr92-response-evidence/release-v4.2-new.md`, on the operator's go-ahead for the exact text: the manifest bullet, the unsafe-rows bullet, the path-check line and the Updating line, as the maintainer asked. Read back: body equal to the draft; the tag still points at `f34769f` (`git ls-remote upstream refs/tags/v4.2*`); published time 2026-10-03T02:55:21Z and the draft and prerelease flags unchanged. The previous body is saved as `release-v4.2-current.md`.
+
+### 2026-10-19 · [ad hoc] S341 -- PR #92: description replaced (the tag now stays at `f34769f`; two ledger entries; the review-changes paragraph)
+
+Non-commit action, `gh api -X PATCH repos/KJ5HST/methodology/pulls/92 -F body=@docs/planning/pr92-response-evidence/pr92-body-new.md`, on the operator's go-ahead for the exact text. Read back: equal to the draft once the trailing newline the channel adds is ignored (1,396 B sent, 1,397 B read). The previous body is saved as `pr92-body-current.md`.
+
+### 2026-10-19 · [ad hoc] S341 -- PR #92: pushed `8a232bb7` to the PR branch (`origin` `docs/release-v4.2`), on the operator's go-ahead for the exact text
+
+Non-commit action. A fast-forward of one commit, `fa2bb5d4..8a232bb7` (`CHANGELOG.md`, `CLAUDE.md`, `README.md`, +14 -5): the maintainer's three requested edits and three small wording fixes. Read back: `git ls-remote origin refs/heads/docs/release-v4.2` and the PR's `headRefOid` both read `8a232bb76b1d`. The commit's own gate run (clean `--no-local` clone): 12/12 pass, results `10df8059439f`, manifest `5986cf638fb1`.
+
 ### 2026-10-19 · [ad hoc] S341 -- PR #92 response, evidence 3 of 3: the response document and the Release body, before and after; nothing sent
 
 `docs/planning/pr92-response-2026-10-19.md` holds the checks, the change, the order of the four outward steps (push, description, Release body, comment; each read back before the next) and what is open (PR #94's comment). `release-v4.2-current.md` is the published Release body and `release-v4.2-new.md` replaces the three sentences, the path-check line and the Updating line; the tag is untouched. Nothing sent.
