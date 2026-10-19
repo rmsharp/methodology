@@ -74,7 +74,7 @@ Commits 6 to 14 answer the nine points of the review of the first version of thi
 |---|---|---|---|
 | 1 | A trim commit that also deleted the live ledger made the proof exit 3, "did not finish", where 1.5.0 exited 1: a total loss read as no verdict. | Exit 3 only for a commit, tree or blob the clone cannot read; a path absent from one it can read is a `FAIL:` line at exit 1 (also for a deleted file in the working-tree mode). | 6, `909eafb` |
 | 2 | `python3 -` puts the working directory on the import path, so a `difflib.py` or `subprocess.py` at the repository root ran inside the proof (also under 1.5.0's template, for `subprocess`). | The proof's interpreter line is `python3 -I -`. | 7, `8aa6da7` |
-| 3 | The `SESSION_NOTES.md` table entry was part of this PR. | Commits 4 and 5 rebuilt without it; the entry is a separate pull request. | 4 and 5, `e88d1fd` and `9a4bf79` |
+| 3 | The `SESSION_NOTES.md` table entry was part of this PR. | Commits 4 and 5 rebuilt without it; the entry is the `SESSION_NOTES.md` pull request. | 4 and 5, `e88d1fd` and `9a4bf79` |
 | 4 | The timing rule was stronger than the proof: a trim committed on its own while record 0 is a stub passes. | The rule is "give the trim a commit of its own, never in the same commit that edits record 0", in the same words everywhere. (The `ACTIVE TASK` half concerns `SESSION_NOTES.md`'s front matter and goes with the separate pull request.) | 13, `5172db2` |
 | 5 | The `HANDOFFS.md` stub marker matched a `status: pending` line anywhere in a record, so a real loss from a complete receipt could be labelled a stub finalize (exit 4). | The line must sit inside the receipt's own fence. | 8, `5aaebdb` |
 | 6 | `--reverify` did not lift `PREFIX`, so a proof written for another depth read exit 1. | `--reverify` refuses such a proof at exit 3, naming both values. | 9, `c7785c9` |
@@ -136,6 +136,91 @@ body = between(body, "## Adopter impact\n", "🤖 Generated with", """## Adopter
 - This is not a framework release; the only version that moves is the trimmer's own `TRIM_VERSION`.
 
 """, "adopter impact")
+
+
+# ---- Second pass: the fresh reader's findings -----------------------------------------------
+SEP = "the separate pull request"
+NOTES_PR = "the `SESSION_NOTES.md` pull request"
+
+# Summary: the commit count and what "the notes pull request" is
+body = once(body, "The second teaches the proof to recognise the shape behind most of the other 8, a trim committed together with the finishing of a session's placeholder record, and to name it instead of printing generic failures.",
+    "The second teaches the proof to recognise the shape behind the other 8, a trim committed together with the finishing of a session's placeholder record, and, where the ledger table declares a stub marker, to name it instead of printing generic failures; in this PR that reaches 1 of the 8, and the other 7 are `SESSION_NOTES.md` shards (see below).", "summary c2")
+body = once(body, "Commits 6 to 14 answer a review of the first five; see \"Changes since the first review\". An earlier version of this PR also added the project's third ledger, `SESSION_NOTES.md`, to the trimmer's table; at the reviewer's request that change is now a separate pull request.",
+    "Commits 6 to 14 answer your review of the first version of this PR: eight of your nine points, one commit each, plus one extra fix (point 3, the split, is the rebuild of Commits 4 and 5); see \"Changes since the first review\". The first version also added the project's third ledger, `SESSION_NOTES.md`, to the trimmer's table; at your request that change is now the `SESSION_NOTES.md` pull request (not yet opened: branch `feat/trim-session-notes-ledger-issue93` of my fork, based on this branch's head `c3e926b`).", "summary p1 tail")
+body = once(body, "they keep the generic exit 1 until the separate pull request lands, and with it all 8 are named at exit 4.",
+    "they keep the generic exit 1 until the `SESSION_NOTES.md` pull request lands; once it has landed, all 8 are named at exit 4.", "summary p2")
+
+# Orientation block
+body = once(body, "Commits 4 and 5 replace the commits of the same names in the first version of this PR (see \"Changes since the first review\").",
+    "\n\n**Orientation for a reader of the first version.** The head you reviewed was `1082d3b`; the current head is `c3e926b`. Commits 1 to 3 are unchanged (`68d8a06`, `965f136`, `972eb2c`). Commits 4 and 5 are rebuilt as `e88d1fd` and `9a4bf79`, without the `SESSION_NOTES.md` entry; they keep the version numbers 1.8.0 and 1.8.1 of the commits they replace but their content differs, so \"1.8.1\" below means the rebuilt Commit 5 unless it says `1082d3b`. Commits 6 to 14 are new and move `TRIM_VERSION` to 1.8.2. The table in \"Changes since the first review\" gives each commit's number and hash.", "orientation")
+
+# Commit 2: the marker was narrowed later; the rule's old wording stated
+body = once(body, "so a receipt that merely quotes the marker inside a longer line is not taken for a stub).",
+    "so a receipt that merely quotes the marker inside a longer line is not taken for a stub; Commit 8 narrows this further, to a line inside the receipt's own fence).", "marker narrowed")
+body = once(body, "(This commit stated the rule more strongly than the proof enforces; Commit 13 corrects the wording.)",
+    "(This commit worded the rule as \"trim while record 0 is complete, that is, before the claim or after the finalize is committed\", which is stronger than the proof enforces; Commit 13 replaces that with the wording above. See \"Changes since the first review\" for what Commits 8 and 13 are.)", "rule paragraph")
+
+# Commit 4
+body = once(body, "(Commit 11 extends this to a record 0 edit beside other records moving)",
+    "(Commit 11 also withholds the diff, and says so in a note, when record 0 was edited and other records moved as well)", "commit 4 ref")
+body = once(body, "Minor, not patch: new proof output, no verdict changes.", "Minor version bump: new proof output, no verdict changes.", "minor not patch")
+
+# Commit 5: the sweep
+body = once(body, "the sweep behind this PR saw it once (exit 0 on the re-run)", "a run of `--reverify` over all 54 shards of the #93 repository (see Evidence) saw it once (exit 0 on the re-run)", "sweep")
+body = once(body, "(Commit 6 refines which aborts are exit 3: a path missing from a commit the clone can read is a FAIL.)",
+    "(Commit 6, in the table below, refines which aborts are exit 3: a path missing from a commit the clone can read is a FAIL.)", "commit 5 ref")
+
+# Changes since the first review: accounting, glosses
+body = once(body, "Commits 6 to 14 answer the nine points of the review of the first version of this PR, one commit each, and add one fix the review did not ask for. Each has its own tests, its own record in `CHANGELOG.md` and a mutation round. Every point reproduced on a throwaway repository before any change was made.",
+    "Commits 6 to 14 answer eight of your nine points (one commit each; point 3, the split, is the rebuild of Commits 4 and 5) and add one fix you did not ask for (Commit 14). Each has its own tests, its own record in `CHANGELOG.md` and a mutation round. Every defect (points 1, 2, 4 to 9, and the extra fix) was reproduced on a throwaway repository before any change was made; point 3 was a request.", "changes intro")
+body = once(body, "(The `ACTIVE TASK` half concerns `SESSION_NOTES.md`'s front matter and goes with the separate pull request.)",
+    "(The second half of your point 4, an `ACTIVE TASK` edit in the trim commit failing L2 after `L2_OK`, concerns `SESSION_NOTES.md`'s front matter and goes with the `SESSION_NOTES.md` pull request.)", "point 4 half")
+body = once(body, "| `--reverify` did not lift `PREFIX`, so a proof written for another depth read exit 1. |",
+    "| `--reverify` reads (\"lifts\") each grammar line out of a frozen proof, but not `PREFIX` (the relative path a shard's links climb back to the repository root), so a proof written for another depth read exit 1. |", "row 6")
+body = once(body, "made the spliced proof a `SyntaxError`", "made the re-derived proof a `SyntaxError`", "row 7")
+body = once(body, "| The frontier note and the record-0 diff said nothing of other records that had moved. | They are printed only when no other record moved; otherwise a note says the others did. |",
+    "| The `NOTE:` line about a record 0 edit, and the record-0 diff, said nothing of other records that had moved. | They are printed only when no other record moved; otherwise a note says the others did. |", "row 8")
+body = once(body, "| Narrowing `other_fails` to one failure kind passed every test. |", "| Narrowing `other_fails` (every failure that is not L1 or L3) to one kind passed every test. |", "row 9")
+body = once(body, "Separable: drop the commit and the nine stand.", "Separable: drop Commit 14 and the other answers stand.", "extra row")
+
+# Where to read closely: the marker in a fenced block
+i = body.index("`HANDOFFS.md`'s stub marker is now ")
+j = body.index("\n\n", body.index("The diff is built with Python's `difflib`", i)) 
+new_marker = ("`HANDOFFS.md`'s stub marker is, since Commit 8, this regular expression under `re.M`:\n\n"
+              "```\n" + r"\A(`{3,}|~{3,})handoff[^\n]*\n(?:(?!\1)[^\n]*\n)*?status: pending[ \t\r]*$" + "\n```\n\n"
+              "The line must be inside the fence that opens the record, which ends at a line starting with the same run of backticks or tildes that opened it. It is a lazy line-by-line scan, linear in the record; a test searches a 400,000-line record that has no marker. The diff is built with Python's `difflib` from the two record texts the proof already holds.")
+body = body[:i] + new_marker + body[j:]
+
+# Evidence
+body = once(body, "In a clean `--no-local` clone of this branch's head, `quality_ratchet.py --run` reports 12 of 12 gates pass, 0 fail, 0 unmeasured (results `b49e29a9e5ea`, manifest `06181a10ec42`)",
+    "In a clean `--no-local` clone of this branch's head (`c3e926b`), `quality_ratchet.py --run` reports 12 of 12 gates pass, 0 fail, 0 unmeasured (the ratchet's results digest `b49e29a9e5ea` and manifest digest `06181a10ec42`)", "gate")
+body = once(body, "Those three rounds ran in my fork (`rmsharp/methodology`) when the code was first written there. Commit 4:",
+    "Those three rounds ran in my fork (`rmsharp/methodology`) when the code was first written there; Commits 1 to 3 here differ from the fork's finished code in six places, seven lines in all (comments and one assertion message), none changing behaviour. Commit 4:", "six places")
+body = once(body, "Commits 6 to 14, run on this branch: 8, 3, 6, 3, 3, 4, 8, 4 and 2 mutants, all caught; for Commit 12 one further mutant (\"every failure that starts with `L2`\") survives, and is equivalent, because every failure string starts with `L1`, `L2` or `L3`.",
+    "Commits 6 to 14, run on this branch: 8, 3, 6, 3, 3, 4, 8, 4 and 2 mutants, all caught. Commit 12 has one further mutant (\"every failure that starts with `L2`\"), a ninth, that survives; it is equivalent, because every failure string starts with `L1`, `L2` or `L3`.", "mutants")
+body = once(body, "under 1.8.1 (this PR as first reviewed, with the `SESSION_NOTES.md` entry) 46 at exit 0 and 8 at exit 4;",
+    "at `1082d3b` (the head you reviewed, with the entry) 46 at exit 0 and 8 at exit 4;", "1082d3b sweep")
+body = once(body, "row for row the same as 1.8.1. The fixes change no verdict among the 54. At that repository's HEAD, 2 of 59 proofs carry `PREFIX = \"../\"` (both under `methodology/archive/`): under 1.8.1 `--reverify` read the CHANGELOG one at exit 1 and the HANDOFFS one at exit 0, and this branch refuses both at exit 3. `--reverify` writes nothing.",
+    "row for row the same as `1082d3b`. The fixes change no verdict among the 54. At that repository's HEAD (`d7d16f477`, 59 proofs; not the 54 above), 2 proofs carry `PREFIX = \"../\"` (both under `methodology/archive/`): at `1082d3b` `--reverify` read the CHANGELOG one at exit 1 and the HANDOFFS one at exit 0, and this branch refuses both at exit 3. So this branch cannot `--reverify` shards in that layout; lifting the prefix instead of refusing is a small change, and I followed your wording. `--reverify` writes nothing.", "head sweep")
+body = once(body, "**The two existing ledgers' verdicts.** The 179 frozen shards of my fork (`CHANGELOG.md` and `HANDOFFS.md` shards, written by trimmer versions 1.1.1 to 1.8.1 of the fork's own line):",
+    "**The two existing ledgers' verdicts.** The 181 shards of my fork (`CHANGELOG.md` and `HANDOFFS.md` shards, written by trimmer versions 1.1.1 to 1.8.1 of the fork's own line); 179 have a proof, and the 2 early hand-made ones have none and read exit 3 under 1.7.0 and under this branch alike. For the 179:", "fork shards")
+body = once(body, "and a `NOTE:` line stating the timing rule. (Measured at Commit 3",
+    "and a `NOTE:` line stating the timing rule as Commit 2 worded it (since reworded by Commit 13). (Measured at Commit 3", "timing note")
+body = once(body, "uncommitted, the working-tree read follows the link and passes, which becomes a FAIL once committed.",
+    "uncommitted, the working-tree read follows the link and passes, which becomes a FAIL once committed; this PR does not change that, since the committed proof is the one that decides and it fails closed.", "symlink status")
+
+# Adopter impact
+body = once(body, "Commits 1, 2, 4 and 6 to 14 change only what a *new* trim writes and warns about and what a new or re-derived proof prints or refuses; commit 3 adds a flag.",
+    "Commits 1, 2, 4, 5 and 6 to 14 change only what a *new* trim writes and warns about and what a new or re-derived proof prints, refuses or exits with; commit 3 adds a flag.", "impact 1")
+i = body.index("- **Exit codes mean more exactly.**")
+j = body.index("- **Exit status 4 is new**")
+body = body[:i] + "- **Exit codes are more specific, measured against 1.5.0 (what adopters hold).** A proof that cannot read a commit, tree or blob from git now exits 3 (it exited 1; Commit 5). A proof whose history walk fails now exits 3 (it printed `OK`; Commit 14). A path absent from something the proof can read still exits 1 (Commit 6 restores 1.5.0's answer after Commit 5 moved it to 3). `--reverify` refuses more frozen proofs, at exit 3, by name: a `PREFIX` other than `\"../../\"`, a carriage return or a NUL in `RECORD_START`. A caller that treated 3 as \"could not run\" is unaffected.\n" + body[j:]
+body = once(body, "- **A proof's output grows** when record 0 was edited in the trim commit: the diff", "- **A proof's output grows** when record 0 was edited in the trim commit and no other record moved: the diff", "impact diff")
+body = once(body, "A project that carries its own table entry for it (the #93 repository does) is unaffected until the separate pull request lands. `bin/sync` stops on a locally edited `methodology_trim.py` (exit 2, naming the file, `--force` to overwrite), as it does for any local edit; this PR does not change that.",
+    "A project that carries its own table entry for it (the #93 repository does) is unaffected only while it does not sync: `bin/sync` stops on its locally edited `methodology_trim.py` (exit 2, naming the file), and with `--force` it overwrites the copy and removes the local entry, so that project cannot trim `SESSION_NOTES.md` again until the `SESSION_NOTES.md` pull request lands. This PR does not change how `bin/sync` treats a locally edited file.", "impact notes")
+body = once(body, "`methodology_trim.py` (from 1.5.0 to 1.8.2)", "`methodology_trim.py` (from 1.5.0 to 1.8.2, the version Commits 6 to 14 move it to)", "impact version") if "`methodology_trim.py` (from 1.5.0 to 1.8.2)" in body else body
+
+body = body.replace(SEP, NOTES_PR)
 
 (root / "docs/planning/pr94-response-evidence/pr94-new-body.md").write_text(body, encoding="utf-8")
 print("written; %d bytes" % len(body.encode("utf-8")))

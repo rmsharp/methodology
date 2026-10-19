@@ -30,7 +30,7 @@ Run each with `python3 -I`. The `.py` helpers here (`mutate.py`, `excise_sn.py`,
 |---|---|
 | `adopter-54-sweep-compare.tsv` | The 54 proofs of `rmsharp/nprcgenekeepr` at `82433662`: exit code as written, then `--reverify` under `1082d3b`, under `pr94-r2` and under `pr94-sn`. Columns: shard, exit as written, `--reverify` under `1082d3b`, under `pr94-r2`, under `pr94-sn`. As written 44 pass and 10 fail (the maintainer's figure); `1082d3b` reads 46 at exit 0 and 8 at exit 4 (also the maintainer's); `pr94-r2` reads 46 at exit 0, 1 at exit 4, 7 at exit 1; `pr94-sn` is identical to `1082d3b` row for row. |
 | `adopter-head-prefix-shards.txt` | The two proofs with `PREFIX = "../"` at that repository's HEAD: as written, under `1082d3b`, under `pr94-r2`. |
-| `fork-179-shards-reverify-1.7.0-vs-1.8.2.tsv` | This fork's 179 frozen shards: as written, `--reverify` under 1.7.0, under `pr94-r2`. No row differs between the last two. |
+| `fork-179-shards-reverify-1.7.0-vs-1.8.2.tsv` | The 179 of this fork's 181 shards that have a proof (the other 2 are early hand-made shards with none; both trimmers read them at exit 3): as written, `--reverify` under 1.7.0, under `pr94-r2`. No row differs between the last two. |
 | `adopter-claim-lines-recheck.tsv` | `adopter_claim_lines.py` re-run over the 12 projects' live notes files; compare with `../pr94-rewrite/evidence/adopter-claim-lines-output.tsv` (only the live projects' newest records moved). |
 | `adopter-notes-check-sn-branch.txt` | Read-only `--check` of the `pr94-sn` trimmer over the 12 projects' notes files: 10 parse, 1 fresh seed, 1 refused by name. |
 
