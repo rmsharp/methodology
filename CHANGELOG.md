@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-17-2.md` (1 record(s), 47,564 B → 36,785 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-17 → 2026-10-17) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-17-2.md`](docs/archive/HANDOFFS-through-2026-10-17-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-17-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-17-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,564 B → 36,785 B (−22.7%).
+
 ### 2026-10-19 · [ad hoc] S340 close-out -- the receipt complete; the NEXT session's task, set by him: examine and respond to the comments on PR #92; nothing sent
 
 The S340 claim's `CHANGELOG: pending` is closed by the entries around it. The receipt in `HANDOFFS.md` is complete (self-score 7, predecessor S339 scored 8; Phase 3C appended no row to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule was not triggered; rows considered #21 and #106). **His instruction, recorded here and in the receipt's `next_steps` (1):** "examine and respond to comments on PR #92 in the next session". The maintainer commented once on PR #92 (`issuecomment-6257621669`, 2026-10-19T01:19:30Z, 4,462 characters) and once on PR #94 (`issuecomment-6258571753`, 02:47:56Z, 2,533 characters); this session did not read either text. The next session reads both at Phase 0 before its task picker, checks each point against the code, drafts a reply, shows the exact text, and posts only on his go-ahead on that text. The same instruction is in the memory note for the upstream pull-request route. The gate run is not re-run (no code changed since `5f09130`); the receipt cites S338's.
