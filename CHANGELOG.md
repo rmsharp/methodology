@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S341 close-out -- the maintainer's comment on PR #92 answered: the edit pushed, the description and Release body replaced, the reply posted; PR #94's comment not answered
+
+The S341 claim's `CHANGELOG: pending` is closed by the entries around it. The receipt in `HANDOFFS.md` is complete (self-score 8, predecessor S340 scored 8; Phase 3C appended no row to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule was not triggered; rows considered #95 and #50). The deliverable, `docs/planning/pr92-response-2026-10-19.md`: the maintainer's `issuecomment-6257621669` checked against git (every claim holds), the three requested edits and three small fixes pushed as `8a232bb7` to `origin` `docs/release-v4.2`, the PR description and the Release v4.2 body replaced (the tag stays at `f34769f`), and the reply posted as `issuecomment-6272223306`; each step on the operator's go-ahead for the exact text and read back before the next (entries above). Mistakes: an unquoted heredoc ran `bin/tests.sh` by accident (stopped, no tracked file changed); a wrong byte figure in a commit message (amended before any push). Next: wait on PR #92; PR #94's comment (`issuecomment-6258571753`, nine requested changes to the trimmer) is next in line. The 18-gate run on `main` is not re-run (no code changed since `5f09130`); the receipt cites S338's.
+
 ### 2026-10-19 · [ad hoc] S341 -- PR #92: reply comment posted (`issuecomment-6272223306`), on the operator's go-ahead for the exact text
 
 Non-commit action, `gh pr comment 92 -R KJ5HST/methodology --body-file docs/planning/pr92-response-evidence/reply-comment.md`, 2026-10-19T16:39:50Z. It answers the maintainer's comment `issuecomment-6257621669`: the three changes made, the tag left at `f34769f`, the Release body edited, the gate result. Read back: equal to the draft. The comment on PR #94 (`issuecomment-6258571753`) is not answered.
