@@ -129,19 +129,34 @@ Usage:
   bin/check-handoff --allow-pending    # don't count "status: pending" as a finding
                                         # (that is ALL this flag does — the stub schema
                                         # above is selected by the block, not by this)
-  bin/check-handoff --all              # validate EVERY receipt + whole-file structure (issue #65)
+  bin/check-handoff --all              # validate EVERY receipt against the schema + whole-file structure (issue #65)
   bin/check-handoff --archived         # FILE is a frozen archive shard, not the live ledger
 
 --all exists because the default newest-only scope is a real blind spot: a mangled OLDER
 receipt reported green forever, so a corruption could survive a full session and be caught
-only by hand-diffing the file across two revisions. It adds the ledger-level invariants —
-fences balance, no receipt body stranded outside a fence, `session:`/`date:` lead every
-block, no two receipts share a session id AND date (identity is the pair: a ledger may
-merge two `S<N>` sequences) — and validates every block against the same schema-selection
-logic above (a block's own `status` decides stub vs. full, never the flag), rather than
-block 0 alone. `--allow-pending` still narrows to the NEWEST block under --all: a
+only by hand-diffing the file across two revisions. It adds `session:`/`date:` leading
+every block and validates every block against the same schema-selection logic above (a
+block's own `status` decides stub vs. full, never the flag), rather than block 0 alone, on
+top of the ledger-structure group below: fences balance, no receipt body stranded outside
+a fence, no two receipts share a session id AND date (identity is the pair: a ledger may
+merge two `S<N>` sequences). `--allow-pending` still narrows to the NEWEST block under --all: a
 just-written Phase 1B stub is legitimately pending, an older one never closed out. The
-default stays newest-only so the close-out fast path is unchanged.
+default keeps the 13-key schema on the newest receipt only.
+
+THE LEDGER-STRUCTURE GROUP (BL-89, BL-73), run by the default as well as by --all. The
+default once looked at the newest receipt and nothing else, so it exited 0 on a receipt
+spliced into the front matter's own code example, on one session and date twice, on an
+older receipt left pending, on a receipt begun twice, and on a stray bare fence that hid
+the newest receipt whole (the file then read as holding one receipt fewer, and the next
+one was validated as the newest). Three consecutive sessions shipped one of these; a
+stray fence hid a receipt in 17 committed versions in one day, in this repository's own history. The group is:
+what `scan()` finds between receipts (an unclosed fence, receipt text outside every
+fence, a ```handoff opener inside an open receipt or inside a 3-backtick fence), a
+receipt identity that appears twice, and an older receipt left pending (the newest of
+another line of sessions excepted). Its findings are their own block, "ledger-structure
+issue(s)". A documentation example wrapped in four backticks is not a finding. Limit: a
+stray fence of four or more backticks still hides what it wraps; nothing separates it
+from the example.
 
 Exit: 0 = a receipt is present and structurally complete, or legitimately absent
       (fresh seed, or --allow-none with none found), AND every receipt below the
@@ -281,7 +296,8 @@ def scan(text: str):
     `blocks` is one dict per top-level ```handoff block — {"content", "line"} — in
     file order (first = newest, since the file is newest-on-top). `findings` holds
     LEDGER-level structural defects that only exist between blocks, not within one:
-    an unclosed fence, and a receipt body stranded outside every fence.
+    an unclosed fence, a receipt body stranded outside every fence, and a receipt
+    opener that is hidden or doubled (below).
 
     Fence-nesting aware: a bare all-backtick line (3+ backticks, no language tag —
     e.g. HANDOFFS.md's own 4-backtick "````" wrapper around its illustrative
@@ -289,6 +305,16 @@ def scan(text: str):
     fence-nesting rule (a fence can only be closed by a fence of >= its own
     backtick count). Without this, a ```handoff shown as documentation INSIDE a
     stronger wrapper would be misparsed as a real receipt.
+
+    EVERY line-start ```handoff opener is accounted for (BL-89, BL-73): it opens a
+    receipt, or it sits inside a wrapper of 4+ backticks (a documentation example,
+    legal), or it is a finding. Two places an opener may not hide: inside a receipt
+    that is still open (the receipt was begun twice, and read as one block), and
+    inside a 3-backtick fence, which a stray bare fence above the receipts opens and
+    which then swallows the receipt below it, closing on that receipt's own closing
+    fence, so the file reads as holding one receipt fewer than it does. A bare count of
+    openers cannot tell that from the seed's documentation example; the fence length can.
+    A stray fence of 4+ backticks still hides what it wraps: no rule tells it from the example.
 
     A fence with any other info string (```sh, ```python) is skipped whole the same
     way, to a bare closer at least as long. Read as prose instead, its closing fence
@@ -327,6 +353,12 @@ def scan(text: str):
                     break
                 if info:
                     outside.append(i)
+                if fence_len < 4 and HANDOFF_OPEN_RE.match(lines[i - 1]):
+                    findings.append(
+                        "line %d: a ```handoff opener inside the 3-backtick fence opened at line %d — "
+                        "every check skips a receipt there; only a 4-backtick wrapper may hold a documentation example"
+                        % (i, open_line)
+                    )
             if not closed:
                 findings.append(
                     "line %d: unclosed ```%s fence — opened here, never closed"
@@ -344,6 +376,11 @@ def scan(text: str):
                     i += 1
                     closed = True
                     break
+                if HANDOFF_OPEN_RE.match(lines[i]):
+                    findings.append(
+                        "line %d: a ```handoff opener inside the receipt opened at line %d — "
+                        "the receipt was begun twice and is read as one block" % (i + 1, open_line)
+                    )
                 content.append(lines[i])
                 i += 1
             if not closed:
@@ -381,26 +418,68 @@ def sequence_of(session: str) -> str:
     return (m.group(1) or "") if m else "?" + session
 
 
-def validate_ledger(blocks: list, findings: list, allow_pending: bool) -> list:
-    """Whole-ledger invariants across EVERY receipt, not just the newest.
+def ledger_structure_findings(blocks: list) -> list:
+    """(block index, message) for the two ledger-wide checks that need no schema and that
+    the everyday run shares with --all (BL-89): an OLDER receipt left pending, and a
+    receipt identity that appears twice. The newest block is the newest receipt of its own
+    line, so it is never found pending here: its pending state is `validate()`'s, under
+    `--allow-pending`.
 
-    `allow_pending` applies to the newest block: a just-written Phase 1B stub is
-    legitimately pending mid-session. An OLDER receipt left pending is a session that
-    never closed out — exactly what this mode exists to surface — with one exception:
-    the newest receipt of ANOTHER line. With two lines of sessions live at once (Shape B,
-    parallel-sessions plan), a line's newest pending receipt is that line's live claim,
-    and a concurrent line's receipts are prepended above it; refusing it failed every
-    concurrent branch's gate through no fault of its own (found by the Phase 5 dogfood).
-    A pending receipt superseded by a later receipt of its OWN line is still refused.
+    An older receipt left pending is a session that never closed out — exactly what this
+    check exists to surface — with one exception: the newest receipt of ANOTHER line.
+    With two lines of sessions live at once (Shape B, parallel-sessions plan), a line's
+    newest pending receipt is that line's live claim, and a concurrent line's receipts are
+    prepended above it; refusing it failed every concurrent branch's gate through no fault
+    of its own (found by the Phase 5 dogfood). A pending receipt superseded by a later
+    receipt of its OWN line is still refused.
     """
-    seen = {}
-    newest_of_line = {}
+    found, seen, newest_of_line = [], {}, {}
     for idx, b in enumerate(blocks):
         newest_of_line.setdefault(sequence_of(parse_block(b["content"]).get("session", "").strip()), idx)
     for idx, b in enumerate(blocks):
         fields = parse_block(b["content"])
-        label = fields.get("session", "").strip() or "<no session>"
-        prefix = "block at line %d (%s)" % (b["line"], label)
+        sid = fields.get("session", "").strip()
+        if fields.get("status", "").strip() == "pending" and newest_of_line.get(sequence_of(sid)) != idx:
+            found.append((idx, "receipt still pending — close-out not completed"))
+
+        # Identity is session + date, NOT session alone. `S<N>` is a per-sequence
+        # counter, and a ledger may legitimately merge more than one sequence — a
+        # fork and its upstream each running their own, so two distinct sessions
+        # share an `S<N>` by construction. Keying on the id alone asserts an
+        # invariant the format in `starter-kit/HANDOFFS.md` never states, and
+        # false-positives on such a ledger; a checker that cries wolf on a valid
+        # file is how a gate becomes furniture. The realistic corruption this
+        # still catches is a block copied and not edited, which duplicates both.
+        date = fields.get("date", "").strip()
+        if sid:
+            key = (sid, date)
+            if key in seen:
+                found.append((idx, "duplicate receipt identity — session %r on date %r "
+                                   "(first seen at line %d)" % (sid, date, seen[key])))
+            else:
+                seen[key] = b["line"]
+    return found
+
+
+def block_prefix(b: dict) -> str:
+    label = parse_block(b["content"]).get("session", "").strip() or "<no session>"
+    return "block at line %d (%s)" % (b["line"], label)
+
+
+def validate_ledger(blocks: list, findings: list, allow_pending: bool) -> list:
+    """Whole-ledger invariants across EVERY receipt, not just the newest.
+
+    `allow_pending` applies to the newest block: a just-written Phase 1B stub is
+    legitimately pending mid-session. An OLDER receipt left pending, and a receipt
+    identity that appears twice, are `ledger_structure_findings()`'s, which the everyday
+    run shares.
+    """
+    structural = {}
+    for idx, msg in ledger_structure_findings(blocks):
+        structural.setdefault(idx, []).append(msg)
+    for idx, b in enumerate(blocks):
+        fields = parse_block(b["content"])
+        prefix = block_prefix(b)
 
         order = []
         for line in b["content"].splitlines():
@@ -413,30 +492,10 @@ def validate_ledger(blocks: list, findings: list, allow_pending: bool) -> list:
                 % (prefix, ", ".join(order[:2]) or "none")
             )
 
-        line_owner = newest_of_line.get(sequence_of(fields.get("session", "").strip())) == idx
-        pending_ok = (allow_pending and idx == 0) or (idx != 0 and line_owner)
-        for msg in validate(fields, pending_ok):
+        for msg in validate(fields, allow_pending if idx == 0 else True):
             findings.append("%s: %s" % (prefix, msg))
-
-        # Identity is session + date, NOT session alone. `S<N>` is a per-sequence
-        # counter, and a ledger may legitimately merge more than one sequence — a
-        # fork and its upstream each running their own, so two distinct sessions
-        # share an `S<N>` by construction. Keying on the id alone asserts an
-        # invariant the format in `starter-kit/HANDOFFS.md` never states, and
-        # false-positives on such a ledger; a checker that cries wolf on a valid
-        # file is how a gate becomes furniture. The realistic corruption this
-        # still catches is a block copied and not edited, which duplicates both.
-        sid = fields.get("session", "").strip()
-        date = fields.get("date", "").strip()
-        if sid:
-            key = (sid, date)
-            if key in seen:
-                findings.append(
-                    "%s: duplicate receipt identity — session %r on date %r "
-                    "(first seen at line %d)" % (prefix, sid, date, seen[key])
-                )
-            else:
-                seen[key] = b["line"]
+        for msg in structural.get(idx, ()):
+            findings.append("%s: %s" % (prefix, msg))
 
     return findings
 
@@ -890,9 +949,10 @@ def repo_root() -> Path:
 
 def default_path() -> Path:
     """The repo's own receipt ledger, at its root or under methodology/ (the resolver's table, the
-    runner deciding a tie), else the starter-kit seed template (the only place HANDOFFS.md lives inside
-    the canonical methodology repo, which has no root-level receipt ledger of its own). A tree holding the
-    ledger in both places with nothing to decide between them raises HalfMigrated: never guessed."""
+    runner deciding a tie), else the starter-kit seed template (what a checkout with no receipt ledger of
+    its own falls back to; this repository, which keeps its own ledger at the root, never reaches it). A
+    tree holding the ledger in both places with nothing to decide between them raises HalfMigrated:
+    never guessed."""
     root = repo_root()
     kind, directory, found = resolve_layout(root, LEDGER_NAME)
     if kind == "half":
@@ -916,8 +976,9 @@ def main() -> int:
                          "is the newest, so check every block's `commit:` answer slot (the newest "
                          "receipt's exemption is a property of the LEDGER, not of a file)")
     p.add_argument("--all", action="store_true",
-                    help="validate EVERY receipt in the ledger plus whole-file structure "
-                         "(issue #65); default stays newest-only for the close-out fast path")
+                    help="validate EVERY receipt against the schema, plus whole-file structure "
+                         "(issue #65); the default checks the newest receipt's schema and the "
+                         "ledger's structure (fences, duplicate and pending receipts)")
     args = p.parse_args()
 
     try:
@@ -965,6 +1026,16 @@ def main() -> int:
     fields = parse_block(blocks[0])  # newest = first block in the file
     findings = validate(fields, args.allow_pending) + validate_gate_citation(fields, declared)
 
+    # The ledger's own structure (BL-89, BL-73): what `scan()` finds between receipts and the two
+    # ledger-wide checks that need no schema, shared with --all. They were computed or available
+    # here and dropped, so a ledger could read OK while a receipt in it was hidden, doubled or
+    # duplicated (three consecutive sessions shipped one; a stray fence hid a receipt in 17 committed versions in one day).
+    # Its own block, for the discipline below; the messages do not begin "receipt" (see `nslot()`).
+    structure_findings = list(struct_findings) + [
+        "%s: %s" % (block_prefix(blocks_meta[idx]), msg)
+        for idx, msg in ledger_structure_findings(blocks_meta)
+    ]
+
     # Reported separately from the schema findings above, and computed over a
     # different scope, so the two can never be read as one number: `validate()` is the
     # 13-key schema on the NEWEST receipt; this is one property on every OLDER one.
@@ -988,11 +1059,16 @@ def main() -> int:
     # this mode explicitly; see bin/tests.sh Test 38.
     budget_findings, budget_note = check_record_budget(path, text, blocks_meta)
 
-    if findings or anchor_findings or locator_findings or budget_findings:
+    if findings or structure_findings or anchor_findings or locator_findings or budget_findings:
         if findings:
             print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
                   % (len(findings), path))
             for msg in findings:
+                print("  error: %s" % msg)
+        if structure_findings:
+            print("check-handoff: FAIL — %d ledger-structure issue(s) in %s:"
+                  % (len(structure_findings), path))
+            for msg in structure_findings:
                 print("  error: %s" % msg)
         if anchor_findings:
             print("check-handoff: FAIL — %d unreconciled `commit:` answer slot(s) in %s:"

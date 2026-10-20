@@ -1873,7 +1873,7 @@ EOF_IDS
         # stated skips rather than six vanished rows. The reason travels ON each row: a
         # summary line is read on its own.
         SKIP_WHY="live ledger holds $N_IDS receipt(s), these anchors need 3 -- see BL-40"
-        skip "default mode still green on a destroyed older receipt (documents the gap) -- $SKIP_WHY"
+        skip "default mode reports a destroyed older receipt (BL-89 closed the gap) -- $SKIP_WHY"
         skip "orphaned receipt body caught by --all -- $SKIP_WHY"
         skip "duplicate session+date caught -- $SKIP_WHY"
         skip "repeated session id on different dates is accepted (two merged sequences) -- $SKIP_WHY"
@@ -1882,11 +1882,13 @@ EOF_IDS
         ;;
     ANCHORED)
         # Evidence B: strip an older receipt's opening fence + its session/date lines.
-        # The default newest-only mode reports OK on this file — that IS the blind spot.
+        # The default mode used to report OK on this file -- that WAS the blind spot, pinned here as
+        # "documents the gap" until BL-89 closed it (the structure group, Test 56): the orphaned
+        # body is now reported by the everyday run as well as by --all.
         if mutate "$LEDGER" "$F" "re.sub(r'\`\`\`handoff\nsession: $A1\ndate: [0-9-]+\n', '', s, count=1)"; then
             "$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
-                && pass "default mode still green on a destroyed older receipt (documents the gap)" \
-                || fail "default mode unexpectedly changed behaviour"
+                && fail "default mode still green on a destroyed older receipt (the gap BL-89 closed)" \
+                || pass "default mode reports a destroyed older receipt (BL-89 closed the gap)"
             "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
                 && fail "orphaned receipt body not caught by --all" || pass "orphaned receipt body caught by --all"
         else fail "orphaned-receipt mutation was vacuous"; fi
@@ -4687,6 +4689,83 @@ h55() { grep -o 'HEAD_RE *= *re.compile(r"[^"]*"' "$1" | sed 's/^[^"]*"//'; }
 # the frozen shards under docs/archive/ hold two links to #bl-41 that can never resolve and are not read).
 "$BIN/check-backlog-anchors" >/dev/null 2>&1 && pass "check-backlog-anchors: this repository's own backlog is clean" \
     || fail "check-backlog-anchors: this repository's own backlog has findings"
+
+echo "== Test 56: check-handoff's everyday run reads the ledger's structure, not only the newest receipt (BL-89, BL-73, BL-16, RED-first) =="
+# Seven broken ledgers, built from the shapes BL-89 and BL-73 record. Before this test the everyday run (no --all) exited 0 on
+# five of them and --all on two (a bare doubled opener, a stray bare fence that hides the newest receipt), because
+# the structural findings scan() computes were dropped and the ledger-wide checks ran under --all only. Every case asserts
+# the finding's TEXT as well as the exit code: an exit code alone passes on a fixture broken for another reason.
+H56="$(mktemp -d)"
+r56() { l30_rcpt "$1" 8 7; }       # a complete receipt, dated 2026-10-01
+s56() { l33_stub "$1"; }           # a Phase 1B stub, same date
+fm56() { cat <<'FM56'
+# Handoff Receipts
+
+Phase 0 runs `grep -c '^```handoff' HANDOFFS.md` and reports the count.
+
+---
+
+FM56
+}
+t56() {  # t56 LABEL WANTED-EXIT WANTED-TEXT FILE [flags]: the exit code, and (if given) text the output must carry
+    local label="$1" want="$2" text="$3" file="$4"; shift 4
+    local out rc
+    out="$("$BIN/check-handoff" --file "$file" "$@" 2>&1)"; rc=$?
+    if [ "$rc" = "$want" ] && { [ -z "$text" ] || [[ "$out" == *"$text"* ]]; }; then
+        pass "check-handoff: $label"
+    else
+        fail "check-handoff: $label (exit $rc, wanted $want; text '$text')"
+    fi
+}
+{ fm56; s56 S4; r56 S3; r56 S2; } > "$H56/clean.md"
+t56 "control: a clean ledger passes the everyday run"                                           0 "check-handoff: OK" "$H56/clean.md" --allow-pending
+# (a) a claim receipt spliced in at the first TEXTUAL occurrence of the fence word, which is inside the front matter's code span
+python3 - "$H56/clean.md" > "$H56/splice.md" <<'PY56'
+import sys
+t = open(sys.argv[1], encoding="utf-8").read()
+i = t.index("```handoff")
+sys.stdout.write(t[:i] + "```handoff\nsession: S9\ndate: 2026-10-01\nstatus: pending\nactive_task: a claim\n```\n" + t[i:])
+PY56
+t56 "a receipt spliced into the front matter's code span is reported"                              1 "outside any" "$H56/splice.md" --allow-pending
+# (b) the same session on the same date twice, and an older receipt left pending
+{ fm56; r56 S4; s56 S4; r56 S2; } > "$H56/dup.md"
+t56 "the same session and date twice is reported, at its own line, naming the first"             1 "block at line 23 (S4): duplicate receipt identity — session 'S4' on date '2026-10-01' (first seen at line 7)" "$H56/dup.md" --allow-pending
+# the paired NEGATIVE (Test 34's, for the everyday run): `S<N>` is a per-sequence counter, so a repeated id on a DIFFERENT date is legitimate
+{ fm56; r56 S4; r56 S4 | sed 's/2026-10-01/2026-09-01/'; r56 S2; } > "$H56/merged-sequences.md"
+t56 "control: a repeated session id on a different date is not a duplicate"                      0 "check-handoff: OK" "$H56/merged-sequences.md"
+{ fm56; r56 S4; s56 S3; r56 S2; } > "$H56/older-pending.md"
+t56 "an older receipt left pending is reported"                                                  1 "receipt still pending" "$H56/older-pending.md" --allow-pending
+{ fm56; r56 S6-alpha; s56 S5; r56 S4; } > "$H56/other-line.md"
+t56 "control: another line's newest pending receipt is its live claim"                           0 "check-handoff: OK" "$H56/other-line.md" --allow-pending
+{ fm56; r56 S6; s56 S5; r56 S4; } > "$H56/own-line.md"
+t56 "a pending receipt superseded within its OWN line is reported"                               1 "receipt still pending" "$H56/own-line.md" --allow-pending
+# BL-73: a receipt begun twice, with and without key lines between the two openers
+{ fm56; printf '```handoff\nsession: S9\ndate: 2026-10-01\n\n'; r56 S4; r56 S2; } > "$H56/doubled-keyed.md"
+t56 "a receipt begun twice, with its first keys written, is reported"                             1 "begun twice" "$H56/doubled-keyed.md" --allow-pending
+{ fm56; printf '```handoff\n\n'; r56 S4; r56 S2; } > "$H56/doubled-bare.md"
+t56 "a receipt begun twice, with nothing between the openers, is reported at the second opener"  1 "line 9: a \`\`\`handoff opener inside the receipt opened at line 7" "$H56/doubled-bare.md" --allow-pending
+# a stray bare three-backtick line above the receipts opens an inert wrapper that swallows the newest receipt whole
+{ fm56; printf '```\n\n'; r56 S4; r56 S2; } > "$H56/stray.md"
+t56 "a stray fence that hides the newest receipt is reported at the hidden opener"               1 "line 9: a \`\`\`handoff opener inside the 3-backtick fence opened at line 7" "$H56/stray.md" --allow-pending
+# the seed's own documentation example, wrapped in four backticks, stays legal
+{ fm56; printf '````\n```handoff\nsession: S0\ndate: 2026-10-01\n```\n````\n\n'; r56 S4; r56 S2; } > "$H56/example.md"
+t56 "control: a 4-backtick wrapper holding a documentation example stays legal"                  0 "check-handoff: OK" "$H56/example.md" --allow-pending
+# the findings are reported as their own block, and the other modes read the ledger the same way
+# an opener is a line that STARTS with the fence word, the line Phase 0's `grep -c '^```handoff'` counts: a quoted, indented one is prose
+r56 S4 | awk '{ print } /^gotchas:/ { print "  ```handoff" }' > "$H56/indented-quote-body.md"
+{ fm56; cat "$H56/indented-quote-body.md"; r56 S2; } > "$H56/indented-quote.md"
+t56 "control: an indented opener quoted inside a receipt is prose, not a second opener"         0 "check-handoff: OK" "$H56/indented-quote.md"
+# a 3-backtick fence WITH an info string hides a receipt the same way a bare one does
+{ fm56; printf '```sh\n```handoff\nsession: S0\n```\n\n'; r56 S4; r56 S2; } > "$H56/sh-fence.md"
+t56 "an opener inside a \`\`\`sh fence is reported too"                                           1 "inside the 3-backtick fence" "$H56/sh-fence.md" --allow-pending
+t56 "the structural findings are a block of their own"                                           1 "ledger-structure issue(s)" "$H56/stray.md" --allow-pending
+t56 "--all reports a receipt begun twice too"                                                    1 "begun twice" "$H56/doubled-bare.md" --all --allow-pending
+t56 "--all reports a stray fence too"                                                            1 "inside the 3-backtick fence" "$H56/stray.md" --all --allow-pending
+t56 "--all reports an older pending receipt too, with the same wording"                          1 "block at line 23 (S3): receipt still pending — close-out not completed" "$H56/older-pending.md" --all --allow-pending
+t56 "--all refuses the newest receipt pending when the flag is absent"                           1 "receipt still pending" "$H56/clean.md" --all
+t56 "a frozen shard is read the same way (--archived)"                                           1 "begun twice" "$H56/doubled-bare.md" --archived
+t56 "a clean frozen shard passes (--archived)"                                                   0 "check-handoff: OK" "$H56/example.md" --archived
+rm -rf "$H56"
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
