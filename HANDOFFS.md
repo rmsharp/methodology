@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S344
+date: 2026-10-19
+status: pending
+active_task: **Replace the hand-kept 'Open:' list at the top of `docs/planning/BACKLOG.md` with a derivation (BL-93, first part)** (IN PROGRESS), taken at the operator's Phase 0 picker answers: "Fix the backlog's stale 'Open:' line (Recommended)" and "Yes, trim first (Recommended)" (the trim `30328c0b` and its fold `fcabfc63` done first). The list names 34 of the 58 open index rows. The plan: delete the list; point at a derivation that reads the INDEX TABLE in `BACKLOG.md` (the old grep over `BACKLOG-DETAIL.md` headings now returns 96 headings, 39 of them closed items, so it no longer derives the open list); correct the prose that depends on the list (the paragraphs after it and the S343 note at `:106`); run all three backlog proofs (baseline exit 0 each). NOT in this session: the 13 missing anchor lines in `BACKLOG-DETAIL.md`, bl-58's, the index relabels (BL-93's other parts). **Nothing is sent to `KJ5HST/methodology`.**
+```
+
+```handoff
 session: S343
 date: 2026-10-19
 status: complete

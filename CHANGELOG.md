@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-93] S344 claim (in progress) -- replace the hand-kept 'Open:' list at the top of the backlog with a derivation; nothing sent upstream
+
+CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "Fix the backlog's stale 'Open:' line (Recommended)" and "Yes, trim first (Recommended)" (the trim `30328c0b` and its fold `fcabfc63` done first). The deliverable: the first part of BL-93, the hand-kept **Open:** list at `docs/planning/BACKLOG.md:9`, which names 34 of the 58 open index rows. Measured at Phase 0: the grep the file prints beside the list (`BACKLOG-DETAIL.md` headings) returns 96 headings now, 39 of them closed items whose bodies the detail proof pins, so the derivation the replacement points at is the index table itself (58 rows, no extras). NOT in this session: the 13 missing anchor lines in `BACKLOG-DETAIL.md`, bl-58's, the index relabels (the rest of BL-93, which stays open). **Nothing is sent to `KJ5HST/methodology`.** Phase 0 found PR #94 (`1670c5d`) and PR #92 unchanged, with no maintainer reply; issues #93 and #95 unchanged. The Phase 0 dashboard run (72/100, risk medium) appended its line to `dashboard_history.jsonl`, which rides this claim commit.
+
 ### 2026-10-19 · [ad hoc] S344 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `30328c0b`, ticked at the S344 Phase 0 picker)
 
 The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (37,772 B to 37,316 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-18 → 2026-10-18 | HANDOFFS-through-2026-10-18-3.md | v1.8.1 |`). After the fold the shard's proof exits 0, and `bin/check-handoff`, `bin/check-links` and `bin/check-learnings` exit 0. Taken before the session claim, as the retention rule says.
