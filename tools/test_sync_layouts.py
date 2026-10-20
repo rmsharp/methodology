@@ -34,6 +34,14 @@ def _load(name, path):
     return mod
 
 
+def _load_script(name, path):
+    import importlib.machinery
+    loader = importlib.machinery.SourceFileLoader(name, str(path))
+    mod = importlib.util.module_from_spec(importlib.util.spec_from_loader(name, loader))
+    loader.exec_module(mod)
+    return mod
+
+
 manifest = _load("_manifest", MANIFEST)
 reader = _load("_manifest_reader", REPO / "bin" / "_manifest_reader.py")
 lf = _load("layout_fixtures", HERE / "layout_fixtures.py")
@@ -44,6 +52,7 @@ DISPOSITIONS = (manifest.TRACKED, manifest.SEED)
 SYNC = REPO / "bin" / "sync"
 STATUS = REPO / "bin" / "status"
 CHECK_LINKS = REPO / "bin" / "check-links"
+ck = _load_script("check_links", CHECK_LINKS)
 LITERALS = REPO / "bin" / "check-layout-literals"
 LEGACY = {dest for _s, dest, _d in manifest.DISTRIBUTION}
 NEW = set(manifest.NEW_LAYOUT.values())
@@ -886,6 +895,73 @@ class TestCheckLinksSimulatesBothLayouts(Scratch):
         before = files_of(script.parent.parent)
         run_check_links(script, "--layout", "both")
         self.assertEqual(files_of(script.parent.parent), before)
+
+
+SAFEGUARDS = "starter-kit/SAFEGUARDS.md"
+BOOTSTRAP = "starter-kit/BOOTSTRAP.md"
+# One stray `docs/methodology` string per spelling, in a document that is allowed none: (text, the line it is on).
+STRAY = {"in a code span": ("# t\nSee `docs/methodology/SAFEGUARDS.md`.\n", 2),
+         "in a fenced block": ("# t\n```\nmkdir -p docs/methodology/sessions\n```\n", 3),
+         "in prose": ("# t\nKeep it in docs/methodology/ for now.\n", 2)}
+
+
+class TestCheckLinksCountsTheLegacyDirectory(Scratch):
+    """BL-110: a `docs/methodology/` path written as text is not a link, so the link check cannot see it, and in a
+    project on methodology/ it is wrong. The sources are counted instead: a document may carry as many strings as the
+    table in bin/check-links allows (the three that describe the legacy layout on purpose) and every other one none."""
+
+    def script(self, docs):
+        return scratch_canonical(self.root / ("canon%d" % len(list(self.root.glob("canon*")))), docs)
+
+    def test_a_stray_path_fails_in_every_spelling_naming_the_document_and_the_line(self):
+        for how, (text, line) in STRAY.items():
+            with self.subTest(how):
+                r = run_check_links(self.script({SAFEGUARDS: text}))
+                self.assertEqual(r.returncode, 1, r.out)
+                self.assertIn("check-links: OK", r.out)           # every link resolves: the count is what failed
+                self.assertIn("%s  has 1 (line %d), allows 0" % (SAFEGUARDS, line), r.out)
+
+    def test_a_document_may_carry_its_allowance_and_not_one_more(self):
+        n = ck.LEGACY_PATH_ALLOWANCE[BOOTSTRAP]
+        at = "".join("`docs/methodology/` %d\n" % i for i in range(n))
+        r = run_check_links(self.script({BOOTSTRAP: at}))
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertRegex(r.out, r"^check-links: OK — \d+ relative link\(s\) across \d+ distributed markdown files resolve in the simulated adopter tree\.\n$")
+        r = run_check_links(self.script({BOOTSTRAP: at + "`docs/methodology/` one more\n"}))
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("%s  has %d" % (BOOTSTRAP, n + 1), r.out)
+        self.assertIn("allows %d" % n, r.out)
+
+    def test_two_strings_on_one_line_are_two(self):
+        r = run_check_links(self.script({SAFEGUARDS: "# t\n`docs/methodology/` and `docs/methodology/workstreams/`\n"}))
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("%s  has 2 (line 2), allows 0" % SAFEGUARDS, r.out)
+
+    def test_a_distributed_tool_is_not_a_document(self):
+        """Only the markdown is read: a shipped tool may name the directory (bin/check-layout-literals owns those)."""
+        tool = next(src for src, _dest, _disp in manifest.DISTRIBUTION if src.endswith(".py"))
+        r = run_check_links(self.script({tool: "# `docs/methodology/` in a comment\n"}))
+        self.assertEqual(r.returncode, 0, r.out)
+
+    def test_both_layouts_report_a_stray_path_once_because_the_sources_do_not_depend_on_the_layout(self):
+        r = run_check_links(self.script({SAFEGUARDS: STRAY["in prose"][0]}), "--layout", "both")
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertEqual(r.out.count("allows 0"), 1, r.out)
+        self.assertIn("legacy layout", r.out)
+        self.assertIn("new layout", r.out)
+
+    def test_a_synced_tree_is_not_counted_because_it_carries_the_text_of_the_version_it_was_synced_at(self):
+        d = self.root / "tree"
+        lf.build_tree(d, "legacy", generated=False, contents={"SESSION_RUNNER.md": "`docs/methodology/` " * 3 + "\n"})
+        r = run_check_links(CHECK_LINKS, "--tree", str(d))
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertNotIn("allows", r.out)
+
+    def test_the_table_names_only_distributed_markdown_documents(self):
+        """A key that matches no document would allow nothing and look as if it allowed something."""
+        docs = {src for src, _dest, _disp in manifest.DISTRIBUTION if src.endswith(".md")}
+        self.assertEqual(set(ck.LEGACY_PATH_ALLOWANCE) - docs, set())
+        self.assertTrue(all(n > 0 for n in ck.LEGACY_PATH_ALLOWANCE.values()))      # a zero is a missing entry
 
 
 class TestCheckLinksTreeModeReadsTheTreesLayout(Scratch):

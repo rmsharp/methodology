@@ -24,6 +24,7 @@
   "_s347_tightening_bl109": "FORK-ONLY TIGHTENING (S347, 2026-10-20, BL-109): one gate added, migrate-layout-unit-tests-failed (max 0, the same command as migrate-layout-unit-tests, no extract; 21 -> 22 gates), and the count gate's why corrected. Adding a gate is a tightening and the hook accepts it. No threshold moved: tests-sh-passed stays 523 because bin/tests.sh is untouched in this commit. The pair was demonstrated, not assumed: docs/planning/pr-composition-evidence/layer7-pair-proof.py run against this repository's starter-kit/quality_ratchet.py reads suite-count measured=5.0 pass, suite-failed measured=1.0 fail, command executions: 1, identical to the recorded output.",
   "_s347_tightening_bl111": "FORK-ONLY TIGHTENING (S347, 2026-10-20, BL-111): checker-layout-unit-tests 15 -> 18. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: python3 tools/test_checker_layouts.py read 'Ran 18 tests ... OK' (2.8 s). The three tests are the pull request candidate's, which the fork's suite lacked: a named --file is read where the runner does not decide (check-ledger, check-handoff) and check-ledger names where it looked when there is no ledger. A mutation round of 5 mutants (check-ledger ignoring --file, its no-ledger report omitting the path, its no-ledger exit 1 for 2, check-handoff ignoring --file, check-handoff's --file still refusing a half-migrated tree) killed all 5, and each of the three new tests is the only one that kills at least one of them.",
   "_s350_tightening_bl102": "FORK-ONLY TIGHTENING (S350, 2026-10-20, BL-102): ratchet-unit-tests 120 -> 123. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: python3 tools/test_quality_ratchet.py read 'Ran 123 tests ... OK' (68 s) with quality_ratchet.py at 1.5.1. The three tests are TestTheHookFromASymlinkedPath: a tool reached through a symlinked directory is named by its place in the repository (red on 1.5.0), the hook installed that way still finds the tool after the layout move (red on 1.5.0, which refuses the commit), and a tool file that is itself a symlink keeps its name (green on 1.5.0; it holds the directory-only fix against the backlog row's whole-file realpath). A mutation round of 6 mutants killed 5; the survivor drops realpath on git's toplevel, which git already reports as a real path, so it is equivalent here.",
+  "_s351_tightening_bl110": "FORK-ONLY TIGHTENING (S351, 2026-10-20, BL-110): sync-layout-unit-tests 82 -> 89. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: python3 tools/test_sync_layouts.py read 'Ran 89 tests ... OK' (47 s; 82 before). The seven tests are TestCheckLinksCountsTheLegacyDirectory: a stray docs/methodology string fails in a code span, a fenced block and prose, naming the document and the line; a document may carry its allowance and not one more; two strings on one line are two; a shipped tool is not a document; both layouts report a stray path once; --tree does not count (green before the change, by design); the allowance table names only distributed markdown documents. Written first, five of the first six were red against the unchanged checker for the right reasons (a stray path passed silently; the table did not exist), and the --tree one was green; the shipped-tool test was added after the change and is the only unit test that kills the mutant reading every distributed source. A mutation round of 11 mutants killed 10; the survivor loosens BOOTSTRAP's allowance by one, which a ceiling lets through by design (a table edit a reviewer sees). The check-links gate itself is unchanged: the new rule fails the same command.",
   "version": 1,
   "results_file": ".quality-gates-results.json",
   "gates": [
@@ -101,10 +102,10 @@
     {
       "name": "sync-layout-unit-tests",
       "direction": "min",
-      "threshold": 82,
+      "threshold": 89,
       "command": "python3 tools/test_sync_layouts.py",
       "extract": "Ran (\\d+) tests",
-      "why": "BL-101 P6 (S279): the manifest's second table (NEW_LAYOUT) and its reader, bin/sync --layout auto|legacy|new (the C1 guard, seeds not shadowed, ignore mode, --source=github), bin/status and bin/check-links in both layouts, each driven as a command in scratch projects, and the literal scanner over this repository. Count never drops; green/red is carried by tests-sh-passed. 82 is measured (Ran 82 tests, OK; it was 81 before BL-105 phase 3 added the companion test), after a mutation pass of 55 mutants, all killed by the final suite (six survived the first two rounds and became tests)."
+      "why": "BL-101 P6 (S279): the manifest's second table (NEW_LAYOUT) and its reader, bin/sync --layout auto|legacy|new (the C1 guard, seeds not shadowed, ignore mode, --source=github), bin/status and bin/check-links in both layouts, each driven as a command in scratch projects, and the literal scanner over this repository. Count never drops; green/red is carried by tests-sh-passed. 89 is measured (Ran 89 tests, OK; it was 82 before BL-110 added the seven that count docs/methodology strings; 81 before BL-105 phase 3 added the companion test), after a mutation pass of 55 mutants, all killed by the final suite (six survived the first two rounds and became tests)."
     },
     {
       "name": "migrate-layout-unit-tests",
@@ -135,7 +136,7 @@
       "direction": "max",
       "threshold": 0,
       "command": "bin/check-links",
-      "why": "exit code: every distributed relative link resolves in the simulated adopter tree"
+      "why": "exit code: every distributed relative link resolves in the simulated adopter tree, and no shipped document carries more docs/methodology strings than its allowance in bin/check-links (BL-110)"
     },
     {
       "name": "check-learnings",

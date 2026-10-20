@@ -24,8 +24,13 @@ adopter tree is simulated, `legacy` (the default, so the gate and the message ar
 Since phase P9 the documents resolve in both: a reference that cannot be one relative link in both layouts is a
 bare name in a code span, not a link, and `--layout both` is green (bin/tests.sh holds it).
 
+A code span is not a link, so a `docs/methodology/` path written in one is read by nothing, and it is wrong in a
+project on methodology/ (BL-110). The simulated runs therefore also count the strings in the canonical sources
+(LEGACY_PATH_ALLOWANCE below). `--tree` does not: a project's synced copies carry the text of the version it synced.
+
 Usage:  ./bin/check-links [--layout legacy|new|both] [--tree <adopter-project-dir>]
-Exit:   0 = all relative links resolve; 1 = one or more dangling links; 2 = usage, or a tree with no layout.
+Exit:   0 = all relative links resolve; 1 = one or more dangling links, or a document with more `docs/methodology`
+        strings than it may carry; 2 = usage, or a tree with no layout.
 Python 3 stdlib only; cross-platform.
 """
 import os
@@ -118,6 +123,49 @@ def placeholder_in(layout):
 def companions_in(layout):
     """The companions' paths, relative to the adopter tree, in `layout`."""
     return [beside_in(layout, COMPANION_NEIGHBOUR, name) for name in COMPANION_FILES]
+
+
+# A project that keeps its framework files in docs/methodology/ is on the legacy layout; once it moves to
+# methodology/ that path is wrong, and no link check sees it: it is spelled in a code span, which check() skips on
+# purpose. So the sources are counted, not parsed: a distributed document may carry at most this many
+# `docs/methodology` strings (any spelling: code span, fenced block, prose) and every other one none. These three
+# name the legacy layout on purpose. A new mention fails the count until its author names the file bare or raises
+# the number here, which puts the choice in front of a reviewer. A ceiling, not a pin: a document that loses a
+# mention stays green, and one that swaps a mention for a stray one at the same count does too.
+LEGACY_PATH = "docs/methodology"  # layout: ok -- the string the shipped documents are searched for, never a read
+LEGACY_PATH_ALLOWANCE = {
+    "starter-kit/BOOTSTRAP.md": 9,       # the two-layout table, the legacy tree, the manual copy step
+    "starter-kit/SESSION_RUNNER.md": 1,  # "Where the files are": the four framework files a legacy project keeps
+    "HOW_TO_USE.md": 1,                  # layout: ok -- a source path, counted and never opened: "put the framework in a known location"
+}
+
+
+def legacy_paths():
+    """[(source, line numbers, allowed)] for each distributed markdown source with more `docs/methodology`
+    strings than it may carry. Read from the canonical sources, which are what bin/sync ships."""
+    over = []
+    for src, _dest, _disp in DISTRIBUTION:
+        if not src.endswith(".md"):
+            continue
+        with open(os.path.join(REPO, src), encoding="utf-8") as fh:
+            lines = [n for n, line in enumerate(fh, 1) for _ in range(line.count(LEGACY_PATH))]
+        allowed = LEGACY_PATH_ALLOWANCE.get(src, 0)
+        if len(lines) > allowed:
+            over.append((src, lines, allowed))
+    return over
+
+
+def report_legacy_paths(over):
+    print("check-links: FAIL — %d distributed document(s) carry more `%s` paths than they may:" % (len(over), LEGACY_PATH))
+    for src, lines, allowed in over:
+        where = sorted(set(lines))
+        print("  %s  has %d (line%s %s), allows %d" % (src, len(lines), "" if len(where) == 1 else "s",
+                                                       ", ".join(str(n) for n in where), allowed))
+    print("\nA `%s/` path names the legacy layout only: in a project on methodology/ it is wrong, and a code span is "
+          "not a link, so the check above cannot see it. Name the file bare (beside this document); or, where the "
+          "document describes the legacy layout on purpose, raise its allowance in LEGACY_PATH_ALLOWANCE." % LEGACY_PATH)
+    return 1
+
 
 # Markdown inline link target: the (...) after ](. Targets in these docs contain
 # no ')'; an optional ' "title"' is stripped below.
@@ -262,8 +310,12 @@ def main():
 
     if layout == "both":
         results = [simulate("legacy", " (legacy layout)"), simulate("new", " (new layout)")]
-        return 1 if any(results) else 0
-    return simulate(layout or "legacy", " (new layout)" if layout == "new" else "")
+    else:
+        results = [simulate(layout or "legacy", " (new layout)" if layout == "new" else "")]
+    over = legacy_paths()          # the sources do not depend on the layout: once, after the layout reports
+    if over:
+        results.append(report_legacy_paths(over))
+    return 1 if any(results) else 0
 
 
 if __name__ == "__main__":
