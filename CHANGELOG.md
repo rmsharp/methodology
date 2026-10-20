@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-109] S347 -- closed BL-109, BL-111 and BL-112 (the three small guards, one commit each: `aaa9787b`, `33f5ce70`, `8bbbec14`)
+
+Each by the three-edit close: the row out of `docs/planning/BACKLOG.md`, its id into the Completed-items list, a completed row into `docs/planning/BACKLOG-COMPLETED.md`; the detail bodies are untouched (the detail proof pins them). Open index rows 56 to 53 (`grep -oE '^\| \*\*BL-[0-9]+' docs/planning/BACKLOG.md`). **Measured before this commit:** the 22-gate run in a clean `--no-local` clone of `8bbbec14` read `22/22 pass · 0 fail · 0 unmeasured`, 1,297 s, with `migrate-layout-unit-tests-failed` at 0 (the suite green), `checker-layout-unit-tests` at 18, `tests-sh-passed` at 523 (the floor, so the three commits cost the shell suite nothing); the three backlog proofs, `bin/check-backlog-anchors` (92 links on 96 anchors) and `bin/check-links` exit 0 on the working tree with the three rows closed. One correction carried into BL-112's completed row: its body said the file was the same bytes in the fork and the candidate, which is no longer so. Nothing sent upstream.
+
 ### 2026-10-20 · [BL-112] S347 -- `bin/migrate-layout`'s header now lists exit 4
 
 Fork-side only; nothing sent upstream. The `Exit:` paragraph of the module docstring stopped at 3 while `main` returns 4 when an apply commits and its after-checks differ from its before-checks or leave the tree dirty (`return 0 if report["checks"]["ok"] else 4`, with `way_back` naming the `git revert`); `tools/test_migrate_layout.py` asserts exit 4 in four places. The two added lines are the pull request candidate's wording, checked against that code before copying. A docstring only: the file parses, `bin/check-layout-literals` reads 0 sites, `tools/test_layout_resolver.py` reads `Ran 75 tests ... OK` and the two fast classes of the migration suite `Ran 95 tests ... OK`. No test was added: the docstring is prose, and a check that every exit a tool returns is listed in its header would be a new rule that is not BL-112's.
