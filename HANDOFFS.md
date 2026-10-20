@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S350
+date: 2026-10-20
+status: pending
+active_task: **BL-102: fix the ratchet's hook installer (`starter-kit/quality_ratchet.py` install-hook, 1.5.0 to 1.5.1) so the tool path it writes into the pre-commit hook is computed against git's real-path top directory (realpath on both sides), with a test that installs from a symlinked path; local to the fork, nothing sent upstream.** Taken at the operator's Phase 0 picker answer "BL-102: fix the hook installer (Recommended)". Detail: `docs/planning/BACKLOG-DETAIL.md` (BL-102). Research, then a plan SHOWN for approval, before any code.
+```
+
+```handoff
 session: S349
 date: 2026-10-20
 status: complete

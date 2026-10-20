@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-102] S350 claim (in progress) -- fix the ratchet's hook installer so a symlinked checkout keeps its layout twin (`quality_ratchet.py` 1.5.0 to 1.5.1); nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-102: fix the hook installer (Recommended)", after the `HANDOFFS.md` trim (`968b403c`), its fold (`f5e16323`) and the push of `main` to the fork's `origin` (both ticked at the same picker). Phase 0: both ledger frontiers current, 0 undocumented commits, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (medium, 0 high); #96, #94, #92 open and unanswered by the maintainer, #93 and #95 unchanged, `upstream/main` `f34769f3`. Phase 3F records the rest.
+
 ### 2026-10-20 · [ad hoc] S350 -- push record: fork `main` to the fork `origin` at the operator's Phase 0 picker (`fbb6ea93` to `f5e16323`), head read back
 
 At the picker answer "Push main to your fork", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `fbb6ea93` to `f5e16323` (3 commits: S349's push record, the `HANDOFFS.md` trim and its fold). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `f5e16323d53bba1754104d8b003d0ed49d568f37`, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.
