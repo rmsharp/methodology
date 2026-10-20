@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-113] S348 -- `layer-verify.sh` now runs the budget tool and prints its verdict line and exit code; the composition plan's 'Not carried' cell excepts the one `.context-budget.json` row `ced2c82` carries
+
+Two edits, one deliverable. `docs/planning/pr-composition-evidence/layer-verify.sh` (+6 / -2) gained `python3 starter-kit/context_budget.py --status | grep -E 'over budget|exceeds'` and `echo "budget exit ${PIPESTATUS[0]}"` after the layout scanner's lines, in the same style, with the header naming the line and its pass condition (exit 0). The same lines, taken from the file, run in clean clones: at the pre-fix commit `28f99a7` they print "exceeds the 18,900-token ceiling by 21" and exit 2; at `ced2c82` and at the tip `3cba1e50` "nothing over budget" and exit 0. `docs/planning/upstream-pr-composition-plan.md` line 165 now reads `.context-budget.json` (except one row, `ced2c82`), which draft 11 already discloses (`upstream-pr-body.md:32`); the plan went 29,996 to 29,999 B, within its 30,000 B budget, by merging the two stacked S321 and S323 notes in the 'One seam to keep' paragraph without dropping a fact. The density row is KEPT (stripping it would rewrite the candidate from `ced2c82` on). No fork code, distributed file or candidate commit touched; nothing sent upstream.
+
 ### 2026-10-20 · [BL-113] S348 claim (in progress) -- add the budget tool's `--status` exit to the candidate's `layer-verify.sh` and amend the composition plan's 'Not carried' cell for the density row; nothing sent upstream
 
 CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "BL-113: size check in the candidate's verify script (Recommended)", "Trim HANDOFFS.md (Recommended)" and "Trim CHANGELOG.md, dry run first" then "Yes, run it with --force (Recommended)" (the trims `6874d33d` and `aadb439e` and the fold `f60b5798` done first); the plan was shown and approved at "Go as written (Recommended)". Opens the `status: pending` receipt; the Phase 0 dashboard line rides this commit. Phase 3F records the outcome.

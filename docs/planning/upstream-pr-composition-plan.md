@@ -162,13 +162,13 @@ tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream'
 | Themes **A, B and C** (§1), with their tests | **E** `close_out_report.py` and its tests (its own test reads this repository's 342 receipts) |
 | **D** per decision D3; **the layout hunks of `check-handoff` and `check-ledger` (D5, amended at S319)** | **F** `check-handoff`'s new lints, `check-overhead`, `model-report`, `check-learnings`: canonical-only, and §2.3's second row |
 | The portable blocks of `bin/tests.sh` (45 of 54 pass on upstream's tree) | The 9 blocks of §2.3, until each is parametrised or kept on the fork |
-| Gate thresholds tightened by exactly what the pull request adds (`.quality-gates.json`, S231's D6) | `CLAUDE.md`, `README.md`, `.context-budget.json`, the ledgers, `docs/` except the next row |
+| Gate thresholds tightened by exactly what the pull request adds (`.quality-gates.json`, S231's D6) | `CLAUDE.md`, `README.md`, `.context-budget.json` (except one row, `ced2c82`), the ledgers, `docs/` except the next row |
 | The findings register, the plan, the 20 records (the *evidence* D8 names), about 300 KB | The 3.2 MB of recorded outputs (named by fork commit instead) |
 | A release-notes pull request is **separate**, after the merge, in the manner of #92 | A version number: D7 leaves it to a later decision |
 
 One seam to keep: the runner's 3E sentence and the `HANDOFFS.md` seed's paragraph say a cited run that reads unmeasured gates must name
 them. They ship as prose (B); the lint that enforces them is `bin/check-handoff`'s (F) and stays on the fork, so upstream would hold a rule
-its own checker does not enforce. PR2 states that in the text or carries the one lint, with the ledger edit it needs. **S321: the candidate's runner and `starter-kit/HANDOFFS.md` do not carry these sentences, and the prose layer left them out as not layout (3 hunks, +7 / -4): D6 (§7) was answered (a): a small commit after `bin/migrate-layout`.** **S323 built it as two of the three hunks (`5afc962`; the runner's stays on the fork, §7 D6).**
+its own checker does not enforce. PR2 states that in the text or carries the one lint, with the ledger edit it needs. **S321: the candidate's runner and `starter-kit/HANDOFFS.md` did not carry these sentences (the prose layer left them out as not layout: 3 hunks, +7 / -4); D6 (§7) answered (a), a small commit after `bin/migrate-layout`; S323 built two of the three hunks (`5afc962`); the runner's stays on the fork.**
 
 ---
 
