@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-110] S351 claim (in progress) -- teach `bin/check-links` to flag a `docs/methodology/` path written as code text in a shipped document; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-110: link checker (Recommended)", after the `HANDOFFS.md` trim (`010e960d`), its fold (`d9c321bd`) and the push of `main` to the fork's `origin` (both ticked at the same picker; push record `93c98f11`). Phase 0: both ledger frontiers current, 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (medium, 0 high); #96, #94, #92 open and unanswered by the maintainer, #93 and #95 unchanged, `upstream/main` `f34769f3`. Gate-run citation: the manifest hash `abeec4246a80` (22 gates) matches S350's receipt; the local results file is the Oct 10 one (18 gates), so the cited 22-gate numbers were neither re-run nor contradicted. Phase 3F records the rest.
+
 ### 2026-10-20 · [ad hoc] S351 -- push record: fork `main` to the fork `origin` at the operator's Phase 0 picker (`b8283edd` to `d9c321bd`), head read back
 
 At the picker answer "Push main to origin", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `b8283edd` to `d9c321bd` (3 commits: S350's push record `8da70b8c`, the `HANDOFFS.md` trim `010e960d` and its fold `d9c321bd`). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `d9c321bd6e7c0bb645739094a4b7008e4b5092f7` before this entry, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.

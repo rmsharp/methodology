@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S351
+date: 2026-10-20
+status: pending
+active_task: **BL-110: teach `bin/check-links` to flag a `docs/methodology/` path written as code text in a shipped (distributed) document, outside a short allow-list of places that mean the legacy layout; pre-send, in the fork's copy of the tool only (the candidate branch's copy is a later, separate step); nothing sent upstream.** Taken at the operator's Phase 0 picker answer "BL-110: link checker (Recommended)". Detail: `docs/planning/BACKLOG-DETAIL.md` (BL-110) and `docs/planning/backlog-interaction-review-2026-10-18.md:202`. Research, then a plan SHOWN for approval, before any code.
+```
+
+```handoff
 session: S350
 date: 2026-10-20
 status: complete
