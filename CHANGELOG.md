@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S351 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`d9c321bd` to `3d9975cd`), head read back
+
+At the picker answer "Yes, push main to origin (Recommended)", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `d9c321bd` to `3d9975cd` (5 commits: the earlier push record `93c98f11`, the claim `2652ef63`, the BL-110 work `486b6c60`, the backlog close `8d565eb9` and the close-out `3d9975cd`; the picker text listed the same five). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `3d9975cdaaa6be6dbe518ef30f1b85fd8feb9534` before this entry, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.
+
 ### 2026-10-20 · [BL-110] S351 close-out -- BL-110 done (`bin/check-links` counts `docs/methodology` strings); the receipt complete; BL-123 opened; nothing sent upstream
 
 The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S350 scored 8). Gate run after the claim, in a clean `--no-local` clone of `8d565eb9`: 22/22 pass, 0 fail, 0 unmeasured, results `df713280a8eb`, manifest `9e8ba0c69fd7`, 1183 s (`sync-layout-unit-tests` 89, `tests-sh-passed` 523, `tests-sh-failed` 0). Also in this commit: the close-out dashboard snapshot in `dashboard_history.jsonl` (72/100, medium, 0 high). Phase 3C appended no row to `docs/FORK_LEARNINGS.md` (rule D3 not triggered; rows #57 and #38 considered). Pushing `main` to the fork's `origin` is asked at the close-out picker; nothing was sent to `KJ5HST/methodology`.
