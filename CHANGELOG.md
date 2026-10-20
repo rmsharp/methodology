@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S353 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `8b640b0d`, ticked at the S353 Phase 0 picker)
+
+The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (40,053 B to 39,597 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-20 → 2026-10-20 | HANDOFFS-through-2026-10-20-3.md | v1.8.1 |`). Taken before the session claim, as S352's handoff asked. The trim kept 3 receipts (S352, S351, S350) and archived S349; its dry run named the suffixed shard (`-3`, as predicted) because `HANDOFFS-through-2026-10-20.md` and `-2` were taken, took 7.1 s, and the shard's verify script exited 0 (L1, L2, L3) before the trim commit. Nothing was sent upstream.
+
 ### 2026-10-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-20-3.md` (1 record(s), 50,878 B → 40,053 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
