@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S348 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`ad923837` to `64cc7d7f`), head read back
+
+At the operator's close-out picker answer ("Yes, push main to origin (Recommended)"), `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `ad923837` to `64cc7d7f` (7 commits: the two trims and the fold, the claim, the work, the close and the close-out). Read back: `git ls-remote origin refs/heads/main` and `origin/main` both read `64cc7d7f381d6e3cc4318bf9a4054e346016b669`, equal to the local head. Nothing was sent to `KJ5HST/methodology`.
+
 ### 2026-10-20 · [ad hoc] S348 close-out -- BL-113 done (the candidate's `layer-verify.sh` runs the budget tool; the composition plan's 'Not carried' cell excepts the density row); the receipt complete; nothing sent upstream
 
 The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S347 scored 8). Readings, each in a clean `--no-local` clone: `bash bin/tests.sh` 523 passed, 0 failed, 0 skipped (clone of `55364ba1`); the fork's ratchet 22/22, 0 unmeasured, results `6e76a92566cf`, manifest `9ce337f6c51d` (clone of `1aa39e67`; no code or manifest changed since S347's run, so the hashes are equal); the whole `layer-verify.sh` at the candidate tip `3cba1e50` ends at `layer-verify done` with `budget exit 0`. Phase 3C: no row appended to `docs/FORK_LEARNINGS.md` (the retire-or-refuse rule was not triggered). Open index rows 53 to 52. The sequence this session: Phase 0 report, the two trims (`6874d33d`, fold `f60b5798`, `aadb439e`, each at his tick), the claim `499af9d2`, the work `55364ba1`, the close `1aa39e67`.
