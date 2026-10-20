@@ -20,13 +20,14 @@
   "_s305_bl103_timeout_seconds": "FORK-ONLY, NOT A THRESHOLD (S305, 2026-10-12, BL-103): timeout_seconds 3600 on the three gates that read unmeasured when the machine was loaded (tests-sh-passed and tests-sh-failed share one run of bin/tests.sh, and migrate-layout-unit-tests): S280 and S287 measured 1,835 s and 794 s, S304 676 s at a load of about 180, against the 600 s default. The price is the other edge: a suite that HANGS now holds a run for up to an hour before it reads timeout (3600 s). quality_ratchet.py 1.4.0 warns, never refuses, on a changed timeout_seconds.",
   "_s306_tightening_bl107": "FORK-ONLY TIGHTENING (S306, 2026-10-12, BL-107): ratchet-unit-tests 100 -> 118 -> 120, two commits. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: `python3 tools/test_quality_ratchet.py` read `Ran 118 tests` OK when 1.5.0 was built, and `Ran 120 tests` OK, in a clean --no-local clone, after mutation round 1 (26 mutants, 5 survived) added the two tests that were new (the other two survivor tests changed existing ones); the 20 added tests over 100 are BL-107's (a timed-out command is stopped, a signal to the tool stops it, a real pty Ctrl-C and hangup, the selftest labels, the seed phrase, the platform constant).",
   "_s307_tightening_bl103_r3": "FORK-ONLY TIGHTENING (S307, 2026-10-13, BL-103 repair 3): tests-sh-passed 477 -> 503. Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: `bash bin/tests.sh > file` in a clean --no-local clone of 8dab34f read `== Summary: 503 passed, 0 failed, 0 skipped ==` (483 at S306's last work commit); the 20 added are the rows of the gate-citation block of bin/tests.sh that BL-103 repair 3 wrote (10 written RED first, 10 for mutation round 1's survivors). The last commit that changes the block's rows is 8dab34f; 60b6412 only makes ten of them assert the lint's message and leaves the count.",
+  "_s346_tightening_bl55": "FORK-ONLY TIGHTENING (S346, 2026-10-19, BL-55 fork half): tests-sh-passed 503 -> 523, and three gates added (backlog-completed-proof, backlog-detail-proof, backlog-anchors; 18 -> 21). Tightening needs no approval and the hook accepts it. MEASURED by running the suite, not derived: `bash bin/tests.sh` read `== Summary: 523 passed, 0 failed, 0 skipped` (exit 0, 426 s) in a clean --no-local clone of 8721f8f1, which holds 4 receipts (3 complete and S346 pending); 503 + the 20 assertions of Test 55. Fork Learning #70: the floor is a lowest-routine-state figure, and Test 34 prints six SKIP rows only below 3 receipts, so 523 holds at 3 or more, the same window 503 held in. The two proof gates run scripts that already exited 0 and had no gate; they need the full history (each pins a base commit), so a shallow clone fails them with exit 2 by design.",
   "version": 1,
   "results_file": ".quality-gates-results.json",
   "gates": [
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 503,
+      "threshold": 523,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "timeout_seconds": 3600,
@@ -159,6 +160,27 @@
       "threshold": 0,
       "command": ".githooks/pre-commit --selftest",
       "why": "exit code: the ledger gate's own checks, on the commit-msg-selftest precedent beside it. Added at S198 with BL-76, where a stale .git/REBASE_HEAD made the hook exit 0 before BOTH gates it chains -- the FM #27 ledger gate and quality_ratchet.py --precommit -- for five weeks and 69 commits, and nothing looked. A hook is the one gate no other gate watches: it fails OPEN, so its failure mode is silence. Ten checks, RED-first against the shipped hook (1 red before, 0 after) and mutation-tested (9 mutants, 9 killed). It asserts BOTH halves, because the cheap fix over-corrects: a leaked REBASE_HEAD must still be refused, AND every genuinely in-progress state -- rebase-merge, rebase-apply, MERGE_HEAD, CHERRY_PICK_HEAD -- must still be skipped."
+    },
+    {
+      "name": "backlog-completed-proof",
+      "direction": "max",
+      "threshold": 0,
+      "command": "bash docs/planning/BACKLOG-COMPLETED.md.verify.sh",
+      "why": "exit code: the closed-item rows in BACKLOG-COMPLETED.md are byte-identical to the 33 that moved out of BACKLOG.md, none still stands there, every id is findable there, and each row closed since is reachable (C1-C6). Exit 2 is a proof that could not be established (a shallow clone lacks its base commit) and fails the gate the same way. Added at S346 with BL-55: the proof exited 0 and no gate ran it."
+    },
+    {
+      "name": "backlog-detail-proof",
+      "direction": "max",
+      "threshold": 0,
+      "command": "bash docs/planning/BACKLOG-DETAIL.md.verify.sh",
+      "why": "exit code: every open-item body in BACKLOG-DETAIL.md is byte-identical to the text it replaced in BACKLOG.md at the split, that text is gone from BACKLOG.md, every item keeps an index row, and the routing block above the first item survived (C1-C5). Exit 2 is a proof that could not be established and fails the gate the same way. Added at S346 with BL-55."
+    },
+    {
+      "name": "backlog-anchors",
+      "direction": "max",
+      "threshold": 0,
+      "command": "bin/check-backlog-anchors",
+      "why": "exit code: every link from BACKLOG.md and BACKLOG-COMPLETED.md into BACKLOG-DETAIL.md finds an <a id> anchor, each anchor sits above its own item heading and no other, and none is written twice (BL-55, fork half; S345 found 13 items with no anchor and a bl-58 anchor above BL-60's body). The frozen shards under docs/archive/ are not read: two links to #bl-41 there can never resolve."
     }
   ]
 }
