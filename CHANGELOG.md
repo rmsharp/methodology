@@ -261,6 +261,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-18-3.md` (1 record(s), 47,384 B → 37,772 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-18 → 2026-10-18) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-18-3.md`](docs/archive/HANDOFFS-through-2026-10-18-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-18-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-18-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,384 B → 37,772 B (−20.3%).
+
+The trim: `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --cut 3 --force`, then `--write`: S340's receipt to `docs/archive/HANDOFFS-through-2026-10-18-3.md` (the `-3` suffix: the plain name and `-2` were taken), 4 receipts to 3 (S343, S342, S341). Taken at the operator's Phase 0 picker answer "Yes, trim first (Recommended)", before any claim. The dry run took 5.4 seconds and exited 0; the shard's own proof exits 0 (L1, L2, L3 hold) and `bin/check-handoff` and `bin/check-ledger` exit 0 after the write. The tool printed `FRONTMATTER_FIELD_ABSENT`, expected (the hand-kept receipt count is gone on purpose; see the `HANDOFFS.md` front matter). The pointer block it appended to `HANDOFFS.md` is folded into the archive index in the next commit, because inside the trim commit the shipped `.verify.sh` fails L2 (fork Learning #58).
+
 ### 2026-10-19 · [ad hoc] S343 -- push record: fork `main` to the fork `origin` at the operator's close-out tick (`624d223d` to `419eaf42`), head read back
 
 At the operator's close-out picker answer ("Yes, push main to the fork"), `git push origin main` moved the fork's `main` from `624d223d` to `419eaf42` (11 commits: the trim, its fold, the claim, the seven sweep commits and the close-out). Read back: `git fetch origin`, `git ls-remote origin refs/heads/main` and local `HEAD` all read `419eaf42`, and `git rev-list --left-right --count origin/main...HEAD` reads `0 0`. Only the operator's own fork `rmsharp/methodology` was written; nothing was posted, pushed or edited in `KJ5HST/methodology`. This entry rides a ledger-only commit pushed under the standing grant for push records.
