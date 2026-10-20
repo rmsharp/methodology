@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-20.md` (1 record(s), 49,779 B → 39,006 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-20 → 2026-10-20) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-20.md`](docs/archive/HANDOFFS-through-2026-10-20.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-20.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-20.md.verify.sh)
+rather than trusting a digest printed here. Live file 49,779 B → 39,006 B (−21.6%).
+
 ### 2026-10-20 · [ad hoc] S350 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`f5e16323` to `b8283edd`), head read back
 
 At the picker answer "Yes, push main to origin (Recommended)", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `f5e16323` to `b8283edd` (5 commits: the earlier push record `10c7ba2e`, the claim `b01f0fe9`, the fix `0df0bae8`, the backlog close `8e2397b4` and the close-out `b8283edd`; the picker text listed them as claim, fix, close, evidence script and close-out, which put the script in its own commit and left out `10c7ba2e`: the script rode in the close-out). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `b8283edd1140ae0008079666fe5cb946b3c722c9` before this entry, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.
