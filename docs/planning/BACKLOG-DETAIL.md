@@ -22,8 +22,8 @@ which since S223 keeps only the id in its §Completed items pointer block — an
 is the only path from a pointer row to the record. **The earlier wording of this paragraph said closing an item
 meant "removing it from here", which all ten closures that carry that cell ignored**, and any that had obeyed it
 would have broken its own link. Corrected at S226 with BL-86, whose other half was that the destination's own
-proof refused the pointer row. (Nine `[detail]` links do dangle, for an unrelated reason — a missing anchor
-separator, not a removed body — and that is BL-87.)
+proof refused the pointer row. (Nine `[detail]` links dangled, for an unrelated reason — a missing anchor
+separator, not a removed body — and BL-87 added the missing separators at S345.)
 
 **The `<a id="bl-N">` anchors are the record separators** the proof splits on, and the targets
 `BACKLOG.md`'s index links to. They are scaffolding added by the move; every byte below one,
@@ -1209,6 +1209,8 @@ the ceiling. See `CHANGELOG.md`'s S109 entries for the full four-repo table.
 **Rider from BL-14's close (S343).** `starter-kit/HANDOFFS.md:163-165` (also `upstream/main` line 164) still says that a `commit:` answer slot in an archived receipt "was always going to be filled by a later session", the promise upstream's PR #69 removed from the spec's main text. This item's seed change edits the same file, so reword that sentence in the same change (one hunk) rather than as a separate pull request.
 
 
+<a id="bl-47"></a>
+
 **BL-47 — the seed `context-budget.json` omits the two ledgers `methodology_trim.py` exists to bound.
 Raised 2026-08-26 from `vscode_quarto_ext` S255.**
 
@@ -1241,6 +1243,8 @@ optional, and the ledger is never read whole) makes a `CHANGELOG.md` entry in th
 `context-budget.json` wrong on its own terms, so none will be added. The `HANDOFFS.md` half stays open
 (the plan's D7).
 
+<a id="bl-48"></a>
+
 **BL-48 — the seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares, so every
 adopter gets `FRONTMATTER_FIELD_ABSENT` forever. Raised 2026-08-26 from `vscode_quarto_ext` S254.**
 
@@ -1259,6 +1263,8 @@ matter — its value cannot be kept true. Add it, or remove it from the config.
 A declared-but-absent field is a config that cannot be satisfied by the artifact it describes.
 `vscode_quarto_ext` fixed it locally at S254 by adding the sentence (not by editing the synced
 tool). **Proposed:** ship the sentence in the seed. Distributed file — needs a go-ahead.
+
+<a id="bl-49"></a>
 
 **BL-49 — `content_probe` is consulted only when the record count is ZERO, so a partial grammar
 mismatch is invisible and gets frozen into a shard. Raised 2026-08-26 from `vscode_quarto_ext` S254.**
@@ -1905,7 +1911,7 @@ the ledgers in its watched set only as a property report. **Next: the plan's P1*
 branch `bl57/changelog-rules` created from `b82dcff`. BL-56 folds into the plan's P6, and BL-47's
 `CHANGELOG.md` half is settled by Q2 A (both noted in those items).
 
-<a id="bl-58"></a>
+<a id="bl-60"></a>
 
 **BL-60 — every trim writes a ~16 KB proof script that is 97.9% identical to the last one. 31 of them
 now hold 453,689 B, 5.4% of the tracked repository. Raised 2026-09-16 (S172, on the operator's
@@ -1966,6 +1972,8 @@ worth doing before the `HANDOFFS.md` front-matter cut BL-59 leaves owed. **Measu
 numbers above are re-derivable** — `git ls-files 'docs/archive/*.verify.sh'` and `diff` on any two.
 
 **Rider from BL-30's close (S343).** The trim proofs of three adopters were re-run read-only on 2026-10-19 (clones of each project's `master`): `mts-system` 4 of 4 and `vscode_quarto_ext` 3 of 3 exit 0 as written; `wsfct` 0 of 6 as written and, under `--reverify` with this repository's trimmer 1.8.1, 5 of 6 at exit 0. The sixth, `docs/archive/CHANGELOG-through-2026-08-17.md.verify.sh` in `wsfct`, still exits 1 (`L2 FOOTER is not byte-identical in the live file`; its trim commit added 5 records). Whatever shape this item picks, that proof is a case the new scheme and `--reverify` must handle or name; a frozen proof is not rewritten (point 3 above).
+
+<a id="bl-59"></a>
 
 **BL-59 — `HANDOFFS.md` retains four receipts, and no consumer needs more than one. Decide the
 retention number from what reads the file, and settle whether the *proof* half belongs in
@@ -2097,6 +2105,8 @@ as policy until Test 38 has a fixture, or to do the fixture work first and land 
 `starter-kit/HANDOFFS.md` as a seed-once file and it names **no retention number at all**, so this
 repository's retention policy is fork-local. Teaching the trimmer a retention mode would be the
 one distributed piece, and its own go-ahead.
+
+<a id="bl-58"></a>
 
 **BL-58 — consider giving adopters instructions on trimming a ledger losslessly. They receive the
 tool and almost none of the operating knowledge. Raised 2026-09-16 (S171, on the operator's request,
@@ -2269,6 +2279,8 @@ adopter, so it rides BL-57's P12 pull request or its own, and opening either is 
 
 ---
 
+<a id="bl-64"></a>
+
 **BL-64 — `bin/tests.sh` Test 38's drift guard read the prose between receipts as receipt fields, and the
 close-out gate run is measured one commit too early to catch what the close-out writes. Raised 2026-09-17
 (S182), at Phase 0, from a red quality gate on `main`. The guard half is FIXED the same session (`4c6da50`);
@@ -2314,6 +2326,8 @@ way: `bin/tests.sh` is not in `bin/_manifest.py`, so no adopter received the def
 IS distributed and the same window exists at every adopter that declares gates.
 
 ---
+
+<a id="bl-65"></a>
 
 **BL-65 — `tools/test_context_budget.py`'s fit-gate end-to-end test assumes the r² floor is `calibrate()`'s only
 refusal path, so it fails on a machine whose transcripts fit a negative slope — and it skips in every clone, which
@@ -2478,6 +2492,8 @@ the approved body. **The stated cost:** if #84 merges first, #87 shows as confli
 pushed. **P6 — fork-side adoption — remains, and it waits on the merge; nothing further is owed upstream.**
 
 ---
+
+<a id="bl-67"></a>
 
 **BL-67 — `wsfct`'s report that BL-57's P7 is done and merged is owed a recording here, and the recording that was
 written for it was reverted because it was written in the wrong place in the sequence. Raised 2026-09-17 (S184'),
@@ -2677,6 +2693,8 @@ unchanged. Ten assertions in `bin/tests.sh` Test 22 (six failed on the unfixed c
 fail one or more. Re-read against the three adopters, read-only: the first block `scan()` returns moved from S18 to S19
 in `airqino`, S714 to S715 in `nprcgenekeepr` (which has moved on since S191) and S263 to S264 in `vscode_quarto_ext`;
 `mts-system` is unchanged. Found while verifying, and filed apart: BL-73.
+
+<a id="bl-73"></a>
 
 **BL-73 — `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content, so a receipt begun
 twice reads as one block, and `--all` reports it only when the key order breaks. Raised 2026-09-18 (S192), while
@@ -3673,6 +3691,21 @@ is the obvious C7 and was **deliberately not written at S226**: red on arrival, 
 proof nobody runs. (c) Drop the dead cells instead, leaving the bodies findable only by grep. Fork-only; neither
 file is in `bin/_manifest.py`.
 
+**DONE (S345, 2026-10-19; the operator's Phase 0 picker answer "Finish the backlog cleanup: BL-87 (Recommended)"): shape (a).**
+Re-measured on the working tree first: 96 bodies, 83 anchors, **13 bodies with none** — the nine named above plus
+BL-94, BL-96, BL-97 and BL-98, which were appended since; and nine `[detail]` links dangling, not the same nine
+(`bl-47`, `bl-48`, `bl-49`, `bl-60`, `bl-64`, `bl-73` in `BACKLOG.md`; `bl-59`, `bl-67`, `bl-97` in
+`BACKLOG-COMPLETED.md`; BL-65's closed row carries no `[detail]` link). A second defect the count did not show:
+the `bl-58` anchor stood above BL-60's body, so one span held three bodies (BL-60, BL-59, BL-58, in that order) and
+`#bl-58` landed on BL-60. The edit adds 13 `<a id>` lines, each directly above its own body, and moves `bl-58`'s
+to BL-58's. **After:** 96 anchors for 96 bodies, no anchor's span holds more than its own body (a scratch check
+flagged six spans before, none after), no `[detail]` link in `BACKLOG.md` or `BACKLOG-COMPLETED.md` dangles, the
+three backlog proofs exit 0 before and after (from the repository root), and `bin/check-links` exits 0. C2 could not
+move: the six anchors whose spans held the anchorless bodies (`bl-46`, `bl-58`, `bl-63`, `bl-66`, `bl-72`, `bl-93`)
+are none of the 18 frozen items. **Not done:** shape (b), the check that every `[detail]` link resolves, which is
+BL-55's half and can now ship green; and two links to `#bl-41` in the frozen archive shard
+`docs/archive/CHANGELOG-through-2026-08-24.md`, which no edit can repair (no BL-41 body was ever in this file).
+
 <a id="bl-88"></a>
 
 **BL-88 — Two shipped tools decide a file's read-cap class by two different mechanisms, and the only
@@ -3991,6 +4024,8 @@ upstream-facing.
 
 ---
 
+<a id="bl-94"></a>
+
 **BL-94 — A planning session is owed for an experiment on documentation quality and management, v3.8 against v3.0.
 Raised 2026-10-01 (S244) at the operator's request; nothing built, nothing run, nothing costed.**
 
@@ -4072,6 +4107,8 @@ process rows (R1 old reply against fixed reply is +44% cost). **Decided by him a
 
 ---
 
+<a id="bl-96"></a>
+
 **BL-96 — `bin/tests.sh` Test 9's skip never reaches the suite's skip count, so a machine without `gh` gets a green summary that
 reads `0 skipped`. Raised 2026-10-02 (S248) from the operator's question *what happens if the repository has no `gh` and cannot
 install it? It can use git*; recorded, not fixed.**
@@ -4109,6 +4146,8 @@ install it? It can use git*; recorded, not fixed.**
 **Next action:** none owed. When BL-95's resync plan is written, decide (a), (b) or (c) there; until then no change.
 
 **DONE (S270, 2026-10-06; D7 of the BL-95 plan, (A) at the operator's S269 close-out picker): shape (a).** The premise moved with the merge, as the last bullet above predicted: Test 9's guard is upstream's `git ls-remote` reachability test and `bin/sync` and `bin/status` clone with git, so `gh` is no longer in the path (`grep` for `gh api`, `gh CLI` and `"gh"` in both: none). The uncounted skip survived the merge, a bare `echo "  SKIP: $URL unreachable"`; fix-up F4 is `skip "$URL unreachable"` at `bin/tests.sh:145`. **Measured:** the Test 9 block extracted with `skip()` and run alone against `METHODOLOGY_SOURCE_URL=file:///nonexistent/never` printed `SKIP: file:///nonexistent/never unreachable` and left `SKIP=1`; the full suite's Summary at the R1 tip is in the S270 receipt. **Not done, by decision:** no `tests-sh-skipped` gate (shape (b)). **For the next resync:** this is one line fork-side; upstream's Test 9 has no counter.
+
+<a id="bl-97"></a>
 
 **BL-97 — `echo "$(…)" | grep -q` under `pipefail` flakes at a payload far below the pipe capacity BL-43 measured. Raised 2026-10-03
 (S254), found by a red Test 38 in the full suite; recorded, not fixed.**
@@ -4172,6 +4211,8 @@ does was not read). The S257 reopen condition and the S265 "leave it" paragraph 
 
 **DONE (S268, 2026-10-05, the operator's S268 picker): all 25 hidden-form sites converted; Test 45 keeps the form out.** The S265 population was a count keyed to `echo`/`printf` heads (`grep -cE 'echo [^|]*\| *grep -q'` and its whole-line successor). Re-derived over whole logical lines, every producer, and both arm shapes (`bin/tests.sh` at `d0465ac`, before any edit; `python3` over the file, the scanner now embedded as Test 45): **19 `&& fail` chains and 6 `if ... then fail ... else pass`**, not 16. The extra nine: `:302`, `:312` (an `echo` head, then `grep`, `grep -v`, `grep -q`), `:334` (the same chain headed by `"$BIN/status"`), and `:225`, `:235`, `:330`, `:876` (`if` forms S265 left undecided without reading their else arms) and `:984`, `:1014` (`if` forms headed by `"$BIN/check-handoff"`, which a producer-keyed regex cannot see). **Cures, one line each so no line number moved:** a here-string where the producer heads the pipeline (20 sites); the early-exiting consumer dropped from the three chains (`grep PAT >/dev/null`, since a here-string cannot cure a chain whose middle stage can still be signalled, the note Test 42 already carried); the producer captured where it is the command under test (`:984`, `:1014`). **A second hole, found while reading the `if` forms, needed no flake:** `bin/check-handoff` exits 1 exactly when its output names the pattern the guard looks for, and `pipefail` makes a pipeline's status the producer's, so N3's and N6's `then fail` arm was unreachable. Measured: on a fixture whose newest receipt really lacks a key, the old `:1014` construct took the else arm and the converted one reaches the then arm. **Proof order:** Test 45 written and run alone on the unconverted tree first (assertion 1 FAIL naming all 25; the fixture assertion PASS), then the sweep, then 3 of 3 PASS alone, then the full suite **365 passed, 0 failed, 0 skipped**. **Not done, by decision:** the 62 `&& pass || fail` sites (rerun rule), the 3 `if ... then pass ... else fail` forms (`:1647`, `:1730`, `:2117`: a flake there is a loud red), a negated pipeline (none today), and the mechanism of the flake itself, which was never established. **Not re-measured:** the flake rate on any converted site, and the 0.3% figure stays the synthetic string's.
 
+
+<a id="bl-98"></a>
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
 operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 DONE at S266, P4 DONE at S267 (built inward, then sent as upstream PR #94).**
