@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-79] S349 claim (in progress) -- prepare the Phase 3G close-out report tool as a small upstream pull request (BL-79 P3); nothing sent upstream
+
+CHANGELOG: pending. Taken at the operator's request ("incorporate the formatted close-out report script ... Make this a small PR for upstream if not already there") and his Phase 0 picker answers "Trim HANDOFFS.md to 3 (Recommended)" and "Push main to the fork's origin" (the trim `b4e23e8b`, the fold `66c4244e` and the push record `9790eca3` done first). Phase 0 checked that the tool is not on `upstream/main` (`f34769f3`) and not in the open PR #92 (files: `CHANGELOG.md`, `CLAUDE.md`, `README.md`) or #94 (files: `.quality-gates.json`, `CHANGELOG.md`, `FRAMEWORK_APPARATUS.md`, `starter-kit/methodology_trim.py`, `tools/test_methodology_trim.py`); the fork carries it in four commits (`b34a841d` P1, `816834cb` P2, then two layout-resolver commits upstream cannot use). Opens the `status: pending` receipt; the Phase 0 dashboard line rides this commit. Nothing is pushed or opened without the operator's separate go-ahead. Phase 3F records the outcome.
+
 ### 2026-10-20 · [ad hoc] S349 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `b4e23e8b`, ticked at the S349 Phase 0 picker)
 
 The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (37,888 B to 37,432 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-19 → 2026-10-19 | HANDOFFS-through-2026-10-19-5.md | v1.8.1 |`). Taken before the session claim, as the retention rule says.

@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S349
+date: 2026-10-20
+status: pending
+active_task: **BL-79 P3, the distributed change: prepare the Phase 3G close-out report tool (`starter-kit/close_out_report.py`) as a SMALL pull request for `KJ5HST/methodology`**, at the operator's request ("incorporate the formatted close-out report script ... Make this a small PR for upstream if not already there"). Checked at Phase 0: the tool is not on `upstream/main` (`f34769f3`) and not in open PR #92 or #94. Plan: `docs/planning/close-out-report-actuator-plan.md` §4 P3 (D1 to D3 ratified 2026-10-03). Build on a new branch off `upstream/main` from the P2 version of the tool (`816834cb`, before the fork-only layout resolver): tool + tests + gate wiring, one manifest row, and two doc edits each net at most 0 B, in commits of at most 5 files; verify with `bash bin/tests.sh` and a scratch adopter through `bin/sync`. NOTHING is pushed or opened until the operator gives each go-ahead separately; the PR text is shown inline first and must carry no session numbers or BL codes. This session's own 3G report is rendered by the tool. Taken after the operator's Phase 0 picker answers: "Trim HANDOFFS.md to 3 (Recommended)" (the trim `b4e23e8b`, fold `66c4244e`) and "Push main to the fork's origin" (`c822b6a0`, push record `9790eca3`).
+```
+
+```handoff
 session: S348
 date: 2026-10-20
 status: complete
