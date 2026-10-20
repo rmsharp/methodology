@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S350 -- push record: fork `main` to the fork `origin` at the operator's Phase 0 picker (`fbb6ea93` to `f5e16323`), head read back
+
+At the picker answer "Push main to your fork", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `fbb6ea93` to `f5e16323` (3 commits: S349's push record, the `HANDOFFS.md` trim and its fold). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `f5e16323d53bba1754104d8b003d0ed49d568f37`, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.
+
 ### 2026-10-20 · [ad hoc] S350 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `968b403c`, ticked at the S350 Phase 0 picker)
 
 The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (38,906 B to 38,450 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-19 → 2026-10-19 | HANDOFFS-through-2026-10-19-6.md | v1.8.1 |`). Taken before the session claim, as S349's handoff asked. Read back after the edit: the shard's verify script, `check-handoff` and `check-ledger` exit 0 (results in the commit that follows this entry's).
