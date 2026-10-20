@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S345
+date: 2026-10-19
+status: pending
+active_task: **Add the missing `<a id>` separator lines to `docs/planning/BACKLOG-DETAIL.md` so every `[detail]` link in `docs/planning/BACKLOG.md` and `docs/planning/BACKLOG-COMPLETED.md` resolves (BL-87, shape (a))** (IN PROGRESS), taken at the operator's Phase 0 picker answers: "Finish the backlog cleanup: BL-87 (Recommended)" and "Yes, trim first (Recommended)" (the trim `eb571a7b` and its fold `fe1115ca` done first). S344 measured 13 headings with no anchor and 9 dangling links; this session re-counts before editing and runs all three backlog proofs from the repo root before and after each edit. Not in scope: the check that every `[detail]` link resolves (BL-55), the index relabels. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S344
 date: 2026-10-19
 status: complete
