@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-55] S346 claim (in progress) -- fork half of BL-55: the two backlog proofs wired into `.quality-gates.json` as gates, and a check that every `[detail]` link resolves; nothing sent upstream
+
+CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "Yes, trim first (Recommended)" (the trim `70a31eb3` and its fold `d6863ec7` first) and "BL-55: backlog checks into the gates (Recommended)". Opens the `status: pending` receipt; the Phase 0 dashboard line rides this commit. Phase 3F records the outcome.
+
 ### 2026-10-19 · [ad hoc] S346 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `70a31eb3`, ticked at the S346 Phase 0 picker)
 
 The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (36,233 B to 35,777 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-19 → 2026-10-19 | HANDOFFS-through-2026-10-19-2.md | v1.8.1 |`). Taken before the session claim, as the retention rule says.

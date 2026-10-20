@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S346
+date: 2026-10-19
+status: pending
+active_task: **Fork half of BL-55: wire the two backlog proof scripts (`docs/planning/BACKLOG-COMPLETED.md.verify.sh`, `docs/planning/BACKLOG-DETAIL.md.verify.sh`) into `.quality-gates.json` as no-extract max-0 gates, and add the check that every `[detail]` link in `docs/planning/BACKLOG.md` and `docs/planning/BACKLOG-COMPLETED.md` resolves to an anchor** (IN PROGRESS), taken at the operator's Phase 0 picker answers: "Yes, trim first (Recommended)" (the trim `70a31eb3` and its fold `d6863ec7` done first) and "BL-55: backlog checks into the gates (Recommended)". Position 3 of the 2026-10-18 backlog review, unblocked by S345's BL-87. Not in scope: the adopter-facing half (a shipped `[BL-N]` join check, or promoting the dashboard's Signal F), which stays his decision; the index relabels. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S345
 date: 2026-10-19
 status: complete
