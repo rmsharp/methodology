@@ -4550,3 +4550,16 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 **Fix shape (not costed).** Give `bin/status` the same test `bin/sync` uses and print one sentence above the table when the source is shallow, or print `unknown (source has no history)` on the affected rows. `bin/status` and `bin/sync` are canonical-only (`bin/` has no manifest row), so the fix reaches adopters when they pull the canonical repository, and only an upstream pull request puts it there: its own go-ahead. Test: a shallow clone fixture in `bin/tests.sh`, red before and green after.
 
 **Done when** `bin/status` against a depth-1 source says the source is shallow, and the 21-row reading above no longer reads `locally modified` without a caveat. Not started.
+
+<a id="bl-123"></a>
+**BL-123 — two shipped lines name the legacy directory `docs/methodology/` without saying which layout they mean, and one is wrong in a project on `methodology/`. Raised 2026-10-20 (S351), found while counting for BL-110. Not fixed.**
+
+**What, measured at S351.** Counting `docs/methodology` over the 23 distributed markdown documents (the manifest’s `.md` sources) gives 11 strings: `starter-kit/BOOTSTRAP.md` 9, `starter-kit/SESSION_RUNNER.md` 1, `HOW_TO_USE.md` 1; the candidate tip `3cba1e50` gives the same. Nine of the 11 say which layout on the same line (the runner’s *Where the files are*, BOOTSTRAP lines 45, 62, 90, 115 twice, 132 and 281, and HOW_TO_USE’s “or `methodology/` beside the runner”). Two do not: `starter-kit/BOOTSTRAP.md:28`, the portfolio tree drawing (`└── docs/methodology/ ← The framework (copied from parent dir)`), and `:399`, the *Tracked* row of the update table (“... and everything under `docs/methodology/` (the framework files) | **overlay** — replace with the latest”).
+
+**Why it matters.** Line 399 tells an agent updating a project that the framework files live under `docs/methodology/`. In a project on `methodology/` that directory does not exist and the files are under `methodology/`, so the row points at a place the project does not have. Line 28 is a drawing of the legacy layout with no label, a smaller version of the same gap. BL-110’s check (`LEGACY_PATH_ALLOWANCE` in `bin/check-links`) holds BOOTSTRAP at 9, so these two are counted and allowed as they stand; it does not flag them.
+
+**Fix shape (not costed).** Say the layout on both lines: line 399 “everything under `docs/methodology/` (or `methodology/` in the new layout)”, line 28 a label on the drawing. The first adds a string, so `LEGACY_PATH_ALLOWANCE["starter-kit/BOOTSTRAP.md"]` moves in the same commit (a visible table edit). It edits a shipped document, which adopters receive at their next `bin/sync`, and the pull-request candidate carries the same two lines, so the same edit belongs on the candidate too (the prose layer is already one of its commits): its own go-ahead, with the candidate rebuild.
+
+**Done when** both lines say which layout, `bin/check-links` exits 0 with the allowance moved in the same commit, and the candidate’s copy agrees. Not started.
+
+---
