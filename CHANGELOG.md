@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-18-2.md` (1 record(s), 46,443 B → 37,325 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-18 → 2026-10-18) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-18-2.md`](docs/archive/HANDOFFS-through-2026-10-18-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-18-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-18-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 46,443 B → 37,325 B (−19.6%).
+
 ### 2026-10-19 · [ad hoc] S342 -- push record: fork `main` to the fork `origin` at the operator's close-out tick (`dc9ce731` to `8ceb918e`), head read back
 
 `git push origin main` took the 8 session commits (the trim and its fold, the claim, the package, the revised texts, the BL-118 reword, the record of the four sends, the close-out). Read back three ways: `origin/main` after a fetch, local `main` and `gh api repos/rmsharp/methodology/branches/main` all read `8ceb918e724d9736f526646d71e9fbdf3fa203c1`. Nothing on `KJ5HST/methodology` moved with it.
