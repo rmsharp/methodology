@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S346 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`0a963dbb` to `f2fb6fcb`), head read back
+
+At the operator's close-out picker answer ("Yes, push to origin (Recommended)"), `git push origin main` moved the fork's `main` from `0a963dbb` to `f2fb6fcb` (6 commits: the trim, its fold, the claim, the checker and its test, the gates and the close-out). Read back: `git fetch origin` and `git ls-remote origin refs/heads/main` read `f2fb6fcb166671d7aea4147e9b17ecce8df70314`, equal to local `main`. Nothing was sent to `KJ5HST/methodology`.
+
 ### 2026-10-20 · [ad hoc] S346 close-out -- BL-55 fork half done (checker, Test 55, three gates, floor 523); the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the two BL-55 entries under it). The session also ran the `HANDOFFS.md` trim at his tick before the claim (`70a31eb3`) and its fold (`d6863ec7`), recorded in their own entries. Gate run, taken in a clean `--no-local` clone of `d8021922` (4 receipts in the tree, after the claim, outside the trim window): `quality_ratchet.py --run` read 21/21 pass, 0 fail, 0 unmeasured, results `885c8aa7f389`, manifest `90e0ba15e8c4`, 1200 s; the full suite in a clone of `8721f8f1` read 523 passed, 0 failed, 0 skipped, 426 s. The receipt is complete (self-score 8, predecessor S345 scored 8). Phase 3C appended no row to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule was not triggered; rows considered: #107 (a surviving mutant means two guards cover one case: the wrong-body and duplicate cases survived because a second finding contained the wanted word) and #16 (an assertion wired to the artifact), each already stating the lesson at least as generally. Open and his: the adopter-facing half of BL-55; whether the third backlog proof (the frozen August archive's) becomes a fourth gate. Nothing was sent to `KJ5HST/methodology`.
