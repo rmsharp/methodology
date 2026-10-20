@@ -6,8 +6,8 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 
 This is a backlog, **not** GitHub issues, by operator decision.
 
-**Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
-BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
+**Open: BL-11, BL-12, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
+BL-23, BL-26, BL-30, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
 BL-42, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-70, BL-71, BL-73, BL-74, BL-75, BL-77, BL-79, BL-80, BL-81, BL-84, BL-85, BL-87, BL-92.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
@@ -104,6 +104,8 @@ review time* — sequence, not suspension. Nothing here is blocked for that reas
   [issue #65](https://github.com/KJ5HST/methodology/issues/65); answering it is an outward-facing
   action and needs an explicit ask.
 
+**Note, S343.** The routing block above is kept exactly as it stood at the S99 split: check C5 of [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh) pins it byte for byte, so closing an item it names does not edit it. Several of the ids it names have closed since; the live state is the **Open:** list at the top of this file and §Completed items below.
+
 **Index only — one row per open item. The full text of every item lives in
 [`BACKLOG-DETAIL.md`](BACKLOG-DETAIL.md), read on demand.** Nothing was compacted, reworded or
 dropped in the split (S99): the bodies are byte-identical to what stood here, which
@@ -120,7 +122,6 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 |------|------------|-----------|
 | **BL-11** | Unreachable non-`Learning` referents across the distributed corpus | [detail](BACKLOG-DETAIL.md#bl-11) |
 | **BL-12** | Two verified corpus defects found during BL-10's sweep, out of its declared scope | [detail](BACKLOG-DETAIL.md#bl-12) |
-| **BL-13** | Upstream's citation fix left an unattributed false claim standing in a distributed file | [detail](BACKLOG-DETAIL.md#bl-13) |
 | **BL-14** | The `commit:` answer slot — a distributed promise with no owner and no detector | [detail](BACKLOG-DETAIL.md#bl-14) |
 | **BL-16** | *(no heading of its own, by design)* — lives inside BL-14's follow-ons paragraph | [detail](BACKLOG-DETAIL.md#bl-14) |
 | **BL-17** | The `changelog_ref` referent the seed does not offer, and the one title that is stale | [detail](BACKLOG-DETAIL.md#bl-17) |
@@ -128,11 +129,9 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-19** | The framework's context cost — adopter heuristics and the design deficiencies behind them | [detail](BACKLOG-DETAIL.md#bl-19) |
 | **BL-20** | The seed documents only the `- **Model:**` list form the live ledger does not use — RESIDUAL only, defect FIXED | [detail](BACKLOG-DETAIL.md#bl-20) |
 | **BL-21** | When the Phase 1B carve-out goes upstream, two seed sentences must ship with it | [detail](BACKLOG-DETAIL.md#bl-21) |
-| **BL-22** | `DOC_ONLY_SOURCE_LOC_MAX = 200` — an unexamined round number, no test, decides a user-visible verdict | [detail](BACKLOG-DETAIL.md#bl-22) |
 | **BL-23** | Issue #65's proposed invariants collide with fork state issue #65 doesn't know about | [detail](BACKLOG-DETAIL.md#bl-23) |
 | **BL-26** | Issue #67 and PR #66 vs this fork's current state — neither addressed, PR #66 has its own collisions | [detail](BACKLOG-DETAIL.md#bl-26) |
 | **BL-30** | Watch item, not a defect: `methodology_trim.py`'s next firing outside `nprcgenekeepr` | [detail](BACKLOG-DETAIL.md#bl-30) |
-| **BL-31** | `upstream/main`'s dashboard exclusion list wasn't updated for PR #66's new distributed file | [detail](BACKLOG-DETAIL.md#bl-31) |
 | **BL-32** | `methodology_trim.py`'s `LEDGERS` covers only the framework's own two ledgers; an adopter's third has no path | [detail](BACKLOG-DETAIL.md#bl-32) |
 | **BL-36** | Four of the six shipped `.verify.sh` losslessness proofs do not hold — found, not fixed. **Operator, S173 (2026-09-16, picker):** **folded into BL-60's design session**; the four frozen proofs are decided inside the new scheme, not regenerated first | [detail](BACKLOG-DETAIL.md#bl-36) |
 | **BL-37** | This repo ships a size-ceiling gate it does not run on itself; the shipped list has no `BACKLOG.md` entry | [detail](BACKLOG-DETAIL.md#bl-37) |
@@ -212,7 +211,7 @@ C4 asserts, and its comment names the case it was written for: *"BL-27 is the na
 it and could not find it even while it was in the live file."* Re-derive the list rather than trust
 it — `grep -cE '^\| \*\*BL-[0-9]+\*\* \|' docs/planning/BACKLOG-COMPLETED.md`:
 
-**BL-1**, **BL-2**, **BL-3**, **BL-4**, **BL-5**, **BL-6**, **BL-7**, **BL-8**, **BL-9**, **BL-10**, **BL-15**, **BL-20**, **BL-24**, **BL-25**, **BL-27**, **BL-28**, **BL-29**, **BL-33**, **BL-34**, **BL-35**, **BL-38**, **BL-40**, **BL-41**, **BL-43**, **BL-45**, **BL-53**, **BL-56**, **BL-59**, **BL-67**, **BL-69**, **BL-72**, **BL-76**, **BL-78**, **BL-82**, **BL-83**, **BL-86**, **BL-95**, **BL-96**, **BL-97**, **BL-99**, **BL-100**, **BL-107**, **BL-116**, **BL-118**, **BL-119**, **BL-120**
+**BL-1**, **BL-2**, **BL-3**, **BL-4**, **BL-5**, **BL-6**, **BL-7**, **BL-8**, **BL-9**, **BL-10**, **BL-13**, **BL-15**, **BL-20**, **BL-22**, **BL-24**, **BL-25**, **BL-27**, **BL-28**, **BL-29**, **BL-31**, **BL-33**, **BL-34**, **BL-35**, **BL-38**, **BL-40**, **BL-41**, **BL-43**, **BL-45**, **BL-53**, **BL-56**, **BL-59**, **BL-67**, **BL-69**, **BL-72**, **BL-76**, **BL-78**, **BL-82**, **BL-83**, **BL-86**, **BL-95**, **BL-96**, **BL-97**, **BL-99**, **BL-100**, **BL-107**, **BL-116**, **BL-118**, **BL-119**, **BL-120**
 
 **The heading this block replaces named 19 of the 33.** BL-8, BL-15, BL-20, BL-24, BL-25, BL-27,
 BL-28, BL-29, BL-33, BL-34, BL-35, BL-38, BL-40 and BL-41 were in the table and missing from its
