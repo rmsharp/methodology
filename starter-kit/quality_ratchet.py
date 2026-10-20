@@ -54,7 +54,7 @@ import tempfile
 import time
 from datetime import datetime, timezone
 
-VERSION = "1.5.0"
+VERSION = "1.5.1"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
@@ -663,7 +663,12 @@ def install_hook(root):
     gd = gd.strip() if os.path.isabs(gd.strip()) else os.path.join(root, gd.strip())
     rc3, top, _ = run(["git", "rev-parse", "--show-toplevel"], cwd=root)
     top = top.strip() if rc3 == 0 and top.strip() else root
-    tool = os.path.relpath(os.path.abspath(__file__), top)
+    # git names the toplevel by its real path, so the tool's directory is resolved too: through a symlinked
+    # path (macOS's /var -> /private/var) abspath would climb out of the repository and lose the layout
+    # twin. The file keeps its own name: a tool that is itself a symlink stays where the repository holds it.
+    here = os.path.abspath(__file__)
+    tool = os.path.relpath(os.path.join(os.path.realpath(os.path.dirname(here)), os.path.basename(here)),
+                           os.path.realpath(top))
     rc2, configured, _ = run(["git", "config", "--get", "core.hooksPath"], cwd=root)
     configured = configured.strip()
     if rc2 == 0 and configured:

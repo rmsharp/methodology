@@ -1269,6 +1269,65 @@ class TestTheInstalledHookAcrossTheMove(_Repo):
         self.assertIn("install-hook", p.stdout + p.stderr)
 
 
+class TestTheHookFromASymlinkedPath(_Repo):
+    """git names the toplevel by its real path, so a tool reached through a symlinked directory (macOS's
+    /var -> /private/var is the everyday one) must be resolved before its place is written into the hook.
+    These tests make their own symlink, so they hold wherever the temp directory is. Where the platform
+    will not create one they skip and say so: the property is then unchecked there, not passed."""
+
+    LOOP = 'for t in "quality_ratchet.py" "methodology/quality_ratchet.py"; do'
+
+    def _symlink(self, target, link, **kw):
+        try:
+            os.symlink(target, link, **kw)
+        except (OSError, NotImplementedError) as e:
+            self.skipTest(f"this platform will not create a symlink here ({e}): the symlinked-path property is unchecked")
+
+    def _tracked_tool(self):
+        import shutil
+        shutil.copy(STARTER, os.path.join(self.d, "quality_ratchet.py"))
+        _git(self.d, "add", "-A"); _git(self.d, "commit", "-q", "--no-verify", "-m", "add the tool")
+
+    def _linked_repo(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        link = os.path.join(os.path.realpath(td.name), "via-link")
+        self._symlink(self.d, link, target_is_directory=True)
+        return link
+
+    def _install_via(self, tool_path):
+        p = subprocess.run([PY, tool_path, "install-hook"], cwd=self.d, capture_output=True, text=True)
+        self.assertEqual(p.returncode, qr.CLEAN, p.stdout + p.stderr)
+        hook = open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+        return [l for l in hook.splitlines() if l.startswith("for t in ")]
+
+    def test_a_tool_reached_through_a_symlinked_directory_is_named_by_its_place_in_the_repository(self):
+        self._tracked_tool()
+        link = self._linked_repo()
+        self.assertEqual(self._install_via(os.path.join(link, "quality_ratchet.py")), [self.LOOP])
+
+    def test_that_hook_still_finds_the_tool_after_the_layout_move(self):
+        self._tracked_tool()
+        link = self._linked_repo()
+        self._install_via(os.path.join(link, "quality_ratchet.py"))
+        os.makedirs(os.path.join(self.d, "methodology"))
+        _git(self.d, "mv", LEGACY_CONFIG, NEW_CONFIG)
+        _git(self.d, "mv", "quality_ratchet.py", "methodology/quality_ratchet.py")
+        _git(self.d, "add", "-A")
+        p = subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "the pure move"], capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+
+    def test_a_tool_file_that_is_itself_a_symlink_keeps_its_name_in_the_repository(self):
+        # Only the directory is resolved. Resolving the file would write a path out of the repository
+        # (../../elsewhere/quality_ratchet.py) with no twin in the other layout.
+        import shutil
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        real = os.path.join(os.path.realpath(td.name), "shared-ratchet.py")
+        shutil.copy(STARTER, real)
+        self._symlink(real, os.path.join(self.d, "quality_ratchet.py"))
+        _git(self.d, "add", "-A"); _git(self.d, "commit", "-q", "--no-verify", "-m", "add the tool as a symlink")
+        self.assertEqual(self._install_via(os.path.join(self.d, "quality_ratchet.py")), [self.LOOP])
+
+
 class TestToolInvariants(unittest.TestCase):
     def test_no_force_escape_hatch(self):
         src = STARTER.read_text(encoding="utf-8")
