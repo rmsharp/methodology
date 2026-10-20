@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-109] S347 -- the gate `migrate-layout-unit-tests-failed` (max 0, the same command as the count gate, no `extract`): a red migration suite now turns a gate red
+
+Fork-side only; nothing sent upstream. `.quality-gates.json` gains the gate (21 to 22 gates) after `migrate-layout-unit-tests`, copied in shape from the pull request candidate's pair (`timeout_seconds` 3600, no `extract`, so the exit code is the measurement) and with the fork's own `why`. The count gate's `why` is corrected: it said "green/red is carried by tests-sh-failed", true of every other suite and not of this one, because `bin/tests.sh` runs only `TestThePureRules` and `TestUsageAndNothingToDo` of it (its comment at `bin/tests.sh:327`). **Measured, not assumed:** `docs/planning/pr-composition-evidence/layer7-pair-proof.py` run against this repository's `starter-kit/quality_ratchet.py` (1.5.0) prints `suite-count measured=5.0 status=pass`, `suite-failed measured=1.0 status=fail`, `command executions: 1`, byte-identical to the recorded output; `quality_ratchet.py --precommit` reports `1 gate(s) added` and exits 0 (adding a gate is a tightening); `config_defects` on the new file is `[]`; `--selftest` builds its own throwaway gate file, so it needs no change (BL-109's "not checked" item). No threshold moved: `tests-sh-passed` stays 523 because `bin/tests.sh` is untouched. The gate's real reading (suite green, exit 0) is taken in the close-out's 22-gate run.
+
 ### 2026-10-20 · [BL-109] S347 claim (in progress) -- port three small guards from the pull request candidate to the fork: a failing-suite gate for `migrate-layout-unit-tests` (BL-109), three missing checker tests (BL-111) and `bin/migrate-layout`'s missing exit-4 line (BL-112); nothing sent upstream
 
 CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "Yes, trim first (Recommended)" (the trim `05911d38` and its fold `b7760590` first) and "BL-109: three small guards". Opens the `status: pending` receipt; the Phase 0 dashboard line rides this commit. Phase 3F records the outcome.
