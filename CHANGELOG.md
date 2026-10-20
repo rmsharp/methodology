@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S345 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`221d16e3` to `47cb1da1`), head read back
+
+At the operator's close-out picker answer ("Yes, push main to the fork (Recommended)"), `git push origin main` moved the fork's `main` from `221d16e3` to `47cb1da1` (5 commits: the trim, its fold, the claim, the BL-87 work and the close-out). Read back: `git fetch origin` and `git ls-remote origin refs/heads/main` read `47cb1da1a0cb3ff0595a5db84620f6ce0b2c01f4`, equal to local `main`. Nothing was sent to `KJ5HST/methodology`.
+
 ### 2026-10-19 · [ad hoc] S345 close-out -- BL-87 done; the receipt complete; nothing sent upstream
 
 The close-out of the session whose deliverable was BL-87 (the work commit `9fa99210`, the claim `e43a8d8a`, the trim `eb571a7b` and its fold `fe1115ca`). The `HANDOFFS.md` receipt is `status: complete`. The full shell suite in a clean `--no-local` clone of `9fa99210` (4 receipts in the tree, S345 pending) read 503 passed, 0 failed, 0 skipped in 442 s, equal to the `tests-sh-passed` floor of 503. No code changed (the diff over `starter-kit/`, `tools/`, `bin/`, `.githooks/` and `.quality-gates.json` since `5f09130` is empty), so the 18-gate `quality_ratchet.py --run` was not re-run and the receipt cites S338's. No row appended to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule (D3) was not triggered; rows considered: #96, #47 and #22. Nothing was sent to `KJ5HST/methodology`.
