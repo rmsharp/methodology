@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-109] S347 claim (in progress) -- port three small guards from the pull request candidate to the fork: a failing-suite gate for `migrate-layout-unit-tests` (BL-109), three missing checker tests (BL-111) and `bin/migrate-layout`'s missing exit-4 line (BL-112); nothing sent upstream
+
+CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "Yes, trim first (Recommended)" (the trim `05911d38` and its fold `b7760590` first) and "BL-109: three small guards". Opens the `status: pending` receipt; the Phase 0 dashboard line rides this commit. Phase 3F records the outcome.
+
 ### 2026-10-20 · [ad hoc] S347 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `05911d38`, ticked at the S347 Phase 0 picker)
 
 The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (35,981 B to 35,525 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-19 → 2026-10-19 | HANDOFFS-through-2026-10-19-3.md | v1.8.1 |`). Taken before the session claim, as the retention rule says.

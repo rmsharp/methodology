@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S347
+date: 2026-10-20
+status: pending
+active_task: **Port three small guards from the pull request candidate (`pr2/candidate`) to the fork: (1) BL-109, a second gate `migrate-layout-unit-tests-failed` (max 0, the same command as `migrate-layout-unit-tests`, no `extract`) and the corrected `why` on the count gate; (2) BL-111, the three checker tests the fork's `tools/test_checker_layouts.py` lacks, raising the gate `checker-layout-unit-tests` from 15 to the measured count; (3) BL-112, the missing exit-4 line in `bin/migrate-layout`'s header** (IN PROGRESS), taken at the operator's Phase 0 picker answers: "Yes, trim first (Recommended)" (the trim `05911d38` and its fold `b7760590` done first) and "BL-109: three small guards". Position 8 of the 2026-10-18 backlog review. Up to three commits, one per guard. Not in scope: any change to the candidate, any push to the fork's `origin`, anything sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S346
 date: 2026-10-19
 status: complete
