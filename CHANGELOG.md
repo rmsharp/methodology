@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-89] S352 -- close BL-89, and BL-73 and BL-16 with it (the interaction review folded both into BL-89); BL-18 no longer waits
+
+The three-edit close for each: the row out of `docs/planning/BACKLOG.md`, the id into its completed-items list (in numeric order), the completed row into `docs/planning/BACKLOG-COMPLETED.md`; the detail bodies stay (`BACKLOG-DETAIL.md` is untouched, and the three completed rows link to nothing there that moved). Open index rows 51 to 48, completed rows 72 to 75 (`grep -oE '^\| \*\*BL-[0-9]+' docs/planning/BACKLOG.md | wc -l` and `grep -cE '^\| \*\*BL-[0-9]+\*\* \|' docs/planning/BACKLOG-COMPLETED.md`). The index's header sentence that BL-16 is the one open item with no heading of its own now says it closed. All three backlog proofs, `check-backlog-anchors`, `check-links` and `check-ledger` exit 0. The work is `918cce11`.
+
 ### 2026-10-20 · [BL-89] S352 -- `bin/check-handoff`'s everyday run reads the ledger's structure, so a hidden, doubled, duplicated or stranded receipt fails it (BL-89, BL-73, BL-16; fork only, canonical-only tool, nothing sent upstream)
 
 **The problem, measured on the unchanged tool.** Seven broken `HANDOFFS.md` shapes built from BL-89's and BL-73's descriptions: the everyday run exited 0 on five (a claim stub spliced into the front matter's own code span, one session and date twice, an older receipt left pending, a receipt begun twice with nothing between the openers, a stray bare three-backtick line above the receipts) and `--all` on two (the bare doubled opener and the stray line, which silently skips the newest receipt: the file reads one receipt short and the next one is validated as the newest). The everyday run computed `scan()`'s structural findings and never printed them.
