@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-113] S348 claim (in progress) -- add the budget tool's `--status` exit to the candidate's `layer-verify.sh` and amend the composition plan's 'Not carried' cell for the density row; nothing sent upstream
+
+CHANGELOG: pending. Taken at the operator's Phase 0 picker answers: "BL-113: size check in the candidate's verify script (Recommended)", "Trim HANDOFFS.md (Recommended)" and "Trim CHANGELOG.md, dry run first" then "Yes, run it with --force (Recommended)" (the trims `6874d33d` and `aadb439e` and the fold `f60b5798` done first); the plan was shown and approved at "Go as written (Recommended)". Opens the `status: pending` receipt; the Phase 0 dashboard line rides this commit. Phase 3F records the outcome.
+
 ### 2026-10-20 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-19.md` (89 record(s), 202,864 B → 98,809 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.

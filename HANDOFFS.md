@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S348
+date: 2026-10-20
+status: pending
+active_task: **BL-113, option (e): add the budget tool's `--status` exit (`python3 starter-kit/context_budget.py --status`) to `docs/planning/pr-composition-evidence/layer-verify.sh`, the script that checks each commit of the pull request candidate (`pr2/candidate`) in a clean clone, so no candidate commit crosses the runner's 18,900-token read ceiling unseen; and settle the density row (`ced2c82`'s `.context-budget.json` hunk): KEEP it, and amend the composition plan's 'Not carried' cell (`docs/planning/upstream-pr-composition-plan.md:165`) to say the pull request carries that one row, with matching byte cuts so the plan stays within its 30,000 B budget.** Taken at the operator's Phase 0 picker answers "BL-113: size check in the candidate's verify script (Recommended)", "Trim HANDOFFS.md (Recommended)" and "Trim CHANGELOG.md, dry run first" then "Yes, run it with --force (Recommended)", and the plan was shown and approved at "Go as written (Recommended)" before any code. Nothing is sent to `KJ5HST/methodology`; nothing is pushed.
+```
+
+```handoff
 session: S347
 date: 2026-10-20
 status: complete
