@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S348 close-out -- BL-113 done (the candidate's `layer-verify.sh` runs the budget tool; the composition plan's 'Not carried' cell excepts the density row); the receipt complete; nothing sent upstream
+
+The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S347 scored 8). Readings, each in a clean `--no-local` clone: `bash bin/tests.sh` 523 passed, 0 failed, 0 skipped (clone of `55364ba1`); the fork's ratchet 22/22, 0 unmeasured, results `6e76a92566cf`, manifest `9ce337f6c51d` (clone of `1aa39e67`; no code or manifest changed since S347's run, so the hashes are equal); the whole `layer-verify.sh` at the candidate tip `3cba1e50` ends at `layer-verify done` with `budget exit 0`. Phase 3C: no row appended to `docs/FORK_LEARNINGS.md` (the retire-or-refuse rule was not triggered). Open index rows 53 to 52. The sequence this session: Phase 0 report, the two trims (`6874d33d`, fold `f60b5798`, `aadb439e`, each at his tick), the claim `499af9d2`, the work `55364ba1`, the close `1aa39e67`.
+
 ### 2026-10-20 · [BL-113] S348 -- BL-113 closed: row out of `docs/planning/BACKLOG.md`, id into its Completed list, completed row into `BACKLOG-COMPLETED.md`
 
 The three-edit close for the work commit `55364ba1`. The three backlog proofs (`BACKLOG-COMPLETED.md.verify.sh`, `BACKLOG-DETAIL.md.verify.sh`, `BACKLOG-archive-2026-08-15.md.verify.sh`) and `bin/check-backlog-anchors` (92 links on 96 anchors) and `bin/check-links` exit 0; open index rows 53 to 52. `BACKLOG-DETAIL.md` is untouched (its proof pins the body).
