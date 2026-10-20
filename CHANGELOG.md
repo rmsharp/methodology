@@ -261,6 +261,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-65] S343 -- BL-65 closed: fixed upstream by the maintainer (PR #89, 229f08d9)
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. The maintainer fixed the test himself in the shape the body proposed (a): PR #89 merged 2026-10-01, commit `229f08d9`; `TestFitGateEndToEnd` skips when the data refuse the fit. The body's side note (the `Ran N tests` gates ignore a failing suite) is covered for the four suites it names, because `bin/tests.sh` runs them (lines 263-288) and `tests-sh-failed` reads its result; the instance it cannot cover is BL-109. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-85] S343 -- BL-85 closed: upstream PR #88 merged; the leftover is BL-121
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #88 (the never-overwrite rules for an adopter's ledgers) merged 2026-10-01 (`gh pr view 88`: MERGED); `starter-kit/BOOTSTRAP.md` on `upstream/main` carries the rule at lines 376 and 382. The leftover noted in the body, the stale ‘Setup with bin/sync’ list, is BL-121. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-121] S343 -- BL-121 raised: BOOTSTRAP.md's ‘Setup with bin/sync’ list is stale against the manifest
+
+Raised from BL-85's close, at the operator's S343 picker answer (‘keep it as a new small row’). The leftover was recorded at S224 and never fixed: `starter-kit/BOOTSTRAP.md:90` omits `methodology_trim.py`, `context_budget.py` and `quality_ratchet.py` from the installed operating files and `.context-budget.json` and `.quality-gates.json` from the seeds; `bin/_manifest.py` lines 61, 65, 66, 72, 73 distribute them. One index row in `BACKLOG.md`, one body in `BACKLOG-DETAIL.md`. Not started; the fix is distributed, so it is its own go-ahead.
+
 ### 2026-10-19 · [BL-21] S343 -- BL-21 closed as moot: the Phase 1B carve-out its sentences described was removed
 
 Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Decision D10 (`16648604`, 2026-09-16) removed the claim exemption and its Test 27; `.githooks/pre-commit` carries no claim exemption (re-read S343), so the two seed sentences would describe a hook no one has. Both backlog proofs exit 0 before and after.
