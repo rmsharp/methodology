@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-89] S352 claim (in progress) -- make `bin/check-handoff` catch a structurally broken `HANDOFFS.md` in its default run; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-89 (Recommended)", after the `HANDOFFS.md` trim (`40321173`), its fold (`8229f6cd`) and the push of `main` to the fork's `origin` (both ticked at the same picker; push record `16e20201`). Phase 0: both ledger frontiers current, 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (medium, 0 high); #96, #94, #92 open and unanswered by the maintainer, #93 and #95 unchanged, `upstream/main` `f34769f3`. Gate-run citation: the local results file is the Oct 10 one (18 gates, manifest `c7eae109fc87`) and `--status` says the manifest has changed since, so S351's cited 22-gate numbers were neither re-run nor contradicted. Phase 3F records the rest.
+
 ### 2026-10-20 · [ad hoc] S352 -- push record: fork `main` to the fork `origin` at the operator's Phase 0 picker (`3d9975cd` to `8229f6cd`), head read back
 
 At the picker answer "Push fork main", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `3d9975cd` to `8229f6cd` (3 commits: S351's push record `e6efb052`, the `HANDOFFS.md` trim `40321173` and its fold `8229f6cd`). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `8229f6cde1321c6ee20096653134517f2f524f66` before this entry, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.

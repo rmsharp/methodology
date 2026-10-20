@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S352
+date: 2026-10-20
+status: pending
+active_task: **BL-89: make `bin/check-handoff` catch a structurally broken `HANDOFFS.md` in its default run, not only under `--all`** (failing tests first; fork only, canonical-only tool, nothing sent upstream). The review's row 9 (`docs/planning/backlog-interaction-review-2026-10-18.md`): surface `scan()`'s structural findings in default mode; run the duplicate (session, date) and one-live-pending-per-line checks that only `--all` runs today; add a finding for a receipt opened twice (BL-73) and a block count that tolerates the format example at `starter-kit/HANDOFFS.md:50-51`; reword the false 'no root-level receipt ledger' clause in `default_path()`'s docstring (BL-16). Governing document: `workstreams/DEVELOPMENT_WORKSTREAM.md`.
+```
+
+```handoff
 session: S351
 date: 2026-10-20
 status: complete
