@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S343
+date: 2026-10-19
+status: pending
+active_task: **The backlog sweep: close 19 finished rows** (IN PROGRESS), taken at the operator's Phase 0 picker answers: "Tidy the to-do list (Recommended)" and "Yes, trim first (Recommended)" (the trim `20f06fd3` and its fold `af5abc39` done first). The deliverable is the backlog sweep: close the 19 rows of `docs/planning/BACKLOG.md` that `docs/planning/backlog-interaction-review-2026-10-18.md` section 2.1 lists as finished upstream or superseded (BL-13, 14, 17, 20, 21, 22, 23, 26, 30, 31, 54, 57, 62, 63, 65, 66, 75, 80, 85), each by the three edits the repository requires (the row out of the index, the id into the file's 'Completed items' list, the pointer row into `BACKLOG-COMPLETED.md`) plus a ledger entry, with the review's riders that keep a close from undoing itself (strike the closed ids from the hand-kept 'Open:' list and the routing text; the `.context-budget.json:92` sentence; the stale status lines of the three plans named in section 2.1). Every closing fact is re-checked first, since the review's verdicts came from subagents; a row that fails its re-check stays open and is named. NOT in this session: deleting the hand-kept 'Open:' list, the 13 missing anchor lines in `BACKLOG-DETAIL.md` and the index relabels (the rest of BL-93, which stays open). **Nothing is sent to `KJ5HST/methodology`.**
+```
+
+```handoff
 session: S342
 date: 2026-10-19
 status: complete
