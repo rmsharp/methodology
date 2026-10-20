@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-79] S348 correction -- the closing message was not the Phase 3G report; `self_score` 8 to 7 in the S348 receipt
+
+The operator wrote "This does not look like the Phase 3 close-out report" after S348's final message. It was an unlabelled summary, and an earlier near-report had gone out before the push and its push record, so no message reported the final state in the 3G shape (heading, the four labelled items, `Session over.`). This is the fourth occurrence of the lapse BL-79 describes (S202, S218, S230, now S348), with the rule in my own notes. Corrected in the durable record: the S348 receipt's `self_score` is 7 (it was 8) and its 3B text names the lapse. The correction commit is local until the operator says to push (the push record `31cc13a9` already on the fork's `origin` carries the old score). BL-79's index row is unchanged: it already records the tool (`starter-kit/close_out_report.py`) and its P3 stays his go-ahead.
+
 ### 2026-10-20 · [ad hoc] S348 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`ad923837` to `64cc7d7f`), head read back
 
 At the operator's close-out picker answer ("Yes, push main to origin (Recommended)"), `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `ad923837` to `64cc7d7f` (7 commits: the two trims and the fold, the claim, the work, the close and the close-out). Read back: `git ls-remote origin refs/heads/main` and `origin/main` both read `64cc7d7f381d6e3cc4318bf9a4054e346016b669`, equal to the local head. Nothing was sent to `KJ5HST/methodology`.
