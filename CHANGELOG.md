@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-19.md` (1 record(s), 47,311 B → 37,365 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-19 → 2026-10-19) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-19.md`](docs/archive/HANDOFFS-through-2026-10-19.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-19.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,311 B → 37,365 B (−21.0%).
+
 ### 2026-10-19 · [ad hoc] S344 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`e6f13e86` to `a6e4079f`), head read back
 
 At the operator's close-out picker answer ("Yes, push main to the fork (Recommended)"), `git push origin main` moved the fork's `main` from `e6f13e86` to `a6e4079f` (5 commits: the trim, its fold, the claim, the BL-93 close and the close-out). Read back: `git fetch origin`, `git ls-remote origin refs/heads/main` and local `HEAD` all read `a6e4079f`, and `git rev-list --left-right --count origin/main...HEAD` reads `0 0`. Only the operator's own fork `rmsharp/methodology` was written; nothing was posted, pushed or edited in `KJ5HST/methodology`. This entry rides a ledger-only commit pushed under the standing grant for push records.
