@@ -114,6 +114,17 @@ class TestCheckLedger(Project):
                 self.assertEqual(rc, 2, out + err)
                 self.assertNamesBoth(err, "CHANGELOG.md")
 
+    def test_a_named_ledger_is_read_even_where_the_runner_does_not_decide(self):
+        # the refusal says to name the ledger with --file: that is the way out, and it has to work
+        self.shape("half", "CHANGELOG.md", LEDGER, LEDGER)
+        rc, out, err = self.run_tool("check-ledger", "--file", "CHANGELOG.md")
+        self.assertEqual((rc, "OK" in out), (0, True), out + err)
+
+    def test_a_tree_with_no_ledger_is_reported_naming_where_it_looked(self):
+        rc, out, err = self.run_tool("check-ledger")
+        self.assertEqual(rc, 2, out + err)
+        self.assertIn(os.path.join(self.root, "CHANGELOG.md"), err)
+
     def test_all_reads_the_shards_beside_the_ledger_in_either_layout(self):
         for name, shard in (("legacy", "docs/archive/CHANGELOG-through-2025-12-01.md"),
                             ("new", "methodology/archive/CHANGELOG-through-2025-12-01.md"),
@@ -178,6 +189,12 @@ class TestCheckHandoff(Project):
                 rc, out, err = self.run_tool("check-handoff", "--allow-none")
                 self.assertEqual(rc, 1, out + err)
                 self.assertNamesBoth(out, "HANDOFFS.md")
+
+    def test_a_named_ledger_is_read_even_where_the_runner_does_not_decide(self):
+        self.shape("half", "HANDOFFS.md", HANDOFFS_EMPTY, HANDOFFS_EMPTY)
+        rc, out, err = self.run_tool("check-handoff", "--allow-none", "--file", "HANDOFFS.md")
+        self.assertEqual(rc, 0, out + err)
+        self.assertNotIn("half-migrated", out)
 
     def test_the_canonical_seed_is_still_the_fallback_for_a_tree_with_no_ledger(self):
         touch(self.root, "starter-kit/HANDOFFS.md", HANDOFFS_EMPTY)
