@@ -261,6 +261,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-21] S343 -- BL-21 closed as moot: the Phase 1B carve-out its sentences described was removed
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Decision D10 (`16648604`, 2026-09-16) removed the claim exemption and its Test 27; `.githooks/pre-commit` carries no claim exemption (re-read S343), so the two seed sentences would describe a hook no one has. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-23] S343 -- BL-23 closed as moot: issue #65 closed, the Learnings-table move merged as PR #76
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream issue #65 closed 2026-08-12 and PR #76 (the Learnings-table extraction) merged 2026-09-02 (`gh issue view 65`, `gh pr view 76`); the tag `archive/bl-10-citations` still holds the parked checker (`git tag --list`). Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-26] S343 -- BL-26 closed: PR #66 merged, issue #67 closed by the maintainer's PR #73
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #66 merged 2026-08-11 and issue #67 closed 2026-08-12 (04:43:18Z), one second after the maintainer's PR #73 merged (`gh pr view 66`, `gh pr view 73`, `gh issue view 67`). The fork's own scoped `--sync` fix (`7d682fa`) is not upstream and the closed row says so: it ships only with the large combined pull request's dashboard lineage (composition plan D3 (a)). Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-30] S343 -- BL-30 closed: the trimmer has fired in all three other adopters; their proofs re-run read-only
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. The body asked whether the trimmer fired outside `nprcgenekeepr`, and whether each run was verified by its own `.verify.sh`. It has, in `mts-system`, `vscode_quarto_ext` and `wsfct`. I cloned each project's `master` (`git clone --no-local`, into the session scratchpad, so no adopter working tree was touched) and ran every shard's proof: `mts-system` 4 of 4 exit 0, `vscode_quarto_ext` 3 of 3, `wsfct` 0 of 6 as written and 5 of 6 under `--reverify` (trimmer 1.8.1); the sixth `wsfct` proof is recorded as a rider in BL-60's detail body. Both backlog proofs exit 0 before and after.
+
 ### 2026-10-19 · [BL-14] S343 -- BL-14 closed: upstream PR #69 merged; one leftover sentence handed to BL-46
 
 Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #69 merged 2026-08-12 and the spec's collector promise for `commit: pending` is gone (0 hits for 'until the next session' in `starter-kit/HANDOFFS.md` on `upstream/main`). One sentence at `starter-kit/HANDOFFS.md:163-165` ('was always going to be filled by a later session', identical on `upstream/main` line 164) is not covered; it is upstream's own text too, so it is not a fork-local fix. It is recorded as a rider at the end of BL-46's detail body (BL-46 changes the same file), so closing BL-14 loses nothing. BL-16 stays open. Both backlog proofs exit 0 before and after.

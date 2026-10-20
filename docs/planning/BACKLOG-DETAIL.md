@@ -1965,6 +1965,8 @@ or keep the script but stop tracking it, regenerating on demand.
 worth doing before the `HANDOFFS.md` front-matter cut BL-59 leaves owed. **Measured at S172, and the
 numbers above are re-derivable** — `git ls-files 'docs/archive/*.verify.sh'` and `diff` on any two.
 
+**Rider from BL-30's close (S343).** The trim proofs of three adopters were re-run read-only on 2026-10-19 (clones of each project's `master`): `mts-system` 4 of 4 and `vscode_quarto_ext` 3 of 3 exit 0 as written; `wsfct` 0 of 6 as written and, under `--reverify` with this repository's trimmer 1.8.1, 5 of 6 at exit 0. The sixth, `docs/archive/CHANGELOG-through-2026-08-17.md.verify.sh` in `wsfct`, still exits 1 (`L2 FOOTER is not byte-identical in the live file`; its trim commit added 5 records). Whatever shape this item picks, that proof is a case the new scheme and `--reverify` must handle or name; a frozen proof is not rewritten (point 3 above).
+
 **BL-59 — `HANDOFFS.md` retains four receipts, and no consumer needs more than one. Decide the
 retention number from what reads the file, and settle whether the *proof* half belongs in
 `CHANGELOG.md` at all. Raised 2026-09-16 (S172, on the operator's question: "I thought `HANDOFFS.md`
