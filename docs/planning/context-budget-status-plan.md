@@ -1,7 +1,7 @@
 # `context_budget.py`: a real `--status`, refused unknown arguments, and an advisory that agrees with its table
 
 **Date:** 2026-09-20 (fork session S209)
-**Status:** RATIFIED — all five decisions in §3 were decided 2026-09-21 by the operator at S209's
+**Status:** **UPDATE 2026-10-19 (S343): [PR #86](https://github.com/KJ5HST/methodology/pull/86) MERGED 2026-10-01 and BL-75 and BL-80 are closed. P5 is done as far as it was examined: the merge is in fork `main` and `.context-budget.json`’s ‘the flag does not exist’ sentence is rewritten; the plan’s floors item was not examined. The status below is as it stood at S215.** RATIFIED — all five decisions in §3 were decided 2026-09-21 by the operator at S209's
 decision picker, each as recommended: D1 (b), D2 (a), D3 (a), D4 yes, D5 yes. Implementation is §5,
 one phase per session. **P1 DONE 2026-09-21 (S210): `e859196` on the LOCAL branch `fix/context-budget-status`**
 (not pushed; see *P1 outcome* under §5 P1). **P2 DONE 2026-09-21 (S211): `c299c30` on the same branch** (see

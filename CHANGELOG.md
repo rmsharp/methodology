@@ -261,6 +261,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-75] S343 -- BL-75 closed: upstream PR #86 merged; .context-budget.json's stale --status sentence rewritten
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #86 merged 2026-10-01. The one step the plan still owed (P5) was `.context-budget.json:92`, whose note said `--status` 'does not exist and is silently ignored', false since the merge: it now tells a reader to run `--status` (writes nothing; an unknown argument exits 3) and corrects the `append_history` line reference from `:506` to `:617` (`grep -n 'def append_history' starter-kit/context_budget.py`). The edit is to prose inside one JSON string; the file still parses (`json.loads`) and no number in it changed. Checked S343: `python3 starter-kit/context_budget.py --bogus` exits 3 and `--status` exits 2 on this repository's known state and leaves `git status` clean. The plan's status line (`docs/planning/context-budget-status-plan.md`) gets a dated update in front of the old text. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-80] S343 -- BL-80 closed: upstream PR #86 merged; the advisory sentence follows the table
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #86 merged 2026-10-01 (`gh pr view 86`: MERGED), the same pull request as BL-75; `starter-kit/context_budget.py` on `upstream/main` builds the advisory's second sentence from the headline's own worst status. Both backlog proofs exit 0 before and after.
+
 ### 2026-10-19 · [BL-57] S343 -- BL-57 closed: upstream PR #84 merged; all twelve phases done; the plan's status line and BL-11 updated
 
 Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #84 merged 2026-10-01 (`gh pr view 84`: MERGED). The plan’s status line (`docs/planning/changelog-rules-contradictions-plan.md`) gets a dated update in front of the old text, which stays as it stood. The plan’s §8 follow-ons are pointed at the rows that carry them: D7 (the `HANDOFFS.md` archive rule) is in BL-47’s detail (‘The `HANDOFFS.md` half stays open (the plan’s D7)’); the four fork-only comments in distributed tools are the class BL-11 tracks, and BL-11’s index row gets a note with a grep that finds them now (the plan’s line numbers have drifted; BL-11’s detail body is byte-pinned by the detail proof, so it is not edited). Both backlog proofs exit 0 before and after.
