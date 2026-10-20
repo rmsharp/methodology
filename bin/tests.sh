@@ -4639,6 +4639,55 @@ else
 fi
 rm -f "$M54" "$MR54"
 
+echo "== Test 55: check-backlog-anchors — every link into BACKLOG-DETAIL.md lands on its own item (BL-55, RED-first against fixtures) =="
+# S345 found 13 item bodies with no <a id> line (9 dangling [detail] links) and a bl-58 anchor standing above BL-60's
+# body, so a link resolved to the WRONG item. The two backlog proofs read bodies; neither reads a link. Each case asserts
+# the exit AND the message: an exit code alone passes on a fixture the checker rejects for some other reason.
+F55="$(mktemp -d)"
+t55() { # $1 label, $2 wanted exit, $3 text the output must hold ("" = none), $4 BACKLOG.md, $5 BACKLOG-COMPLETED.md, $6 BACKLOG-DETAIL.md
+    printf '%b' "$4" > "$F55/BACKLOG.md"; printf '%b' "$5" > "$F55/BACKLOG-COMPLETED.md"; printf '%b' "$6" > "$F55/BACKLOG-DETAIL.md"
+    local out got
+    out="$("$BIN/check-backlog-anchors" --dir "$F55" 2>&1)"; got=$?
+    if [ "$got" = "$2" ] && { [ -z "$3" ] || grep -qF -- "$3" <<< "$out"; }; then
+        pass "check-backlog-anchors: $1"
+    else
+        fail "check-backlog-anchors: $1 (exit $got, wanted $2, wanted text '$3'; output: $out)"
+    fi
+}
+L55='| **BL-1** | open | [detail](BACKLOG-DETAIL.md#bl-1) |\n'
+C55='| **BL-2** | done | [detail](BACKLOG-DETAIL.md#bl-2) |\n'
+D55='<a id="bl-1"></a>\n\n**BL-1 — first.**\n\nbody one\n\n<a id="bl-2"></a>\n\n**BL-2 — second.**\n\nbody two\n'
+t55 "a clean backlog passes"                                         0 "OK"            "$L55" "$C55" "$D55"
+t55 "a [detail] link in BACKLOG.md with no anchor fails"             1 "bl-3"          "$L55| **BL-3** | open | [detail](BACKLOG-DETAIL.md#bl-3) |\n" "$C55" "$D55"
+t55 "a link in BACKLOG-COMPLETED.md with no anchor fails"            1 "bl-4"          "$L55" "$C55| **BL-4** | done | [detail](BACKLOG-DETAIL.md#bl-4) |\n" "$D55"
+t55 "a link written with a path prefix is read, and fails too"       1 "bl-5"          "$L55| **BL-5** | open | [detail](../planning/BACKLOG-DETAIL.md#bl-5) |\n" "$C55" "$D55"
+t55 "a link to another file's fragment is not this checker's"        0 "OK"            "$L55| **BL-5** | open | [x](OTHER.md#bl-5) |\n" "$C55" "$D55"
+t55 "two links on one line are both read"                            1 "bl-6"          "$L55| **BL-1** | see [detail](BACKLOG-DETAIL.md#bl-1) and [x](BACKLOG-DETAIL.md#bl-6) |\n" "$C55" "$D55"
+t55 "a body with no anchor of its own fails (S345's thirteen)"       1 "BL-3 has no anchor of its own: anchor bl-2 above it already holds BL-2" "$L55" "$C55" "$D55\n**BL-3 — third.**\n\nbody three\n"
+t55 "an anchor above the WRONG body fails though its link resolves"  1 "BL-60 sits under anchor bl-58, not bl-60" "| **BL-58** | open | [detail](BACKLOG-DETAIL.md#bl-58) |\n" "$C55" '<a id="bl-58"></a>\n\n**BL-60 — sixty.**\n\nbody\n\n**BL-58 — fifty-eight.**\n\nbody\n'
+t55 "an anchor that holds no body fails"                            1 "bl-9"          "$L55" "$C55" "$D55\n<a id=\"bl-9\"></a>\n\ntext with no item\n"
+t55 "an anchor followed by another anchor holds no body"             1 "bl-8"          "$L55" "$C55" "$D55\n<a id=\"bl-8\"></a>\n\n<a id=\"bl-9\"></a>\n\n**BL-9 — nine.**\n\nbody\n"
+t55 "a duplicated anchor fails"                                      1 "duplicate anchor bl-2 (first at line 7)" "$L55" "$C55" "$D55\n<a id=\"bl-2\"></a>\n\n**BL-2 — again.**\n\nbody\n"
+t55 "a duplicated body heading fails"                                1 "duplicate heading BL-1 (first at line 3)" "$L55" "$C55" "$D55\n<a id=\"bl-7\"></a>\n\n**BL-1 — again.**\n\nbody\n"
+t55 "a fragment is case-sensitive, as an HTML id is"               1 "#BL-2"         "$L55| **BL-2** | open | [detail](BACKLOG-DETAIL.md#BL-2) |\n" "$C55" "$D55"
+t55 "an anchor line with text after it is not a separator"          1 "BL-3 has no anchor of its own" "$L55" "$C55" "$D55\n<a id=\"bl-3\"></a> a note\n\n**BL-3 — third.**\n\nbody\n"
+t55 "a heading before any anchor fails"                              1 "BL-0"          "$L55" "$C55" "**BL-0 — zero.**\n\nbody\n\n$D55"
+t55 "no anchors at all is unusable, not a pass"                      2 "nothing"       "$L55" "$C55" "just prose\n"
+t55 "no links at all is unusable, not a pass"                        2 "nothing"       "no links\n" "no links\n" "$D55"
+rm -f "$F55/BACKLOG-COMPLETED.md"
+"$BIN/check-backlog-anchors" --dir "$F55" >/dev/null 2>&1; got55=$?
+[ "$got55" = 2 ] && pass "check-backlog-anchors: a missing file is exit 2" || fail "check-backlog-anchors: a missing file read exit $got55, wanted 2"
+rm -rf "$F55"
+# The tool and the backlog proofs split items on the same heading pattern, or a body one reads the other cannot see.
+h55() { grep -o 'HEAD_RE *= *re.compile(r"[^"]*"' "$1" | sed 's/^[^"]*"//'; }
+[ -n "$(h55 "$BIN/check-backlog-anchors")" ] && [ "$(h55 "$BIN/check-backlog-anchors")" = "$(h55 "$METHODOLOGY/docs/planning/BACKLOG-DETAIL.md.verify.sh")" ] \
+    && pass "check-backlog-anchors: reads items by the heading pattern BACKLOG-DETAIL.md.verify.sh reads them by" \
+    || fail "check-backlog-anchors: its heading pattern differs from BACKLOG-DETAIL.md.verify.sh's"
+# The LIVE files: the same scope as the backlog-anchors gate in .quality-gates.json (BACKLOG.md and BACKLOG-COMPLETED.md;
+# the frozen shards under docs/archive/ hold two links to #bl-41 that can never resolve and are not read).
+"$BIN/check-backlog-anchors" >/dev/null 2>&1 && pass "check-backlog-anchors: this repository's own backlog is clean" \
+    || fail "check-backlog-anchors: this repository's own backlog has findings"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]

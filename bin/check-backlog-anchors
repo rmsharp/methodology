@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""check-backlog-anchors — every link into BACKLOG-DETAIL.md lands on its own item.
+
+BL-55, fork half. docs/planning/BACKLOG.md and BACKLOG-COMPLETED.md keep one row per item and link each
+row to its body in BACKLOG-DETAIL.md (`[detail](BACKLOG-DETAIL.md#bl-N)`). The body is found by an
+`<a id="bl-N"></a>` line standing above it, which is also the record separator the two backlog proofs
+(BACKLOG-DETAIL.md.verify.sh, BACKLOG-COMPLETED.md.verify.sh) read bodies by. S345 found 13 bodies with
+no such line (9 dangling links) and a `bl-58` anchor standing above BL-60's body, so a link RESOLVED to
+the wrong item. The proofs read bodies and neither reads a link; this reads both.
+
+Four things are checked, in the detail file and in the links of the two live files:
+  link       every link whose target is BACKLOG-DETAIL.md#<fragment> (with or without a path in front)
+             finds an `<a id="<fragment>"></a>` line;
+  own item   the nearest anchor above each `**BL-N —` heading is `bl-N`, so a link lands on the item it
+             names (the bl-58 shape: a link-only check passes it);
+  one item   an anchor holds exactly one heading, and no heading stands above the first anchor;
+  unique     no anchor id and no heading is written twice.
+A population of nothing is exit 2, never a pass: a checker that read no anchors or no links asserts nothing.
+
+Scope: the two live files. The frozen shards under docs/archive/ hold two links to #bl-41 that can never
+resolve (no BL-41 body ever existed) and cannot be repaired, so they are not read. The frozen August archive
+has its own proof and no links into the detail file. Canonical-only (not in bin/_manifest.py), like the
+other bin/check-* tools; a declared quality gate, `backlog-anchors`, in .quality-gates.json.
+
+Usage:  ./bin/check-backlog-anchors [--dir DIR]     DIR holds the three files (default: docs/planning)
+Exit:   0 = clean; 1 = findings; 2 = a file unreadable, or nothing to check, or usage.
+Python 3 stdlib only; cross-platform.
+"""
+import argparse
+import os
+import re
+import sys
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LIVE = ("BACKLOG.md", "BACKLOG-COMPLETED.md")
+DETAIL = "BACKLOG-DETAIL.md"
+
+# The same two patterns the backlog proofs read bodies by (BACKLOG-DETAIL.md.verify.sh), so this tool and
+# the proofs cannot disagree about what an item or its separator is.
+ANCHOR_RE = re.compile(r'^<a id="([^"]+)"></a>$')
+HEAD_RE = re.compile(r"^\*\*BL-(\d+) —")
+LINK_RE = re.compile(r"\]\((?:[^)\s]*/)?" + re.escape(DETAIL) + r"#([^)\s]+)\)")
+
+
+def read_lines(path):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return fh.read().split("\n")
+    except OSError as exc:
+        print(f"check-backlog-anchors: cannot read {path}: {exc.strerror or exc}", file=sys.stderr)
+        sys.exit(2)
+
+
+def read_detail(lines):
+    """Walk the detail file once. Returns (anchor ids, findings); a finding is (line number, text)."""
+    findings, anchors, heads = [], {}, {}
+    cur = None  # [anchor id, its line, the first heading under it, or None]
+    for no, line in enumerate(lines, 1):
+        m = ANCHOR_RE.match(line)
+        if m:
+            aid = m.group(1)
+            if aid in anchors:
+                findings.append((no, f"duplicate anchor {aid} (first at line {anchors[aid]})"))
+            else:
+                anchors[aid] = no
+            if cur and cur[2] is None:
+                findings.append((cur[1], f"anchor {cur[0]} holds no item heading"))
+            cur = [aid, no, None]
+            continue
+        m = HEAD_RE.match(line)
+        if not m:
+            continue
+        n = m.group(1)
+        if n in heads:
+            findings.append((no, f"duplicate heading BL-{n} (first at line {heads[n]})"))
+        else:
+            heads[n] = no
+        if cur is None:
+            findings.append((no, f"BL-{n} has no anchor above it"))
+        elif cur[2] is not None:
+            findings.append((no, f"BL-{n} has no anchor of its own: anchor {cur[0]} above it already holds BL-{cur[2]}"))
+        elif cur[0] != f"bl-{n}":
+            findings.append((no, f"BL-{n} sits under anchor {cur[0]}, not bl-{n}"))
+        if cur is not None and cur[2] is None:
+            cur[2] = n
+    if cur and cur[2] is None:
+        findings.append((cur[1], f"anchor {cur[0]} holds no item heading"))
+    return anchors, findings
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="check-backlog-anchors", description=__doc__.split("\n")[0])
+    ap.add_argument("--dir", default=os.path.join(REPO, "docs", "planning"), metavar="DIR",
+                    help="directory holding BACKLOG.md, BACKLOG-COMPLETED.md and BACKLOG-DETAIL.md "
+                         "(default: docs/planning)")
+    args = ap.parse_args(argv)
+
+    detail_lines = read_lines(os.path.join(args.dir, DETAIL))
+    anchors, detail_findings = read_detail(detail_lines)
+    live = {name: read_lines(os.path.join(args.dir, name)) for name in LIVE}
+
+    links = [(name, no, m.group(1)) for name, lines in live.items()
+             for no, line in enumerate(lines, 1) for m in LINK_RE.finditer(line)]
+    if not anchors:
+        print(f"check-backlog-anchors: nothing to check: no <a id> anchor in {DETAIL}", file=sys.stderr)
+        return 2
+    if not links:
+        print(f"check-backlog-anchors: nothing to check: no link into {DETAIL} in {' or '.join(LIVE)}",
+              file=sys.stderr)
+        return 2
+
+    findings = [(DETAIL, no, text) for no, text in detail_findings]
+    findings += [(name, no, f'link to {DETAIL}#{frag} finds no <a id="{frag}"></a>')
+                 for name, no, frag in links if frag not in anchors]
+    if findings:
+        for name, no, text in sorted(findings, key=lambda f: (f[0] != DETAIL, f[0], f[1])):
+            print(f"  {name}:{no}: {text}")
+        print(f"check-backlog-anchors: FAIL — {len(findings)} finding(s)")
+        return 1
+    print(f"check-backlog-anchors: OK — {len(links)} link(s) in {' and '.join(LIVE)} land on {len(anchors)} "
+          f"anchor(s); each anchor holds exactly its own item")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
