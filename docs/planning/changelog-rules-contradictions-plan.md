@@ -1,6 +1,6 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
-**Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
+**Status:** **UPDATE 2026-10-19 (S343): [PR #84](https://github.com/KJ5HST/methodology/pull/84) MERGED 2026-10-01, all twelve phases are done, and BL-57 is closed. The status below is as it stood at S195. The §8 follow-ons: D7 is carried by BL-47; the fork-only comments in distributed tools are the class BL-11 tracks (a note on its index row).** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
 S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; all four
 backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**, and BL-54, which came
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180

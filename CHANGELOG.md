@@ -261,6 +261,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-57] S343 -- BL-57 closed: upstream PR #84 merged; all twelve phases done; the plan's status line and BL-11 updated
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #84 merged 2026-10-01 (`gh pr view 84`: MERGED). The plan’s status line (`docs/planning/changelog-rules-contradictions-plan.md`) gets a dated update in front of the old text, which stays as it stood. The plan’s §8 follow-ons are pointed at the rows that carry them: D7 (the `HANDOFFS.md` archive rule) is in BL-47’s detail (‘The `HANDOFFS.md` half stays open (the plan’s D7)’); the four fork-only comments in distributed tools are the class BL-11 tracks, and BL-11’s index row gets a note with a grep that finds them now (the plan’s line numbers have drifted; BL-11’s detail body is byte-pinned by the detail proof, so it is not edited). Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-62] S343 -- BL-62 closed: upstream PR #84 merged; the partition test sums only the read-set pair
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. `tools/test_context_budget.py` on `upstream/main` has `READ_TOGETHER_CLASSES = ("read-set",)` at line 1664 and uses it at 1679; the fix commit `5223afb6` is an ancestor of `upstream/main`. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-63] S343 -- BL-63 closed: upstream PR #84 merged; the paragraph and the cap sentence are live (index row out; never in the Open list)
+
+Closed by the index row leaving `docs/planning/BACKLOG.md`, the id kept in its Completed items list and the pointer row joining `docs/planning/BACKLOG-COMPLETED.md`. BL-63 was never in the hand-kept 'Open:' list, so nothing was struck there. 'Committing a sync' is at `starter-kit/BOOTSTRAP.md` line 76 on `upstream/main` and the cap-row sentence is in `starter-kit/SAFEGUARDS.md` there (`grep -c` reads 1). Both backlog proofs exit 0 before and after.
+
 ### 2026-10-19 · [BL-54] S343 -- BL-54 closed: upstream PR #87 merged, carrying the fork-side fix
 
 Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #87 carries the two fork-side commits (`2c4f801`, `865119f`) with BL-66's fix, as the plan's D3 (a) decided; `bin/sync` on `upstream/main` uses `--full-history` and `bin/status` counts a first-parent 'mainline'. Closed with BL-66, the sync-github plan's last step. Both backlog proofs exit 0 before and after.
