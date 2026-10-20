@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-102] S350 close-out -- BL-102 done (quality_ratchet.py 1.5.1: install-hook resolves the tool's directory); the receipt complete; nothing sent upstream
+
+The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S349 scored 8). Gate run after the claim, in a clean `--no-local` clone of `8e2397b4`: 22/22 pass, 0 fail, 0 unmeasured, results `8b85fe699a30`, manifest `abeec4246a80`, 1266 s (`ratchet-unit-tests` 123, `tests-sh-passed` 523, `tests-sh-failed` 0). Also in this commit: the close-out dashboard line in `dashboard_history.jsonl` (72/100, medium, 0 high; the Phase 0 line was restored away and is not in history) and the mutation script `docs/planning/bl102-evidence/mutate-bl102.py` (6 mutants, 5 killed, 1 equivalent), so the round can be re-run. Phase 3C appended no row to `docs/FORK_LEARNINGS.md` (rule D3 not triggered; rows #23 and #57 considered). Pushing `main` to the fork's `origin` is asked at the close-out picker; nothing was sent to `KJ5HST/methodology`.
+
 ### 2026-10-20 · [BL-102] S350 -- BL-102 closed in the backlog files (row out of `BACKLOG.md`, id into its Completed list, completed row into `BACKLOG-COMPLETED.md`); open index rows 52 to 51
 
 The three edits of a close; `BACKLOG-DETAIL.md` untouched (its proof pins the pre-split bodies). Read after the edit, each exit 0: `BACKLOG-COMPLETED.md.verify.sh`, `BACKLOG-DETAIL.md.verify.sh`, `BACKLOG-archive-2026-08-15.md.verify.sh`, `bin/check-backlog-anchors` and `bin/check-links`. The completed row records the reason for the directory-only shape, the 1.5.1 reach and the not-repaired already-installed hook; the work is in the entry below (commit `0df0bae8`).
