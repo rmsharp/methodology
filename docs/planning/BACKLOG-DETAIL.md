@@ -4498,3 +4498,14 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 **Why it is a row and not a note.** The paragraph is distributed (`starter-kit/BOOTSTRAP.md`), so the fix reaches adopters only through an upstream pull request, which is its own go-ahead. It was left out of PR #88 on purpose (that pull request carried only the never-overwrite rules) and is stale against the manifest, which this file’s own warning ‘do not trust a list’ applies to. A fix could derive the sentence from the manifest’s table instead of restating it, or just add the five names; check the line number first (it was 74 at S224 and is 90 now).
 
 **Done when** the paragraph names every file `bin/_manifest.py` marks TRACKED or SEED, or points at the manifest instead of listing; verify with `grep -c` of each name in the paragraph. Not started.
+
+<a id="bl-122"></a>
+**BL-122 — `bin/status` does not tell its reader that the methodology source has no git history, so a project that is only behind reads as locally modified. Raised 2026-10-19 (S343), from BL-66’s close. Not fixed.**
+
+**What, measured at S343.** `git clone --depth 1` of this repository gave a shallow source. Against it, `bin/status` for a clean clone of `mts-system` (`69cc272`) printed `locally modified` on **21** rows and `current` on the rest, with no mention of history (the word does not appear in the output). Against the full repository the same 21 rows read `N versions behind` and none reads `locally modified`. `bin/sync --dry-run` against the same shallow source refuses and says why: “This source cannot tell whether they are merely behind or edited here: its checkout is shallow (1 commit) ... Run from a full clone, or deepen this one” (upstream PR #87, plan decision D5, which named `bin/sync` only; `grep -ci shallow bin/status` reads 0).
+
+**Why it matters.** A reader of `bin/status` is told their files were edited when the source cannot tell. The sync-github plan’s verification clause (P6) compares `--source=github` with `--source=local` and so would not notice, because both routes clone with history; the gap shows only for a shallow or tarball checkout used as a local source.
+
+**Fix shape (not costed).** Give `bin/status` the same test `bin/sync` uses and print one sentence above the table when the source is shallow, or print `unknown (source has no history)` on the affected rows. `bin/status` and `bin/sync` are canonical-only (`bin/` has no manifest row), so the fix reaches adopters when they pull the canonical repository, and only an upstream pull request puts it there: its own go-ahead. Test: a shallow clone fixture in `bin/tests.sh`, red before and green after.
+
+**Done when** `bin/status` against a depth-1 source says the source is shallow, and the 21-row reading above no longer reads `locally modified` without a caveat. Not started.

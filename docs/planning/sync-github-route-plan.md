@@ -1,7 +1,7 @@
 # `bin/sync --source=github`: an update route that can update, and a refusal that says what it knows
 
 **Date:** 2026-09-21 (fork session S217)
-**Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
+**Status:** **UPDATE 2026-10-19 (S343): [PR #87](https://github.com/KJ5HST/methodology/pull/87) MERGED 2026-10-01, P6 is done, and BL-66 and BL-54 are closed. The status below is as it stood at S222.** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
 session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1–P5 are
 done** (S218, S219, S220, S221 and S222, each outcome under its phase in §5). **The pull request is OPEN:
 [KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87)**, head `67feb9f`, base `main`, `MERGEABLE` /

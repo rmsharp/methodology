@@ -261,6 +261,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-54] S343 -- BL-54 closed: upstream PR #87 merged, carrying the fork-side fix
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #87 carries the two fork-side commits (`2c4f801`, `865119f`) with BL-66's fix, as the plan's D3 (a) decided; `bin/sync` on `upstream/main` uses `--full-history` and `bin/status` counts a first-parent 'mainline'. Closed with BL-66, the sync-github plan's last step. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-66] S343 -- BL-66 closed: upstream PR #87 merged; plan P6 done; the verification clause run
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #87 merged 2026-10-01 (`gh pr view 87`: MERGED); `upstream/main` is an ancestor of fork `main`. **The plan's verification clause, run:** with `METHODOLOGY_SOURCE_URL=https://github.com/rmsharp/methodology.git` (the default upstream address cannot pass it, since fork `main` differs from upstream's), `bin/status` over a clean clone of `mts-system` (`69cc272`) printed 33 lines from each of `--source=github` and `--source=local`, equal except the `source:` line. The residual the plan's decision D5 did not cover is BL-122. The plan's status line is corrected in `docs/planning/sync-github-route-plan.md` by a dated update in front of the old text. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-122] S343 -- BL-122 raised: bin/status says nothing about a shallow source (measured: 21 rows misread)
+
+Raised from BL-66's close so the residual is not lost. Measured S343 with a `--depth 1` clone of this repository as the source and a clean clone of `mts-system` as the project: `bin/status` prints `locally modified` on 21 rows and never mentions history; against the full source the same 21 rows read `N versions behind`. `bin/sync --dry-run` against the same shallow source refuses and names the shallow checkout. One index row in `BACKLOG.md`, one body in `BACKLOG-DETAIL.md`; nothing built, and the fix is canonical-only, so it reaches adopters only through an upstream pull request.
+
 ### 2026-10-19 · [BL-65] S343 -- BL-65 closed: fixed upstream by the maintainer (PR #89, 229f08d9)
 
 Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. The maintainer fixed the test himself in the shape the body proposed (a): PR #89 merged 2026-10-01, commit `229f08d9`; `TestFitGateEndToEnd` skips when the data refuse the fit. The body's side note (the `Ran N tests` gates ignore a failing suite) is covered for the four suites it names, because `bin/tests.sh` runs them (lines 263-288) and `tests-sh-failed` reads its result; the instance it cannot cover is BL-109. Both backlog proofs exit 0 before and after.
