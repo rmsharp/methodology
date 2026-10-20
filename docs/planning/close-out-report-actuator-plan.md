@@ -219,6 +219,8 @@ appears at their root; **no hook is installed for anyone** — that stays their 
 **Surface:** a scratch adopter project plus the real harness. **Cannot enforce:** an adopter's harness.
 **Does not start before** P1 and P2 have each closed and the operator says so. **STOP** at the opened PR.
 
+**Status, 2026-10-20 (S349):** P3 went out in a narrower shape than written above, at the operator's word "make this a small PR": upstream pull request #96 carries the tool, its tests, its gate and pointers in `SAFEGUARDS.md` and `BOOTSTRAP.md`, canonical-only (adopters copy it). Left out on purpose: the `bin/_manifest.py` row (it fails five checks in `tools/test_methodology_dashboard.py`, because the dashboard keeps three cross-references to the manifest: the installed-source tuple, its per-name entry and the checklist exemption) and the `SESSION_RUNNER.md` section 3G edit. Those two are the follow-up, and the cost above (about 31 lines in each dashboard twin, as the ratchet's own addition paid) is the price this plan did not list.
+
 ## 5. What the operator is choosing between
 
 | | Choice | Recommendation and why |
