@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-113] S348 -- BL-113 closed: row out of `docs/planning/BACKLOG.md`, id into its Completed list, completed row into `BACKLOG-COMPLETED.md`
+
+The three-edit close for the work commit `55364ba1`. The three backlog proofs (`BACKLOG-COMPLETED.md.verify.sh`, `BACKLOG-DETAIL.md.verify.sh`, `BACKLOG-archive-2026-08-15.md.verify.sh`) and `bin/check-backlog-anchors` (92 links on 96 anchors) and `bin/check-links` exit 0; open index rows 53 to 52. `BACKLOG-DETAIL.md` is untouched (its proof pins the body).
+
 ### 2026-10-20 · [BL-113] S348 -- `layer-verify.sh` now runs the budget tool and prints its verdict line and exit code; the composition plan's 'Not carried' cell excepts the one `.context-budget.json` row `ced2c82` carries
 
 Two edits, one deliverable. `docs/planning/pr-composition-evidence/layer-verify.sh` (+6 / -2) gained `python3 starter-kit/context_budget.py --status | grep -E 'over budget|exceeds'` and `echo "budget exit ${PIPESTATUS[0]}"` after the layout scanner's lines, in the same style, with the header naming the line and its pass condition (exit 0). The same lines, taken from the file, run in clean clones: at the pre-fix commit `28f99a7` they print "exceeds the 18,900-token ceiling by 21" and exit 2; at `ced2c82` and at the tip `3cba1e50` "nothing over budget" and exit 0. `docs/planning/upstream-pr-composition-plan.md` line 165 now reads `.context-budget.json` (except one row, `ced2c82`), which draft 11 already discloses (`upstream-pr-body.md:32`); the plan went 29,996 to 29,999 B, within its 30,000 B budget, by merging the two stacked S321 and S323 notes in the 'One seam to keep' paragraph without dropping a fact. The density row is KEPT (stripping it would rewrite the candidate from `ced2c82` on). No fork code, distributed file or candidate commit touched; nothing sent upstream.
