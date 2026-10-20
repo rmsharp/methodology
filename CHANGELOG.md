@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-19-6.md` (1 record(s), 48,713 B → 38,906 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-19 → 2026-10-19) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-19-6.md`](docs/archive/HANDOFFS-through-2026-10-19-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-19-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-19-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 48,713 B → 38,906 B (−20.1%).
+
 ### 2026-10-20 · [ad hoc] S349 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`c822b6a0` to `fbb6ea93`), head read back
 
 At the picker answer "Yes, push main to origin (Recommended)", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `c822b6a0` to `fbb6ea93` (5 commits: the trim, its fold, the push record, the claim and the close-out). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `fbb6ea93796c36cde4521d29c03c686c2bd48ab0`, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.
