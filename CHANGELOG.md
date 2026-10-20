@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] S350 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`f5e16323` to `b8283edd`), head read back
+
+At the picker answer "Yes, push main to origin (Recommended)", `git push origin main` (`https://github.com/rmsharp/methodology.git`, the fork) moved `main` from `f5e16323` to `b8283edd` (5 commits: the earlier push record `10c7ba2e`, the claim `b01f0fe9`, the fix `0df0bae8`, the backlog close `8e2397b4` and the close-out `b8283edd`; the picker text listed them as claim, fix, close, evidence script and close-out, which put the script in its own commit and left out `10c7ba2e`: the script rode in the close-out). Read back: `git ls-remote origin refs/heads/main` and the local `HEAD` both read `b8283edd1140ae0008079666fe5cb946b3c722c9` before this entry, and `git rev-list --count origin/main..HEAD` read 0. Nothing was sent to `KJ5HST/methodology` by this push.
+
 ### 2026-10-20 · [BL-102] S350 close-out -- BL-102 done (quality_ratchet.py 1.5.1: install-hook resolves the tool's directory); the receipt complete; nothing sent upstream
 
 The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S349 scored 8). Gate run after the claim, in a clean `--no-local` clone of `8e2397b4`: 22/22 pass, 0 fail, 0 unmeasured, results `8b85fe699a30`, manifest `abeec4246a80`, 1266 s (`ratchet-unit-tests` 123, `tests-sh-passed` 523, `tests-sh-failed` 0). Also in this commit: the close-out dashboard line in `dashboard_history.jsonl` (72/100, medium, 0 high; the Phase 0 line was restored away and is not in history) and the mutation script `docs/planning/bl102-evidence/mutate-bl102.py` (6 mutants, 5 killed, 1 equivalent), so the round can be re-run. Phase 3C appended no row to `docs/FORK_LEARNINGS.md` (rule D3 not triggered; rows #23 and #57 considered). Pushing `main` to the fork's `origin` is asked at the close-out picker; nothing was sent to `KJ5HST/methodology`.
