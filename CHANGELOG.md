@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-110] S351 close-out -- BL-110 done (`bin/check-links` counts `docs/methodology` strings); the receipt complete; BL-123 opened; nothing sent upstream
+
+The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S350 scored 8). Gate run after the claim, in a clean `--no-local` clone of `8d565eb9`: 22/22 pass, 0 fail, 0 unmeasured, results `df713280a8eb`, manifest `9e8ba0c69fd7`, 1183 s (`sync-layout-unit-tests` 89, `tests-sh-passed` 523, `tests-sh-failed` 0). Also in this commit: the close-out dashboard snapshot in `dashboard_history.jsonl` (72/100, medium, 0 high). Phase 3C appended no row to `docs/FORK_LEARNINGS.md` (rule D3 not triggered; rows #57 and #38 considered). Pushing `main` to the fork's `origin` is asked at the close-out picker; nothing was sent to `KJ5HST/methodology`.
+
 ### 2026-10-20 · [BL-110] S351 -- close BL-110 (`bin/check-links` counts `docs/methodology` strings); BL-123 opened for the two BOOTSTRAP lines the count found
 
 The three-edit close: the `BL-110` index row out of `docs/planning/BACKLOG.md`, its id into the *Completed items* list (between `BL-109` and `BL-111`), and its completed row last in `docs/planning/BACKLOG-COMPLETED.md` (the work is `486b6c60`). The index reads 51 open rows (50 after the close, 51 with the new one). **BL-123** (new, at his go-ahead at the plan picker): `starter-kit/BOOTSTRAP.md:28` and `:399` name the legacy directory without saying which layout, and `:399` is wrong in a project on `methodology/`; written from what was measured, no fix attempted, its body appended last in `BACKLOG-DETAIL.md`. Read back, each gated on its own exit: `BACKLOG-COMPLETED.md.verify.sh`, `BACKLOG-DETAIL.md.verify.sh`, `BACKLOG-archive-2026-08-15.md.verify.sh`, `bin/check-backlog-anchors` and `bin/check-links` exit 0. **Left open on purpose, named in the completed row and not given rows:** the `PROJECT_LEARNINGS.md` link (1 hunk) and the 19 layout-prose hunks of the S321 round, which are the row's option (c).
