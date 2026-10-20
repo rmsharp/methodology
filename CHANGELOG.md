@@ -261,6 +261,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [ad hoc] S344 -- push record: fork `main` to the fork `origin` at the operator's close-out picker (`e6f13e86` to `a6e4079f`), head read back
+
+At the operator's close-out picker answer ("Yes, push main to the fork (Recommended)"), `git push origin main` moved the fork's `main` from `e6f13e86` to `a6e4079f` (5 commits: the trim, its fold, the claim, the BL-93 close and the close-out). Read back: `git fetch origin`, `git ls-remote origin refs/heads/main` and local `HEAD` all read `a6e4079f`, and `git rev-list --left-right --count origin/main...HEAD` reads `0 0`. Only the operator's own fork `rmsharp/methodology` was written; nothing was posted, pushed or edited in `KJ5HST/methodology`. This entry rides a ledger-only commit pushed under the standing grant for push records.
+
 ### 2026-10-19 · [ad hoc] S344 close-out -- BL-93 done; the receipt complete; nothing sent upstream
 
 The session's one deliverable, BL-93 (the hand-kept ‘Open:’ list at the top of `docs/planning/BACKLOG.md`), is done in `8662c30c`; the trim `30328c0b` and its fold `fcabfc63` came first at the operator's Phase 0 picker answer, the claim is `8a1da586`. The `HANDOFFS.md` receipt is complete (`status: complete`, predecessor S343 scored 8, self 8). Phase 3C appended no row to `docs/FORK_LEARNINGS.md` (rows considered: #81, #23, #37), so the retire-or-refuse rule was not triggered. `bash bin/tests.sh` in a clean `--no-local` clone of `8662c30c`: 503 passed, 0 failed, 0 skipped, 422 s, equal to the tests-sh-passed floor of 503. Left open and named in the receipt: BL-87's anchors (13 headings, 9 dangling links, measured) and the sweep's relabels (no row). **Nothing was sent to `KJ5HST/methodology`.**
