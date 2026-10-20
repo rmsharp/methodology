@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-19-5.md` (1 record(s), 47,832 B → 37,888 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-19 → 2026-10-19) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-19-5.md`](docs/archive/HANDOFFS-through-2026-10-19-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-19-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-19-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,832 B → 37,888 B (−20.8%).
+
 ### 2026-10-20 · [BL-79] S348 correction -- the closing message was not the Phase 3G report; `self_score` 8 to 7 in the S348 receipt
 
 The operator wrote "This does not look like the Phase 3 close-out report" after S348's final message. It was an unlabelled summary, and an earlier near-report had gone out before the push and its push record, so no message reported the final state in the 3G shape (heading, the four labelled items, `Session over.`). This is the fourth occurrence of the lapse BL-79 describes (S202, S218, S230, now S348), with the rule in my own notes. Corrected in the durable record: the S348 receipt's `self_score` is 7 (it was 8) and its 3B text names the lapse. The correction commit is local until the operator says to push (the push record `31cc13a9` already on the fork's `origin` carries the old score). BL-79's index row is unchanged: it already records the tool (`starter-kit/close_out_report.py`) and its P3 stays his go-ahead.
