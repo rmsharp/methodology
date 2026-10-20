@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-20 · [BL-18] S353 claim (in progress) -- a forward-only rule in `bin/check-handoff` against root-relative ledger anchors in a new receipt's `key_files`; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-18 (Recommended)", after the `HANDOFFS.md` trim (`8b640b0d`) and its fold (`0515b2a3`) he ticked at the same picker (his third tick, to push `main` to the fork's `origin` at close-out, is still owed). Phase 0: both ledger frontiers current, 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (medium, 0 high); #96, #94, #92 open and unanswered by the maintainer (0, 2, 2 comments), #93 (1) and #95 (0) open and unchanged, `upstream/main` `f34769f3`. Gate-run citation: the local results file is the Oct 10 one, so S352's cited 22-gate numbers were neither re-run nor contradicted. Phase 3F records the rest.
+
 ### 2026-10-20 · [ad hoc] S353 -- the HANDOFFS trim's pointer block folded into the archive index (the trim itself is the tool's entry below, commit `8b640b0d`, ticked at the S353 Phase 0 picker)
 
 The fold, in its own commit as the index's rule says: the pointer block left `HANDOFFS.md` (40,053 B to 39,597 B) and one row joined `docs/HANDOFFS_ARCHIVE_INDEX.md` (`| 1 | 2026-10-20 → 2026-10-20 | HANDOFFS-through-2026-10-20-3.md | v1.8.1 |`). Taken before the session claim, as S352's handoff asked. The trim kept 3 receipts (S352, S351, S350) and archived S349; its dry run named the suffixed shard (`-3`, as predicted) because `HANDOFFS-through-2026-10-20.md` and `-2` were taken, took 7.1 s, and the shard's verify script exited 0 (L1, L2, L3) before the trim commit. Nothing was sent upstream.

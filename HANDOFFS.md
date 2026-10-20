@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S353
+date: 2026-10-20
+status: pending
+active_task: **BL-18: a forward-only rule in `bin/check-handoff`: a bare `CHANGELOG.md:N` or `HANDOFFS.md:N` in a NEW receipt's `key_files` is a finding** (the interaction review's row 14, `docs/planning/backlog-interaction-review-2026-10-18.md`; its wait on BL-89 ended at S352). Fork only, canonical-only tool, nothing sent upstream. The tension the row's detail names (`BACKLOG-DETAIL.md:297`): the checker's own `KEY_FILES_RE` requires a `path:line` token in `key_files`, so the rule exempts a receipt whose only such token is the ledger anchor, and the archive shards stay untouched. Plan first (the design of 'new' is open), shown to him before any code; failing tests first. Governing document: `workstreams/DEVELOPMENT_WORKSTREAM.md`.
+```
+
+```handoff
 session: S352
 date: 2026-10-20
 status: complete
