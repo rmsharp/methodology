@@ -261,6 +261,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-19 · [BL-14] S343 -- BL-14 closed: upstream PR #69 merged; one leftover sentence handed to BL-46
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #69 merged 2026-08-12 and the spec's collector promise for `commit: pending` is gone (0 hits for 'until the next session' in `starter-kit/HANDOFFS.md` on `upstream/main`). One sentence at `starter-kit/HANDOFFS.md:163-165` ('was always going to be filled by a later session', identical on `upstream/main` line 164) is not covered; it is upstream's own text too, so it is not a fork-local fix. It is recorded as a rider at the end of BL-46's detail body (BL-46 changes the same file), so closing BL-14 loses nothing. BL-16 stays open. Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-17] S343 -- BL-17 closed: upstream PR #69 merged; the fork-side check is not built, by design
+
+Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. The distributed half merged as upstream PR #69 on 2026-08-12 (`starter-kit/HANDOFFS.md:63` on `upstream/main` blesses the quoted-heading locator). The fork-side half, a check that every quoted ledger title still resolves, was deliberately never built; **the operator confirmed at the S343 Phase 0 picker that it is recorded as not built, by design** (the row's own reasoning: such a check goes red when an entry is retitled to correct a false claim). Both backlog proofs exit 0 before and after.
+
+### 2026-10-19 · [BL-20] S343 -- BL-20's residual closed: the seed became a pointer (index row out only)
+
+BL-20's defect was fixed at S79; only its option (3), documenting the bare `**Model:**` form in the receipts seed, stayed open. The text it targeted no longer exists: `starter-kit/CHANGELOG.md` is a pointer to `FRAMEWORK_APPARATUS.md` §The Action Ledger (merged upstream with PR #84) and has no `Model:` sentence (`grep -c 'Model:' starter-kit/CHANGELOG.md` reads 0). The index row is out of `BACKLOG.md` and the id struck from its 'Open:' list; the id was already in the Completed items list. **No new completed row:** the existing row (`BACKLOG-COMPLETED.md:90`) is byte-pinned by `BACKLOG-COMPLETED.md.verify.sh` and still says option (3) 'remains open', so this entry is the record that it closed. Both backlog proofs exit 0 before and after.
+
 ### 2026-10-19 · [BL-13] S343 -- BL-13 closed: upstream PR #68 merged
 
 Closed by the three edits: the index row out of `docs/planning/BACKLOG.md` (and the id struck from its hand-kept 'Open:' list), the id kept in its 'Completed items' list, the pointer row into `docs/planning/BACKLOG-COMPLETED.md`. Upstream PR #68 (the corrected `/caveman` row) merged 2026-08-12; line 96 of `RECOMMENDED_SKILLS.md` on `upstream/main` now says the methodology constrains a handoff by content, not length. **The routing block in `BACKLOG.md` is NOT edited:** check C5 of `BACKLOG-DETAIL.md.verify.sh` pins its 1,684 B byte for byte (editing it turned the proof red, found at S343), so a note after the block says it is kept as it stood. Both backlog proofs exit 0 before and after.

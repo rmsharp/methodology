@@ -1206,6 +1206,8 @@ the ceiling. See `CHANGELOG.md`'s S109 entries for the full four-repo table.
 > footer was not. Either the seed must instruct removal of the separator and comment too, or the
 > detector must key on the trailing footer rather than the sentinel.
 
+**Rider from BL-14's close (S343).** `starter-kit/HANDOFFS.md:163-165` (also `upstream/main` line 164) still says that a `commit:` answer slot in an archived receipt "was always going to be filled by a later session", the promise upstream's PR #69 removed from the spec's main text. This item's seed change edits the same file, so reword that sentence in the same change (one hunk) rather than as a separate pull request.
+
 
 **BL-47 — the seed `context-budget.json` omits the two ledgers `methodology_trim.py` exists to bound.
 Raised 2026-08-26 from `vscode_quarto_ext` S255.**
