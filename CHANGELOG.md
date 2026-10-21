@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [BL-44] S355 claim (in progress) -- `bin/check-learnings` names a reserved gap in its message; fork `main` only; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-44 checker message (Recommended)". The picker also took, before this claim, the `HANDOFFS.md` trim (`5a9828e`, run by him because the permission classifier held both my dry run and the write; 4 receipts to 3, S351 archived to the `-5` shard, 52,327 B to 41,051 B, shard proof exit 0) and its fold (`2bd0c7e`, 40,595 B), the push recorded above, and his answer that the manifest follow-up stays on the fork. Phase 0: both ledger frontiers current (`7c54aeab`), 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (medium, 0 high-risk, 0 vulnerabilities; its run added one line to `dashboard_history.jsonl`, carried by this claim); #96 (`ad5c980`, 0 comments), #94 (`1670c5d`, 2), #92 (`8a232bb`, 2) open, #93 (1) and #95 (0) open, all unchanged from S354; `upstream/main` `f34769f3` (no new commits). Gate-run citation: the local results file is still the Oct 10 one (head `4afc0d6`), so S354's 22-gate numbers were neither re-run nor contradicted. Phase 3F records the rest.
+
+### 2026-10-21 · [ad hoc] S355 push record -- the fork's `main` pushed to the fork `origin` (`e2871a35` to `7c54aeab`, 10 commits), head read back
+
+At the operator's Phase 0 picker answer "Push 10 commits to origin": `git push origin main` (`https://github.com/rmsharp/methodology.git`, his fork, not `upstream`), then `git fetch origin` and `git ls-remote origin refs/heads/main` both read `7c54aeab55fec0c581ed14e0b0869c1cd922b227`, equal to the local `HEAD`; `git rev-list --left-right --count origin/main...HEAD` read `0 0`. The ten were S354's work (the claim, the trim and fold, the three work layers, the floor, the gate-found fix and the close-out). Nothing was pushed to or opened on `upstream`.
+
 ### 2026-10-21 · [ad hoc] S355 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 41,051 B to 40,595 B) became the row `| 1 | 2026-10-20 → 2026-10-20 | HANDOFFS-through-2026-10-20-5.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` exit 0 after it. Taken before the S355 claim, at the operator's Phase 0 picker answer "Trim HANDOFFS.md first".

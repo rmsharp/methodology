@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S355
+date: 2026-10-21
+status: pending
+active_task: **BL-44: `bin/check-learnings` names a reserved gap in its message** (the operator's Phase 0 picker answer "BL-44 checker message (Recommended)", 2026-10-21). Half of BL-44 was fixed at S176 (`8cfaf0d` reads the span off the parsed rows as `min..max`); the other half is that the message does not yet name the reserved gap, which is what the item's detail proposes. Read `docs/planning/BACKLOG-DETAIL.md#bl-44` and `bin/check-learnings` first. Canonical-only checker, fork `main` only; nothing sent upstream. Also taken at his picker before this claim: the `HANDOFFS.md` trim (`5a9828e`, run by him) with its fold (`2bd0c7e`), and the push of the fork's `main` to `origin` (`e2871a35` to `7c54aeab`, head read back).
+```
+
+```handoff
 session: S354
 date: 2026-10-20
 status: complete
