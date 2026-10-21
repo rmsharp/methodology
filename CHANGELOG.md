@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [BL-92] S357 claim (in progress) -- make Test 44 say what failed and stop depending on the live tree (shapes a and b); fork `main` only; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-92: make a flaky test failure say what failed (Recommended)". The picker also took three go-aheads, two done before this claim and one running: the push below, the `HANDOFFS.md` trim (`279f0b95`, 4 receipts to 3, S353 archived to the `-7` shard, 50,933 B to 39,596 B, run by him with `!`, shard proof exit 0) and its fold (`3b57b02a`, 39,140 B), and a re-run of the 22 quality checks in a clean `--no-local` clone of `dbba3715` (running; Phase 3F records the result). Phase 0: both ledger frontiers current (`dbba3715`), 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (its run added one line to `dashboard_history.jsonl`, carried by this claim); #96 (`ad5c980`, 0 comments), #94 (`1670c5d`, 2), #92 (`8a232bb`, 2), #93 (1) and #95 (0) open and unchanged; `CHANGELOG.md` 179,561 B before this session's entries, `--check` says the trigger does not fire. Scope: Test 44's no-write assertion (`bin/tests.sh:3871`-`3886`). Shape (c), the ratchet keeping a failing gate's output, is a distributed-tool change and is not taken.
+
+### 2026-10-21 · [ad hoc] S357 push record -- the fork's `main` pushed to the fork `origin` (`0c1802bd` to `dbba3715`, 6 commits), head read back
+
+At the operator's Phase 0 picker answer "Push main to the fork's origin (6 commits)": `git push origin main` (`https://github.com/rmsharp/methodology.git`, his fork, not `upstream`), then `git fetch origin` and `git ls-remote origin refs/heads/main` both read `dbba3715ec349118383cc3a80b6f78b3997ecce4`, equal to the local `HEAD`; `git rev-list --left-right --count HEAD...origin/main` read `0 0`. The six were S356's work (the trim `a73e5e5a`, its fold `9bb4a319`, the claim `e8ab4bb5`, the BL-81 edit `d2708ba0`, the closure `6c62d09f` and the close-out `dbba3715`). Pushed before this session's trim, so the trim and fold (`279f0b95`, `3b57b02a`) and this claim are local until a later push.
+
 ### 2026-10-21 · [ad hoc] S357 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 39,596 B to 39,140 B) became the row `| 1 | 2026-10-20 → 2026-10-20 | HANDOFFS-through-2026-10-20-7.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` exit 0 after it. Taken before the S357 claim, at the operator's Phase 0 picker answer to trim `HANDOFFS.md`; he ran the dry run and the `--write` himself with the `!` prefix, and the trim is `279f0b95`.

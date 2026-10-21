@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S357
+date: 2026-10-21
+status: pending
+active_task: **BL-92 shapes (a) and (b): make Test 44 in `bin/tests.sh` (the `bin/check-overhead` test, `:3854`) say what failed and stop depending on the live tree** (the operator's Phase 0 picker answer "BL-92: make a flaky test failure say what failed (Recommended)", 2026-10-21). Its no-write assertion (`:3871`-`:3886`) compares `git status --porcelain` of the WHOLE live repository before and after two printer runs, and its failure message prints both snapshots without the paths that differ; the suite read 360 passed / 1 failed once in five runs at `5d6fbe4` and the failing assertion was never identified. Plan, from the review's row 11 (`docs/planning/backlog-interaction-review-2026-10-18.md:212`): (a) print the difference of the two snapshots in the failure message; (b) run the printer in a fixture tree holding a copy of `.context-budget.json` and the files it names, so unrelated churn cannot red it. Shape (c), keeping a failing gate's output, is a ratchet change and waits for a later ratchet release. Fork-only: `bin/tests.sh` is canonical-only; nothing distributed, nothing sent upstream. Governing document: `workstreams/DEVELOPMENT_WORKSTREAM.md`.
+```
+
+```handoff
 session: S356
 date: 2026-10-21
 status: complete
