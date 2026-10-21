@@ -295,12 +295,7 @@ Then commit all changes with a descriptive message.
 
 ### 3G: Report and STOP
 
-Tell the user:
-
-- Summary of the deliverable
-- Self-assessment highlights (what went well, what didn't)
-- Previous session's handoff score and key findings
-- What the next session should do
+Run `python3 close_out_report.py` (`--help` lists its inputs) and print its output as your last message: deliverable, self-assessment, predecessor's score and findings, next session.
 
 **Then STOP. The session is over.**
 
