@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S356
+date: 2026-10-21
+status: pending
+active_task: **BL-81: delete the stale prose file sizes from `.context-budget.json`'s notes** (the operator's Phase 0 picker answer "BL-81 (Recommended)", 2026-10-21). `_synced` and `_deliberate_exclusions` still state SESSION_RUNNER.md 54,363 B and SAFEGUARDS.md 15,386 B (`wc -c`, 2026-08-30); the review's row 12 says delete both and cite the structured record, no new guard. Read `docs/planning/BACKLOG-DETAIL.md#bl-81` and `.context-budget.json` (the notes near :114-115) first. Found at Phase 0: `files[].measured_bytes` is also hand-typed and already stale (55,406 and 17,129 against 55,578 and 16,919 today), so the row's premise that `files[]` cannot go stale needs checking against `context_budget.py` before the wording is chosen. Fork-only config; nothing sent upstream. Also taken at his picker before this claim: the `HANDOFFS.md` trim (`a73e5e5a`, run by him) with its fold (`9bb4a319`), the push of S355's 7 commits to the fork's `origin` (head read back), and a re-run of the 22 quality checks in a clean clone of `0c1802bd` (running).
+```
+
+```handoff
 session: S355
 date: 2026-10-21
 status: complete

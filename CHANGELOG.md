@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [BL-81] S356 claim (in progress) -- delete the stale prose file sizes from `.context-budget.json`'s notes; fork `main` only; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-81 (Recommended)". The picker also took three go-aheads, all three done before this claim or running: the `HANDOFFS.md` trim (`a73e5e5a`, 4 receipts to 3, S352 archived to the `-6` shard, 51,486 B to 40,301 B, run by him with `!`, shard proof exit 0) and its fold (`9bb4a319`, 39,845 B), the push below, and a re-run of the 22 quality checks in a clean `--no-local` clone of `0c1802bd` (running; Phase 3F records the result). Phase 0: both ledger frontiers current (`0c1802bd`), 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (medium, 0 high-risk, 0 vulnerabilities; its run added one line to `dashboard_history.jsonl`, carried by this claim); #96 (`ad5c980`, 0 comments), #94 (`1670c5d`, 2), #92 (`8a232bb`, 2) open, #93 (1) and #95 (0) open, all unchanged from S355. The local gate-results file is still the Oct 10 one (head `4afc0d6`), so S355's 22-gate citation was neither contradicted nor confirmed before the re-run. Phase 3F records the rest.
+
+### 2026-10-21 · [ad hoc] S356 push record -- the fork's `main` pushed to the fork `origin` (`7c54aeab` to `0c1802bd`, 7 commits), head read back
+
+At the operator's Phase 0 picker answer "Push the 7 commits to your fork's origin": `git push origin main` (`https://github.com/rmsharp/methodology.git`, his fork, not `upstream`), then `git fetch origin` and `git ls-remote origin refs/heads/main` both read `0c1802bd43c170ae651c5ebb1d7f931cf980e27d`, equal to the local `HEAD`; `git rev-list --left-right --count origin/main...main` read `0 0`. The seven were S355's work (the trim and its fold, the claim, the BL-44 fix, the floor, the backlog closure and the close-out). Pushed before the trim, so the trim and fold (`a73e5e5a`, `9bb4a319`) and this claim are not yet on `origin`. Nothing was pushed to or opened on `upstream`.
+
 ### 2026-10-21 · [ad hoc] S356 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 40,301 B to 39,845 B) became the row `| 1 | 2026-10-20 → 2026-10-20 | HANDOFFS-through-2026-10-20-6.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` exit 0 after it. Taken before the S356 claim, at the operator's Phase 0 picker answer "Trim HANDOFFS.md before the claim"; he ran the dry run and the `--write` himself with the `!` prefix, because the permission classifier refuses both for the agent.
