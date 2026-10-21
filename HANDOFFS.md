@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S354
+date: 2026-10-20
+status: pending
+active_task: **BL-79 follow-up: distribute `starter-kit/close_out_report.py` to adopters through `bin/sync`** (the operator's request, 2026-10-20: he believed it was already in the manifest; it is not, by S349's choice to keep PR #96 small). Three parts, per `docs/planning/close-out-report-actuator-plan.md` P3 and its S349 status: (1) the `bin/_manifest.py` row (and its `NEW_LAYOUT` twin), (2) the dashboard's three cross-references in both twins so the five failing checks pass, (3) `SESSION_RUNNER.md` section 3G telling a session to run the tool, net 0 B or less, plus any line in `SAFEGUARDS.md` the shipping makes false. Fork `main` only; nothing sent upstream (adding to #96, or a follow-up pull request, is his separate go-ahead); syncing the 13 sibling repositories is a later step. The picker's other half, the trim, was run by him at the prompt before this claim (`43b38a91`, fold `0df0fd9f`).
+```
+
+```handoff
 session: S353
 date: 2026-10-20
 status: complete
