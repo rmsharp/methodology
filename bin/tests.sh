@@ -1758,9 +1758,20 @@ else fail "line-wrap mutation was vacuous"; fi
 # Here-strings, not `echo | grep -q`: under pipefail that form can score a match as failed.
 FORK_LEARNINGS="$METHODOLOGY/docs/FORK_LEARNINGS.md"
 OUT="$("$BIN/check-learnings" --file "$FORK_LEARNINGS" --first 15 --no-citations 2>&1)"
-grep -q '^check-learnings: OK .* contiguous 15\.\.' <<<"$OUT" \
+grep -q '^check-learnings: OK .* #15\.\.#[0-9]*, ' <<<"$OUT" \
     && pass "fork Learnings table (#15 on) is clean" \
     || fail "fork Learnings table: expected clean from #15, got: $OUT"
+# BL-44: the OK line names every number the table reserves. The expectation is DERIVED from the
+# file, and a population guard fails the row if none is found, so it cannot pass vacuously.
+RES_FORK="$(grep -oE '`#[0-9]+` is reserved' "$FORK_LEARNINGS" | grep -oE '#[0-9]+')"
+NAMED_FORK=1
+[ -n "$RES_FORK" ] || NAMED_FORK=0
+for r in $RES_FORK; do
+    grep -qE "reserved \(([^)]*, )?$r[,)]" <<<"$OUT" || NAMED_FORK=0
+done
+[ "$NAMED_FORK" = 1 ] \
+    && pass "fork Learnings table: the OK line names its reserved gap(s) ($(echo $RES_FORK))" \
+    || fail "fork Learnings table: the OK line does not name every reserved number (found: '$RES_FORK'): $OUT"
 OUT="$("$BIN/check-learnings" --file "$FORK_LEARNINGS" --no-citations 2>&1)"
 grep -q "not contiguous from 1 .* missing #1, #2," <<<"$OUT" \
     && pass "fork Learnings table without --first reports #1 missing (the flag is read)" \
@@ -1771,7 +1782,67 @@ if mutate "$FORK_LEARNINGS" "$F" 're.sub(r"(?m)^\| 40 \| .*\n", "", s, count=1)'
         && pass "deleted fork row (numbering gap from #15) caught" \
         || fail "deleted fork row (numbering gap from #15) not caught: $OUT"
 else fail "fork row-deletion mutation was vacuous"; fi
-rm -f "$F"
+
+# BL-44: the OK line states the span the rows OBSERVE and names the reserved gap, so that
+# rows + reserved = the span can be checked by eye. S108's receipt read "36 rows, contiguous
+# 1..36" and in the same block cited Learning #37: the count stood in for the highest number.
+# (1) the live table: #14 is reserved and the highest row is read from the file, not counted.
+LAST32="$(grep -oE '^\| *[0-9]+ *\|' "$RUNNER" | grep -oE '[0-9]+' | sort -n | tail -1)"
+grep -qE "^check-learnings: OK .* Learning row\(s\), #1\.\.#$LAST32, 1 reserved \(#14\);" <<<"$OUT32" \
+    && pass "canonical Learnings table: OK line reads #1..#$LAST32 and names the reserved #14" \
+    || fail "canonical Learnings table: expected '#1..#$LAST32, 1 reserved (#14)', got: $OUT32"
+# (2) synthetic tables, so the three shapes are pinned whatever the live tables hold.
+G32="$(mktemp)"
+fx32() {  # fx32 <reserved-callout-lines> <row numbers...> -> writes $G32
+    local callouts="$1"; shift
+    { printf '# Learnings\n\n%s\n\n' "$callouts"
+      printf '| # | Learning | Source | When to Apply |\n|---|---|---|---|\n'
+      for n in "$@"; do printf '| %s | row %s | src | when |\n' "$n" "$n"; done
+    } > "$G32"
+}
+fx32 '' 1 2 3
+OUT="$("$BIN/check-learnings" --file "$G32" --no-citations 2>&1)"
+grep -q 'Learning row(s), #1\.\.#3, none reserved;' <<<"$OUT" \
+    && pass "OK line, no reserved number: '#1..#3, none reserved'" \
+    || fail "OK line, no reserved number: got: $OUT"
+fx32 '> **`#3` is reserved — never fill the gap.**' 1 2 4
+OUT="$("$BIN/check-learnings" --file "$G32" --no-citations 2>&1)"
+grep -q '3 Learning row(s), #1\.\.#4, 1 reserved (#3);' <<<"$OUT" \
+    && pass "OK line, one reserved number: '3 rows, #1..#4, 1 reserved (#3)'" \
+    || fail "OK line, one reserved number: got: $OUT"
+# #2 and #9, not #2 and #4: a Python set of small ints iterates by hash slot, so {2, 9} prints
+# 9 before 2 unless the checker sorts it, while {2, 4} comes out ordered either way.
+fx32 '> **`#2` is reserved.**
+> **`#9` is reserved.**' 1 3 4 5 6 7 8 10
+OUT="$("$BIN/check-learnings" --file "$G32" --no-citations 2>&1)"
+grep -q '8 Learning row(s), #1\.\.#10, 2 reserved (#2, #9);' <<<"$OUT" \
+    && pass "OK line, two reserved numbers: '8 rows, #1..#10, 2 reserved (#2, #9)'" \
+    || fail "OK line, two reserved numbers: got: $OUT"
+# (3) MUTATION, each verified to APPLY (mutate exits 2 on a vacuous one). Both run on the one-gap
+# fixture: the span derived from the row COUNT again (the defect BL-44 names), and the gap unnamed.
+fx32 '> **`#3` is reserved — never fill the gap.**' 1 2 4
+if mutate "$BIN/check-learnings" "$F" 's.replace("min(valid), max(valid), gap", "1, len(rows), gap", 1)'; then
+    OUT="$(python3 "$F" --file "$G32" --no-citations 2>&1)"
+    grep -q '#1\.\.#4,' <<<"$OUT" \
+        && fail "MUTANT SURVIVED: a count-derived span still printed #1..#4: $OUT" \
+        || pass "mutant killed: deriving the span from len(rows) misreports a table with a reserved gap"
+else fail "OK-line span mutation DID NOT APPLY"; fi
+if mutate "$BIN/check-learnings" "$F" 's.replace("if reserved else \"none reserved\"", "if False else \"none reserved\"", 1)'; then
+    OUT="$(python3 "$F" --file "$G32" --no-citations 2>&1)"
+    grep -q '1 reserved (#3)' <<<"$OUT" \
+        && fail "MUTANT SURVIVED: the reserved gap was still named: $OUT" \
+        || pass "mutant killed: an OK line that does not name the reserved gap is caught"
+else fail "OK-line gap mutation DID NOT APPLY"; fi
+# The third mutant needs the two-reserved fixture: dropping sorted() is invisible with one number.
+fx32 '> **`#2` is reserved.**
+> **`#9` is reserved.**' 1 3 4 5 6 7 8 10
+if mutate "$BIN/check-learnings" "$F" 's.replace("for n in sorted(reserved)", "for n in reserved", 1)'; then
+    OUT="$(python3 "$F" --file "$G32" --no-citations 2>&1)"
+    grep -q '2 reserved (#2, #9);' <<<"$OUT" \
+        && fail "MUTANT SURVIVED: an unsorted reserved list still printed in order: $OUT" \
+        || pass "mutant killed: dropping sorted() prints the reserved numbers out of order"
+else fail "OK-line sort mutation DID NOT APPLY"; fi
+rm -f "$F" "$G32"
 
 echo "== Test 33: check-learnings — citations into the distributed corpus resolve =="
 # A distributed file citing a Learning that does not exist. Uses a scratch COPY of

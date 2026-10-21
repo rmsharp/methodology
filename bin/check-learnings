@@ -304,7 +304,8 @@ def main() -> int:
 
     text = path.read_text(encoding="utf-8", errors="replace")
     rows, findings = parse_table(text)
-    findings = check_table(rows, findings, reserved_numbers(text), args.first)
+    reserved = reserved_numbers(text)
+    findings = check_table(rows, findings, reserved, args.first)
 
     valid = {int(n) for n, _c, _l, _r in rows if n.isdigit()}
     budget = check_row_budget(rows, findings)
@@ -320,8 +321,12 @@ def main() -> int:
     scope = "table shape only (--no-citations)" if args.no_citations else "all citations resolve"
     # The span is read off the rows, not derived from their count: a reserved gap inside it
     # (#14 in a 65-row table) made the count-derived form print 1..65 for rows ending at #66.
-    print("check-learnings: OK — %d Learning row(s), contiguous %d..%d; %s; %s."
-          % (len(rows), min(valid), max(valid), scope, budget))
+    # The gap is named for the same reason: rows + reserved = the span, and "contiguous" was
+    # false of any table that has one (BL-44).
+    gap = ("%d reserved (%s)" % (len(reserved), ", ".join("#%d" % n for n in sorted(reserved)))
+           if reserved else "none reserved")
+    print("check-learnings: OK — %d Learning row(s), #%d..#%d, %s; %s; %s."
+          % (len(rows), min(valid), max(valid), gap, scope, budget))
     return 0
 
 
