@@ -1560,7 +1560,7 @@ class TestTheLedgerEntry(Adopter):
         text = r.report["ledger_entry"]["text"]
         self.assertIn("`bin/migrate-layout`", text)
         self.assertIn("tier all", text)
-        self.assertIn("38 files", text)
+        self.assertIn("39 files", text)
         for path in ("CLAUDE.md", ".gitignore", "methodology/.context-budget.json", "methodology/.quality-gates.json"):
             self.assertIn("`%s`" % path, text)
         self.assertIn(text.strip(), self.ledger())
@@ -2634,7 +2634,7 @@ class TestTheCompanionRule(WithALearningsFile):
 
     def test_the_ledger_entry_counts_it_among_the_files_it_moved(self):
         r = run_migrate(self.project)
-        self.assertIn("39 files", r.report["ledger_entry"]["text"])
+        self.assertIn("40 files", r.report["ledger_entry"]["text"])
         self.assertIn("Layout migration", r.report["ledger_entry"]["text"])
 
     def test_a_copy_already_under_methodology_is_a_destination_that_exists(self):

@@ -75,8 +75,8 @@ Evidence for every number below is re-runnable from
 | `docs/methodology/` | 12 | `ITERATIVE_METHODOLOGY.md` `HOW_TO_USE.md` `FRAMEWORK_APPARATUS.md` and `workstreams/` (6 workstreams, 3 campaigns) | canonical owns |
 | Generated beside them | 4 | the dashboard page and history, the budget history, the ratchet results | tool output |
 
-Not in the manifest, so not delivered today: `starter-kit/close_out_report.py` (BL-79 P1; its
-distribution is P3, its own go-ahead), the git hooks (copied by hand), `bin/*` (canonical-only).
+Not in the manifest, so not delivered: the git hooks (copied by hand), `bin/*` (canonical-only).
+(`close_out_report.py` joined the manifest at S354, BL-79, after this plan.)
 
 ### 2.2 The 12 adopters (read-only survey, `adopter-survey.sh`)
 
