@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [BL-44] S355 -- close BL-44 (`bin/check-learnings` prints the observed span and names the reserved gap)
+
+Three-edit close: the open row out of `docs/planning/BACKLOG.md` (open index rows 47 to 46), `BL-44` into its Completed list in numeric order (between BL-43 and BL-45), and the completed row appended to `docs/planning/BACKLOG-COMPLETED.md`. The detail block in `BACKLOG-DETAIL.md` stays as the record, as for BL-18. The two `.verify.sh` backlog proofs, `bin/check-backlog-anchors` and `bin/check-links` exit 0. Stated in the completed row, not done: `upstream/main`'s checker (read at `f34769f3`) still prints `contiguous 1..%d`. Nothing sent upstream.
+
 ### 2026-10-21 · [BL-44] S355 floor -- `tests-sh-passed` 566 to 574 (`.quality-gates.json`)
 
 Measured, not derived: `bash bin/tests.sh` read `== Summary: 574 passed, 0 failed, 0 skipped ==` on the committed tree `e168dae` (clean status before and after), with 4 receipts in `HANDOFFS.md` (the claim stub and three complete receipts), the state S354 read 566 in; 566 plus the 8 new Test 32 assertions. The threshold only tightens, so the hook accepts it without approval; the note `_s355_tightening_bl44` records the figures beside the earlier ones. Nothing sent upstream.
