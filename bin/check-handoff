@@ -114,12 +114,28 @@ follow, and each is deliberate:
     `HANDOFFS.md:<N>` is a finding. Reusing KEY_FILES_RE here would be unsound — it
     matches all three.
 
-Scope is `changelog_ref` ONLY, and that is a smaller claim than the defect. The same
-anchors sit in 14 receipts' `key_files` values, where they decay identically — but
-`key_files` is REQUIRED by this very checker to carry a `path:line` token, so the two
-rules would collide head-on, and one archived receipt's entire `key_files` value is a
-single such anchor that cannot be rewritten without inventing a citation. Recorded as a
-backlog item, deliberately not bundled (FM #17).
+Scope was `changelog_ref` ONLY until BL-18 (S353), which extends the prohibition to the
+NEWEST receipt's `key_files`, forward only. The same anchors sat there and decay
+identically, and the two rules once collided head-on: this checker REQUIRES a `path:line`
+token in `key_files`, and one archived receipt's whole value is a single such anchor that
+cannot be rewritten without inventing a citation. A NEW receipt has no such problem, so
+the rule is forward-only by SCOPE, not by a cutoff date:
+
+  * THE NEWEST RECEIPT ONLY, in the everyday run and in --all (as the gate-citation lint
+    is). An older receipt is never re-judged: measured at S353, 123 of 386 receipts
+    carried an anchor while they were the newest, 165 anchors sit in proof-locked shards
+    (editing one fails its `.verify.sh`) and 2 in older live receipts. Nothing in the
+    past is rewritten.
+  * A `status: pending` Phase 1B stub is skipped, as in the rule above.
+  * --archived skips it: a shard holds no newest receipt (the answer-slot rule's reason).
+  * NO EXEMPTION for a receipt whose only `path:line` token is the anchor (the operator's
+    call, S353). 7 receipts ever had that shape, none since 2026-09-16, and a new receipt
+    can always list a file it changed or a prefixed shard.
+
+Stated limits, not hidden ones: a `./CHANGELOG.md:<N>` spelling passes (the prefix-aware
+regex reads `./` as a directory; 0 occurrences in the corpus), and the other keys
+(`next_steps`, `what_was_done`, `gotchas`, `active_task`) are not scanned — 17 newest
+receipts carried an anchor only there, against 123 for `key_files`.
 
 Usage:
   bin/check-handoff                    # check the newest receipt in ./HANDOFFS.md,
@@ -740,6 +756,21 @@ def check_locator_forms(blocks: list) -> list:
     return findings
 
 
+def key_files_anchors(fields: dict) -> list:
+    """The bare, root-relative ledger anchors in ONE receipt's `key_files`, as the matched
+    tokens in order (BL-18; see THE LOCATOR-FORM RULE in the module docstring).
+
+    The CALLER chooses the receipt: the newest only, never an older one and never a shard's.
+    That scope, not a date, is what makes the rule forward-only. This function skips only a
+    `status: pending` stub (a Phase 1B claim is written before the work it will list), and it
+    has no exemption for a receipt whose only `path:line` token is the anchor.
+    """
+    if fields.get("status", "").strip() == "pending":
+        return []
+    return [m.group(0) for m in LIVE_LEDGER_ANCHOR_RE.finditer(fields.get("key_files", ""))
+            if not m.group(1)]
+
+
 # --- THE RECORD BUDGET AND THE HEADER RESERVE --------------------------------
 #
 # 12 KiB per RECORD. A POLICY NUMBER — NOT a derivation. That distinction is the whole
@@ -1013,6 +1044,10 @@ def main() -> int:
         findings += ["block at line %d (%s): %s"
                      % (blocks_meta[0]["line"], newest.get("session", "").strip() or "<no session>", m)
                      for m in validate_gate_citation(newest, declared)]
+        if not args.archived:  # a shard holds no newest receipt (BL-18)
+            findings += ["block at line %d (%s): key_files addresses a live ledger by line number: %r"
+                         % (blocks_meta[0]["line"], newest.get("session", "").strip() or "<no session>", a)
+                         for a in key_files_anchors(newest)]
         if findings:
             print("check-handoff --all: FAIL — %d issue(s) across %d receipt(s) in %s:"
                   % (len(findings), len(blocks), path))
@@ -1051,7 +1086,17 @@ def main() -> int:
     # into the answer-slot tests' assertions.
     locator_findings = check_locator_forms(blocks)
 
-    # A FOURTH scope, same discipline, and deliberately NOT run under --all. The budget is a
+    # A FOURTH scope (BL-18): the same prohibition on the NEWEST receipt's `key_files`, and only
+    # there. Forward-only by scope: an older receipt is never re-judged, a pending stub is skipped
+    # inside `key_files_anchors`, and a shard (--archived) holds no newest receipt. The message
+    # begins "key_files", never "receipt" or "changelog_ref", so `nslot()` and `nloc()` cannot count it.
+    key_files_findings = [] if args.archived else [
+        "key_files in receipt %s (%s) addresses a live ledger by line number: %r"
+        % (fields.get("session", "?"), fields.get("date", "?"), anchor)
+        for anchor in key_files_anchors(fields)
+    ]
+
+    # A FIFTH scope, same discipline, and deliberately NOT run under --all. The budget is a
     # property of the record being WRITTEN, which is the newest — that is what this mode is
     # for. Adding it to --all would also route it through Test 34's presence control, which
     # asserts on check-handoff's EXIT CODE against the live ledger: a union over every check,
@@ -1059,7 +1104,8 @@ def main() -> int:
     # this mode explicitly; see bin/tests.sh Test 38.
     budget_findings, budget_note = check_record_budget(path, text, blocks_meta)
 
-    if findings or structure_findings or anchor_findings or locator_findings or budget_findings:
+    if (findings or structure_findings or anchor_findings or locator_findings
+            or key_files_findings or budget_findings):
         if findings:
             print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
                   % (len(findings), path))
@@ -1089,6 +1135,15 @@ def main() -> int:
             print("        number keeps resolving, to the wrong entry. Name the entry instead:")
             print('        CHANGELOG.md "<its ### heading>". A prefixed path (starter-kit/…,')  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
             print("        docs/archive/…) is stable and stays legal.")  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
+        if key_files_findings:
+            print("check-handoff: FAIL — %d positional ledger address(es) in `key_files` of the newest receipt in %s:"
+                  % (len(key_files_findings), path))
+            for msg in key_files_findings:
+                print("  error: %s" % msg)
+            print("  note: a line number into a ledger is wrong by the next session (a new entry goes in")
+            print("        at the top each time). `changelog_ref` already names the entry; list in")
+            print("        `key_files` the files you changed, each with a line. A prefixed path")
+            print("        (starter-kit/…, docs/archive/…) is stable and stays legal.")  # layout: ok -- message text: the directory is named as an example of a stable prefix, not read
         if budget_findings:
             print("check-handoff: FAIL — the record being written is over the per-record "
                   "budget in %s:" % path)

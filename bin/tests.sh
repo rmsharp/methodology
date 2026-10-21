@@ -4767,6 +4767,73 @@ t56 "a frozen shard is read the same way (--archived)"                          
 t56 "a clean frozen shard passes (--archived)"                                                   0 "check-handoff: OK" "$H56/example.md" --archived
 rm -rf "$H56"
 
+echo "== Test 57: check-handoff refuses a bare ledger line number in the NEWEST receipt's key_files, and only there (BL-18, RED-first) =="
+# `CHANGELOG.md:268` in a receipt's key_files is wrong by the next session: a new entry goes in at the top of the ledger each
+# time. 123 of 386 receipts carried one while they were the newest (a replay of every committed version of HANDOFFS.md); the
+# archive shards hold 165 more and are proof-locked, so nothing in the past is rewritten. Forward-only is a property of SCOPE: the
+# newest receipt is judged, an older one never is, a Phase 1B stub is skipped, and --archived skips a shard. There is NO exemption
+# for a receipt whose only path:line token is the anchor (the operator's call, S353): a new receipt can always list a real file.
+# Reuses Test 56's runner t56 (LABEL WANTED-EXIT WANTED-TEXT FILE [flags]) and fm56 (the front matter), and nslot/nloc from Tests 25 and 33.
+H57="$(mktemp -d)"
+r57() {  # r57 SESSION KEY_FILES [DATE] [STATUS]: a receipt whose key_files is the given value (an argument, never a format string)
+    printf '```handoff\nsession: %s\ndate: %s\nstatus: %s\nself_score: 8\npredecessor_score: 8\nactive_task: the task of %s\nwhat_was_done: did it (abc1234)\nnext_steps: the next thing after %s\nkey_files: %s\ngotchas: none for %s\nruntime_smoke: n/a — docs-only\nchangelog_ref: abc1234\ncommit: abc1234\n```\n\n' \
+        "$1" "${3:-2026-10-01}" "${4:-complete}" "$1" "$1" "$2" "$1"
+}
+c57() { "$BIN/check-handoff" --file "$1" "${@:2}" 2>&1 | grep -c '^  error: key_files'; }
+OK57='bin/check-handoff:293, bin/tests.sh:4693'
+{ fm56; r57 S4 "$OK57"; r57 S3 'bin/check-handoff:1'; } > "$H57/clean.md"
+t56 "control: a newest receipt that lists only real files with lines passes"                       0 "check-handoff: OK" "$H57/clean.md"
+{ fm56; r57 S4 "CHANGELOG.md:268, $OK57"; r57 S3 'bin/check-handoff:1'; } > "$H57/bare.md"
+t56 "a bare CHANGELOG.md:N beside real files is reported, naming the receipt and the anchor"      1 "key_files in receipt S4 (2026-10-01) addresses a live ledger by line number: 'CHANGELOG.md:268'" "$H57/bare.md"
+{ fm56; r57 S4 "HANDOFFS.md:31-39 (its own receipt), $OK57"; r57 S3 'bin/check-handoff:1'; } > "$H57/range.md"
+t56 "a bare HANDOFFS.md:N-M is reported, at its first number"                                       1 "addresses a live ledger by line number: 'HANDOFFS.md:31'" "$H57/range.md"
+{ fm56; r57 S4 'CHANGELOG.md:35 (issue #55 ledger entry)'; r57 S3 'bin/check-handoff:1'; } > "$H57/only.md"
+t56 "no exemption: an anchor that is the receipt's only path:line token is reported too"          1 "addresses a live ledger by line number: 'CHANGELOG.md:35'" "$H57/only.md"
+{ fm56; r57 S4 "CHANGELOG.md:268, HANDOFFS.md:31, $OK57"; r57 S3 'bin/check-handoff:1'; } > "$H57/two.md"
+[ "$(c57 "$H57/two.md")" = "2" ] && pass "check-handoff: one finding per anchor, so the count equals the tokens a repair removes" \
+    || fail "check-handoff: two anchors did not give two findings (got $(c57 "$H57/two.md"))"
+t56 "the findings are a block of their own, headed by the field"                                  1 "positional ledger address(es) in \`key_files\` of the newest receipt" "$H57/bare.md"
+t56 "the note names the way out"                                                                  1 "\`changelog_ref\` already names the entry" "$H57/bare.md"
+[ "$(nslot "$H57/bare.md")" = "0" ] && [ "$(nloc "$H57/bare.md")" = "0" ] \
+    && pass "check-handoff: the finding begins with the field, so the answer-slot and locator counters cannot absorb it" \
+    || fail "check-handoff: the finding begins 'receipt' or 'changelog_ref' and would be absorbed by Test 25's or 33's counters"
+{ fm56; r57 S4 'starter-kit/CHANGELOG.md:92, bin/tests.sh:1'; r57 S3 'bin/check-handoff:1'; } > "$H57/template.md"
+t56 "control: a prefixed path into a distributed template stays legal"                             0 "check-handoff: OK" "$H57/template.md"
+{ fm56; r57 S4 'docs/archive/HANDOFFS-through-2026-10-20-3.md:1'; r57 S3 'bin/check-handoff:1'; } > "$H57/shard.md"
+t56 "control: a prefixed path into a frozen shard stays legal, even as the only token"            0 "check-handoff: OK" "$H57/shard.md"
+{ fm56; r57 S4 'bin/tests.sh:4693, CHANGELOG.md "2026-10-20 · [BL-18] S353 claim"'; r57 S3 'bin/check-handoff:1'; } > "$H57/heading.md"
+t56 "control: a ledger entry named by its heading (no line number) stays legal"                    0 "check-handoff: OK" "$H57/heading.md"
+{ fm56; r57 S4 "$OK57"; r57 S3 'CHANGELOG.md:268, bin/check-handoff:1'; } > "$H57/older.md"
+t56 "forward-only: an OLDER receipt that carries the anchor is not re-judged"                     0 "check-handoff: OK" "$H57/older.md"
+t56 "forward-only under --all too"                                                                0 "check-handoff --all: OK" "$H57/older.md" --all
+t56 "--all judges the newest receipt's anchor, at the newest receipt's own line"                  1 "block at line 7 (S4): key_files addresses a live ledger by line number: 'CHANGELOG.md:268'" "$H57/bare.md" --all
+{ fm56; printf '```handoff\nsession: S9\ndate: 2026-10-01\nstatus: pending\nactive_task: in progress\nkey_files: CHANGELOG.md:45 (the ordering rule), bin/tests.sh:504\n```\n\n'; r57 S4 "$OK57"; } > "$H57/stub.md"
+t56 "control: a Phase 1B stub that carries the anchor is not judged until it is closed out"        0 "check-handoff: OK" "$H57/stub.md" --allow-pending
+{ fm56; r57 S4 "CHANGELOG.md:268, $OK57" 2026-10-01 reconciled; r57 S3 'bin/check-handoff:1'; } > "$H57/reconciled.md"
+t56 "a reconciled receipt is judged like a complete one (only a pending stub is skipped)"         1 "addresses a live ledger by line number: 'CHANGELOG.md:268'" "$H57/reconciled.md"
+t56 "--archived does not judge a frozen shard's first receipt"                                    0 "check-handoff: OK" "$H57/bare.md" --archived
+t56 "--all --archived does not judge it either"                                                   0 "check-handoff --all: OK" "$H57/bare.md" --all --archived
+# The real corpus: the skip must be what spares the shards, and the shards must still read as before.
+S57="$METHODOLOGY/docs/archive/HANDOFFS-through-2026-10-20-3.md"
+if [ -f "$S57" ] && [ -d "$METHODOLOGY/docs/archive" ]; then
+    grep -qE '^key_files:.*(^|[^A-Za-z0-9_./-])CHANGELOG\.md:[0-9]' "$S57" \
+        && pass "check-handoff: control has teeth: a real shard's only receipt carries a bare ledger anchor" \
+        || fail "check-handoff: the real shard $S57 carries no bare anchor, so the --archived skip below is not exercised"
+    [ "$(c57 "$S57")" = "1" ] && pass "check-handoff: the same shard read as a live ledger IS reported (the skip is what spares it)" \
+        || fail "check-handoff: the real shard read as a live ledger gave $(c57 "$S57") finding(s), wanted 1"
+    [ "$(c57 "$S57" --archived)" = "0" ] && pass "check-handoff: that shard read as a frozen shard (--archived) gives no finding" \
+        || fail "check-handoff: the real shard under --archived gave $(c57 "$S57" --archived) finding(s)"
+    n57=0; shards57=0
+    for s in "$METHODOLOGY"/docs/archive/HANDOFFS-*.md; do
+        shards57=$((shards57+1)); n57=$((n57 + $(c57 "$s" --archived)))
+    done
+    [ "$n57" = "0" ] && [ "$shards57" -gt 100 ] && pass "check-handoff: all $shards57 frozen shards read with no key_files finding under --archived" \
+        || fail "check-handoff: $n57 key_files finding(s) across $shards57 frozen shards under --archived (wanted 0 across more than 100)"
+else
+    skip "check-handoff: the real-corpus controls need docs/archive/HANDOFFS-through-2026-10-20-3.md (a canonical checkout); not exercised"
+fi
+rm -rf "$H57"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
