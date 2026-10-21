@@ -4563,3 +4563,16 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 **Done when** both lines say which layout, `bin/check-links` exits 0 with the allowance moved in the same commit, and the candidate’s copy agrees. Not started.
 
 ---
+
+<a id="bl-124"></a>
+**BL-124 — `.context-budget.json`'s `_deliberate_exclusions` note quotes four stale file sizes, and the reason it gives for leaving two of those files out of the budget needs re-checking. Raised 2026-10-21 (S356), found while closing BL-81. Not fixed.**
+
+**What, measured at S356 with `wc -c`.** The note's "STILL EXCLUDED" list quotes `README.md` 90,453 B (now 99,793), `ITERATIVE_METHODOLOGY.md` 55,895 B (now 66,331), `FRAMEWORK_APPARATUS.md` 15,493 B (now 30,083) and `docs/planning/BACKLOG-DETAIL.md` 116,749 B (now 479,525). Each is the figure the note recorded when it was written (the README's is stamped 2026-08-30); nothing re-measures any of them. This is BL-81's defect in the four places BL-81's scope (the two read-set files' sizes) did not reach, and the note's own closing rule, *"never derive a ceiling from a size written in prose"*, applies to them.
+
+**The part that is more than staleness.** The note leaves `ITERATIVE_METHODOLOGY.md` and `FRAMEWORK_APPARATUS.md` without a ceiling on this argument: *"Both now fit one read, which is why neither needs a ceiling; that is the argument, not their size."* This config's read cap is 25,000 tokens (`read_cap_tokens`). At 66,331 B, `ITERATIVE_METHODOLOGY.md` is about 25,400 tokens at the 2.61 B/token measured for `CLAUDE.md` and about 29,200 at the tool's 2.27 B/token floor (`MIN_BYTES_PER_TOKEN`): at or over the cap on either density, so "fits one read" may no longer be true of it. Both figures are estimates (a real count needs the token meter). `FRAMEWORK_APPARATUS.md` at 30,083 B is well inside the cap. S130 moved the apparatus out of the manual so that it would fit one read (68,240 B to 55,895 B by the note's figures); it has regrown by 10,436 B since.
+
+**Fix shape (not costed).** (1) Delete the four sizes and point at `wc -c`, BL-81's shape: no new guard. (2) A decision for the operator: whether `ITERATIVE_METHODOLOGY.md` still meets the one-read argument, earns a ceiling (a `files[]` entry, which the note itself calls "policy, not provisioning"), or sheds bytes again. Measure with the token meter before choosing.
+
+**Done when** the four sizes are gone from the note and the `ITERATIVE_METHODOLOGY.md` question has a recorded answer. Not started.
+
+---
