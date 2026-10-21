@@ -198,11 +198,11 @@ class TestTheManifestsSecondTable(unittest.TestCase):
     def test_it_names_a_new_destination_for_every_distributed_file_and_no_other(self):
         srcs = [src for src, _dest, _disp in manifest.DISTRIBUTION]
         self.assertEqual(sorted(manifest.NEW_LAYOUT), sorted(srcs))
-        self.assertEqual(len(srcs), 30)
+        self.assertEqual(len(srcs), 31)
 
     def test_the_destinations_are_exactly_section_4_1(self):
         self.assertEqual(set(manifest.NEW_LAYOUT.values()), section_4_1_destinations())
-        self.assertEqual(len(set(manifest.NEW_LAYOUT.values())), 30, "two files share one new destination")
+        self.assertEqual(len(set(manifest.NEW_LAYOUT.values())), 31, "two files share one new destination")
 
     def test_the_workstreams_stay_one_level_down_and_everything_else_is_flat(self):
         for src, dest, _disp in manifest.DISTRIBUTION:
@@ -235,7 +235,7 @@ class TestTheReaderReadsTheTableAsData(Scratch):
     def test_a_source_that_predates_the_table_has_none_and_is_still_readable(self):
         path = self.manifest_with("NEW_LAYOUT = {", "OTHER_LAYOUT = {")
         rows, _markers = reader.read_manifest(path, DISPOSITIONS)
-        self.assertEqual(len(rows), 30)
+        self.assertEqual(len(rows), 31)
         self.assertIsNone(reader.read_new_layout(path, rows))
 
     def test_the_table_is_never_run_only_read(self):

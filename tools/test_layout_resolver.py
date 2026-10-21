@@ -305,11 +305,13 @@ class TestTheBlockIsEmbeddable(Scratch):
 
 
 # The plan's section 4.1, typed out: the one place the target layout is written as literals, so a change to
-# the manifest cannot quietly reshape what "the new layout" means. 34 files, none of them at the root.
+# the manifest cannot quietly reshape what "the new layout" means. 35 files, none of them at the root.
+# `close_out_report.py` (BL-79) joined after the plan was written; the plan's own table is not amended.
 S41_FRAMEWORK = ["SESSION_RUNNER.md", "SAFEGUARDS.md", "FRAMEWORK_LEARNINGS.md", "RECOMMENDED_SKILLS.md",
                  "BOOTSTRAP.md", "CONTEXT_TEMPLATE.md", "CLAUDE_TEMPLATE.md",
                  "ITERATIVE_METHODOLOGY.md", "FRAMEWORK_APPARATUS.md", "HOW_TO_USE.md",
-                 "methodology_dashboard.py", "methodology_trim.py", "context_budget.py", "quality_ratchet.py"]
+                 "methodology_dashboard.py", "methodology_trim.py", "context_budget.py", "quality_ratchet.py",
+                 "close_out_report.py"]
 S41_WORKSTREAMS = ["DESIGN_WORKSTREAM.md", "ARCHITECTURE_WORKSTREAM.md", "DEVELOPMENT_WORKSTREAM.md",
                    "AUDIT_WORKSTREAM.md", "RESEARCH_DOCUMENTATION_WORKSTREAM.md", "TEMPLATE_WORKSTREAM.md",
                    "RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",
@@ -330,7 +332,7 @@ class TestFixtureTrees(Scratch):
         want = {"methodology/" + n for n in S41_FRAMEWORK + S41_STATE + S41_GENERATED}
         want |= {"methodology/workstreams/" + n for n in S41_WORKSTREAMS}
         self.assertEqual(self.build("new"), want)
-        self.assertEqual(len(want), 34)
+        self.assertEqual(len(want), 35)
 
     def test_the_legacy_tree_is_the_manifest_plus_the_generated_files(self):
         manifest = _load("_manifest", REPO / "bin" / "_manifest.py")
