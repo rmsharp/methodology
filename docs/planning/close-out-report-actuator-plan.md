@@ -221,6 +221,8 @@ appears at their root; **no hook is installed for anyone** — that stays their 
 
 **Status, 2026-10-20 (S349):** P3 went out in a narrower shape than written above, at the operator's word "make this a small PR": upstream pull request #96 carries the tool, its tests, its gate and pointers in `SAFEGUARDS.md` and `BOOTSTRAP.md`, canonical-only (adopters copy it). Left out on purpose: the `bin/_manifest.py` row (it fails five checks in `tools/test_methodology_dashboard.py`, because the dashboard keeps three cross-references to the manifest: the installed-source tuple, its per-name entry and the checklist exemption) and the `SESSION_RUNNER.md` section 3G edit. Those two are the follow-up, and the cost above (about 31 lines in each dashboard twin, as the ratchet's own addition paid) is the price this plan did not list.
 
+**Status, 2026-10-20 (S354):** the follow-up S349 left out landed on the fork's `main` only, at the operator's word that he had thought the tool was already in the manifest: `bin/_manifest.py` row and `NEW_LAYOUT` twin (`56bf6d1f`), the dashboard's installed-content entry in both twins at 2.23.0 and the pinned counts (`56bf6d1f`, `4c08a600`; the fork's dashboard suite read 6 failing methods, not five, because it has one more table test than the PR branch), and section 3G plus the `SAFEGUARDS.md` sentence (`8f63492b`, net -7 B and -29 B). Not done: the `HOW_TO_USE.md`, `README.md` and worked-transcript phrases above, and BOOTSTRAP Step 10's settings snippet (it is on the PR branch only). Nothing is upstream; the 13 sibling repositories have not been synced.
+
 ## 5. What the operator is choosing between
 
 | | Choice | Recommendation and why |
