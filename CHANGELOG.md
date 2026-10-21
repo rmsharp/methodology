@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-20-6.md` (1 record(s), 51,486 B → 40,301 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-20 → 2026-10-20) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-20-6.md`](docs/archive/HANDOFFS-through-2026-10-20-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-20-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-20-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 51,486 B → 40,301 B (−21.7%).
+
 ### 2026-10-21 · [BL-44] S355 close-out -- BL-44 done (bin/check-learnings prints the observed span and names the reserved gap); the receipt complete; nothing sent upstream
 
 Deliverable: BL-44, fork `main` only. The OK line of `bin/check-learnings` now reads `16 Learning row(s), #1..#17, 1 reserved (#14)`, and the fork's table `94 Learning row(s), #15..#109, 1 reserved (#85)`; Test 32 holds it (9 to 17 assertions), driven RED against the previous checker (8 of 17 failed) and mutation-tested twice. Evidence: the full suite `574 passed, 0 failed, 0 skipped` on committed `e168dae` (floor 566 to 574 in `cd159af`); the three backlog proofs, `check-backlog-anchors`, `check-links` and `check-ledger` exit 0 (closure `a49f203`); `quality_ratchet.py --run` in a clean `--no-local` clone of `a49f203`: 22/22 pass, 0 fail, 0 unmeasured, results `e9c5a438be68`, manifest `195ad2eb1d65` (1,249 s; output kept only in the scratchpad). Also taken at the operator's Phase 0 picker: the `HANDOFFS.md` trim (`5a9828e`, fold `2bd0c7e`), the push of `main` to the fork `origin` (recorded in its own entry), and his answer that the manifest follow-up stays on the fork. The predecessor's handoff (S354) scored 9. No Learnings row appended, so the retire-or-refuse rule was not triggered. `main` is 7 commits ahead of `origin` after this entry; nothing on `upstream`.
