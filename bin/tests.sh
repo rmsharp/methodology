@@ -3861,32 +3861,166 @@ echo "== Test 44: check-overhead — one line, both units, write-free (BL-91 P1,
 # moves. The control run below is fenced by a snapshot/restore for exactly that reason.
 CO="$METHODOLOGY/bin/check-overhead"
 HIST44="$METHODOLOGY/.context-budget-history.jsonl"
+
+# snapshot_delta BEFORE AFTER -- the lines that differ between two `git status --porcelain`
+# snapshots, one "< before" / "> after" item each, joined with ";". Empty when they are equal. A
+# failure message that prints both snapshots whole leaves you diffing them by eye on a busy tree;
+# this names the paths that moved (BL-92). Blank lines are dropped so an empty snapshot is empty.
+snapshot_delta() {
+    { diff <(printf '%s\n' "$1" | sed '/^$/d') <(printf '%s\n' "$2" | sed '/^$/d') || true; } \
+        | { grep '^[<>]' || true; } | paste -sd ';' -
+}
+
+# build_overhead_fixture DIR -- the throwaway git repository (1b) asserts in: a COPY of the printer,
+# this repository's .context-budget.json, every read-set file that config names, and the history
+# file, all committed. Non-zero when any of it cannot be copied or committed, so the caller fails
+# loudly instead of asserting over an empty tree.
+build_overhead_fixture() {
+    local fix="$1"
+    mkdir -p "$fix/bin" \
+        && cp "$CO" "$fix/bin/check-overhead" && chmod +x "$fix/bin/check-overhead" \
+        && cp "$METHODOLOGY/.context-budget.json" "$fix/.context-budget.json" \
+        || return 1
+    # The history file is a stand-in when the repository has none: (1b) only needs a file to hash.
+    if [ -f "$HIST44" ]; then cp "$HIST44" "$fix/.context-budget-history.jsonl" || return 1
+    else : > "$fix/.context-budget-history.jsonl" || return 1
+    fi
+    python3 - "$METHODOLOGY" "$fix" <<'PY' || return 1
+import json, os, shutil, sys
+src, fix = sys.argv[1], sys.argv[2]
+with open(os.path.join(src, ".context-budget.json"), encoding="utf-8") as fh:
+    cfg = json.load(fh)
+for spec in cfg.get("files", []):
+    if spec.get("class") != "read-set":
+        continue
+    dst = os.path.join(fix, spec["path"])
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    shutil.copyfile(os.path.join(src, spec["path"]), dst)
+PY
+    git -C "$fix" init -q && git -C "$fix" add -A \
+        && git -C "$fix" -c user.email=t@t -c user.name=t commit -q -m fixture
+}
+
+# fixture_writes FIX PRINTER -- run PRINTER twice from inside FIX and print what moved in FIX: the
+# snapshot_delta of `git status --porcelain`, plus a note when the history file's hash moved or the
+# file is gone. Empty means the printer wrote nothing. The real assertion AND every kill control go
+# through this one function, so a control proves that the assertion's own wiring can fail, not only
+# that git can see a write.
+fixture_writes() {
+    local fix="$1" printer="$2" hist="$1/.context-budget-history.jsonl" pa pb ha hb d
+    pa="$(git -C "$fix" status --porcelain)"
+    ha="$(shasum "$hist" 2>/dev/null | awk '{print $1}')"
+    (cd "$fix" && python3 "$printer" >/dev/null 2>&1)
+    (cd "$fix" && python3 "$printer" >/dev/null 2>&1)
+    pb="$(git -C "$fix" status --porcelain)"
+    hb="$(shasum "$hist" 2>/dev/null | awk '{print $1}')"
+    d="$(snapshot_delta "$pa" "$pb")"
+    [ -n "$ha" ] || d="${d:+$d;}history file missing before the runs"
+    [ "$ha" = "$hb" ] || d="${d:+$d;}history hash ${ha:-none} -> ${hb:-none}"
+    printf '%s' "$d"
+}
+
 if [ ! -x "$CO" ]; then
     fail "bin/check-overhead exists and is executable (RED-first: this is the assertion that was red before the tool existed)"
 else
     pass "bin/check-overhead exists and is executable"
 
-    # (1) THE NO-WRITE ASSERTION, measured around the PRINTER ONLY and taken as a before/after
-    # rather than as "the tree is clean": the suite runs mid-session, when the tree usually is not.
-    PORCH44A="$(cd "$METHODOLOGY" && git status --porcelain)"
-    HSUM44A="$(shasum "$HIST44" 2>/dev/null | awk '{print $1}')"
+    # (1) EXIT CODES AND DETERMINISM, on the live tree. Nothing is measured about the repository
+    # around these two runs: (1b) says why the no-write assertion no longer reads it.
     OUT44A="$("$CO" 2>/dev/null)"; RC44A=$?
     OUT44B="$("$CO" 2>/dev/null)"; RC44B=$?
-    PORCH44B="$(cd "$METHODOLOGY" && git status --porcelain)"
-    HSUM44B="$(shasum "$HIST44" 2>/dev/null | awk '{print $1}')"
 
     [ "$RC44A" = "0" ] && [ "$RC44B" = "0" ] \
         && pass "check-overhead exits 0 on a measurable tree (both runs)" \
         || fail "check-overhead exit codes: first=$RC44A second=$RC44B (expected 0, 0)"
-    [ "$PORCH44A" = "$PORCH44B" ] \
-        && pass "two runs change no tracked file (git status --porcelain identical)" \
-        || fail "check-overhead changed the tree: before=[$PORCH44A] after=[$PORCH44B]"
-    [ "$HSUM44A" = "$HSUM44B" ] \
-        && pass "two runs append nothing to .context-budget-history.jsonl" \
-        || fail "check-overhead touched the history file: $HSUM44A -> $HSUM44B"
     [ "$OUT44A" = "$OUT44B" ] \
         && pass "two runs on a still tree print byte-identical output" \
         || fail "check-overhead is not deterministic: [$OUT44A] vs [$OUT44B]"
+
+    # (1b) THE NO-WRITE ASSERTION, in a FIXTURE tree and not around the live repository (BL-92).
+    # It used to compare `git status --porcelain` of the WHOLE live repository before and after
+    # the two runs above, which made it the one assertion in the suite that unrelated churn anywhere
+    # in the tree could turn red, with a message that printed both snapshots and named no path. It
+    # went red once in five runs at 5d6fbe4 under quality_ratchet.py --run, and the failing
+    # assertion was never identified. A printer that only reads cannot be what changed the live
+    # tree, so the property is asserted where nothing else writes: a throwaway git repository
+    # holding a COPY of the printer (so a write beside the script is seen too), this repository's
+    # .context-budget.json, its read-set files and its history file. A failure now names the paths
+    # that moved (snapshot_delta), and the three kill controls, which go through the same
+    # fixture_writes as the assertion, prove it CAN fail -- which a no-write assertion never shows
+    # on its own, because the printer does not write.
+    FIX44="$(mktemp -d)"
+    if build_overhead_fixture "$FIX44"; then
+        FCO44="$FIX44/bin/check-overhead"
+
+        # Vacuity guard: a printer that failed before measuring also "wrote nothing".
+        FOUT44="$(cd "$FIX44" && "$FCO44" 2>/dev/null)"; FRC44=$?
+        [ "$FRC44" = "0" ] && [ "${FOUT44#read-set: }" != "$FOUT44" ] \
+            && pass "the fixture's printer copy measured the read-set (exit 0, a read-set line)" \
+            || fail "the fixture's printer did not measure: exit $FRC44, output [$FOUT44] -- the no-write assertion below would be vacuous"
+
+        FDR44="$(fixture_writes "$FIX44" "$FCO44")"
+        [ -z "$FDR44" ] \
+            && pass "two fixture runs change no file and append nothing to .context-budget-history.jsonl" \
+            || fail "check-overhead wrote in the fixture: $FDR44"
+
+        # snapshot_delta itself: equal snapshots give nothing, and one moved path among unchanged
+        # ones gives that path and only that path.
+        SDX44=" M kept.md"$'\n'"?? kept.txt"
+        # Defined first, because an undefined function prints nothing and "prints nothing" is the
+        # very answer this assertion accepts.
+        declare -F snapshot_delta >/dev/null && [ -z "$(snapshot_delta "$SDX44" "$SDX44")" ] \
+            && pass "snapshot_delta of equal snapshots is empty" \
+            || fail "snapshot_delta of equal snapshots was not empty (or is undefined): [$(snapshot_delta "$SDX44" "$SDX44")]"
+        SDD44="$(snapshot_delta "$SDX44" "$SDX44"$'\n'"?? moved.txt")"
+        [ "$SDD44" = "> ?? moved.txt" ] \
+            && pass "snapshot_delta names the one path that moved and none of the unchanged ones" \
+            || fail "snapshot_delta of one added path read [$SDD44], expected [> ?? moved.txt]"
+        # An EMPTY snapshot is the clean tree, and is the case the flake itself produced
+        # (before=[?? churn.tmp] after=[]): neither direction may leave a blank item behind.
+        SDE44="$(snapshot_delta "" "?? moved.txt")|$(snapshot_delta "?? gone.txt" "")"
+        [ "$SDE44" = "> ?? moved.txt|< ?? gone.txt" ] \
+            && pass "snapshot_delta reads a path appearing in, and one leaving, a clean tree" \
+            || fail "snapshot_delta against an empty snapshot read [$SDE44], expected [> ?? moved.txt|< ?? gone.txt]"
+
+        # Kill controls: COPIES of the printer that write, run through the same fixture_writes the
+        # assertion above used. One writes a stray file at the fixture's root, one appends to the
+        # history file, and one writes BESIDE itself -- which is why the real run uses a copy of
+        # the printer inside the fixture rather than the live file. The beside-mutant sits in the
+        # fixture's bin/, and fixture_writes takes its baseline after it is placed, so only the
+        # stray file it writes next to itself moves the snapshot.
+        MW44="$(mktemp)"; MH44="$(mktemp)"; MB44="$FIX44/bin/mutant-check-overhead"
+        if mutate "$CO" "$MW44" 's.replace("    print(\"{cls}", "    open(os.path.join(root, \"stray-write.txt\"), \"w\").write(\"x\")\n    print(\"{cls}", 1)'; then
+            FDW44="$(fixture_writes "$FIX44" "$MW44")"
+            grep -qF -- "stray-write.txt" <<< "$FDW44" \
+                && pass "kill control: a printer that writes a file is seen, and the delta names it" \
+                || fail "kill control: a stray write was not named: delta [$FDW44]"
+            rm -f "$FIX44/stray-write.txt"
+        else
+            fail "kill control mutation DID NOT APPLY -- the printer's final print is no longer a single statement"
+        fi
+        if mutate "$CO" "$MH44" 's.replace("    print(\"{cls}", "    open(os.path.join(root, \".context-budget-history.jsonl\"), \"a\").write(\"x\")\n    print(\"{cls}", 1)'; then
+            FDH44="$(fixture_writes "$FIX44" "$MH44")"
+            grep -qF -- "history hash" <<< "$FDH44" \
+                && pass "kill control: a printer that appends to the history file moves its hash, and the delta says so" \
+                || fail "kill control: an appended history line was not reported: delta [$FDH44]"
+            git -C "$FIX44" checkout -q -- .context-budget-history.jsonl
+        else
+            fail "kill control mutation DID NOT APPLY -- the printer's final print is no longer a single statement"
+        fi
+        if mutate "$CO" "$MB44" 's.replace("    print(\"{cls}", "    open(os.path.join(os.path.dirname(os.path.abspath(__file__)), \"stray-beside.txt\"), \"w\").write(\"x\")\n    print(\"{cls}", 1)'; then
+            FDB44="$(fixture_writes "$FIX44" "$MB44")"
+            grep -qF -- "stray-beside.txt" <<< "$FDB44" \
+                && pass "kill control: a write beside the script lands in the fixture, and the delta names it" \
+                || fail "kill control: a write beside the script was not named: delta [$FDB44]"
+        else
+            fail "kill control mutation DID NOT APPLY -- the printer's final print is no longer a single statement"
+        fi
+        rm -f "$MW44" "$MH44"
+    else
+        fail "the no-write fixture could not be built -- the no-write assertion did not run"
+    fi
+    rm -rf "$FIX44"
 
     # (2) EXACTLY ONE LINE. wc -l counts terminators, so a single terminated line reads 1 and an
     # unterminated one reads 0; both are accepted, two lines are not.
