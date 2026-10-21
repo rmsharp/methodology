@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-20-7.md` (1 record(s), 50,933 B → 39,596 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-20 → 2026-10-20) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-20-7.md`](docs/archive/HANDOFFS-through-2026-10-20-7.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-20-7.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-20-7.md.verify.sh)
+rather than trusting a digest printed here. Live file 50,933 B → 39,596 B (−22.3%).
+
 ### 2026-10-21 · [BL-81] S356 close-out -- BL-81 done (the stale prose sizes leave .context-budget.json's notes); BL-124 raised; the receipt complete; nothing sent upstream
 
 Phase 3, in order. **3A:** S355's handoff scored **9** (re-read before scoring; every checked claim held: the `gh pr view` command and the state it expected for all five upstream threads; the trim offer with `--cut 3 --force`, S352 and the `-6` shard it flagged as a guess, which the dry run printed exactly; "7 commits ahead of origin"; the `CHANGELOG.md` size; the review's order putting BL-81 first; wrong: "three stale size notes" for BL-81, which was two stale prose sentences and one tool-watched field). **3B:** self-score **8** (plain-language Phase 0 report and one picker; the push read back; the trim and fold as ticked, in separate commits; S355's 22-gate citation confirmed by a re-run instead of assumed; the tool read before the wording was chosen, which corrected the row's premise; every surviving hit classified; before/after tool output identical; the backlog searched before BL-124; minus a first edit that grew the file, a classified hit written down only at close-out, a wrong dashboard path, an over-broad "all four are small" in the picker, and a no-op wait). **3C:** appended no row to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule (D3) was not triggered; rows considered: #61, #74, #58, #73. **Gate run (3E), taken in a clean `--no-local` clone of the closure commit `6c62d09f`** (after the claim, 4 receipts in the tree, 1,387 s): `quality_ratchet.py --run` read `22/22 pass · 0 fail · 0 unmeasured · results e9c5a438be68 · manifest 195ad2eb1d65`; the earlier run at `0c1802bd` (1,320 s) read the same, which confirms S355's citation. The BL-124 body gained one sentence naming a fifth, softer hit (`.context-budget.json:21`, classified at work time and left on purpose). The receipt is complete (self-score 8, predecessor S355 scored 9). Nothing was sent upstream, no sibling repository was written, and no spend cap was touched.
