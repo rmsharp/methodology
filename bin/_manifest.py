@@ -64,6 +64,8 @@ DISTRIBUTION = [
     # (see the comment above) only needs one new tail entry, not a reorder.
     ("starter-kit/context_budget.py", "context_budget.py", TRACKED),
     ("starter-kit/quality_ratchet.py", "quality_ratchet.py", TRACKED),
+    # The fifth executable (BL-79): the Phase 3G report tool. Appended last for the same ordered-tuple reason.
+    ("starter-kit/close_out_report.py", "close_out_report.py", TRACKED),
     # seed-once root-files: created if absent, then adopter-owned (never clobbered)
     ("starter-kit/SESSION_NOTES.md", "SESSION_NOTES.md", SEED),
     ("starter-kit/CHANGELOG.md", "CHANGELOG.md", SEED),
@@ -113,6 +115,7 @@ NEW_LAYOUT = {
     "starter-kit/methodology_trim.py": "methodology/methodology_trim.py",
     "starter-kit/context_budget.py": "methodology/context_budget.py",
     "starter-kit/quality_ratchet.py": "methodology/quality_ratchet.py",
+    "starter-kit/close_out_report.py": "methodology/close_out_report.py",
     "starter-kit/SESSION_NOTES.md": "methodology/SESSION_NOTES.md",
     "starter-kit/CHANGELOG.md": "methodology/CHANGELOG.md",
     "starter-kit/HANDOFFS.md": "methodology/HANDOFFS.md",

@@ -430,6 +430,10 @@ CHECKLIST_EXEMPT = {
                           "context_budget.py: sync installs it, so its presence measures sync, "
                           "not adoption; whether a project DECLARES gates is answered by the "
                           "dashboard's gate metrics, not by the compliance checklist",
+    "close_out_report.py": "the Phase 3G report tool (BL-79), same class as quality_ratchet.py: "
+                           "sync installs it, so its presence measures sync, not adoption; whether "
+                           "a session prints the shaped report is answered by the tool's own lint "
+                           "against the receipts, not by the compliance checklist",
     ".quality-gates.json": "SEED manifest for the ratchet above — starts empty by decision "
                            "(plan §8.4), so its presence proves only that sync ran; a declared "
                            "gate count and its outcomes are reported as risks/points instead",
@@ -2508,11 +2512,13 @@ class TestFmtRatioAndTwins(unittest.TestCase):
         on a distributed tool, so MINOR. 2.21.0 is BL-99: the manifest-history walk is first-parent,
         so a merged lineage no longer prints loosenings nobody caused -- changed output, so MINOR.
         2.22.0 is BL-101 P5: the dashboard reads a project that keeps its methodology files under
-        methodology/ as it reads one that keeps them at the root -- changed output, so MINOR."""
-        self.assertEqual(md.DASHBOARD_VERSION, "2.22.0")
+        methodology/ as it reads one that keeps them at the root -- changed output, so MINOR.
+        2.23.0 is BL-79: the Phase 3G report tool becomes installed content, so a synced copy is not
+        counted as the adopter's own source -- changed output, so MINOR."""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.23.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.22\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.22.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.23\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.23.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
@@ -2901,7 +2907,8 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         # 6 since the resync's stage M2 (S177): upstream's quality ratchet ships quality_ratchet.py
         # and its .quality-gates.json seed, and the loop below checks both against their real files.
         # 7 since the 2026-10 resync (BL-95 R1): upstream's v4.1 `.gitattributes` seed.
-        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 7,
+        # 8 since BL-79: the Phase 3G report tool (`close_out_report.py`).
+        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 8,
                          "population guard: update this test's expectations deliberately when a "
                          "further executable ships, rather than letting the loop silently cover less")
         for dest in md.FRAMEWORK_INSTALLED_SOURCE:
@@ -6560,10 +6567,11 @@ QUARTO_BOOK = {
 
 
 def installed_tool_contents():
-    """What `bin/sync` writes for the four executables: each carries the constant its own predicate reads."""
+    """What `bin/sync` writes for the five executables: each carries the constant its own predicate reads."""
     body = "".join("def gen_%d():\n    return %d\n" % (i, i) for i in range(800))
     return {"methodology_dashboard.py": installed_scanner(), "methodology_trim.py": installed_trimmer(),
-            "context_budget.py": 'VERSION = "1.0.0"\n' + body, "quality_ratchet.py": 'VERSION = "1.0.0"\n' + body}
+            "context_budget.py": 'VERSION = "1.0.0"\n' + body, "quality_ratchet.py": 'VERSION = "1.0.0"\n' + body,
+            "close_out_report.py": '__version__ = "1.0.0"\n' + body}
 
 
 def card_projection(project):
@@ -6595,7 +6603,7 @@ class TestBL101P5Walk(unittest.TestCase):
                 p = layout_project(self, layout, contents=installed_tool_contents(), extra=QUARTO_BOOK)
                 m = md.collect_all(p)
                 self.assertTrue(m["doc_only"]["is_doc_only"])
-                self.assertEqual(m["tests"]["source_loc"], 0, "the adopter wrote no source; the four tools are ours")
+                self.assertEqual(m["tests"]["source_loc"], 0, "the adopter wrote no source; the five tools are ours")
                 self.assertGreater(m["files"]["by_category"]["vendor"]["loc"], 5000)
 
     def test_the_card_projects_the_same_in_every_layout(self):
@@ -6986,7 +6994,7 @@ class TestBL101P5NameTables(unittest.TestCase):
     def test_the_names_the_layout_moves_are_the_manifests_destinations_and_the_two_directories(self):
         m = lf._manifest()
         dests = {dest for _s, dest, _d in m.DISTRIBUTION}
-        self.assertEqual(len(dests), 30)
+        self.assertEqual(len(dests), 31)
         self.assertEqual(md.LAYOUT_MOVED - {"docs/methodology", "docs/methodology/workstreams"}, dests)
 
     def test_the_state_files_are_exactly_the_manifests_seeds(self):
