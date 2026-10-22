@@ -55,6 +55,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S361
+date: 2026-10-22
+status: pending
+active_task: **Revisit the retention rule in this file's front matter (keep THREE receipts, trim above THREE, `--cut 3 --force`), which BL-108 wrote down at S359** (the operator's answer "Revisit the rule now", 2026-10-22, after he asked "perhaps my rule should be revisited. What is it's justification?"). The decision among the options (a trigger above four with `--cut 3`; trimming at close-out; a trigger on bytes at the one-read cap; or leaving it) is his; the edit follows his choice and stays inside the front matter's 7,168 B reserve (Test 39 A2). BL-124's second half (the manual's token count) waits for the next session. Fork `main` only; nothing sent upstream.
+```
+
+```handoff
 session: S360
 date: 2026-10-22
 status: complete
