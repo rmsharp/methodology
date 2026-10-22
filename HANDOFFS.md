@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S359
+date: 2026-10-21
+status: pending
+active_task: **BL-108: state the `HANDOFFS.md` retention practice (trim above 3, keep 3)** (the operator's Phase 0 picker answer "BL-108: state the retention rule (Recommended)", 2026-10-21; the rule itself was decided at S358's close-out picker). The front matter's 'Retention policy' paragraph still says keep TWO and trim above TWO, which every trim since S325 has not done (4 to 3); the edit makes the text match the practice. Text only: read `RETENTION_FLOOR` in `bin/check-handoff`, Test 34 and Test 39 A2 first, and keep the front matter inside the 7,168 B reserve.
+```
+
+```handoff
 session: S358
 date: 2026-10-21
 status: complete
