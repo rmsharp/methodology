@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-21-2.md` (3 record(s), 68,763 B → 36,365 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **3** record(s) (2026-10-21 → 2026-10-21) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-21-2.md`](docs/archive/HANDOFFS-through-2026-10-21-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-21-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-21-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 68,763 B → 36,365 B (−47.1%).
+
 ### 2026-10-22 · [BL-124] S362 close-out -- BL-124's second half measured and recorded, S361's commit slot repaired, BL-127 raised and corrected; the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). **Deliverable:** `ITERATIVE_METHODOLOGY.md` is 22,706.5 tokens and fits one read (work `745406dc`); the apparatus is 10,809; the control read 36,957 against the recorded 36,955. BL-124 stays open for his one remaining call, whether the manual earns a ceiling (recommended: none). **Also:** the repair of S361's `commit:` slot (`6d06731e`), BL-127 raised (`ae67d393`) and corrected to four occurrences (`06375cf8`). **At his picker:** the `HANDOFFS.md` trim skipped, so the file closes at six receipts and the next Phase 0 owes a `--cut 3 --force` that archives three; the push declined, so `main` is 10 commits ahead of `origin`. **Gate run**, taken in a clean `--no-local` clone of `ae67d393` (6 receipts in the tree): 24/24 pass, 0 unmeasured, results `5b1b7d2357d2`, 1,305 s; the first run, at `745406dc`, read 22/24 (results `0dea193cebb2`) because of the slot the repair fixed. **Phase 3C:** no fork Learning row appended, so no retirement is owed; rows considered are named in the receipt (#42, #60, #50, #81). Nothing sent upstream.
