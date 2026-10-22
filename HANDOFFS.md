@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S364
+date: 2026-10-22
+status: pending
+active_task: **Resolve BL-124's successor, BL-127: `bin/check-handoff` cannot see an all-decimal `commit:` slot in the newest receipt, so the receipt passes at close-out and goes red at the next claim (four times: S253, S285, S303, S361).** Chosen at his Phase 0 picker, 2026-10-22, the recommended option. The five options (a) to (e) in the backlog row are his call, so the first act after this claim is to show them to him in one picker; nothing is built before his answer. Also at the picker, before this claim: the push of S363's 5 local commits, `515b3a7e..ab127d63`, to the fork's `origin` (read back equal with `git ls-remote`). Nothing sent upstream.
+```
+
+```handoff
 session: S363
 date: 2026-10-22
 status: complete

@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-127] S364 claim (in progress) -- resolve BL-127 (`bin/check-handoff` cannot see an all-decimal `commit:` slot in the newest receipt); fork `main` only; nothing sent upstream
+
+Claimed at his Phase 0 picker (2026-10-22): deliverable **BL-127**, the recommended option. The five options (a) to (e) in the backlog row are his call; they are shown to him before anything is built. Phase 0 found both frontiers at `ab127d63` (0 undocumented commits, 0 merges, no pending receipt), `check-ledger` and `check-handoff --all` exit 0, four receipts in `HANDOFFS.md` (no trim this session; S365 trims two), dashboard 72/100, and the five upstream items (#96, #94, #92, #93, #95) open and unchanged, `upstream/main` `f34769f3`. `CHANGELOG: pending` until the close-out entry.
+
+### 2026-10-22 · [ad hoc] S364 push -- S363's 5 local commits to the fork's `origin`, `515b3a7e..ab127d63`; nothing sent upstream
+
+His go-ahead at the Phase 0 picker, for exactly those five commits (the S363 trim `977cacda`, fold `5da39999`, claim `94efb4a0`, work `0ce7d9e5` and close-out `ab127d63`). Fast-forward checked with `merge-base --is-ancestor` against a fresh `origin/main` (`515b3a7e`), pushed by sha and not `HEAD`; `origin/main` and `git ls-remote origin refs/heads/main` both read `ab127d63` afterwards.
+
 ### 2026-10-22 · [BL-124] S363 close-out -- BL-124 closed with no ceiling (the manual is 22,706.5 tokens, fits one read); HANDOFFS.md trimmed 6 to 3 with its fold; 10 commits pushed to the fork; the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). **Deliverable:** BL-124 closed, no ceiling (work `0ce7d9e5`; open index rows 47 to 46). **Also at his picker:** the `HANDOFFS.md` trim (`977cacda`, 68,763 B to 36,365 B, he ran the `--write` with `!`) and its fold (`5da39999`), and the push of the 10 commits that were ahead, `18943b46..515b3a7e` to the fork's `origin`, read back equal with `git ls-remote`; this session's five commits stay local. **Gate run:** 24/24 pass, 0 fail, 0 unmeasured, results `5b1b7d2357d2`, manifest `969de61a8185`, in a clean `--no-local` clone of `0ce7d9e5` (1,407 s, 4 receipts in the tree; `tests-sh-passed` 580 against its floor of 580). The `HANDOFFS.md` ledger rests at four receipts, so the next Phase 0 does not trim.
