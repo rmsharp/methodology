@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S358
+date: 2026-10-21
+status: pending
+active_task: **BL-106: put a size gate on each plan file that declares a byte budget nothing enforces** (the operator's Phase 0 picker answer "BL-106 size gates (Recommended)", 2026-10-21). The directory-move plan `docs/planning/methodology-subdirectory-plan.md` (its header: 60,000 B, 'one agent read at prose density'; 59,977 B today) and the composition plan `docs/planning/upstream-pr-composition-plan.md` (30,000 B; 29,999 B today) sit within a few bytes of their ceilings and no entry in `.quality-gates.json` names either; a past edit took the first to 60,107 B while the gate run read 18/18. Plan, from the backlog review's row 13 (`docs/planning/backlog-interaction-review-2026-10-18.md:214`): one `max`-direction gate per plan (a byte-count command, ceiling = the declared figure, so green on arrival and the next edit to either plan must cut bytes first), a check that each gate reads red on an oversize copy, and an inventory by grep, not memory, of every other planning file that declares a byte budget before deciding what to cover. Fork `main` only; nothing sent upstream. Not in scope: shape (c) of BL-92, BL-124, BL-108.
+```
+
+```handoff
 session: S357
 date: 2026-10-21
 status: complete

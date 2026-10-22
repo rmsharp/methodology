@@ -265,6 +265,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [BL-106] S358 claim (in progress) -- put a size gate on each plan file that declares a byte budget nothing enforces; fork `main` only; nothing sent upstream
+
+Claimed at the operator's Phase 0 picker answer "BL-106 size gates (Recommended)". The picker also took three go-aheads, all done before this claim: the push below, the `HANDOFFS.md` trim (`47994ee3`, 4 receipts to 3, S354 archived to the `-8` shard, 50,900 B to 39,090 B, run by him with `!`, shard proof exit 0) and its fold (`7c062fc6`, 38,634 B), and a re-run of the 22 quality checks in a clean `--no-local` clone of `a0a34c4b` (1,422 s): `22/22 pass · 0 fail · 0 unmeasured · results ccd48215f346 · manifest 26d37cb455c3`, identical to S357's citation, which the stale local results file (10 October) could not confirm. Phase 0: both ledger frontiers current (`a0a34c4b`), 0 undocumented commits, 0 merges, no pending receipt, `check-ledger` and `check-handoff` exit 0, dashboard 72/100 (its run added one line to `dashboard_history.jsonl`, carried by this claim); #96 (`ad5c980`, 0 comments), #94 (`1670c5d`, 2), #92 (`8a232bb`, 2), #93 (1) and #95 (0) open and unchanged, `upstream/main` unchanged since 2 October; `CHANGELOG.md` 187,827 B before this session's entries against the 196,608 B trigger (`--check`: does not fire). Scope: `.quality-gates.json` gates for the plan files that declare a byte budget, plus the backlog closure. Shape (c) of BL-92, BL-124 and BL-108 are not taken.
+
 ### 2026-10-21 · [ad hoc] S358 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 39,090 B to 38,634 B) became the row `| 1 | 2026-10-20 → 2026-10-20 | HANDOFFS-through-2026-10-20-8.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` exit 0 after it. Taken before the S358 claim, at the operator's Phase 0 picker answer to trim `HANDOFFS.md`; he ran the dry run and the `--write` himself with the `!` prefix, and the trim is `47994ee3`.
@@ -276,6 +280,10 @@ Moved the oldest **1** record(s) (2026-10-20 → 2026-10-20) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-20-8.md`](docs/archive/HANDOFFS-through-2026-10-20-8.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-20-8.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-20-8.md.verify.sh)
 rather than trusting a digest printed here. Live file 50,900 B → 39,090 B (−23.2%).
+
+### 2026-10-21 · [ad hoc] S358 push record -- the fork's `main` pushed to the fork `origin` (`dbba3715` to `a0a34c4b`, 6 commits), head read back
+
+At the operator's Phase 0 picker answer "Push main to fork": `git push origin main` (`https://github.com/rmsharp/methodology.git`, his fork, not `upstream`), then `git ls-remote origin refs/heads/main` read `a0a34c4b9dbf8701a0e0fc76b95bf7efafd654a2`, equal to the local `HEAD` at that moment, and `git rev-list --left-right --count origin/main...HEAD` read `0 0`. The six were S357's trim (`279f0b95`), its fold (`3b57b02a`), the claim (`06c4092c`), the Test 44 work (`59ba1066`), the closure (`23603741`) and the close-out (`a0a34c4b`). Pushed before this session's trim, so the trim and fold (`47994ee3`, `7c062fc6`) and this claim are local until a later push.
 
 ### 2026-10-21 · [BL-92] S357 close-out -- BL-92 shapes (a) and (b) done, shape (c) open; the receipt complete; nothing sent upstream
 
