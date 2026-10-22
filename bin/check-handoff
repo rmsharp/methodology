@@ -69,6 +69,23 @@ purpose: it accepts trailing prose (most reconciled receipts carry some), and it
 catches the `this commit — ...` dialect that names no sha at all, which keying on
 the literal word `pending` would miss.
 
+THE NEWEST RECEIPT'S ONE EXCEPTION (BL-127). The exemption above is positional and reads
+no value, so it also covers a value that can only fail LATER: a sha written without a hex
+letter. SHA_RE requires one because a bare run of digits is far more often a count or a
+timestamp than a sha, so the slot of a receipt that was the newest passed every check at
+close-out and read `unreconciled commit: answer slot` once the next session's claim made
+it older. Four times, each repaired by its own commit: S253 `6200587`, S285 `3184535`,
+S303 `6583022`, S361 `94375552` (3.7% of 7-character shas, 2.3% of 8, 0.4% of 12). So the
+NEWEST receipt's first token is refused when it is 7 to 40 decimal digits (SHA_RE's own
+length bounds) — the one spelling that is a sha to its author and never one to this
+checker. `pending`, a hex-lettered sha and every other spelling stay legal, so nothing
+here re-creates the chicken-egg. Read in the everyday run and in --all, whatever the
+receipt's `status`; --archived skips it (a shard holds no newest receipt, and every block
+there is read by the rule above). Stated limits: a 6-digit or a 41-digit first token is not
+sha-shaped and is left to the next claim; the message names the way out
+(`git rev-parse --short=12`, a longer form if that is all digits too). Found by S362's
+gate run, a 1,336 s run that had to be explained.
+
 Scope note, deliberate: this pass iterates blocks[1:], but `validate()` still runs on
 blocks[0] ONLY — the 13-key schema is not applied to older receipts. Upstream issue
 #65 separately proposes a `--all` mode for this tool covering different ground
@@ -281,7 +298,8 @@ KEY_FILES_RE = re.compile(r"[^\s:]*[/.][^\s:]*:\d+")
 # A sha-shaped token anywhere in what_was_done; short (7) to full (40) hex, and
 # containing at least one hex LETTER so a bare 7+ digit decimal (a count, a unix
 # timestamp) does not pass as a "commit sha" — the far more common false-negative.
-# (A rare all-numeric short sha is still carried in the separate `commit:` field.)
+# (A rare all-numeric short sha is refused in the `commit:` field too: `decimal_commit_slot`
+# reports it on the newest receipt, and `check_answer_slots` on every older one.)
 SHA_RE = re.compile(r"\b(?=[0-9a-f]{7,40}\b)[0-9a-f]*[a-f][0-9a-f]*\b")
 
 PICK_BACKLOG_RE = re.compile(r"pick next(\s+from)?(\s+the)?\s+backlog", re.IGNORECASE)
@@ -701,6 +719,30 @@ def check_answer_slots(blocks: list, archived: bool = False) -> list:
     return findings
 
 
+# BL-127: 7 to 40 decimal digits, SHA_RE's own length bounds with its hex-letter requirement turned
+# round. A first token of this shape is a sha to the writer and never one to `leads_with_sha`.
+DECIMAL_SLOT_RE = re.compile(r"[0-9]{7,40}")
+
+DECIMAL_SLOT_TAIL = ("a decimal-only run: check-handoff cannot tell it from a count, so it fails as an "
+                     "unreconciled answer slot once the next claim makes this receipt older")
+
+
+def decimal_commit_slot(fields: dict):
+    """The newest receipt's `commit:` first token when it is a decimal-only run of 7 to 40
+    digits, else None. THE NEWEST RECEIPT'S ONE EXCEPTION in the module docstring.
+
+    The token is cut the way `leads_with_sha` cuts it (first whitespace-delimited word,
+    backticks and a trailing comma/semicolon/colon stripped), so the two predicates agree
+    on what the slot IS and differ only on whether it is a sha. A missing or empty `commit:`
+    key returns None: absence on a close-out receipt is `validate()`'s finding, and a Phase
+    1B stub legitimately has none. Status is deliberately not read — the shape is wrong
+    whatever the receipt's state.
+    """
+    value = fields.get("commit", "").strip()
+    token = value.split()[0].strip("`,;:") if value else ""
+    return token if DECIMAL_SLOT_RE.fullmatch(token) else None
+
+
 # A ROOT-RELATIVE positional address into a live ledger file. See THE LOCATOR-FORM RULE
 # in the module docstring. group(1) is the directory prefix and is the whole point: the
 # match is a finding ONLY when that prefix is empty.
@@ -1048,6 +1090,11 @@ def main() -> int:
             findings += ["block at line %d (%s): key_files addresses a live ledger by line number: %r"
                          % (blocks_meta[0]["line"], newest.get("session", "").strip() or "<no session>", a)
                          for a in key_files_anchors(newest)]
+            slot = decimal_commit_slot(newest)  # BL-127, same scope: the newest receipt of a live ledger
+            if slot:
+                findings.append("block at line %d (%s): commit: slot begins with %r, %s"
+                                % (blocks_meta[0]["line"], newest.get("session", "").strip() or "<no session>",
+                                   slot, DECIMAL_SLOT_TAIL))
         if findings:
             print("check-handoff --all: FAIL — %d issue(s) across %d receipt(s) in %s:"
                   % (len(findings), len(blocks), path))
@@ -1104,8 +1151,18 @@ def main() -> int:
     # this mode explicitly; see bin/tests.sh Test 38.
     budget_findings, budget_note = check_record_budget(path, text, blocks_meta)
 
+    # A SIXTH scope (BL-127): the NEWEST receipt's `commit:` first token, which `check_answer_slots`
+    # exempts unread. Forward-only by scope like the fourth (an older receipt is `check_answer_slots`'s,
+    # in its own words; a shard holds no newest receipt). The message begins "commit:", never "receipt",
+    # "changelog_ref" or "key_files", so `nslot()`, `nloc()` and Test 57's counter cannot count it.
+    decimal_slot = None if args.archived else decimal_commit_slot(fields)
+    slot_findings = [] if decimal_slot is None else [
+        "commit: slot of the newest receipt %s (%s) begins with %r, %s"
+        % (fields.get("session", "?"), fields.get("date", "?"), decimal_slot, DECIMAL_SLOT_TAIL)
+    ]
+
     if (findings or structure_findings or anchor_findings or locator_findings
-            or key_files_findings or budget_findings):
+            or key_files_findings or slot_findings or budget_findings):
         if findings:
             print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
                   % (len(findings), path))
@@ -1144,6 +1201,15 @@ def main() -> int:
             print("        at the top each time). `changelog_ref` already names the entry; list in")
             print("        `key_files` the files you changed, each with a line. A prefixed path")
             print("        (starter-kit/…, docs/archive/…) is stable and stays legal.")  # layout: ok -- message text: the directory is named as an example of a stable prefix, not read
+        if slot_findings:
+            print("check-handoff: FAIL — %d decimal-only `commit:` slot(s) in the newest receipt in %s:"
+                  % (len(slot_findings), path))
+            for msg in slot_findings:
+                print("  error: %s" % msg)
+            print("  note: a sha with no hex letter is a sha to you and a count to this checker (3.7% of")
+            print("        7-character shas, 0.4% of 12-character ones). Write the 12-character form,")
+            print("        git rev-parse --short=12 <sha>, and a longer one (--short=14) if that is all")
+            print("        digits too. `commit: pending` stays legal.")
         if budget_findings:
             print("check-handoff: FAIL — the record being written is over the per-record "
                   "budget in %s:" % path)

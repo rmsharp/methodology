@@ -5039,6 +5039,90 @@ else
 fi
 rm -rf "$H57"
 
+echo "== Test 58: check-handoff refuses an all-decimal commit: slot in the NEWEST receipt, the one shape that passes at close-out and is red at the next claim (BL-127, RED-first) =="
+# A receipt ships in the commit whose sha it names, so the newest receipt's `commit:` is exempt from Test 25's answer-slot rule
+# (`pending` is legal there). The exemption read no value, and a short sha with no hex letter (3.7% at 7 digits, 0.4% at 12) is a sha
+# to its author and a count to SHA_RE: it passed every check at close-out and read `unreconciled commit: answer slot` once the next
+# session's claim made it older. Four times, each repaired by its own commit: S253 `6200587`, S285 `3184535`, S303 `6583022`, S361
+# `94375552`. The rule is narrow on purpose: the newest receipt's FIRST token, when it is 7 to 40 decimal digits (SHA_RE's own length
+# bounds); `pending`, a hex-lettered sha and every other spelling stay legal. Reuses Test 56's runner t56 and fm56, nslot/nloc from
+# Tests 25 and 33, and c57 from Test 57.
+H58="$(mktemp -d)"
+r58() {  # r58 SESSION COMMIT [STATUS]: a receipt whose commit: slot is the given value (an argument, never a format string)
+    printf '```handoff\nsession: %s\ndate: 2026-10-01\nstatus: %s\nself_score: 8\npredecessor_score: 8\nactive_task: the task of %s\nwhat_was_done: did it (abc1234)\nnext_steps: the next thing after %s\nkey_files: bin/check-handoff:1\ngotchas: none for %s\nruntime_smoke: n/a — docs-only\nchangelog_ref: abc1234\ncommit: %s\n```\n\n' \
+        "$1" "${3:-complete}" "$1" "$1" "$1" "$2"
+}
+c58() { "$BIN/check-handoff" --file "$1" "${@:2}" 2>&1 | grep -c '^  error: commit: slot'; }
+{ fm56; r58 S4 'abc1234 (the work commit)'; r58 S3 abc1234; } > "$H58/ok.md"
+t56 "control: a newest receipt whose commit: slot leads with a hex-lettered sha passes"            0 "check-handoff: OK" "$H58/ok.md"
+{ fm56; r58 S4 '94375552 (the work commit)'; r58 S3 abc1234; } > "$H58/dec8.md"
+t56 "an 8-digit decimal first token is reported, naming the receipt and the token (S361's)"        1 "commit: slot of the newest receipt S4 (2026-10-01) begins with '94375552'" "$H58/dec8.md"
+{ fm56; r58 S4 '6200587 (close-out)'; r58 S3 abc1234; } > "$H58/dec7.md"
+t56 "a 7-digit decimal first token is reported (S253's)"                                           1 "begins with '6200587'" "$H58/dec7.md"
+{ fm56; r58 S4 '`3184535` (the last work commit)'; r58 S3 abc1234; } > "$H58/fenced.md"
+t56 "a backtick-fenced decimal token is reported, bare in the message (S285's)"                    1 "begins with '3184535'" "$H58/fenced.md"
+{ fm56; r58 S4 '6583022, the last work commit'; r58 S3 abc1234; } > "$H58/comma.md"
+t56 "a trailing comma on the token does not hide it (S303's)"                                      1 "begins with '6583022'" "$H58/comma.md"
+{ fm56; r58 S4 '123456789012 (12 digits, 0.4% of shas)'; r58 S3 abc1234; } > "$H58/dec12.md"
+t56 "a 12-digit decimal token is reported (the form the message recommends can miss too)"          1 "begins with '123456789012'" "$H58/dec12.md"
+{ fm56; r58 S4 1234567890123456789012345678901234567890; r58 S3 abc1234; } > "$H58/dec40.md"
+t56 "a 40-digit token is reported (SHA_RE's upper bound)"                                          1 "begins with '1234567890123456789012345678901234567890'" "$H58/dec40.md"
+{ fm56; r58 S4 12345678901234567890123456789012345678901; r58 S3 abc1234; } > "$H58/dec41.md"
+t56 "limit, stated: 41 digits is not sha-shaped, so this rule leaves it"                           0 "check-handoff: OK" "$H58/dec41.md"
+{ fm56; r58 S4 '123456 (6 digits)'; r58 S3 abc1234; } > "$H58/dec6.md"
+t56 "limit, stated: 6 digits is shorter than any abbreviation git writes, so this rule leaves it" 0 "check-handoff: OK" "$H58/dec6.md"
+{ fm56; r58 S4 pending; r58 S3 abc1234; } > "$H58/pending.md"
+t56 "control: commit: pending on the newest receipt stays legal (the deferral the template permits)" 0 "check-handoff: OK" "$H58/pending.md"
+{ fm56; r58 S4 'pending 94375552'; r58 S3 abc1234; } > "$H58/pending-then.md"
+t56 "control: only the FIRST token is read, so a decimal run after 'pending' is prose"              0 "check-handoff: OK" "$H58/pending-then.md"
+{ fm56; r58 S4 'abc1234 and 94375552 later'; r58 S3 abc1234; } > "$H58/sha-then.md"
+t56 "control: only the FIRST token is read, so a decimal run after a real sha is prose"            0 "check-handoff: OK" "$H58/sha-then.md"
+{ fm56; r58 S4 1234567a; r58 S3 abc1234; } > "$H58/mostly.md"
+t56 "control: a sha that is all digits but one hex letter is a sha"                                0 "check-handoff: OK" "$H58/mostly.md"
+{ fm56; r58 S4 '94375552ad9d (12 chars)'; r58 S3 abc1234; } > "$H58/twelve.md"
+t56 "control: the 12-character form the note recommends passes"                                    0 "check-handoff: OK" "$H58/twelve.md"
+t56 "the finding is a block of its own, headed by the field"                                       1 "decimal-only \`commit:\` slot(s) in the newest receipt" "$H58/dec8.md"
+t56 "the note names the way out"                                                                   1 "git rev-parse --short=12" "$H58/dec8.md"
+{ fm56; r58 S4 94375552 reconciled; r58 S3 abc1234; } > "$H58/reconciled.md"
+t56 "a reconciled receipt is judged like a complete one"                                           1 "begins with '94375552'" "$H58/reconciled.md"
+{ fm56; printf '```handoff\nsession: S9\ndate: 2026-10-01\nstatus: pending\nactive_task: in progress\ncommit: 94375552\n```\n\n'; r58 S4 abc1234; } > "$H58/stub.md"
+t56 "a Phase 1B stub that carries one is reported too (the shape is wrong whatever the status)"     1 "begins with '94375552'" "$H58/stub.md" --allow-pending
+{ fm56; r58 S4 abc1234; r58 S3 94375552; } > "$H58/older.md"
+t56 "an OLDER receipt's decimal slot stays the answer-slot rule's, in that rule's words"           1 "names no commit sha in its \`commit:\` answer slot: '94375552'" "$H58/older.md"
+[ "$(c58 "$H58/older.md")" = "0" ] && [ "$(nslot "$H58/older.md")" = "1" ] \
+    && pass "check-handoff: the older receipt is reported once, by the answer-slot rule, not twice" \
+    || fail "check-handoff: the older receipt's decimal slot gave $(c58 "$H58/older.md") newest-slot and $(nslot "$H58/older.md") answer-slot finding(s), wanted 0 and 1"
+[ "$(nslot "$H58/dec8.md")" = "0" ] && [ "$(nloc "$H58/dec8.md")" = "0" ] && [ "$(c57 "$H58/dec8.md")" = "0" ] && [ "$(c58 "$H58/dec8.md")" = "1" ] \
+    && pass "check-handoff: the finding begins 'commit:', so the answer-slot, locator and key_files counters cannot absorb it" \
+    || fail "check-handoff: the newest-slot finding is absorbed by (or absorbs) another counter's rows"
+t56 "--all judges the newest receipt's slot, at the newest receipt's own line"                      1 "block at line 7 (S4): commit: slot begins with '94375552'" "$H58/dec8.md" --all
+t56 "control: --all passes the clean ledger"                                                       0 "check-handoff --all: OK" "$H58/ok.md" --all
+[ "$(c58 "$H58/dec8.md" --archived)" = "0" ] && [ "$(nslot "$H58/dec8.md" --archived)" = "1" ] \
+    && pass "check-handoff: a shard (--archived) holds no newest receipt; its first block is read by the answer-slot rule, once" \
+    || fail "check-handoff: --archived gave $(c58 "$H58/dec8.md" --archived) newest-slot and $(nslot "$H58/dec8.md" --archived) answer-slot finding(s), wanted 0 and 1"
+# The real history: the four receipts BL-127 names, as they stood in the commit in which each was the newest.
+for pair58 in "S253:e5670b51:6200587" "S285:b3e07362:3184535" "S303:2c629275:6583022" "S361:c1095f27:94375552"; do
+    IFS=: read -r s58 c58sha tok58 <<< "$pair58"
+    if git -C "$METHODOLOGY" cat-file -e "$c58sha:HANDOFFS.md" 2>/dev/null; then
+        git -C "$METHODOLOGY" show "$c58sha:HANDOFFS.md" > "$H58/real-$s58.md"
+        out58="$("$BIN/check-handoff" --file "$H58/real-$s58.md" 2>&1)"   # captured, never piped into grep -q: pipefail would fail it on the checker's own exit 1
+        [ "$(c58 "$H58/real-$s58.md")" = "1" ] && [[ "$out58" == *"begins with '$tok58'"* ]] \
+            && pass "check-handoff: $s58's slot, as committed in $c58sha, is reported ('$tok58')" \
+            || fail "check-handoff: $s58's slot, as committed in $c58sha, is not reported as '$tok58'"
+    else
+        skip "check-handoff: $s58's slot needs commit $c58sha (a full-history canonical checkout); not exercised"
+    fi
+done
+# And nothing that is true today: the live ledger and every shard read with no newest-slot finding.
+n58=0; shards58=0
+for s in "$METHODOLOGY"/HANDOFFS.md "$METHODOLOGY"/docs/archive/HANDOFFS-*.md; do
+    [ -f "$s" ] || continue
+    shards58=$((shards58+1)); n58=$((n58 + $(c58 "$s")))
+done
+[ "$n58" = "0" ] && [ "$shards58" -gt 100 ] && pass "check-handoff: $shards58 real ledger files read with no newest-slot finding" \
+    || fail "check-handoff: $n58 newest-slot finding(s) across $shards58 real ledger files (wanted 0 across more than 100)"
+rm -rf "$H58"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
