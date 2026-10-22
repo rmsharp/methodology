@@ -4600,3 +4600,16 @@ The two plans BL-106 gated were last changed 2026-10-20 (36 and 25 commits). Non
 **Done when** each of the six is gated, or has a recorded decision not to be, and the 451 B has a recorded answer. Not started.
 
 ---
+
+<a id="bl-126"></a>
+**BL-126 — nothing fails when `HANDOFFS.md` passes its 65,536 B ceiling, and the rule S361 chose lets the file close a session near it. Raised 2026-10-22 (S361), found while changing the retention rule. Not started.**
+
+**What the rule now rests on.** At S361 he moved the trim trigger from above three receipts to above four (depth stays three, `--cut 3 --force`). The front matter's paragraph gives the reason in bytes: five complete receipts fit under the 65,536 B ceiling and six do not. Measured at S361 (receipt blocks S357 to S360: 11,760, 10,686, 10,408 and 9,876 B, mean 10,682 B; front matter 5,994 B after the edit): 3 receipts 38,040 B, 4 receipts 48,722 B, **5 receipts 59,404 B**, 6 receipts 70,086 B. Under the new trigger a session closes with 5 receipts at every second Phase 0 (3 at rest, 4 after one close-out, 5 after the next, then the trim), so the file spends every second close-out about 6 KB under the ceiling.
+
+**What holds it, and what does not.** The ceiling is `max_bytes` for `HANDOFFS.md` in `.context-budget.json` (the `CEILING_BYTES = 65536` constant in `bin/check-handoff` mirrors it). `context_budget.py --status` prints the file against it (49,460 B and `warn` after the S361 edit) and exits 2, but it exited 2 already for four other files over their ceilings (`CLAUDE.md`, `docs/FORK_LEARNINGS.md`, `starter-kit/SESSION_RUNNER.md`, `starter-kit/SAFEGUARDS.md`), so an `over` row on this file would change nothing a session sees by exit code. No entry in `.quality-gates.json` names `HANDOFFS` or 65,536. Test 39's A1 compares the constant with `RETENTION_FLOOR x record budget + reserve`, which is the three-receipt case (44,032 B) and says nothing of five. `bin/check-handoff` bounds each receipt at 12,288 B, so the worst case is bounded: five receipts at that limit are 67,434 B, **1,898 B over the ceiling**; five at the largest measured (11,760 B) are 64,794 B, 742 B under.
+
+**Options (none run).** (a) A `max` gate on `wc -c < HANDOFFS.md`, reading the figure from `.context-budget.json` rather than repeating 65,536 (a second copy drifts; BL-106 repeated a plan's own declared figure, which is a different case). It reads pass on arrival (49,460 B today, about 59 KB at the five-receipt peak) and red only when a close-out leaves the file over; the answer to a red is the paragraph's own fallback, trim at four. (b) Leave it: the failure is bounded at 1,898 B over, needs a run of receipts near their 12 KiB limit, and shows as an `over` row in the status report. Neither changes the rule he chose.
+
+**Done when** the gate exists, or a recorded decision not to have one. Not started.
+
+---
