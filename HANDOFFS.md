@@ -55,6 +55,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S360
+date: 2026-10-22
+status: pending
+active_task: **BL-124, first half: delete the four stale file sizes from `.context-budget.json`'s `_deliberate_exclusions` note and point at `wc -c` (BL-81's shape, no new guard)** (the operator's Phase 0 picker answer "BL-124 first half (Recommended)", 2026-10-22). The four are `README.md` 90,453 B, `ITERATIVE_METHODOLOGY.md` 55,895 B, `FRAMEWORK_APPARATUS.md` 15,493 B and `docs/planning/BACKLOG-DETAIL.md` 116,749 B. Not taken: the manual's token measurement (his S358 decision: a later session, token meter in a subagent with a control), any ceiling, and the 'fifth, softer hit' at the read-set note (S356 classed it rhetorical). Text only; BL-124 stays open for its second half.
+```
+
+```handoff
 session: S359
 date: 2026-10-21
 status: complete
