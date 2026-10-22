@@ -4576,3 +4576,27 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 **Done when** the four sizes are gone from the note and the `ITERATIVE_METHODOLOGY.md` question has a recorded answer. Not started.
 
 ---
+
+<a id="bl-125"></a>
+**BL-125 — six plan files declare a byte budget in their own header and nothing gates them; one of the six is already over. Raised 2026-10-21 (S358), found while closing BL-106. Not started.**
+
+**What, measured at S358.** `grep -i 'declared budget' docs/planning/*.md` found eight plan files that state a "Declared budget: N B" in their header; the backlog review named two. BL-106 gated those two (`plan-size-directory-move` 60,000 B and `plan-size-pr-composition` 30,000 B in `.quality-gates.json`). The other six, with `wc -c` today and the date `git log -1` last touched each:
+
+| File (`docs/planning/`) | Declared | Today | Last changed |
+|---|---|---|---|
+| `upstream-read-set-pr-plan.md` | 45,000 B | **45,451 B (451 B over)** | 2026-08-30 |
+| `file-management-system-plan.md` | 65,000 B | 31,643 B | 2026-08-27 |
+| `phase3c-deadlock-adjudication.md` | 35,000 B | 20,158 B | 2026-08-29 |
+| `port-branch-identity-adjudication.md` | 35,000 B | 20,715 B | 2026-08-30 |
+| `read-set-budgets-local-use-routes.md` | 20,000 B | 16,238 B | 2026-09-14 |
+| `read-set-budgets-to-main-pr-body.md` | 24,000 B | 14,824 B | 2026-09-09 |
+
+The two plans BL-106 gated were last changed 2026-10-20 (36 and 25 commits). None of these six has changed in five weeks or more, which is why the gates covered the two live plans first.
+
+**The part that is more than a missing gate.** `upstream-read-set-pr-plan.md` is over its own declared figure. A gate at the declared 45,000 B would read red when added, and a red gate fails the whole ratchet run; a gate at today's 45,451 B would contradict the file's header; cutting 451 B edits a plan whose status line reads "PHASES 1–4 SHIPPED (fork-side, unpushed); 5 open — corrections in §11". Nothing in the repository records that it is over.
+
+**Options (none run).** (a) Gate the five inside their budgets at the declared figures (green on arrival; BL-106's two entries are the pattern: `wc -c < <file>` and a digits-only extract) and decide the sixth separately. (b) Leave all six: a gate on a file nobody edits guards nothing, and the one overage is 451 B of a settled plan. (c) One checker that reads every "Declared budget" header and fails on an over-budget file, so a future plan is covered without a new entry; the figure it compares lives in the document, so raising it is not a ratchet loosening, which is the property BL-106's per-file entries have and this lacks.
+
+**Done when** each of the six is gated, or has a recorded decision not to be, and the 451 B has a recorded answer. Not started.
+
+---
