@@ -5,21 +5,22 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Retention policy — keep TWO receipts, trim above TWO.** Everything older is archived under
-`docs/archive/` and indexed in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **N=2 is an operator decision (2026-09-28, S232)**
-replacing **his N=1 of S172 (2026-09-16)**, which had replaced S127's N=4. It settles a
-contradiction rather than changing practice: this paragraph said *keep ONE* and printed `--cut 1`
-while S229, S230 and S231 each ran `--cut 2` and kept two — flagged in S231's receipt as the
-operator's to settle. BL-59's measurement of what actually reads this file still stands — the
-handoff is done by the newest receipt alone — so the second receipt is a spare, not a working set. **Depth and trigger are separate on purpose:**
-every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
+**Retention policy — keep THREE receipts, trim above THREE.** Everything older is archived under
+`docs/archive/` and indexed in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **N=3 is an operator decision (2026-10-21, S358, BL-108)**
+that writes down what the trims had been doing since 2026-10-17 (each archived one receipt and left three, four to
+three; S358's is the latest). It replaces **his N=2 of S232 (2026-09-28)** and **his "trim above 3, cut to 2" of S322
+(2026-10-15)**; before them stood S172's N=1 and S127's N=4. BL-59's measurement of what actually reads this file still
+stands — the handoff is done by the newest receipt alone — so the older receipts are spares, not a working set. **Depth and trigger are separate on purpose:**
+every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **In steady state that is a trim at
+every Phase 0:** a session adds one receipt and removes none, so the next Phase 0 counts four and archives one (the
+cadence his S313 question asked about). **`methodology_trim.py` fires on BYTES (196,608 B),
 never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
-`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
+`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 3**, the trim is its own action after
 that report, never inside Phase 0, which is read-only apart from the reconcile backfill
-(`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 2 --force`. The force is
+(`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 3 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
 (BL-59). `bin/check-handoff` checks the **newest** receipt's 13-key schema and the ledger's structure; `--all` checks
-every receipt's schema and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that TRIGGER, not this depth**, so N=2 leaves it and its A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) untouched; the steady state is two receipts between claims and three during one, which is why `tests-sh-passed` reads six lower at rest than mid-claim, and its floor is set at rest.
+every receipt's schema and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that count and now equals the depth**: a trim to three stands on the floor and never below it, and the A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) is untouched. The file holds three receipts after a Phase 0 trim and four after the claim, so those six rows never print and `tests-sh-passed` reads the same all session (it holds at three or more, `.quality-gates.json` `_s346_tightening_bl55`); under N=2 it read six lower at rest.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
@@ -35,7 +36,7 @@ upstream ones (precedent: `fc4d297`).
 > stated, expected, not a failure. Removing the declaration is distributed — its own go-ahead (BL-60).
 > **Count with `grep -c '^```handoff' HANDOFFS.md`.**
 
-> **⚠ THREE is the floor the retention policy sits one above.** `bin/tests.sh` Test 34 mutates *this*
+> **⚠ THREE is the floor, and the retention depth now sits on it.** `bin/tests.sh` Test 34 mutates *this*
 > ledger to check `check-handoff --all`'s whole-ledger invariants, reading two anchors from the live
 > file — not hardcoded, so it survives *which* receipts rotate, but it needs three to exist. A short
 > ledger is **stated rather than silent** (BL-40 (b)): below the floor those six assertions print as
