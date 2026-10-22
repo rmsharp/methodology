@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-127] S362 follow-up -- BL-127 raised: `check-handoff` cannot see an all-decimal `commit:` slot in the newest receipt, so it goes red at the next claim (S253, S303, S361); not started; nothing sent upstream
+
+Raised from the finding the entry below repaired, searched first: the backlog and the Learnings table have no row for it (BL-14 built the detector for receipts below the newest, and the newest is exempt by design). `docs/planning/BACKLOG.md` (the index row) and `docs/planning/BACKLOG-DETAIL.md` (the body, anchor `bl-127`, appended after the last `---`: what happened, why the checker cannot see it, the cost, four options). It names two edits and does neither: a lint of the newest receipt's slot when it is not `pending` (canonical-only), and a template line saying to write `git rev-parse --short=12` (distributed, so upstream-batched and its own go-ahead). His call. The three backlog proofs, `check-backlog-anchors`, `check-ledger` and `check-links` are run before this commit.
+
 ### 2026-10-22 · [ad hoc] S362 -- reconcile S361's receipt `commit:` slot to a sha `check-handoff` accepts; nothing sent upstream
 
 S361 wrote `94375552`, all decimal digits, which `bin/check-handoff` does not read as a sha (no hex letter). The check exempts the newest receipt, so S361's close-out read OK and S362's claim stub turned it red; it was found by S362's gate run in a clean clone of `745406dc`, which read **22/24** (`tests-sh-passed` 579 against its floor of 580, `tests-sh-failed` 1), and a re-run of `bash bin/tests.sh` in that clone with the output kept named the row: `L1 live ledger has an unreconciled commit: answer slot` (579 passed, 1 failed, 451 s). The slot now reads `94375552ad9d`, the same commit (`git rev-parse --short=12`), and names the close-out commit `c1095f27`. The third time: S253 (reconciled `d45afa4f`), S303 (`3fae1107`), S361. `HANDOFFS.md` is the only file changed besides this entry.

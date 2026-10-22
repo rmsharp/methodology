@@ -4629,3 +4629,18 @@ The two plans BL-106 gated were last changed 2026-10-20 (36 and 25 commits). Non
 **Done when** the gate exists, or a recorded decision not to have one. Not started.
 
 ---
+
+<a id="bl-127"></a>
+**BL-127 — `bin/check-handoff` cannot see an all-decimal `commit:` slot in the newest receipt, so it passes at close-out and goes red at the next claim. Raised 2026-10-22 (S362), found by S362's gate run. Not started.**
+
+**What happened, measured at S362.** S362's gate run, in a clean `--no-local` clone of `745406dc` (the work commit, 6 receipts in the tree), read **22/24 pass · 2 fail**: `tests-sh-passed` 579 against its floor of 580, and `tests-sh-failed` 1 (the ratchet keeps no output). A re-run of `bash bin/tests.sh` in that clone with the output kept (451 s) named the row: `FAIL: L1 live ledger has an unreconciled commit: answer slot`, from `check-handoff`'s `receipt S361 (2026-10-22) names no commit sha in its commit: answer slot: '94375552 (the work commit)...'`. `94375552` is all decimal digits, and `SHA_RE.fullmatch` needs a hex letter in the first token (`leads_with_sha`, test N8). The slot's later shas (`2e5688c8`, `084aca46`) are not read: the answer slot is the first token, by design (N7). S361's close-out read green because it was the newest receipt, and S362's claim stub made it older.
+
+**Why the checker cannot see it.** `check_answer_slots` skips `blocks[0]` 'unconditionally and WITHOUT inspecting its value' (its docstring), so that no close-out receipt can be failed for the `commit: pending` deferral the template permits (N3). The exemption is positional, which is why it also covers a value that can only fail later. The odds: a short sha of 8 hex digits has no letter 2.3% of the time (10/16 to the 8th), of 12 digits 0.4%. **Three occurrences are on record, each repaired by its own commit:** S253's (reconciled in S254, `d45afa4f`; the S253 case is also in this file's S254 note on its suite summary `360 passed, 2 failed`), S303's `6583022` (S304, `3fae1107`) and S361's (S362, `6d06731e`). The rule is stated in the checker's docstring and in test N8, and S361 still wrote the decimal sha first, so as written it does not stop a writer who is not looking at the checker.
+
+**What it cost at S362.** One gate run of 1,336 s whose result had to be explained, one 451 s suite run to find the row, and one repair commit. Nothing reached an adopter: `check-handoff` is canonical-only.
+
+**Options (none run).** (a) Lint the newest receipt when its `commit:` value is not `pending`: fail when the first token is a decimal-only run of 7 or more digits (the one shape that can never be a sha), leaving `pending` and every hex-lettered sha green. That is a narrow rule written from real receipts, which the function's own docstring asks for ('widening this predicate should be driven by a real receipt'); it needs new tests in `bin/tests.sh` (N-series) and moves `tests-sh-passed`'s floor (a gate tightening, never a loosening). Canonical-only, so no adopter moves. (b) Say in the shipped template (`starter-kit/HANDOFFS.md`, the `commit:` line of the block) to write `git rev-parse --short=12`; that makes the miss 0.4% and not 2.3%, but it edits a distributed file (adopters get it at their next `bin/sync`), so it waits for an upstream batch and its own go-ahead. (c) Both: (a) catches the miss at write time, (b) lowers the rate for adopters who do not have the canonical checker. (d) Leave it: three repair commits in the 108 sessions from S253 to S361, about one per 50 sessions.
+
+**Done when** the newest receipt's slot is linted or a recorded decision not to; and the template line is changed or left on purpose. Not started.
+
+---
