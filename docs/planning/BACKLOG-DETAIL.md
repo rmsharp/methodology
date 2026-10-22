@@ -4644,3 +4644,16 @@ The two plans BL-106 gated were last changed 2026-10-20 (36 and 25 commits). Non
 **Done when** the newest receipt's slot is linted or a recorded decision not to; and the template line is changed or left on purpose. Not started.
 
 ---
+
+<a id="bl-128"></a>
+**BL-128 — `bin/check-handoff --all` does not read older receipts' `commit:` slots, so the check a session runs right after its claim cannot see an unreconciled one. Raised 2026-10-22 (S364), found while building BL-127. Not started.**
+
+**What was measured (S364).** A fixture ledger of two receipts, the newest with `commit: abc1234` and the older with `commit: 94375552`: the everyday run (`bin/check-handoff --file F`) exits **1** and prints `receipt S3 (2026-10-01) names no commit sha in its \`commit:\` answer slot: '94375552'`; `--all` exits **0** and prints `OK — 2 receipt(s) ..., all structurally complete`. The cause is in `main()`: the `--all` branch (the `if args.all:` block) calls `validate_ledger`, `validate_gate_citation` and `key_files_anchors` (and, since BL-127, `decimal_commit_slot` on the newest receipt) and returns; `check_answer_slots` is called only from the everyday path below it. **It is not a regression:** `git log -S'check_answer_slots(' -- bin/check-handoff` finds one commit, `6d47624e` (BL-14, 2026-08-02), so the count of the call never changed after it was written, and `--all` (issue #65) was added with the module docstring saying it 'is not that, is not named that'.
+
+**Who believed otherwise.** (1) BL-127's option (e), 'run `bin/check-handoff --all` right after the Phase 1B claim commit: the claim makes the predecessor's receipt non-newest, so its slot is judged at once' (above, `BACKLOG-DETAIL.md` under `bl-127`): it would not have been, in `--all`. (2) The table at `BACKLOG-DETAIL.md:1995` (BL-59's reader inventory): '`bin/check-handoff --all` ... the answer-slot rule requires every receipt below the newest to name a commit sha'. True of the everyday run, not of `--all`. (3) S363's receipt took the output of `--all` run right after its claim as showing that S362's repaired slot passed; the slot was sound, but `--all` had not read it. Nothing was lost: the gate's own check (`bin/tests.sh` Test 34, `L1`) uses the everyday run, which is what read S361's slot at S362.
+
+**Options (none run).** (a) Have the `--all` branch call `check_answer_slots(blocks, args.archived)` and print the same block as the everyday run: a few lines in `bin/check-handoff` and tests in `bin/tests.sh`; canonical-only, no adopter moves. The comment in `main()` above the budget check says Test 34's presence control reads `--all`'s EXIT CODE against the live ledger, so a new `--all` check meets that test; run the whole suite before and after. (b) Say in the usage text and docstring that `--all` does not read slots, and name the plain `bin/check-handoff` as the claim-time check. No code. (c) Both. (d) Leave it: the everyday run, which the gate uses, already reads them; the cost is a mistaken belief, not a missed failure.
+
+**Done when** `--all` reads the slots or says in its usage text that it does not, and no statement in the backlog (BL-127's option (e), the table at `:1995`) is left claiming it does; or a recorded decision to leave it. Not started.
+
+---
