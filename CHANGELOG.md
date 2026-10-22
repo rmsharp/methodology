@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-127] S364 -- close BL-127 (option (a) built, `tests-sh-passed` floor 580 to 609); fork `main` only; nothing sent upstream
+
+The closure of the work commit `da5de7c6`, three edits and the gate: the BL-127 index row out of `docs/planning/BACKLOG.md` (open rows 47 to 46, BL-128 being the new one), `BL-127` after `BL-124` in the Completed id list (81 to 82 ids; recomputed against the rows of `BACKLOG-COMPLETED.md`: 82 and 82, no difference), and a closing row appended to `BACKLOG-COMPLETED.md` (rows run in closing-date order). The body under `bl-127` in `BACKLOG-DETAIL.md` is untouched, as the detail proof requires. **Floor:** `.quality-gates.json` `tests-sh-passed` 580 to 609, measured, not derived: `bash bin/tests.sh` read `== Summary: 609 passed, 0 failed, 0 skipped ==` in 458 s in a clean `--no-local` clone of `da5de7c6` (5 receipts in the tree); the note is `_s364_tightening_bl127`. Each proof run alone, exit 0: the three `.verify.sh` scripts, `check-backlog-anchors` (88 links, 102 anchors before the closure), `check-links`, `check-ledger`, `quality_ratchet.py --precommit`. Not done on purpose: the template line (b)/(c), a distributed edit with its own go-ahead; option (e) is recorded as wrong as written (BL-128).
+
 ### 2026-10-22 · [BL-128] S364 -- raise BL-128 (`bin/check-handoff --all` does not read older receipts' `commit:` slots); fork `main` only; nothing sent upstream
 
 Found while building BL-127 (a fixture with an older decimal slot: everyday run exit 1, `--all` exit 0). Recorded, not fixed: it is a second deliverable. An index row in `BACKLOG.md` (open rows 46 to 47, until BL-127 closes), a body in `BACKLOG-DETAIL.md` under `bl-128` (options (a) to (d), none run; not a regression: `git log -S'check_answer_slots('` finds only `6d47624e`, BL-14), and this entry. Three statements are named as saying the opposite: BL-127's option (e), `BACKLOG-DETAIL.md:1995`, and S363's receipt. Nothing there is edited: the detail proof pins the old bodies.
