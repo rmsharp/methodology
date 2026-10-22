@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-21.md` (2 record(s), 60,074 B → 38,543 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-21 → 2026-10-21) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-21.md`](docs/archive/HANDOFFS-through-2026-10-21.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-21.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-21.md.verify.sh)
+rather than trusting a digest printed here. Live file 60,074 B → 38,543 B (−35.8%).
+
 ### 2026-10-22 · [BL-108] S359 close-out -- BL-108 done (the retention paragraph states keep three, trim above three); the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). The work is `dc665e30` (`HANDOFFS.md`'s front-matter retention paragraph: keep THREE, trim above THREE, `--cut 3 --force`, and what the rule costs: a trim at every Phase 0), the closure `2b00451e` (BL-108 closed, open index rows 46 to 45). Gate run, taken in a clean `--no-local` clone of `2b00451e` (5 receipts in the tree, after the claim): `quality_ratchet: 24/24 pass · 0 fail · 0 unmeasured · results 5b1b7d2357d2 · manifest 969de61a8185`, 1,375 s, identical to S358's citation as a text-only change should be. The fork's `origin` was pushed at the Phase 0 picker (`a0a34c4b` to `8f26f2ed`, read back equal); the three commits since (claim, work, closure) and this one are local, and a push of them is his call. Two things were offered and not done: the `HANDOFFS.md` trim (not ticked; the file holds 5 receipts, so the next trim archives two, and with this receipt the file is 59,699 B, which `context_budget.py --status` reads at about 26,349 tokens against its 25,000-token ceiling, newly OVER; the tool's exit 2 was already standing and it is not one of the 24 gates) and the `CHANGELOG.md` trim (ticked, then skipped by his answer after the trimmer said `NOTHING_TO_DO`; the file is now past its trigger, so the next Phase 0's `--check` fires with no override). Handoff receipt: `HANDOFFS.md`, S359, scores 7 (self) and 8 (S358's handoff). Nothing was sent upstream; no Learnings row appended, so no retirement or refusal is owed (row 70 considered: its premise is stale, its lesson stands).
