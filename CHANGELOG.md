@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-124] S363 claim (in progress) -- close BL-124 with no ceiling on `ITERATIVE_METHODOLOGY.md` (22,706.5 tokens, fits one read); fork `main` only; nothing sent upstream
+
+Claimed at his Phase 0 picker (2026-10-22): deliverable **close BL-124, no ceiling** (his answer to S362's open question; the manual is 9.2% under the 25,000-token one-read cap, so a ceiling guards nothing today); two go-aheads, both taken before this claim or after it: the `HANDOFFS.md` trim (six receipts to three: trim `977cacda`, fold `5da39999`, he ran the `--write` with `!`) and the push of the local commits to the fork's `origin`. `CHANGELOG: pending` until the close-out entry.
+
 ### 2026-10-22 · [ad hoc] S363 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 36,365 B before) became the row `| 3 | 2026-10-21 → 2026-10-21 | HANDOFFS-through-2026-10-21-2.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `977cacda`, taken at the operator's Phase 0 picker answer to trim `HANDOFFS.md` (six receipts to three, on his keep-three rule, trim above four); he ran the `--write` with `!`.
