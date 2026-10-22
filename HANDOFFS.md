@@ -5,22 +5,26 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Retention policy — keep THREE receipts, trim above THREE.** Everything older is archived under
+**Retention policy — keep THREE receipts, trim above FOUR.** Everything older is archived under
 `docs/archive/` and indexed in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **N=3 is an operator decision (2026-10-21, S358, BL-108)**
 that writes down what the trims had been doing since 2026-10-17 (each archived one receipt and left three, four to
 three; S358's is the latest). It replaces **his N=2 of S232 (2026-09-28)** and **his "trim above 3, cut to 2" of S322
-(2026-10-15)**; before them stood S172's N=1 and S127's N=4. BL-59's measurement of what actually reads this file still
+(2026-10-15)**; before them stood S172's N=1 and S127's N=4. **The trigger moved from above three to above four on 2026-10-22 (S361), his choice after he asked what justified the rule; the depth stayed three.** BL-59's measurement of what actually reads this file still
 stands — the handoff is done by the newest receipt alone — so the older receipts are spares, not a working set. **Depth and trigger are separate on purpose:**
-every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **In steady state that is a trim at
-every Phase 0:** a session adds one receipt and removes none, so the next Phase 0 counts four and archives one (the
-cadence his S313 question asked about). **`methodology_trim.py` fires on BYTES (196,608 B),
+every trim pays a FIXED ~16 KB proof (BL-60), so the trigger sits two above the depth and a trim archives two receipts:
+**in steady state a trim at every second Phase 0** (a session adds one receipt and removes none; the cadence his S313
+question asked about). **The reason is bytes, measured S361:** a receipt runs about 10.7 KB (9,876 to 11,760 B, S357 to
+S360), so five fit under the 65,536 B ceiling (about 60 KB; S359 read 59,699 B) and six (about 70 KB) do not. Five is over
+the one-read cap (about 56.7 KB: 25,000 tokens at the measured, provisional 2.27 B/token), so every second close-out reads OVER in
+`context_budget.py --status`; no gate reads it. **At the 12,288 B record budget five receipts would be about 67 KB, over
+the ceiling:** the trigger rests on receipts staying near their measured size; if they grow, it goes back to above three. **`methodology_trim.py` fires on BYTES (196,608 B),
 never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
-`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 3**, the trim is its own action after
+`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 4**, the trim is its own action after
 that report, never inside Phase 0, which is read-only apart from the reconcile backfill
 (`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 3 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
 (BL-59). `bin/check-handoff` checks the **newest** receipt's 13-key schema and the ledger's structure; `--all` checks
-every receipt's schema and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that count and now equals the depth**: a trim to three stands on the floor and never below it, and the A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) is untouched. The file holds three receipts after a Phase 0 trim and four after the claim, so those six rows never print and `tests-sh-passed` reads the same all session (it holds at three or more, `.quality-gates.json` `_s346_tightening_bl55`); under N=2 it read six lower at rest.
+every receipt's schema and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that count and now equals the depth**: a trim to three stands on the floor and never below it, and the A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) is untouched (it covers three; the five-receipt peak is the byte reason above). The file holds three to five receipts, so those six rows never print and `tests-sh-passed` reads the same all session (it holds at three or more, `.quality-gates.json` `_s346_tightening_bl55`); under N=2 it read six lower at rest.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
