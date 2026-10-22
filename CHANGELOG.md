@@ -265,6 +265,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-21 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-20-8.md` (1 record(s), 50,900 B → 39,090 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-20 → 2026-10-20) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-20-8.md`](docs/archive/HANDOFFS-through-2026-10-20-8.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-20-8.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-20-8.md.verify.sh)
+rather than trusting a digest printed here. Live file 50,900 B → 39,090 B (−23.2%).
+
 ### 2026-10-21 · [BL-92] S357 close-out -- BL-92 shapes (a) and (b) done, shape (c) open; the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S356 9, scored after re-reading its next steps and gotchas: every state, the `-7` shard guess, the CHANGELOG size and the six-commit count matched). **Quality checks:** `quality_ratchet.py --run` in a clean `--no-local` clone of the closure commit `23603741` (1,438 s): `22/22 pass · 0 fail · 0 unmeasured · results ccd48215f346 · manifest 26d37cb455c3`, with `tests-sh-passed` measuring 580 against the new floor of 580. **Phase 3C:** no row appended to `docs/FORK_LEARNINGS.md`, so the retire-or-refuse rule (D3) was not triggered and no row retires; rows considered: #41, #16, #107, #81, #31. **Not done, by design:** the original flake's writer is unidentified (the new assertion cannot see it); BL-92's shape (c) is open; no push (this session's 6 commits are local, and a push waits for his go-ahead); nothing sent upstream.
