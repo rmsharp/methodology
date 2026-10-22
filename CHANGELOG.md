@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-124] S363 -- BL-124 closed: no ceiling on `ITERATIVE_METHODOLOGY.md` (22,706.5 tokens, fits one read); fork `main` only; nothing sent upstream
+
+His answer at the Phase 0 picker (2026-10-22), the recommended option: no ceiling, no cut. Three edits, nothing else touched: the index row left `docs/planning/BACKLOG.md` (47 open index rows to 46), its id joined the Completed list (80 ids to 81, each id with one row in `BACKLOG-COMPLETED.md`), and one row was appended to `docs/planning/BACKLOG-COMPLETED.md`. `BACKLOG-DETAIL.md` (the body and its `bl-124` anchor) and `.context-budget.json` are unedited: the note's 'Both now fit one read' was measured true at S362 (`745406dc`). Run alone after the edits, each exit 0: the three `.verify.sh` proofs under `docs/planning/`, `bin/check-backlog-anchors` (87 links, 101 anchors), `bin/check-links` and `bin/check-ledger`. If a ceiling is wanted later, the row records the shape (a `files[]` entry with `max_tokens` and a measured `bytes_per_token`). `CHANGELOG: pending` stays until the close-out entry.
+
 ### 2026-10-22 · [BL-124] S363 claim (in progress) -- close BL-124 with no ceiling on `ITERATIVE_METHODOLOGY.md` (22,706.5 tokens, fits one read); fork `main` only; nothing sent upstream
 
 Claimed at his Phase 0 picker (2026-10-22): deliverable **close BL-124, no ceiling** (his answer to S362's open question; the manual is 9.2% under the 25,000-token one-read cap, so a ceiling guards nothing today); two go-aheads, both taken before this claim or after it: the `HANDOFFS.md` trim (six receipts to three: trim `977cacda`, fold `5da39999`, he ran the `--write` with `!`) and the push of the local commits to the fork's `origin`. `CHANGELOG: pending` until the close-out entry.
