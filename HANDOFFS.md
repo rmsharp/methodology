@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S362
+date: 2026-10-22
+status: pending
+active_task: **BL-124's second half: count the tokens of `ITERATIVE_METHODOLOGY.md` (66,331 B) with the token meter, in an opus subagent that reproduces a recorded control in the same run, so the note's claim that the manual "fits one read" (cap 25,000 tokens) has a measured answer.** Chosen at his Phase 0 picker, 2026-10-22; the `HANDOFFS.md` trim was skipped by his answer (five receipts at rest) and the push of 4 local commits declined. The result is a figure for him; whether the manual earns a ceiling or sheds bytes is his call. Fork `main` only; nothing sent upstream.
+```
+
+```handoff
 session: S361
 date: 2026-10-22
 status: complete
