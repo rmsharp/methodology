@@ -4575,6 +4575,22 @@ spec, which the `bin/sync` overlay drops, has no backlog item of its own.
 
 **Done when** the four sizes are gone from the note and the `ITERATIVE_METHODOLOGY.md` question has a recorded answer. Not started.
 
+**Status, S362: the first half was done S360 (the four sizes are out of the note); the second half was measured S362 (below); the ceiling decision is open.** The 'Not started' above is the S356 text.
+
+**Measured S362 (2026-10-22), second half.** *Method* (S173's, from the doubled-file lesson): built in the scratchpad from committed blobs, each checked with `cmp` against the working copy: the manual `b993bd50ab55` (66,331 B, 636 newlines) alone and doubled (132,662 B); the apparatus `ffaf4ce5b3f3` (30,083 B) alone and tripled (90,249 B); and the control, blob `c0550acd` (52,195 B), doubled (104,390 B). An opus subagent (the brief forbade every tool but Read and gave it no expected figure for the manual) called Read on each with no `offset`, `limit` or `allow_large` and copied every notice back. Every line total it saw matched the files (781, 637, 1273, 558, 1672: newlines plus one). *Verbatim, trimmed to the figures:*
+
+| File read | The tool said | Meaning |
+|---|---|---|
+| control, doubled | `showing lines 1-449 of 781 total (36957 tokens, cap 25000)` | recorded 36,955; 2 off (0.005%) |
+| manual, alone | no notice; the whole file, last line 637 | at or under the cap |
+| manual, doubled | `showing lines 1-595 of 1273 total (45413 tokens, cap 25000)` | 22,706.5 alone |
+| apparatus, alone | no notice; the whole file, last line 558 | under the cap |
+| apparatus, tripled | `showing lines 1-1095 of 1672 total (32428 tokens, cap 25000)` | 10,809 alone |
+
+The single reads and the halved count agree with each other (a whole file at or under 25,000, and 22,706.5), which is the check that the subagent's report is not just its word. *Ratios:* manual 2.921 B/token, apparatus 2.783, control 2.825: three different files, three different densities, which is fork Learning #42 and #60 again (BL-124's two estimates took 2.61 from `CLAUDE.md` and 2.27 from the tool's floor, and both overstated this file by 12% to 29%).
+
+**Why the recommendation is no ceiling and no cut.** (1) It fits with 9.2% to spare and has not changed since 2026-10-08 (`7eb78713`); two sample points, 61,717 B on 2026-06-20 and 66,331 B on 2026-10-08, give +4,614 B in 110 days, so the 6.7 KB of room is about five months at that straight-line pace (derived from two points, an estimate). (2) The manual is read on demand, and `starter-kit/context_budget.py:119` to `:126` applies the read cap only to the classes the protocol orders read whole; an on-demand file 'gets no token verdict at all'. (3) A ceiling declared with only `max_bytes` is priced at the tool's 2.27 floor, which makes the manual 29,221 tokens, over the cap, when it is 22,706.5 (`file_density`, `:142`): it would read red on arrival for a file that fits. Declaring it right needs a per-file `bytes_per_token` of 2.92, a snapshot of today's content (fork Learning #60). So a ceiling adds a number that drifts, to guard a read nobody is ordered to make whole; the note's own words for it are 'policy, not provisioning'. **If he wants a ceiling anyway,** the shape is a `files[]` entry with `max_tokens` and a measured `bytes_per_token`, which loosens nothing, and BL-124 closes when it lands. **If he does not,** BL-124 closes as answered: fits, no ceiling, the note stands.
+
 ---
 
 <a id="bl-125"></a>
