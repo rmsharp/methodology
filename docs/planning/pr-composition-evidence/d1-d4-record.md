@@ -77,7 +77,28 @@ and the text's decision 3 are re-measured before PR5. Settling D4 sends nothing,
 
 ## 4. What this leaves for PR5
 
-1. His go-ahead for each outward step, none implied by the one before; no earlier than 2026-10-25 unless he changes D4.
+1. His go-ahead for each outward step, none implied by the one before; no earlier than 2026-10-25 unless he changes D4 (what ends the wait: section 5).
 2. Nothing in the candidate or the text changes because of D1 or D4 (`pr2/candidate` is still `3cba1e5`, draft 11 is still 21,486 B).
 3. Still not done, from S338's receipt: the 12-project paragraph's "49 lines" was not re-run (`pr3-adopters.py`) and `pr4-claims.sh`'s
    `HEAD94` default is stale (`972eb2c`); pass the environment.
+
+## 5. D4 clarified: what ends the wait (S369, 2026-10-23)
+
+Asked because S368's receipt (gotcha 4) found that the wait's end was not written down. Two sources word D4 differently. The plan
+([`../upstream-pr-composition-plan.md`](../upstream-pr-composition-plan.md) section 7, line 223, the default offered 2026-10-13) says
+*"wait for #94 and #92 to merge or be answered before PR5, and if #94 is still open then, ask whether to stack on its head or state
+that this pull request supersedes it"*. His answer of 2026-10-18 (section 1, above) says *"Keep waiting, and ask again on or after
+2026-10-25"*, a date and no event.
+
+**Between the two:** on 2026-10-19 the maintainer replied on both pull requests (#92: three changes asked, "once those are in, I'll
+merge it locally", comment `6257621669`; #94: changes requested on nine points, `6258571753`), and the fork answered both the same day
+(`6272223306`, `6275751677`; heads `8a232bb` and `1670c5d`). Read 2026-10-23: both still open, 2 comments each, unchanged since.
+
+**His answer (S369 picker, one question, three options): the date alone.** The wait ends on 2026-10-25 whatever #92 and #94 do. A
+second maintainer reply, a merge or a close is not required. The two rejected readings were "his reply or a merge" and "both merged or
+closed", each open-ended.
+
+**What this does:** on or after 2026-10-25 the session asks the plan's follow-up, if #94 is still open, whether PR5 stacks on its head
+or states that it supersedes it, and each outward step still needs its own go-ahead (section 4, item 1, unchanged). **What it does
+not do:** it starts nothing and authorises nothing outward; the date is when to ask, not a trigger a session acts on alone; the
+candidate and the text do not change.
