@@ -87,10 +87,16 @@ sha-shaped and is left to the next claim; the message names the way out
 gate run, a 1,336 s run that had to be explained.
 
 Scope note, deliberate: this pass iterates blocks[1:], but `validate()` still runs on
-blocks[0] ONLY — the 13-key schema is not applied to older receipts. Upstream issue
-#65 separately proposes a `--all` mode for this tool covering different ground
-(duplicate/malformed row detection across the whole ledger). This is not that, is not
-named that, and does not answer it.
+blocks[0] ONLY in the everyday run — the 13-key schema is applied to older receipts under
+`--all` alone (issue #65, which covers different ground: duplicate and malformed rows
+across the whole ledger). This pass is not that and does not answer it.
+
+THE PASS RUNS IN BOTH MODES (BL-128). It was written for the everyday run and `--all`
+returned before reaching it, so a session that ran `--all` right after its claim — the
+claim is what makes the predecessor's receipt older — read "all structurally complete"
+over a slot the everyday run fails. `--all` now reads the same receipts (every one below
+the newest; every block under --archived) and prints the same rows and the same note, so
+the two modes disagree on this rule nowhere. The newest receipt stays exempt in both.
 
 THE LOCATOR-FORM RULE (the `changelog_ref` field, EVERY receipt including the newest).
 `changelog_ref` points at the session's entry in the action ledger. A `CHANGELOG.md:68`
@@ -172,7 +178,8 @@ every block and validates every block against the same schema-selection logic ab
 block's own `status` decides stub vs. full, never the flag), rather than block 0 alone, on
 top of the ledger-structure group below: fences balance, no receipt body stranded outside
 a fence, no two receipts share a session id AND date (identity is the pair: a ledger may
-merge two `S<N>` sequences). `--allow-pending` still narrows to the NEWEST block under --all: a
+merge two `S<N>` sequences) — and, since BL-128, the answer-slot rule above on every receipt
+below the newest. `--allow-pending` still narrows to the NEWEST block under --all: a
 just-written Phase 1B stub is legitimately pending, an older one never closed out. The
 default keeps the 13-key schema on the newest receipt only.
 
@@ -719,6 +726,15 @@ def check_answer_slots(blocks: list, archived: bool = False) -> list:
     return findings
 
 
+def print_answer_slot_note() -> None:
+    """The note under a block of `check_answer_slots` findings. One copy, because the everyday run
+    and --all (BL-128) print the same rows and owe the reader the same way out."""
+    print("  note: the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session")
+    print("        reconciles `commit:` to a real sha. Find the sha a receipt should name")
+    print("        with: git log --all --full-history --format=%H -- <this file>")
+    print("        then the first commit whose copy of that block reads `status: complete`.")
+
+
 # BL-127: 7 to 40 decimal digits, SHA_RE's own length bounds with its hex-letter requirement turned
 # round. A first token of this shape is a sha to the writer and never one to `leads_with_sha`.
 DECIMAL_SLOT_RE = re.compile(r"[0-9]{7,40}")
@@ -1050,8 +1066,9 @@ def main() -> int:
                          "receipt's exemption is a property of the LEDGER, not of a file)")
     p.add_argument("--all", action="store_true",
                     help="validate EVERY receipt against the schema, plus whole-file structure "
-                         "(issue #65); the default checks the newest receipt's schema and the "
-                         "ledger's structure (fences, duplicate and pending receipts)")
+                         "(issue #65) and every older receipt's `commit:` answer slot (BL-128); the "
+                         "default checks the newest receipt's schema, the ledger's structure (fences, "
+                         "duplicate and pending receipts) and the same answer slots")
     args = p.parse_args()
 
     try:
@@ -1095,11 +1112,18 @@ def main() -> int:
                 findings.append("block at line %d (%s): commit: slot begins with %r, %s"
                                 % (blocks_meta[0]["line"], newest.get("session", "").strip() or "<no session>",
                                    slot, DECIMAL_SLOT_TAIL))
+        # BL-128: the answer-slot rule, over the same receipts the everyday run reads (every one below the
+        # newest; every block of a shard), in the same words, so nslot() counts them in either mode. The call
+        # below was written for the everyday run (BL-14) and --all (issue #65) never got it.
+        slot_rows = check_answer_slots(blocks, args.archived)
+        findings += slot_rows
         if findings:
             print("check-handoff --all: FAIL — %d issue(s) across %d receipt(s) in %s:"
                   % (len(findings), len(blocks), path))
             for msg in findings:
                 print("  error: %s" % msg)
+            if slot_rows:
+                print_answer_slot_note()
             return 1
         print("check-handoff --all: OK — %d receipt(s) in %s, all structurally complete, "
               "fences balanced, no duplicate session+date." % (len(blocks), path))
@@ -1178,10 +1202,7 @@ def main() -> int:
                   % (len(anchor_findings), path))
             for msg in anchor_findings:
                 print("  error: %s" % msg)
-            print("  note: the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session")
-            print("        reconciles `commit:` to a real sha. Find the sha a receipt should name")
-            print("        with: git log --all --full-history --format=%H -- <this file>")
-            print("        then the first commit whose copy of that block reads `status: complete`.")
+            print_answer_slot_note()
         if locator_findings:
             print("check-handoff: FAIL — %d positional ledger address(es) in `changelog_ref` in %s:"
                   % (len(locator_findings), path))

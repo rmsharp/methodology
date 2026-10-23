@@ -5123,6 +5123,82 @@ done
     || fail "check-handoff: $n58 newest-slot finding(s) across $shards58 real ledger files (wanted 0 across more than 100)"
 rm -rf "$H58"
 
+echo "== Test 59: check-handoff --all reads every older receipt's commit: answer slot, in the everyday run's words (BL-128, RED-first) =="
+# The answer-slot rule (Test 25) was wired into the everyday run only: `main()`'s --all branch returned before `check_answer_slots`,
+# so --all exited 0 on a ledger whose older receipt names `94375552`, and the check a session runs right after its claim (the claim is
+# what makes the predecessor's receipt older) could not see an unreconciled slot. Three statements said it could: BL-127's option (e),
+# the reader table in BACKLOG-DETAIL.md, and S363's own claim-time check. The fix makes them true rather than rewording them, so --all
+# calls `check_answer_slots` with the same scope as the everyday run (every receipt below the newest; every block under --archived),
+# prints the same rows in the same words (so nslot() counts them) and the same reconcile note. Reuses Test 56's runner t56 and fm56,
+# s56 (a Phase 1B stub), nslot from Test 25, and r58 from Test 58.
+H59="$(mktemp -d)"
+W59="receipt S3 (2026-10-01) names no commit sha in its \`commit:\` answer slot: '94375552'"
+{ fm56; r58 S4 abc1234; r58 S3 94375552; } > "$H59/older.md"
+t56 "baseline: the everyday run reports an older receipt's decimal slot"                             1 "$W59" "$H59/older.md"
+t56 "--all reports it too, in the same words (S364's fixture: exit 0 before BL-128)"                1 "$W59" "$H59/older.md" --all
+[ "$(nslot "$H59/older.md" --all)" = "1" ] && [ "$(nslot "$H59/older.md")" = "1" ] \
+    && pass "check-handoff: the older receipt is reported once under --all and once in the everyday run" \
+    || fail "check-handoff: the older receipt gave $(nslot "$H59/older.md" --all) answer-slot finding(s) under --all and $(nslot "$H59/older.md") in the everyday run, wanted 1 and 1"
+t56 "--all prints the reconcile note the everyday run prints"                                       1 "git log --all --full-history" "$H59/older.md" --all
+t56 "the everyday run still prints it (one function prints the note for both modes)"               1 "git log --all --full-history" "$H59/older.md"
+t56 "--all counts the slot finding in its header (1 issue across 2 receipts)"                       1 "check-handoff --all: FAIL — 1 issue(s) across 2 receipt(s)" "$H59/older.md" --all
+{ fm56; r58 S4 abc1234; r58 S3 'this commit — the work'; } > "$H59/prose.md"
+t56 "--all reports the 'this commit' dialect, which names no sha at all"                            1 "answer slot: 'this commit — the work'" "$H59/prose.md" --all
+{ fm56; r58 S4 abc1234; r58 S3 abc1234 | grep -v '^commit:'; r58 S2 abc1234; } > "$H59/nokey.md"
+t56 "--all: a missing commit: key below the newest is a finding, absence is not a pass"             1 "receipt S3 (2026-10-01) names no commit sha in its \`commit:\` answer slot: ''" "$H59/nokey.md" --all
+{ fm56; r58 S4 abc1234; r58 S3 94375552; r58 S2 6200587; r58 S1 abc1234; } > "$H59/two.md"
+[ "$(nslot "$H59/two.md" --all)" = "2" ] \
+    && pass "check-handoff: two unreconciled older receipts are two findings under --all, once each" \
+    || fail "check-handoff: two unreconciled older receipts gave $(nslot "$H59/two.md" --all) finding(s) under --all, wanted 2"
+{ fm56; r58 S4 abc1234; r58 S3 abc1234; r58 S2 abc1234; } > "$H59/ok.md"
+t56 "control: --all passes a ledger whose older receipts all lead with a sha"                       0 "check-handoff --all: OK" "$H59/ok.md" --all
+{ fm56; r58 S4 pending; r58 S3 abc1234; } > "$H59/pending.md"
+t56 "control: --all leaves the NEWEST receipt's commit: pending alone (the deferral the template permits)" 0 "check-handoff --all: OK" "$H59/pending.md" --all
+{ fm56; r58 S4 'this commit, the close-out'; r58 S3 abc1234; } > "$H59/this.md"
+t56 "control: --all leaves the newest receipt's prose slot alone (the exemption reads no value)"    0 "check-handoff --all: OK" "$H59/this.md" --all
+{ fm56; r58 S4 abc1234; s56 S3; r58 S2 abc1234; } > "$H59/stub-below.md"
+t56 "an older Phase 1B stub is the pending rule's finding under --all"                              1 "receipt still pending" "$H59/stub-below.md" --all
+[ "$(nslot "$H59/stub-below.md" --all)" = "0" ] \
+    && pass "check-handoff: an older stub is not reported a second time by the answer-slot rule under --all" \
+    || fail "check-handoff: an older stub gave $(nslot "$H59/stub-below.md" --all) answer-slot finding(s) under --all, wanted 0"
+out59="$("$BIN/check-handoff" --file "$H59/stub-below.md" --all 2>&1)"   # captured, never piped into grep -q: pipefail would fail it on the checker's own exit 1
+[[ "$out59" != *"full-history"* ]] \
+    && pass "check-handoff: the reconcile note is printed only when a slot finding is" \
+    || fail "check-handoff: --all printed the reconcile note for a ledger with no slot finding"
+{ fm56; r58 S4 94375552; r58 S3 abc1234; } > "$H59/shard.md"
+[ "$(nslot "$H59/shard.md" "--all --archived")" = "1" ] && [ "$(nslot "$H59/shard.md" --archived)" = "1" ] \
+    && pass "check-handoff: --all --archived reads a shard's first block, as --archived does (once)" \
+    || fail "check-handoff: the shard's first block gave $(nslot "$H59/shard.md" "--all --archived") finding(s) under --all --archived and $(nslot "$H59/shard.md" --archived) under --archived, wanted 1 and 1"
+t56 "control: --all --archived passes a shard whose every block leads with a sha"                   0 "check-handoff --all: OK" "$H59/ok.md" --all --archived
+# The real moment: the S362 claim made S361's receipt older, with the slot `94375552` S361 had passed at close-out. The everyday run
+# read it; --all did not, and printed only the pending-receipt error the claim's own stub raises.
+c59=e8ffbf5961ae
+if git -C "$METHODOLOGY" cat-file -e "$c59:HANDOFFS.md" 2>/dev/null; then
+    git -C "$METHODOLOGY" show "$c59:HANDOFFS.md" > "$H59/real-s362-claim.md"
+    [ "$(nslot "$H59/real-s362-claim.md" --allow-pending)" = "1" ] && [ "$(nslot "$H59/real-s362-claim.md" "--all --allow-pending")" = "1" ] \
+        && pass "check-handoff: S361's slot, as it stood in the S362 claim $c59, is read by --all as well as by the everyday run" \
+        || fail "check-handoff: the S362 claim $c59 gave $(nslot "$H59/real-s362-claim.md" --allow-pending) answer-slot finding(s) in the everyday run and $(nslot "$H59/real-s362-claim.md" "--all --allow-pending") under --all, wanted 1 and 1"
+else
+    skip "check-handoff: the S362 claim needs commit $c59 (a full-history canonical checkout); not exercised"
+fi
+# And nothing that is true today is disturbed: on the live ledger and every frozen shard --all reads exactly what the everyday run reads.
+# Both read 0 there (every real older receipt names a sha), so this is a control and not a tooth: the teeth are the fixtures above and
+# the S362 claim.
+mism59=0; files59=0; tot59=0
+for s in "$METHODOLOGY"/HANDOFFS.md "$METHODOLOGY"/docs/archive/HANDOFFS-*.md; do
+    [ -f "$s" ] || continue
+    files59=$((files59+1))
+    if [ "$s" = "$METHODOLOGY/HANDOFFS.md" ]; then e59="--allow-pending"; else e59="--archived"; fi
+    a59="$(nslot "$s" "$e59")"; b59="$(nslot "$s" "--all $e59")"; tot59=$((tot59 + a59))
+    [ "$a59" = "$b59" ] || { mism59=$((mism59+1)); echo "    $s: everyday run $a59, --all $b59"; }
+done
+[ "$mism59" = "0" ] && [ "$files59" -gt 100 ] && pass "check-handoff: control: --all and the everyday run read the same answer slots on all $files59 real ledger files ($tot59 findings each)" \
+    || fail "check-handoff: --all and the everyday run differ on $mism59 of $files59 real ledger files (wanted 0 of more than 100)"
+[ "$(nslot "$METHODOLOGY/HANDOFFS.md" "--all --allow-pending")" = "0" ] \
+    && pass "check-handoff: control: the live ledger has no unreconciled older slot under --all" \
+    || fail "check-handoff: the live ledger has $(nslot "$METHODOLOGY/HANDOFFS.md" "--all --allow-pending") unreconciled older slot(s) under --all"
+rm -rf "$H59"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
