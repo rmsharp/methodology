@@ -5199,6 +5199,145 @@ done
     || fail "check-handoff: the live ledger has $(nslot "$METHODOLOGY/HANDOFFS.md" "--all --allow-pending") unreconciled older slot(s) under --all"
 rm -rf "$H59"
 
+echo "== Test 60: check-handoff refuses a ledger over its 65,536 B ceiling, in the everyday run close-out makes after writing the receipt (BL-126, RED-first) =="
+# CEILING_BYTES (65,536 B, mirrored by `.context-budget.json`'s max_bytes for this ledger) was read by one assertion, Test 39's A1 fit, and compared
+# with the file by nothing. The file passed it at 8 commits in 5 sessions between 2026-10-15 and 2026-10-22 (S327, S328, S331, S332 and S362; S362's
+# close-out 515b3a7e left 68,763 B, 3,227 B over) and no check said so. A quality gate could not have: a session's gate run reads the committed tree
+# at its work commit (S362: 745406dc, 59,818 B, under), and the receipt that grows the file by about 8.8 KB is written after it. So the finding lives
+# where close-out reads the FINAL file, the everyday run, and, like the record budget (Test 38), not under --all: Test 34's presence control reads
+# --all's exit code on the live ledger, and a union over every check would turn it red for a size reason. The size is judged in bytes (st_size, the
+# figure `wc -c` and context_budget.py print), whatever the status of the newest receipt, so a claim that finds the ledger left over is told at once.
+# A shard (--archived) is frozen and is not under the live ledger's ceiling. Reuses Test 56's runner t56 and fm56 and s56, nslot from Test 25, nloc from
+# Test 33, c57 from Test 57, r58 and c58 from Test 58, and const39 from Test 39.
+H60="$(mktemp -d)"
+CEIL60="$(const39 "$BIN/check-handoff" CEILING_BYTES)"
+BUD60="$(const39 "$BIN/check-handoff" RECORD_BUDGET_BYTES)"
+fmt60() { python3 -I -c 'import sys; print(f"{int(sys.argv[1]):,}")' "$1"; }
+body60() {  # the receipts after the padding: two complete ones, or (with an argument) a Phase 1B stub over one
+    if [ -n "${1-}" ]; then s56 S5; r58 S4 abc1234; else r58 S4 abc1234; r58 S3 abc1234; fi
+}
+mk60() {  # mk60 FILE TARGET-BYTES [stub]: a clean ledger whose front matter is padded so the file is exactly TARGET-BYTES long
+    local base
+    base="$({ fm56; body60 "${3-}"; } | wc -c | tr -d ' ')"
+    { fm56; python3 -I -c 'import sys; sys.stdout.write("x" * (int(sys.argv[1]) - 2) + "\n\n")' $(( $2 - base )); body60 "${3-}"; } > "$1"
+}
+c60() { "$BIN/check-handoff" --file "$1" "${@:2}" 2>&1 | grep -c '^  error: .* B, over the .* B ceiling by'; }
+if [[ "$CEIL60" =~ ^[0-9]+$ ]] && [[ "$BUD60" =~ ^[0-9]+$ ]]; then
+    pass "parse control: CEILING_BYTES and RECORD_BUDGET_BYTES are named and readable in check-handoff ($CEIL60, $BUD60)"
+else
+    fail "parse control: CEILING_BYTES or RECORD_BUDGET_BYTES was not found in check-handoff"; CEIL60=65536; BUD60=12288
+fi
+CF60="$(fmt60 "$CEIL60")"
+mk60 "$H60/at.md" "$CEIL60"
+[ "$(wc -c < "$H60/at.md" | tr -d ' ')" = "$CEIL60" ] \
+    && pass "fixture control: at.md is exactly $CEIL60 B, the ceiling" \
+    || fail "fixture control: at.md is $(wc -c < "$H60/at.md" | tr -d ' ') B, wanted $CEIL60"
+t56 "control: a ledger exactly AT the ceiling passes"                                              0 "check-handoff: OK" "$H60/at.md"
+mk60 "$H60/one.md" $(( CEIL60 + 1 ))
+t56 "a ledger one byte over is reported, naming the file, its size, the ceiling and the overshoot"  1 "one.md is $(fmt60 $(( CEIL60 + 1 ))) B, over the $CF60 B ceiling by 1 B" "$H60/one.md"
+mk60 "$H60/s362.md" 68763
+t56 "S362's close-out size, 68,763 B, is reported with its overshoot"                               1 "s362.md is 68,763 B, over the $CF60 B ceiling by $(fmt60 $(( 68763 - CEIL60 ))) B" "$H60/s362.md"
+python3 -I -c 'import sys; sys.stdout.buffer.write(("é" * int(sys.argv[1]) + "\n\n").encode("utf-8"))' 33000 > "$H60/pad-multibyte"
+{ fm56; cat "$H60/pad-multibyte"; body60; } > "$H60/chars.md"
+read -r bytes60 chars60 < <(python3 -I -c 'import sys; b = open(sys.argv[1], "rb").read(); print(len(b), len(b.decode("utf-8")))' "$H60/chars.md")
+[ "$chars60" -lt "$CEIL60" ] && [ "$bytes60" -gt "$CEIL60" ] \
+    && pass "fixture control: chars.md is $chars60 characters (under the ceiling) and $bytes60 bytes (over it)" \
+    || fail "fixture control: chars.md is $chars60 characters and $bytes60 bytes, wanted characters < $CEIL60 < bytes"
+t56 "the unit is bytes, not characters: a ledger of 2-byte characters under the ceiling in characters is reported" 1 "chars.md is $(fmt60 "$bytes60") B, over the $CF60 B ceiling" "$H60/chars.md"
+mk60 "$H60/stub-over.md" $(( CEIL60 + 100 )) stub
+t56 "a claim that finds the ledger left over is told at once (the newest receipt is a Phase 1B stub)" 1 "stub-over.md is $(fmt60 $(( CEIL60 + 100 ))) B, over the $CF60 B ceiling by 100 B" "$H60/stub-over.md" --allow-pending
+t56 "the finding is a block of its own, headed by the ceiling"                                         1 "check-handoff: FAIL — the file is over its $CF60 B ceiling in" "$H60/one.md"
+t56 "the note names the way out: the trimmer's --cut 3 --force"                                      1 "--cut 3 --force" "$H60/one.md"
+t56 "the note points at the retention rule in the front matter, not at a path"                       1 "front matter" "$H60/one.md"
+[ "$(nslot "$H60/one.md")" = "0" ] && [ "$(nloc "$H60/one.md")" = "0" ] && [ "$(c57 "$H60/one.md")" = "0" ] && [ "$(c58 "$H60/one.md")" = "0" ] && [ "$(c60 "$H60/one.md")" = "1" ] \
+    && pass "check-handoff: the finding begins with the file name, so the answer-slot, locator, key_files and commit: counters cannot absorb it" \
+    || fail "check-handoff: the size finding is absorbed by (or absorbs) another counter's rows"
+out60="$("$BIN/check-handoff" --file "$H60/one.md" 2>&1)"   # captured, never piped into grep -q: pipefail would fail it on the checker's own exit
+[ "$(grep -c '^  error: one.md is ' <<< "$out60")" = "1" ] \
+    && pass "check-handoff: the error line begins with the file's name, the directory being in the heading above it" \
+    || fail "check-handoff: the error line does not begin with the file's name"
+t56 "limit, stated: --all does not read the file's size (Test 34's presence control reads --all's exit)" 0 "check-handoff --all: OK" "$H60/one.md" --all
+t56 "limit, stated: a shard (--archived) is frozen and is not under the live ledger's ceiling"        0 "check-handoff: OK" "$H60/one.md" --archived
+out60="$("$BIN/check-handoff" --file "$H60/one.md" --archived 2>&1)"   # captured, never piped into grep -q: pipefail would fail it on the checker's own exit
+[[ "$out60" == *"file size not checked (--archived"* ]] \
+    && pass "check-handoff: --archived states that the size was not checked, in words, and prints no figure" \
+    || fail "check-handoff: --archived did not state that the size was not checked"
+mk60 "$H60/small.md" 20000
+out60="$("$BIN/check-handoff" --file "$H60/small.md" 2>&1)"
+[[ "$out60" == *"file size: 20,000 B of $CF60 B ceiling; $(fmt60 $(( CEIL60 - 20000 ))) B left, room for $(( (CEIL60 - 20000) / BUD60 )) more record(s) at the $(fmt60 "$BUD60") B record budget"* ]] \
+    && pass "check-handoff: the OK line prints the headroom as a count of records that fit, not a share of the total" \
+    || fail "check-handoff: the OK line does not print the headroom as a count of records: $(grep -c 'file size' <<< "$out60") line(s) mention it"
+mk60 "$H60/tight.md" $(( CEIL60 - 1239 ))
+out60="$("$BIN/check-handoff" --file "$H60/tight.md" 2>&1)"
+[[ "$out60" == *"1,239 B left, room for 0 more record(s)"* ]] \
+    && pass "check-handoff: 1,239 B short of the ceiling reads 0 records fit, not 98% (fork Learning #63's own case, S365's close-out)" \
+    || fail "check-handoff: a ledger 1,239 B short of the ceiling does not read 'room for 0 more record(s)'"
+out60="$("$BIN/check-handoff" --file "$H60/at.md" 2>&1)"
+[[ "$out60" == *"file size: $CF60 B of $CF60 B ceiling; 0 B left, room for 0 more record(s)"* ]] \
+    && pass "check-handoff: exactly at the ceiling passes and reads 0 B left" \
+    || fail "check-handoff: the at-ceiling headroom line is wrong"
+# The real history: the close-out commits that left the ledger over, as each was committed.
+for tri60 in "S362:515b3a7e:68763" "S327:981c33a4:72291" "S328:91bea10f:84380" "S331:34366cb8:71481" "S332:36a466aa:80594"; do
+    IFS=: read -r s60 sha60 sz60 <<< "$tri60"
+    if git -C "$METHODOLOGY" cat-file -e "$sha60:HANDOFFS.md" 2>/dev/null; then
+        git -C "$METHODOLOGY" show "$sha60:HANDOFFS.md" > "$H60/real-$s60.md"
+        out60="$("$BIN/check-handoff" --file "$H60/real-$s60.md" 2>&1)"   # captured, never piped into grep -q
+        [ "$(c60 "$H60/real-$s60.md")" = "1" ] && [[ "$out60" == *"real-$s60.md is $(fmt60 "$sz60") B, over the $CF60 B ceiling by $(fmt60 $(( sz60 - CEIL60 ))) B"* ]] \
+            && pass "check-handoff: $s60's ledger, as committed in $sha60, is reported ($(fmt60 "$sz60") B)" \
+            || fail "check-handoff: $s60's ledger, as committed in $sha60, is not reported at $(fmt60 "$sz60") B"
+    else
+        skip "check-handoff: $s60's ledger needs commit $sha60 (a full-history canonical checkout); not exercised"
+    fi
+done
+# And the states that were under it, among them the tree S362's own gate run read: why a gate there was blind.
+for tri60 in "S362-gate-run:745406dc:59818" "S364:899bc756:54891" "S365:008d9775:64297"; do
+    IFS=: read -r s60 sha60 sz60 <<< "$tri60"
+    if git -C "$METHODOLOGY" cat-file -e "$sha60:HANDOFFS.md" 2>/dev/null; then
+        git -C "$METHODOLOGY" show "$sha60:HANDOFFS.md" > "$H60/under-$s60.md"
+        [ "$(wc -c < "$H60/under-$s60.md" | tr -d ' ')" = "$sz60" ] && [ "$(c60 "$H60/under-$s60.md" --allow-pending)" = "0" ] \
+            && pass "check-handoff: control: $s60's ledger ($sha60, $(fmt60 "$sz60") B) is under the ceiling and is not reported" \
+            || fail "check-handoff: control: $s60's ledger ($sha60) was reported, or is not $sz60 B"
+    else
+        skip "check-handoff: $s60's ledger needs commit $sha60 (a full-history canonical checkout); not exercised"
+    fi
+done
+if [ -f "$H60/under-S365.md" ]; then
+    out60="$("$BIN/check-handoff" --file "$H60/under-S365.md" --allow-pending 2>&1)"
+    [[ "$out60" == *"file size: 64,297 B of $CF60 B ceiling; 1,239 B left, room for 0 more record(s)"* ]] \
+        && pass "check-handoff: S365's real close-out ledger (008d9775) reads 1,239 B left and room for 0 more records" \
+        || fail "check-handoff: S365's real close-out ledger does not read 1,239 B left and room for 0 records"
+fi
+# And nothing that is true today: the live ledger, and every frozen shard under --archived (some of them are over the ceiling).
+[ "$(c60 "$METHODOLOGY/HANDOFFS.md" --allow-pending)" = "0" ] \
+    && pass "check-handoff: control: the live ledger is under its ceiling ($(wc -c < "$METHODOLOGY/HANDOFFS.md" | tr -d ' ') B)" \
+    || fail "check-handoff: the live ledger is over its $CF60 B ceiling ($(wc -c < "$METHODOLOGY/HANDOFFS.md" | tr -d ' ') B): trim it"
+n60=0; shards60=0; over60=0
+for s in "$METHODOLOGY"/docs/archive/HANDOFFS-*.md; do
+    [ -f "$s" ] || continue
+    shards60=$((shards60+1)); n60=$((n60 + $(c60 "$s" --archived)))
+    [ "$(wc -c < "$s" | tr -d ' ')" -gt "$CEIL60" ] && over60=$((over60+1))
+done
+[ "$n60" = "0" ] && [ "$shards60" -gt 100 ] && [ "$over60" -gt 0 ] \
+    && pass "check-handoff: $shards60 frozen shards read with no size finding under --archived ($over60 of them are over the ceiling)" \
+    || fail "check-handoff: $n60 size finding(s) across $shards60 shards, $over60 over the ceiling (wanted 0 across more than 100, with at least one over)"
+cb60="$(python3 -I - "$METHODOLOGY/.context-budget.json" <<'PY60'
+import json, sys
+try:
+    cfg = json.load(open(sys.argv[1], encoding="utf-8"))
+except (OSError, ValueError):
+    cfg = {}
+print(next((f.get("max_bytes", "") for f in cfg.get("files", []) if f.get("path") == "HANDOFFS.md"), ""))
+PY60
+)"
+if [ -n "$cb60" ]; then
+    [ "$cb60" = "$CEIL60" ] \
+        && pass "check-handoff: control: CEILING_BYTES ($CEIL60) equals .context-budget.json's max_bytes for the ledger, so the two copies cannot drift apart" \
+        || fail "check-handoff: CEILING_BYTES is $CEIL60 and .context-budget.json's max_bytes for the ledger is $cb60"
+else
+    skip "check-handoff: the ceiling's mirror needs .context-budget.json with an entry for the ledger (a canonical checkout); not exercised"
+fi
+rm -rf "$H60"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]

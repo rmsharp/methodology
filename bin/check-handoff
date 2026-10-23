@@ -98,6 +98,22 @@ over a slot the everyday run fails. `--all` now reads the same receipts (every o
 the newest; every block under --archived) and prints the same rows and the same note, so
 the two modes disagree on this rule nowhere. The newest receipt stays exempt in both.
 
+THE LEDGER'S OWN SIZE (BL-126). CEILING_BYTES (65,536 B, mirrored by `.context-budget.json`'s
+max_bytes for the ledger; Test 60 holds the two equal) was read by the A1 fit assertion (Test
+39) and compared with the file by nothing, so the file passed it unremarked: at 8 commits in 5
+sessions between 2026-10-15 and 2026-10-22 (S327, S328, S331, S332 and S362, whose close-out
+left 68,763 B). A quality gate would not have seen it either: a session's gate run reads the
+tree at its work commit (S362: 59,818 B), and the receipt that grows the file by about 8.8 KB
+is written after it. So the everyday run, which close-out makes right after writing the
+receipt, fails a file whose size in BYTES (`st_size`, the figure `wc -c` and context_budget.py
+print; 2-byte characters count twice) is over the ceiling, whatever the newest receipt's
+status, so a claim that finds the ledger left over is told at once. The message names the
+size and the overshoot; the note names the trim and the front matter, which holds the
+retention rule. Two stated limits, both deliberate: NOT under --all, for the reason the
+record budget gives below (Test 34's presence control reads --all's exit code on the live
+ledger, and a union over every check turns it red for a size reason); and not under
+--archived (a shard is frozen and is not under the live ledger's ceiling).
+
 THE LOCATOR-FORM RULE (the `changelog_ref` field, EVERY receipt including the newest).
 `changelog_ref` points at the session's entry in the action ledger. A `CHANGELOG.md:68`
 line number is not a locator into that ledger, it is a POSITIONAL ADDRESS into a file
@@ -992,6 +1008,31 @@ def check_record_budget(path: Path, text: str, blocks: list):
     return [], "record budget: 1 unwritten record(s), 0 over %s B" % f"{RECORD_BUDGET_BYTES:,}"
 
 
+def check_file_size(path: Path, archived: bool = False):
+    """(findings, note) for the whole file against CEILING_BYTES (BL-126).
+
+    The unit is bytes (`st_size`, what `wc -c` and context_budget.py print), not characters: a
+    ledger of 2-byte characters is over the ceiling at half the characters. `note` is never None,
+    and a shard says in words that nothing was checked and prints no figure, because there is no
+    honest one to print for a file the ceiling does not apply to.
+    """
+    if archived:
+        return [], "file size not checked (--archived: a shard is frozen and is not under the live ledger's ceiling)"
+    size = path.stat().st_size
+    if size > CEILING_BYTES:
+        return ([
+            "%s is %s B, over the %s B ceiling by %s B"
+            % (path.name, f"{size:,}", f"{CEILING_BYTES:,}", f"{size - CEILING_BYTES:,}")
+        ], "file size: %s B of %s B ceiling" % (f"{size:,}", f"{CEILING_BYTES:,}"))
+    # Headroom in the unit of the next write (fork Learning #63), never as a share of the total: a ledger
+    # at 98% of the ceiling reads as roomy and cannot take another record. Floor division, so 1 B short of
+    # a whole record reads 0, and 0 is the answer a successor needs.
+    left = CEILING_BYTES - size
+    return [], ("file size: %s B of %s B ceiling; %s B left, room for %d more record(s) at the %s B record budget"
+                % (f"{size:,}", f"{CEILING_BYTES:,}", f"{left:,}", left // RECORD_BUDGET_BYTES,
+                   f"{RECORD_BUDGET_BYTES:,}"))
+
+
 def declared_gate_count(handoffs_path: Path) -> int:
     """Gates declared beside this ledger (0 when no manifest, an empty seed, or unreadable JSON)."""
     mp = handoffs_path.resolve().parent / GATES_MANIFEST
@@ -1185,8 +1226,15 @@ def main() -> int:
         % (fields.get("session", "?"), fields.get("date", "?"), decimal_slot, DECIMAL_SLOT_TAIL)
     ]
 
+    # A SEVENTH scope (BL-126): the FILE against CEILING_BYTES, in the everyday run only and for the
+    # same reason as the fifth (Test 34's presence control reads --all's exit code on the live ledger),
+    # and not on a shard. Unlike the fifth it reads the file, not the record, so it needs no git. The
+    # message begins with the file name, never "receipt", "changelog_ref", "key_files" or "commit:", so
+    # `nslot()`, `nloc()` and the counters of Tests 57 and 58 cannot count it.
+    size_findings, size_note = check_file_size(path, args.archived)
+
     if (findings or structure_findings or anchor_findings or locator_findings
-            or key_files_findings or slot_findings or budget_findings):
+            or key_files_findings or slot_findings or budget_findings or size_findings):
         if findings:
             print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
                   % (len(findings), path))
@@ -1246,6 +1294,13 @@ def main() -> int:
             print("        self_score. The budget is a POLICY number, not a derivation —")
             print("        RECORD_BUDGET_BYTES in this file, with the fit assertion and the")
             print("        evidence beside it. Do not re-derive it from the ceiling.")
+        if size_findings:
+            print("check-handoff: FAIL — the file is over its %s B ceiling in %s:" % (f"{CEILING_BYTES:,}", path))
+            for msg in size_findings:
+                print("  error: %s" % msg)
+            print("  note: every session that reads the ledger pays for the whole file. The way out is")
+            print("        the trim; the retention rule, and the flags it gives (--cut 3 --force at this")
+            print("        writing), are in the ledger's front matter. Run the trimmer's dry run first.")
         return 1
 
     label = ("a valid Phase 1B stub (close-out not yet performed)"
@@ -1254,6 +1309,7 @@ def main() -> int:
     print("check-handoff: OK — newest receipt in %s is %s; all %d %sreceipt(s) name a commit sha."
           % (path, label, checked, "" if args.archived else "older "))
     print("  %s" % budget_note)
+    print("  %s" % size_note)
     return 0
 
 
