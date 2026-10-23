@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-23 · [ad hoc] S368 push -- the 9 commits that were ahead of the fork's `origin` (`e9c266b1..c2be6a0b`) pushed to `origin`; nothing sent upstream
+
+His go-ahead after the close-out report ('push'), one set: S367's claim, work, closure and close-out, then S368's trim, fold, claim, work and close-out. Fast-forward checked against a freshly fetched `origin/main` (`merge-base --is-ancestor`, ahead/behind `0 9`), `origin` confirmed to be `rmsharp/methodology` and not `KJ5HST/methodology`, pushed by sha, then read back: `git ls-remote origin refs/heads/main`, `origin/main` and the local branch all read `c2be6a0b`, ahead/behind `0 0`; `upstream/main` still `f34769f3`. This entry's own commit is not pushed (the standing grant would allow it, but pushing a push record needs another record); it rides the next push. The S368 receipt's 'nine commits ahead of `origin`' (next_steps 6) was true when written and is now `0`.
+
 ### 2026-10-23 · [ad hoc] S368 close-out -- the S340 review's three 'D4's date is superseded' sentences corrected in place; the receipt trimmed 5 to 3 and folded; the receipt complete; nothing sent upstream
 
 Fork `main` only. The session's actions, each with its own entry below: the receipt trim `aa4cdb60` (he ran the `--write`), its fold `ad9490c9`, the claim `fb8f2134` and the correction `6466f492`. Gate run: 24/24 pass, 0 fail, 0 unmeasured (results `873329624aaf`, manifest `98c8c8024d0e`) in a clean `--no-local` clone of `6466f492`, 1,476 s; `tests-sh-passed` 660 against its floor of 660. The predecessor (S367) scored 9; this session's self-score is 8. No row was appended to `docs/FORK_LEARNINGS.md` (rows #81, #28 and #97 already state the lesson), so the retirement duty does not fire. `HANDOFFS.md` now holds four receipts (S368, S367, S366, S365): no trim at the next Phase 0, a trim of two at the one after. Nothing was pushed: `main` is 9 commits ahead of the fork's `origin` (`e9c266b1`), and the standing grant covers a ledger-only push record, nothing wider.
