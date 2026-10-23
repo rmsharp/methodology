@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S369
+date: 2026-10-23
+status: pending
+active_task: **Settle what ends decision D4's wait before the PR5 pull request (`docs/planning/pr-composition-evidence/d1-d4-record.md` line 12), and record his answer there.** Chosen at his Phase 0 picker, the recommended deliverable; S368's receipt (gotcha 4) named it: D4's text is 'keep waiting for the maintainer's answer on #92 and #94 before PR5 ... ask again on or after 2026-10-25', and the maintainer's first replies (2026-10-19) are an answer of a kind that the fork answered. Docs-only, fork `main` only; nothing sent upstream. The question to him is not yet asked at this claim.
+```
+
+```handoff
 session: S368
 date: 2026-10-23
 status: complete
