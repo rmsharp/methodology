@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-126] S366 claim (in progress) -- resolve BL-126 (nothing fails when `HANDOFFS.md` passes its 65,536 B ceiling); fork `main` only; nothing sent upstream
+
+Claimed at his Phase 0 picker (2026-10-22): deliverable **BL-126**, the recommended item. How the gate reads the ceiling, and where it lives, is shown to him before anything is built. Phase 0 found both frontiers at `008d9775` (0 undocumented commits, 0 merges, no pending receipt), `check-ledger` and `check-handoff` exit 0, six receipts in `HANDOFFS.md` (64,297 B, 1,239 B under the ceiling), dashboard 72/100, and the five upstream items open and unchanged (pull requests #96 with 0 comments, #94 with 2, #92 with 2; issues #93 with 1 and #95 with 0), `upstream/main` `f34769f3`. His two go-aheads at the picker were taken before this claim: the push of S365's 4 commits to the fork (`899bc756..008d9775`, recorded in the fold entry below) and the trim (`3ecaa111`, fold `9d90b53b`; `HANDOFFS.md` now 34,382 B, 3 receipts). `CHANGELOG: pending` until the close-out entry.
+
 ### 2026-10-22 · [ad hoc] S366 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 448 B; `HANDOFFS.md` 34,830 B before, 34,382 B after) became the row `| 3 | 2026-10-22 → 2026-10-22 | HANDOFFS-through-2026-10-22.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `3ecaa111`, taken at the operator's Phase 0 picker answer to trim `HANDOFFS.md` (six receipts to three, on his keep-three rule, trim above four); he ran the `--write` with `!`. The same picker also took the push of S365's 4 commits to the fork's `origin` (`899bc756..008d9775`, fast-forward checked against a fresh `origin/main`, read back by `git ls-remote`); nothing was sent upstream.

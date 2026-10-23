@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S366
+date: 2026-10-22
+status: pending
+active_task: **Resolve BL-126: nothing fails when `HANDOFFS.md` passes its 65,536 B ceiling.** Chosen at his Phase 0 picker, 2026-10-22, the recommended item (shown to him as 'add a check that goes red past the limit', which is the row's option (a)). How the gate reads the ceiling, and where it lives, is shown to him before anything is built. Also at the picker, both done before this claim: the push of S365's 4 commits to the fork (`899bc756..008d9775`, read back equal) and the `HANDOFFS.md` trim (six receipts to three: trim `3ecaa111`, fold `9d90b53b`).
+```
+
+```handoff
 session: S365
 date: 2026-10-22
 status: complete
