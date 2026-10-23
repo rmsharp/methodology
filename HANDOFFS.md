@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S365
+date: 2026-10-22
+status: pending
+active_task: **Resolve BL-128: `bin/check-handoff --all` does not read older receipts' `commit:` slots, so the check a session runs right after its claim cannot see an unreconciled one.** Chosen at his Phase 0 picker, 2026-10-22, the recommended item. Which of BL-128's options (a) to (d) to build is his call, so the first act after this claim is showing them to him. Also at the picker: the push of S364's 5 commits to the fork (`ab127d63..899bc756`, read back equal). The `HANDOFFS.md` trim was offered and not ticked.
+```
+
+```handoff
 session: S364
 date: 2026-10-22
 status: complete

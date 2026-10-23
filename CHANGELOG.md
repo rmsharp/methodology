@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [BL-128] S365 claim (in progress) -- resolve BL-128 (`bin/check-handoff --all` does not read older receipts' `commit:` slots); fork `main` only; nothing sent upstream
+
+Claimed at his Phase 0 picker (2026-10-22): deliverable **BL-128**, the recommended item. Which of its four options (a) to (d) to build is his call and is shown to him before anything is built. Phase 0 found both frontiers at `899bc756` (0 undocumented commits, 0 merges, no pending receipt), `check-ledger` and plain `check-handoff` exit 0, five receipts in `HANDOFFS.md` (above his four; the trim was offered at the picker and he did not tick it, so no trim this session and the file closes at six), dashboard 72/100, and the five upstream items (#96, #94, #92, #93, #95) open and unchanged, `upstream/main` `f34769f3`. `CHANGELOG: pending` until the close-out entry.
+
+### 2026-10-22 · [ad hoc] S365 push -- S364's 5 local commits to the fork's `origin`, `ab127d63..899bc756`; nothing sent upstream
+
+His go-ahead at the Phase 0 picker, for exactly those five commits (the S364 claim `e5b67e16`, work `da5de7c6`, BL-128 raise `bf3aaf40`, closure `892b9420` and close-out `899bc756`). Fast-forward checked with `merge-base --is-ancestor` against a fresh `origin/main` (`ab127d63`), pushed by sha and not `HEAD`; `origin/main` and `git ls-remote origin refs/heads/main` both read `899bc756` afterwards, `main...origin/main` `0 0`.
+
 ### 2026-10-22 · [BL-127] S364 close-out -- BL-127 closed (check-handoff refuses an all-decimal commit: slot in the newest receipt), BL-128 raised, tests-sh-passed floor 609; S363's 5 commits pushed to the fork; the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). **Deliverable:** BL-127 closed with option (a) (work `da5de7c6`, closure `892b9420`; open index rows 46 to 46, BL-127 out and BL-128 in). **Also at his picker:** the push of S363's 5 commits, `515b3a7e..ab127d63`, to the fork's `origin`, read back equal with `git ls-remote`. **Gate run:** 24/24 pass, 0 fail, 0 unmeasured, results `77ac22c6bc5e`, manifest `3c03799313b0`, in a clean `--no-local` clone of `892b9420` (1,382 s, 5 receipts in the tree; `tests-sh-passed` 609 against its new floor of 609). **No row appended** to `docs/FORK_LEARNINGS.md`, so no retirement is owed; the lesson (two modes of one checker are not nested) is BL-128's body. The `HANDOFFS.md` ledger rests at five receipts, so the next Phase 0 trims two. This session's five commits (claim, work, BL-128 raise, closure, this close-out) stay local.
