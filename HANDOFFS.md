@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S368
+date: 2026-10-23
+status: pending
+active_task: **Correct the S340 review's statement that decision D4's 2026-10-25 date is superseded (`docs/planning/backlog-interaction-review-2026-10-18.md`, lines 203 and 449, and a third instance of the same claim at line 286).** Chosen at his Phase 0 picker, the recommended deliverable. He ruled at S367 (2026-10-23) 'Yes, D4 stands', so all three sentences are false; the fix is docs-only and fork-only, in place, with no line added or removed. Before this claim, at the same picker: the receipt trim (`aa4cdb60`, 5 receipts to 3, he ran the `--write`) and its fold (`ad9490c9`). Nothing sent upstream.
+```
+
+```handoff
 session: S367
 date: 2026-10-23
 status: complete

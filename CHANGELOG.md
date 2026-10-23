@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-23 · [ad hoc] S368 claim (in progress) -- correct the S340 review's 'D4's date is superseded' lines (203, 449, and a third instance at 286); fork `main` only; nothing sent upstream
+
+Claimed at his Phase 0 picker: the recommended deliverable, one of the open calls S367's receipt listed. Phase 0 (read 2026-10-23) found both frontiers at `e056ee17` (0 undocumented commits, 0 merges, no pending receipt), `check-ledger` and `check-handoff` exit 0, pull requests #96 (head `ad5c980`, 0 comments), #94 (`1670c5d`, 2) and #92 (`8a232bb`, 2) and issues #93 (1) and #95 (0) open and unchanged, `upstream/main` `f34769f3`, dashboard 72/100 with 0 high-risk flags. The local `.quality-gates-results.json` is from 2026-10-10 (18 gates), so S367's 24/24 citation is neither contradicted nor confirmed by it; no `--run` this Phase 0. The class scan for the deliverable found the claim in three places in the review, not two; the third (line 286) is the same defect and is fixed with the other two. The dashboard refresh's one `dashboard_history.jsonl` line rides this claim, as in S364 to S367.
+
 ### 2026-10-23 · [ad hoc] S368 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 456 B; `HANDOFFS.md` 38,650 B before, 38,194 B after) became the row `| 2 | 2026-10-22 → 2026-10-22 | HANDOFFS-through-2026-10-22-2.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `aa4cdb60`, taken at the operator's Phase 0 picker answer to trim `HANDOFFS.md` (five receipts to three, on his keep-three rule, trim above four); he ran the `--write` with `!`. Nothing sent upstream.
