@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-22 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-22.md` (3 record(s), 64,297 B → 34,830 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **3** record(s) (2026-10-22 → 2026-10-22) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-22.md`](docs/archive/HANDOFFS-through-2026-10-22.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-22.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-22.md.verify.sh)
+rather than trusting a digest printed here. Live file 64,297 B → 34,830 B (−45.8%).
+
 ### 2026-10-22 · [BL-128] S365 close-out -- BL-128 closed (check-handoff --all reads every older receipt's commit: slot), tests-sh-passed floor 629; S364's 5 commits pushed to the fork; the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). **Deliverable:** BL-128 closed with option (a) (work `1f518f850f9e`, closure `ce3df1702b41`; open index rows 46 to 45). **Also at his picker:** the push of S364's 5 commits, `ab127d63..899bc756`, to the fork's `origin`, read back equal with `git ls-remote`; this session's four commits (claim, work, closure, this close-out) stay local. **Not done, his choice:** the `HANDOFFS.md` trim was offered with its dry run (2 of 5 receipts, 54,891 B to 34,835 B) and he did not tick it, so the file closes at six receipts and about 64.3 KB (`wc -c`), about 1.2 KB under its 65,536 B ceiling. **Gate run:** 24/24 pass, 0 fail, 0 unmeasured, results `10cba3f5e621`, manifest `eadfb171f55a`, in a clean `--no-local` clone of `ce3df1702b41` (1,479 s, 6 receipts in the tree; `tests-sh-passed` measured 629 against its floor of 629; `check-handoff-all` passes with the new check in it). **3C:** no row appended to `docs/FORK_LEARNINGS.md`, so D3's retirement duty does not fire. **Predecessor (3A):** S364 scored 9. **Self-assessment (3B):** 8. **Model:** Claude Sonnet 5.5.
