@@ -10,7 +10,7 @@ It is scoped by an operator re-aim recorded at `CHANGELOG.md` 2026-08-27 · *"S1
 
 > **Declared budget: 45,000 B**, so this file is deliverable in one agent `Read` at the settled
 > denominator (`READ_CAP_BYTES = 56,750`). It is file 33 in `docs/planning/`, which has no ceiling —
-> the same instance-of-the-problem this directory always is. Stated rather than discovered.
+> the same instance-of-the-problem this directory always is. Stated rather than discovered. **Over its own figure (BL-125, 2026-10-23): 45,451 B before this note, 451 B over, and about 11 KB under `READ_CAP_BYTES`, so the one-read purpose holds. No gate holds this figure (decided: the file is unchanged since 2026-08-30). Kept on one line: other plans cite this file by line number.**
 
 ---
 
