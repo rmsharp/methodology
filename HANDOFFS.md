@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S367
+date: 2026-10-23
+status: pending
+active_task: **Resolve BL-125: six plan files declare a byte budget in their own header and no gate holds any of them; `upstream-read-set-pr-plan.md` is 451 B over its 45,000 B.** Chosen at his Phase 0 picker, the recommended item. What to do about the six files and the 451 B is shown to him as options before anything is built. Also at the picker, done before this claim: the push of S366's 7 commits to the fork's `origin` (`008d9775..e9c266b1`, read back). Nothing sent upstream.
+```
+
+```handoff
 session: S366
 date: 2026-10-22
 status: complete
