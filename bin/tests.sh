@@ -5338,6 +5338,93 @@ else
 fi
 rm -rf "$H60"
 
+echo "== Test 61: status says when its source has no history, instead of reading a file that is only behind as locally modified (BL-122, RED-first) =="
+# A file that matches no version in the source's history is a local edit only if that history is all there. Test 48
+# made bin/sync say so for a shallow clone and for a tree with no .git; bin/status kept the old reading, so against the
+# same sources a clean project's older files read "locally modified" (S343: 21 rows against a depth-1 clone of this
+# repository, all 21 "N versions behind" against a full one) and nothing in the output named the source. Such a row now
+# reads "unknown (source history incomplete)", and one note before the table names the cause and the command that repairs
+# it. The two tools carry separate copies of the test, so the cause sentences are pinned here against bin/sync's own
+# output. Reuses Test 41's fixture (mh_fixture: $M, $F, $D; v1 is the root version, merely behind) and Test 48's three
+# sources, then a --source=github run over the shallow one (its clone is shallow too, so the way out names another source).
+mh_fixture
+P="$(mktemp_project)"
+"$M/bin/sync" "$P" --mode=commit --source=local >/dev/null
+R61=SESSION_RUNNER.md
+H="$(cd "$(mktemp -d)" && pwd -P)"  # resolved, as bin/status prints its own root (/var is /private/var on macOS)
+git clone -q --depth 1 "file://$M" "$H/shallow"  # file://, or git copies the repository and ignores --depth
+git clone -q --depth 2 "file://$M" "$H/shallow2"  # depth 2 reaches both of the merge's parents
+N61="$(git -C "$H/shallow2" rev-list --count HEAD)"
+mkdir "$H/tarball"; git -C "$M" archive HEAD | tar -x -C "$H/tarball"
+[ "$(git -C "$H/shallow" rev-parse --is-shallow-repository)" = "true" ] && [ "$(git -C "$H/shallow2" rev-parse --is-shallow-repository)" = "true" ] \
+    && [ ! -e "$H/tarball/.git" ] && cmp -s "$H/shallow/bin/status" "$BIN/status" && cmp -s "$H/shallow2/bin/status" "$BIN/status" \
+    && cmp -s "$H/tarball/bin/status" "$BIN/status" \
+    && pass "fixture: two shallow clones and a tree with no .git, each carrying the status under test" \
+    || fail "fixture: a clone is not shallow, the tree has a .git, or a copy of bin/status differs"
+st61() {  # st61 <source tree> <content of $D> <1 if the runner is edited here>: the status output over the project
+    printf '%s\n' "$2" > "$P/$D"
+    cp "$M/starter-kit/$R61" "$P/$R61"
+    [ "$3" = "1" ] && echo "# local edit" >> "$P/$R61"
+    "$1/bin/status" --source=local "$P" 2>&1
+}
+row61() {  # row61 <output> <file>: the Status cell of that file's row
+    awk -v d="$2" '$2 == d { $1 = $2 = $3 = ""; sub(/^ +/, ""); sub(/ +$/, ""); print }' <<<"$1"
+}
+tab61() {  # tab61 <output>: the project's rows but the two this test edits, padding stripped (the widest cell sets it)
+    grep "^$(basename "$P") " <<<"$1" | grep -Ev " ($D|$R61) " | sed 's/ *$//'
+}
+FULL61="$(st61 "$M" v1 1)"
+[ "$(row61 "$FULL61" "$D")/$(row61 "$FULL61" "$R61")" = "3 versions behind/locally modified" ] \
+    && pass "control: a full-history source reads v1 as '3 versions behind' and the edited runner as 'locally modified'" \
+    || fail "control: a full-history source reads v1 '$(row61 "$FULL61" "$D")' and the edited runner '$(row61 "$FULL61" "$R61")'"
+[ "$(grep -c '^note:' <<<"$FULL61")" = "0" ] \
+    && pass "control: a full-history source prints no note" || fail "control: a full-history source printed a note"
+chk61() {  # chk61 <source tree> <the cause, in bin/sync's words> <the command that repairs it> <what>
+    local out sout nl tl
+    out="$(st61 "$1" v1 1)"
+    [ "$(row61 "$out" "$D")/$(row61 "$out" "$R61")" = "unknown (source history incomplete)/unknown (source history incomplete)" ] \
+        && pass "$4: both files read 'unknown (source history incomplete)'" \
+        || fail "$4: v1 reads '$(row61 "$out" "$D")' and the edited runner '$(row61 "$out" "$R61")'"
+    [ "$(grep -c 'locally modified' <<<"$out")" = "0" ] \
+        && pass "$4: no row reads 'locally modified'" || fail "$4: a row still reads 'locally modified'"
+    grep -qF "$2" <<<"$out" && pass "$4: the note says '$2'" || fail "$4: no '$2' in the output: $out"
+    sout="$("$1/bin/sync" "$P" --source=local 2>&1)"
+    grep -qF "$2" <<<"$sout" && pass "$4: bin/sync's refusal says the same '$2'" || fail "$4: bin/sync's refusal lacks '$2': $sout"
+    grep -qxF "    $3" <<<"$out" && pass "$4: the note gives the command that repairs it" || fail "$4: no '$3' line in the output"
+    grep -qF 'The 2 files marked "unknown" below could be either.' <<<"$out" \
+        && pass "$4: the note counts the files it makes unknown" || fail "$4: the note does not say how many files are unknown"
+    nl="$(grep -n '^note:' <<<"$out" | head -1 | cut -d: -f1)"; tl="$(grep -n '^Project ' <<<"$out" | head -1 | cut -d: -f1)"
+    [ -n "$nl" ] && [ -n "$tl" ] && [ "$nl" -lt "$tl" ] \
+        && pass "$4: the note comes before the table" || fail "$4: the note is at line '$nl', the table at '$tl'"
+    [ "$(tab61 "$out")" = "$(tab61 "$FULL61")" ] \
+        && pass "$4: every other row reads as it does against the full source" || fail "$4: another row changed"
+}
+chk61 "$H/shallow" "is shallow (1 commit)" "git -C $H/shallow fetch --unshallow" "shallow source"
+chk61 "$H/shallow2" "is shallow ($N61 commits)" "git -C $H/shallow2 fetch --unshallow" "a deeper shallow source"
+chk61 "$H/tarball" "has no git history (no .git in $H/tarball)" "git clone ${METHODOLOGY_SOURCE_URL:-https://github.com/KJ5HST/methodology.git}" "source with no .git"
+# What the history can still answer stays answered, and a note with nothing to say is not printed.
+OUT61="$(st61 "$H/shallow2" v4side 0)"
+[ "$(row61 "$OUT61" "$D")" = "1 version behind" ] && [ "$(grep -c '^note:' <<<"$OUT61")" = "0" ] \
+    && pass "a version the shallow source still holds reads '1 version behind', and with no unknown row there is no note" \
+    || fail "shallow source, v4side: reads '$(row61 "$OUT61" "$D")' with $(grep -c '^note:' <<<"$OUT61") note(s)"
+OUT61="$(st61 "$H/tarball" v5 0)"
+[ "$(row61 "$OUT61" "$D")" = "current" ] && [ "$(grep -c '^note:' <<<"$OUT61")" = "0" ] \
+    && pass "a source with no .git reads the canonical version as 'current', with no note" \
+    || fail "source with no .git, v5: reads '$(row61 "$OUT61" "$D")' with $(grep -c '^note:' <<<"$OUT61") note(s)"
+# --source=github clones its URL for the run. A URL that serves a shallow repository gives a shallow clone, which is
+# gone when the run ends, so the way out is another source, not a command to deepen it. One file is unknown here.
+printf 'v1\n' > "$P/$D"; cp "$M/starter-kit/$R61" "$P/$R61"
+OUT61="$(METHODOLOGY_SOURCE_URL="file://$H/shallow" "$BIN/status" --source=github "$P" 2>&1)"
+[ "$(row61 "$OUT61" "$D")" = "unknown (source history incomplete)" ] && grep -qF "is shallow (1 commit)" <<<"$OUT61" \
+    && pass "--source=github over a shallow URL: v1 reads 'unknown (source history incomplete)' and the note says 'is shallow (1 commit)'" \
+    || fail "--source=github over a shallow URL: v1 reads '$(row61 "$OUT61" "$D")': $OUT61"
+grep -qxF "  Compare against a full clone of it instead, with --source=local." <<<"$OUT61" \
+    && pass "--source=github over a shallow URL: the way out names --source=local, not a command to deepen a clone that is gone" \
+    || fail "--source=github over a shallow URL: no 'Compare against a full clone' line"
+grep -qF 'The 1 file marked "unknown" below could be either.' <<<"$OUT61" \
+    && pass "the note reads in the singular for one unknown file" || fail "the note does not read 'The 1 file marked' for one unknown file"
+rm -rf "$M" "$H" "$P"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
