@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-23 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-23.md` (2 record(s), 59,826 B → 38,552 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-23 → 2026-10-23) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-23.md`](docs/archive/HANDOFFS-through-2026-10-23.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-23.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-23.md.verify.sh)
+rather than trusting a digest printed here. Live file 59,826 B → 38,552 B (−35.6%).
+
 ### 2026-10-23 · [BL-121] S371 close-out -- BL-121 closed (BOOTSTRAP lines 90 and 399 name every root file the manifest distributes; the row undercounted: 7 names, not 5); S370's 6 commits pushed to the fork; the receipt complete; nothing sent upstream
 
 Phase 3 of the session whose claim stands below (`CHANGELOG: pending` is resolved by this entry and the entries between). **Deliverable:** BL-121 closed (work `60772eb2`, closure `acd1805cea6d`; open index rows 42 to 41). **Also done:** the push of S370's 6 commits (`66efb971..7a5e5815`) to the fork's `origin` (its own entry below). **Predecessor (3A):** S370 scored 9; every cited anchor re-read in the files, nothing wrong found. **Self-assessment (3B):** 8; the work entry's false 'adopters receive' sentence (corrected in the closure entry, not edited), a wrong 21 B figure in the plan picker (23 B), and a 'no existing word changes' said before the moved 'and' was counted. **Learnings (3C):** no row appended to `docs/FORK_LEARNINGS.md`; rows #81 and #100 considered, both read in full, and #100 already states the lesson at least as generally, so D3's retirement duty does not fire. **Gate run (3E):** 24/24 pass, 0 fail, 0 unmeasured, results `873329624aaf`, manifest `98c8c8024d0e`, in a clean `--no-local` clone of `acd1805cea6d` (1,427 s); `tests-sh-passed` 660 against its floor of 660. **Next session:** S372's Phase 0 trims two receipts (S368 and S367); PR5 only on or after 2026-10-25. Nothing sent to `KJ5HST/methodology`.
