@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-24 · [BL-122] S372 tightening -- `tests-sh-passed` floor 660 to 692 (Test 61's 32 assertions); the 24-gate run
+
+`quality_ratchet.py --run` in a clean `--no-local` clone of the closure commit `9ee3e390` (4 receipts in the tree: the claim stub and three complete ones, the state S366 read 660 in) read 24/24 pass, 0 fail, 0 unmeasured, results `64559ac8d8c6`, manifest `98c8c8024d0e` (the manifest before this move), `tests-sh-passed` 692; the run took from 00:36 to 01:00 on 2026-10-24 under a load of about 7 from other sessions. The floor in `.quality-gates.json` moves 660 to 692, with a dated note `_s372_tightening_bl122` in the file's existing style. 660 + 32 agrees with the measurement; the measurement is what the floor takes. A tightening: `quality_ratchet.py --precommit` accepts it. The only floor that moved; no gate was added. Fork `main` only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-24 · [BL-122] S372 -- close BL-122 (`bin/status` says when its source has no history; Test 61)
 
 The index row out of `docs/planning/BACKLOG.md` (41 to 40 open rows), `BL-122` into its Completed id list (87 to 88 ids, recomputed against 88 closing rows), and its closing row appended to `docs/planning/BACKLOG-COMPLETED.md`; the `bl-122` anchor in `BACKLOG-DETAIL.md` is untouched, as the detail proof pins it. The closing row records what the work did (work `e77b8bda`), that a tree with no `.git` was covered although the row measured only the shallow case, and that the later carry to upstream is a re-apply onto upstream's different `bin/status` (blob `a3659766f5a4` against the fork's `0c3436ebd7ba`), untested, with its own go-ahead. Fork `main` only; nothing sent to `KJ5HST/methodology`.
