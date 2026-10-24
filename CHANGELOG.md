@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-23 · [ad hoc] S369 push -- the 4 commits that were ahead of the fork's `origin` (`c2be6a0b..650a7ca4`) pushed to `origin`; nothing sent upstream
+
+His go-ahead after the close-out report ('push'), one set: S368's push record `5fd05af6`, then S369's claim `e17e350a`, work `df7ee124` and close-out `650a7ca4`. `origin` is `rmsharp/methodology`, the fork (`git remote -v`); fast-forward checked against a freshly fetched `origin/main` (`merge-base --is-ancestor`, ahead/behind `0 4`, clean tree, no rebase marker), pushed by sha (`650a7ca4561f:refs/heads/main`), read back: `origin/main` and `git ls-remote` both `650a7ca4561f`, ahead/behind `0 0`. Nothing sent to `KJ5HST/methodology`
+
 ### 2026-10-23 · [ad hoc] S369 close-out -- decision D4's wait settled: it ends on 2026-10-25 whatever #92 and #94 do, recorded in the D4 record; the receipt complete; nothing sent upstream
 
 The one deliverable (a decision record) is done: `docs/planning/pr-composition-evidence/d1-d4-record.md` section 5, commit `df7ee124fc00`, claim `e17e350a91ec`. The `HANDOFFS.md` receipt is `status: complete` (self 8, predecessor S368 scored 9); S370's Phase 0 trims two receipts (five at rest). Gates 24/24 pass, 0 unmeasured, results `873329624aaf`, manifest `98c8c8024d0e` in a clean clone of the work commit (1,474 s; identical to S368's citation, as expected for a text change). No row appended to `docs/FORK_LEARNINGS.md` (rows considered: #28, #48), so D3's retirement duty does not fire. Memory notes outside the repository updated. `main` is 4 commits ahead of `origin` (S368's push record, then S369's claim, work and this close-out). Nothing sent upstream
