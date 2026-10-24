@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S372
+date: 2026-10-23
+status: pending
+active_task: **BL-122: `bin/status` does not tell its reader that the methodology source has no git history, so a project that is only behind reads as locally modified.** Chosen at his Phase 0 picker, the recommended deliverable; the same picker took the receipt trim (done before this claim: trim `c3309007`, fold `6389122f`) and the push of S371's 4 commits to the fork (done before this claim, `7a5e5815..a0ec04cf`). Fork `main` only; nothing sent upstream. The row is re-measured before any edit (S370 found BL-123's row wrong twice, S371 found BL-121 undercounted).
+```
+
+```handoff
 session: S371
 date: 2026-10-23
 status: complete
