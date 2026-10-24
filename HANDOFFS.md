@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S371
+date: 2026-10-23
+status: pending
+active_task: **BL-121: the 'Setup with `bin/sync`' prose in `starter-kit/BOOTSTRAP.md` is stale against `bin/_manifest.py`** (its list of installed operating files leaves out `methodology_trim.py`, `context_budget.py` and `quality_ratchet.py`; its list of seeded files leaves out `.context-budget.json` and `.quality-gates.json`). Chosen at his Phase 0 picker, the recommended deliverable; the same picker took the push of S370's 6 commits to the fork (done before this claim, `66efb971..7a5e5815`). Fork `main` only; nothing sent upstream. The row is re-measured before any edit (S370 found BL-123's row wrong twice).
+```
+
+```handoff
 session: S370
 date: 2026-10-23
 status: complete
