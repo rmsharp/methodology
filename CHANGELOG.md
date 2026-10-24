@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-23 · [BL-123] S370 claim (in progress) -- BL-123 (two lines of `starter-kit/BOOTSTRAP.md`, 28 and 399, name `docs/methodology/` without saying which layout); fork `main` only; nothing sent upstream
+
+Claimed at his Phase 0 picker: BL-123, the recommended option. The same picker took the `HANDOFFS.md` trim (`64ef4966`, five receipts to three; he ran the `--write` with `!`), its fold (`6abe24cc`, own commit) and the push of S369's push record, all done before this claim. Phase 0 (read 2026-10-23) found both frontiers current (`CHANGELOG.md` and `HANDOFFS.md` at `66efb971`/`650a7ca4`; 0 undocumented commits, 0 merges, no pending receipt), `check-ledger` and `check-handoff` exit 0 with 5 receipts (57,796 B of 65,536 B, so the trim was owed on his keep-three, trim-above-four rule), pull requests #96 (`ad5c980`, 0 comments), #94 (`1670c5d`, 2) and #92 (`8a232bb`, 2) and issues #93 (1) and #95 (0) open and unchanged, `upstream/main` `f34769f3`, dashboard 72/100 with 0 high-risk flags. The local `.quality-gates-results.json` is from 2026-10-10 (18 gates), so S369's 24/24 citation is neither contradicted nor confirmed by it; no `--run` this Phase 0. The dashboard refresh's one `dashboard_history.jsonl` line rides this claim, as in S364 to S369.
+
 ### 2026-10-23 · [ad hoc] S370 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 456 B; `HANDOFFS.md` 37,407 B before, 36,951 B after) became the row `| 2 | 2026-10-22 → 2026-10-22 | HANDOFFS-through-2026-10-22-3.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `64ef4966`, taken at the operator's Phase 0 picker answer to trim `HANDOFFS.md` (five receipts to three, on his keep-three rule, trim above four); he ran the `--write` with `!`. Nothing sent upstream.
@@ -280,6 +284,10 @@ Moved the oldest **2** record(s) (2026-10-22 → 2026-10-22) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-22-3.md`](docs/archive/HANDOFFS-through-2026-10-22-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-22-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-22-3.md.verify.sh)
 rather than trusting a digest printed here. Live file 57,796 B → 37,407 B (−35.3%).
+
+### 2026-10-23 · [ad hoc] S370 push -- the 1 commit that was ahead of the fork's `origin` (`650a7ca4..66efb971`) pushed to `origin`; nothing sent upstream
+
+His go-ahead at the Phase 0 picker (the option 'Push 66efb971 to fork origin'): S369's push record `66efb971`, a CHANGELOG-only commit. `origin` is `rmsharp/methodology`, the fork (`git remote get-url origin`); guards run in one script before the push, each failing it: `origin/main` equal to the expected `650a7ca4` after a fresh fetch, `merge-base --is-ancestor` true, ahead/behind `0 1`, no rebase marker, the pushed set exactly `CHANGELOG.md`, nothing staged. The tree was not clean: `dashboard_history.jsonl` carried the dashboard run's line, unrelated to the push and left for the claim. Pushed by sha (`66efb9710010f71c5fb3b06b9799901584d1d38e:refs/heads/main`), read back: `git ls-remote origin refs/heads/main` and `origin/main` both `66efb9710010`, ahead/behind `0 0`. Nothing sent to `KJ5HST/methodology`.
 
 ### 2026-10-23 · [ad hoc] S369 push -- the 4 commits that were ahead of the fork's `origin` (`c2be6a0b..650a7ca4`) pushed to `origin`; nothing sent upstream
 

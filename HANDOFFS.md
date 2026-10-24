@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S370
+date: 2026-10-23
+status: pending
+active_task: **BL-123: say which directory layout `starter-kit/BOOTSTRAP.md` lines 28 and 399 mean (line 399's 'everything under `docs/methodology/`' is wrong in a project on `methodology/`), and move `LEGACY_PATH_ALLOWANCE["starter-kit/BOOTSTRAP.md"]` in `bin/check-links` in the same commit.** Chosen at his Phase 0 picker, the recommended deliverable. The picker also took two go-aheads, both done before this claim: the `HANDOFFS.md` trim (`64ef4966`, fold `6abe24cc`) and the push of S369's push record `66efb971` to the fork's `origin`. Edits a shipped document (adopters receive it at their next `bin/sync`); fork `main` only; copying the same two lines to the upstream candidate is a later, separate go-ahead; nothing sent upstream. The proposed wording is shown to him before any edit and is not yet shown at this claim.
+```
+
+```handoff
 session: S369
 date: 2026-10-23
 status: complete
