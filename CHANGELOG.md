@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-23 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-22-3.md` (2 record(s), 57,796 B → 37,407 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-22 → 2026-10-22) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-22-3.md`](docs/archive/HANDOFFS-through-2026-10-22-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-22-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-22-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,796 B → 37,407 B (−35.3%).
+
 ### 2026-10-23 · [ad hoc] S369 push -- the 4 commits that were ahead of the fork's `origin` (`c2be6a0b..650a7ca4`) pushed to `origin`; nothing sent upstream
 
 His go-ahead after the close-out report ('push'), one set: S368's push record `5fd05af6`, then S369's claim `e17e350a`, work `df7ee124` and close-out `650a7ca4`. `origin` is `rmsharp/methodology`, the fork (`git remote -v`); fast-forward checked against a freshly fetched `origin/main` (`merge-base --is-ancestor`, ahead/behind `0 4`, clean tree, no rebase marker), pushed by sha (`650a7ca4561f:refs/heads/main`), read back: `origin/main` and `git ls-remote` both `650a7ca4561f`, ahead/behind `0 0`. Nothing sent to `KJ5HST/methodology`
