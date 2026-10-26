@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S373
+date: 2026-10-26
+status: pending
+active_task: **BL-98 (continued): prepare the second upstream pull request, the trimmer's `SESSION_NOTES.md` entry (`8de50d23`, 1.9.0), rebased on `upstream/main` `d50ce290`, with the maintainer's three small follow-ups folded in, verified in a clean clone and a draft body shown to the operator.** Chosen at his Phase 0 picker, the recommended deliverable; the same picker took the push of S372's 7 commits to the fork (done, `03685ed4`). Preparation only: opening the pull request, any force-push and any comment are separate go-aheads.
+```
+
+```handoff
 session: S372
 date: 2026-10-23
 status: complete
