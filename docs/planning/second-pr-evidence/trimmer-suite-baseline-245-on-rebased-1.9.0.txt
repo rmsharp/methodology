@@ -1,0 +1,7 @@
+# Last lines of: python3 tools/test_methodology_trim.py, run in a scratch clone of upstream/main d50ce290 + the cherry-picked first commit (39825279), 2026-10-26, before any change.
+
+----------------------------------------------------------------------
+Ran 245 tests in 59.175s
+
+OK (skipped=2)
+exit 0

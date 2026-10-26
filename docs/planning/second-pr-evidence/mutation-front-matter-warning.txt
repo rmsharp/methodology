@@ -1,0 +1,13 @@
+M1 no blank filter                       KILLED  by test_a_front_matter_with_every_blank_line_removed_is_silent
+M2 substring membership                  KILLED  by test_a_regenerated_value_edit_beside_a_real_edit_still_fires_once, test_an_uncommitted_front_matter_edit_fires_and_names_the_way_out, test_it_counts_e
+M3 no regen carve-out                    KILLED  by test_a_change_to_a_declared_regenerated_value_alone_is_silent, test_a_regenerated_value_edit_beside_a_real_edit_still_fires_once
+M4 partner ignores residue               KILLED  by test_a_regenerated_field_line_with_other_text_changed_still_fires
+M5 partner ignores prefix group          SURVIVED   
+M6 count off by one                      KILLED  by test_a_regenerated_value_edit_beside_a_real_edit_still_fires_once, test_an_uncommitted_front_matter_edit_fires_and_names_the_way_out, test_it_counts_e
+M7 quotes last lost line                 KILLED  by test_it_counts_every_lost_line
+M8 guard never adds                      KILLED  by test_a_regenerated_value_edit_beside_a_real_edit_still_fires_once, test_it_counts_every_lost_line, test_a_regenerated_field_line_with_other_text_chang
+M10 hz None unguarded                    KILLED  by test_a_head_the_grammar_cannot_classify_is_silent_not_a_crash
+M11 CRLF not folded                      KILLED  by test_converted_line_endings_are_not_an_edit
+M12 call removed                         KILLED  by test_a_regenerated_value_edit_beside_a_real_edit_still_fires_once, test_it_counts_every_lost_line, test_a_regenerated_field_line_with_other_text_chang
+M13 compares the working tree to itself  KILLED  by test_a_regenerated_value_edit_beside_a_real_edit_still_fires_once, test_it_counts_every_lost_line, test_a_regenerated_field_line_with_other_text_chang
+restored; sha256 identical

@@ -1,0 +1,20 @@
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  12/12 pass · 0 fail · 0 unmeasured · results 1b096f787d67 · manifest 9f6dc2ebeb91
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 261         261  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 229         229  pass
+  context-budget-unit-tests             >= 148         148  pass
+  trimmer-unit-tests                    >= 270         270  pass
+  ratchet-unit-tests                     >= 45          45  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 1b096f787d67 · manifest 9f6dc2ebeb91
+

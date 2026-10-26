@@ -1,0 +1,5 @@
+F1a no-entry case treated as declared-none    KILLED  by test_a_ledger_the_table_has_no_entry_for_is_said_to_have_no_entry
+F1b entry case treated as no-entry            KILLED  by test_a_ledger_the_table_has_no_entry_for_is_said_to_have_no_entry, test_a_table_entry_that_declares_no_marker_is_said_to_declare_none
+F1c marker case loses the pattern text        KILLED  by test_a_proof_older_than_the_stub_label_is_rederived_with_the_label_from_the_ledger_table
+F2 refusal says depth again                   KILLED  by test_the_refusal_says_a_different_layout_not_a_different_depth
+restored; sha256 identical

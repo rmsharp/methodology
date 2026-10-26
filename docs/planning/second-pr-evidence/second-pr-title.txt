@@ -1,0 +1,1 @@
+feat(trim): SESSION_NOTES.md joins the ledger table; warn of an uncommitted front-matter edit (refs #93)
