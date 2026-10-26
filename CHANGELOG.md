@@ -269,6 +269,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-23-2.md` (2 record(s), 60,224 B → 40,571 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-23 → 2026-10-23) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-23-2.md`](docs/archive/HANDOFFS-through-2026-10-23-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-23-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-23-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 60,224 B → 40,571 B (−32.6%).
+
 ### 2026-10-26 · [BL-98] S373 close-out -- the second upstream pull request prepared (local branch `feat/trim-session-notes-ledger-issue93`, tip `65990cda`); S372's 7 commits pushed to the fork; the receipt complete; nothing sent upstream
 
 The deliverable was the second upstream pull request, prepared and not sent, chosen at his Phase 0 picker (the recommended option; the others offered were the fix for upstream issue #97, a resync of the fork's `main`, and a rebase of PR #96). The same picker took the push of S372's 7 commits (`S373 push` below). Phase 0 found both frontiers current at `03685ed4` and, after S372's receipt was written, that the maintainer had merged PR #92 and PR #94 on 2026-10-24, answered the four calls on #94 and asked for the second PR now, rebased on `main`; the work is in `S373 work`. The close-out found one more thing worth a line here: running the notes-file entry over real notes files showed that `mts-system`'s cannot be dry-run trimmed at `--cut 3` (`ARTIFACT_UNPARSEABLE`, a standalone `---` inside the oldest retained record; the same at 1.9.0; a refusal, not a loss), now item 3 in the draft body and a clause on the BL-98 rider. `docs/planning/second-pr-evidence/` gained its repro (`notes_rule_in_last_record.sh`) and the README and body were corrected after a fact-check. `HANDOFFS.md` now holds five receipts (S373 complete, 60,185 B of 65,536 B), so S374's Phase 0 trims two. `docs/FORK_LEARNINGS.md` gained no row (rows #76, #16 and #33 considered), so the retirement duty does not fire. Checks on the final tree: `check-handoff`, `check-ledger`, `check-links` and `check-backlog-anchors` exit 0; `bash bin/tests.sh` read 692 passed, 0 failed twice: on the tree with the pending receipt, and again with the completed receipt (before the `S373 evidence` entry was added). Open for him: the push of the branch to `origin` (a force-push) and the opening of the pull request, each a separate go-ahead. Nothing sent to `KJ5HST/methodology`.
