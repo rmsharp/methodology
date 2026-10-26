@@ -1,0 +1,12 @@
+trimmer: methodology_trim.py v1.9.0
+records: 4, standalone rules at lines: 7 15 23 31 
+--cut 3:   [ARTIFACT_UNPARSEABLE] the text this run would write does not parse under its own declared grammar — refus
+--cut 2:   [DRY_RUN] would archive 2 of 4 record(s) (2026-10-06 → 2026-10-06) to docs/archive/SESSION_NOTES-through-2
+--cut 3 with line 31 removed:   [DRY_RUN] would archive 1 of 4 record(s) (unknown → unknown) to docs/archive/SESSION_NOTES-through-unknown
+
+trimmer: methodology_trim.py v1.10.0
+records: 4, standalone rules at lines: 7 15 23 31 
+--cut 3:   [ARTIFACT_UNPARSEABLE] the text this run would write does not parse under its own declared grammar — refus
+--cut 2:   [DRY_RUN] would archive 2 of 4 record(s) (2026-10-06 → 2026-10-06) to docs/archive/SESSION_NOTES-through-2
+--cut 3 with line 31 removed:   [DRY_RUN] would archive 1 of 4 record(s) (unknown → unknown) to docs/archive/SESSION_NOTES-through-unknown
+
