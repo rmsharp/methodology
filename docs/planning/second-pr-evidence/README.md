@@ -1,9 +1,11 @@
-# Evidence for the second upstream pull request (prepared 2026-10-26, not sent)
+# Evidence for the second upstream pull request (prepared and SENT 2026-10-26 as PR #98)
 
 The branch is the local branch `feat/trim-session-notes-ledger-issue93` (tip `65990cda`), three commits on `upstream/main`
-`d50ce290` after `KJ5HST/methodology` merged pull requests #92 and #94 on 2026-10-24. Its copy on the fork's `origin` is
-still the old single commit `8de50d23` on `1670c5d4`, which is not an ancestor of the new tip, so putting the new branch there
-is a force-push. Nothing in this folder has been sent anywhere.
+`d50ce290` after `KJ5HST/methodology` merged pull requests #92 and #94 on 2026-10-24. At 2026-10-26 (S374) the branch was
+force-pushed to the fork's `origin` over the old single commit `8de50d23` (lease, read back `65990cda`) and opened as
+[PR #98](https://github.com/KJ5HST/methodology/pull/98); GitHub's title and body were read back equal to `second-pr-title.txt` and
+`second-pr-body.md`. The body was recomposed in S374 (9,370 B to 14,915 B) so each open question stands alone; the measurement
+files below are unchanged.
 
 | Commit | What | `TRIM_VERSION` |
 |---|---|---|
@@ -11,7 +13,7 @@ is a force-push. Nothing in this folder has been sent anywhere.
 | `3df5b0cd` | the maintainer's three follow-ups from his 2026-10-24 comment on #94: the entry-less message, the `PREFIX` refusal's reason, three exit-3 statements | 1.9.1 |
 | `65990cda` | `FRONTIER_FRONT_MATTER_UNCOMMITTED`: his answer (b), the warning for an uncommitted front-matter edit | 1.10.0 |
 
-Texts: `second-pr-title.txt` and `second-pr-body.md` are the drafts, shown to the operator before anything is posted.
+Texts: `second-pr-title.txt` and `second-pr-body.md` are what PR #98 carries (shown to the operator, reworded and approved before anything was posted). A later edit to the pull request is his go-ahead, and these files are then the source to edit.
 
 ## Measurements and how to repeat them
 
