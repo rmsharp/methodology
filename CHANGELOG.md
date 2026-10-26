@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-26 · [BL-98] S374 claim (in progress) -- send the second upstream pull request (`feat/trim-session-notes-ledger-issue93`, tip `65990cda`); nothing outward without his go-aheads
+
+Claimed at his Phase 0 picker. He first chose 'Rebase PR #96'; I then showed him, from `git merge-tree` against `upstream/main` and the scratch PR #90's measurement, that #96's CONFLICTING label is GitHub's server-side merge not applying `merge=union` to `CHANGELOG.md` (the only conflicting file with attributes off; clean with upstream's own), and that #96 and the second PR are independent (shared files `.quality-gates.json`, `CHANGELOG.md`, `README.md`, on different lines; the two branches merge clean together). He switched to the recommended option, opening the second PR. Phase 0 found: both ledger frontiers at `8194b070`, 0 undocumented commits, 0 merges, no pending receipt; `upstream/main` still `d50ce290`; #96 open with 0 comments; #97 and #95 open with 0 comments, #93 open with 1. Before this claim, at his go-ahead, the `HANDOFFS.md` trim (five receipts to three, `ab3130e7`) and its fold (`ca1f29dd`) ran. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-26 · [ad hoc] S374 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 456 B; `HANDOFFS.md` 40,571 B before, 40,115 B after) became the row `| 2 | 2026-10-23 → 2026-10-23 | HANDOFFS-through-2026-10-23-2.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `ab3130e7`, taken at the operator's Phase 0 answer (five receipts to three, on his keep-three rule, trim above four); he ran the `--write` with `!`. Nothing sent to `KJ5HST/methodology`.

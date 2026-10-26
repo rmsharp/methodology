@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S374
+date: 2026-10-26
+status: pending
+active_task: **BL-98 (continued): send the second upstream pull request: the local branch `feat/trim-session-notes-ledger-issue93` (tip `65990cda`, three commits on `upstream/main` `d50ce290`), from prepared to opened.** Chosen at his Phase 0 picker (the recommended option), after he first picked 'Rebase PR #96' and then, on being shown that #96's CONFLICTING label is GitHub's server-side `CHANGELOG.md` merge (it merges clean locally under `merge=union`), switched. Order: show him the draft body's three open questions and let him cut or keep them; then two SEPARATE go-aheads, each read back: (a) the force-push with a lease to the fork's `origin`, (b) opening the pull request on `KJ5HST/methodology`. Nothing outward without them. The HANDOFFS.md trim (5 to 3, `ab3130e7`) and its fold (`ca1f29dd`) ran first, at his go-ahead.
+```
+
+```handoff
 session: S373
 date: 2026-10-26
 status: complete
