@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S381
+date: 2026-10-27
+status: pending
+active_task: **PR2b layer 5: add the candidate's commit 5 (`98ca7fc9`: methodology_trim.py 1.8.0, the trimmer finds a ledger at the root or under methodology/, writes its shard beside it, and proves the trim; 5 files by `git show --numstat`: `.quality-gates.json` 1/1, `starter-kit/methodology_trim.py` +228/-92, `tools/fixtures/trim-verify-template-1.7.0.sh` +406 (new), `tools/test_layout_resolver.py` 3/2, `tools/test_methodology_trim.py` +497/-1, to be re-read) to the local branch `pr2b/candidate` (`1d93579a`; layer 4's commit stays an ancestor) in a scratch `--no-local` clone, then run `layer-verify.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; the branch local and un-pushed; nothing sent to `KJ5HST/methodology`.** Chosen at his Phase 0 picker (the recommended option), with two go-aheads ticked: the push of fork `main` (done and read back, `494a22a1..f964a9cf`, `origin/main` = `HEAD`) and a standing permission to plan commits 6-33 in groups (a later session's plan edit, not this one's work).
+```
+
+```handoff
 session: S380
 date: 2026-10-27
 status: complete
