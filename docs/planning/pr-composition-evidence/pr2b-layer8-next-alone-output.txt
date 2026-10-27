@@ -1,0 +1,23 @@
+# S384: each remaining candidate commit (numbers 9 to 19 of the sizing, in its order) applied ALONE onto the new tip of pr2b/candidate (07ec025b),
+# by: git merge-tree --write-tree --name-only --merge-base=<commit>^ pr2b/candidate <commit>   (exit 0 clean, 1 conflicts). Alone, not in order: a conflict measured alone can vanish in order
+# (seen at layers 6 and 7, and for commits 9 and 10 at layer 7), so these are estimates for the next layers, not predictions of the final series.
+261b8d36 exit 0  feat(sync): bin/sync, bin/status, bin/check-links and the manifest reader find a project's
+0aa1897e exit 0  test(sync): the sync layer's own suite, its two gates, and the scanner's scope
+a459b8bb exit 1  feat(checkers): bin/check-ledger and bin/check-handoff find a project's ledger at the root
+      conflicted: tools/test_layout_resolver.py
+505541c3 exit 1  test(checkers): the checkers' own suite, its gate, and the layout scanner now reads both
+      conflicted: .quality-gates.json
+      conflicted: bin/tests.sh
+      conflicted: tools/test_layout_resolver.py
+c8d43754 exit 0  docs(layout): the operating files say where the methodology files sit, and their reference
+04918ce3 exit 0  docs(layout): the framework documents and the skills index hold in both layouts
+23e6e66a exit 0  docs(layout): the workstreams name the runner, the skills index and the safeguards without
+0248ebf2 exit 0  docs(layout): the workstreams name the runner, the skills index and the safeguards without
+18cda0f2 exit 1  test(layout): the distributed documents must resolve in both layouts
+      conflicted: .quality-gates.json
+2942e46c exit 1  feat(layout): bin/migrate-layout moves a legacy project's methodology files under methodol
+      conflicted: tools/test_layout_resolver.py
+      conflicted: tools/test_sync_layouts.py
+ab35e965 exit 1  test(layout): the migration tool's suite, its fast classes in the shell suite and its two 
+      conflicted: .quality-gates.json
+      conflicted: bin/tests.sh
