@@ -1,0 +1,86 @@
+== 1. commit and parent
+commit e5210601 (tree d44458c2)   parent f767ced0 (tree d225c95a)
+subject: feat(dashboard): methodology_dashboard.py 2.22.0 -- the dashboard reads a project that keeps its methodology files under methodology/ as it reads one that keeps them at the root
+
+== 2. changed files (git diff --numstat parent commit)
+2	2	.quality-gates.json
+370	115	starter-kit/methodology_dashboard.py
+370	115	tools/methodology_dashboard.py
+13	2	tools/test_layout_resolver.py
+595	4	tools/test_methodology_dashboard.py
+files: 5
+
+== 3. the literal scanner on the parent's tree and on the commit's tree
+parent f767ced0: check-layout-literals: scanned 14 files; 93 sites (70 path, 23 text); 31 acknowledged; 172 prose not counted   (exit 1)
+       6  bin/check-handoff
+       4  bin/check-ledger
+       1  bin/check-links
+       3  bin/status
+      79  starter-kit/methodology_dashboard.py
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       1  bin/check-layout-literals
+       4  starter-kit/context_budget.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+commit e5210601: check-layout-literals: scanned 14 files; 14 sites (6 path, 8 text); 114 acknowledged; 187 prose not counted   (exit 1)
+       6  bin/check-handoff
+       4  bin/check-ledger
+       1  bin/check-links
+       3  bin/status
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       1  bin/check-layout-literals
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+sites per file, parent -> commit (only files that differ):
+    starter-kit/methodology_dashboard.py: 79 -> 0
+acknowledged per file, parent -> commit (only files that differ):
+    starter-kit/methodology_dashboard.py: 0 -> 83
+
+== 3b. what became of the parent's counted site lines in the files whose site count fell (CRUDE)
+   A site line 'survives' if its first 60 characters occur verbatim in the commit's version of the file
+   (as code, prose or an acknowledged line). Not a 1:1 map: a rewritten line does not survive, and a new
+   acknowledged line has no parent counterpart. It shows whether the counts are the SAME lines.
+    starter-kit/methodology_dashboard.py: 79 parent site lines, 70 verbatim in the commit's file, 9 not
+
+== 4. fork-internal references on the commit's added lines (regex SCRUB; rough)
+       0 of     2 added lines  .quality-gates.json
+      24 of   370 added lines  starter-kit/methodology_dashboard.py
+      24 of   370 added lines  tools/methodology_dashboard.py
+       0 of    13 added lines  tools/test_layout_resolver.py
+       6 of   595 added lines  tools/test_methodology_dashboard.py
+    54 of 1350 added lines in total
+regex: BL-\d+|\bS\d{3}\b|\bthe fork\b|[Ll]earning #\d+|plan C\d+|\(plan |decision D\d+|phase P\d+|\bP[1-9]\b.*phase|overruled|\bhe\b (?:overruled|decided)
+
+== 5. the merge of the commit with each ref (merge-tree, empty attribute tree = GitHub's view)
+   for each ref: the commit, its parent (what the earlier layers already conflict in), and, for a ref other
+   than upstream/main, upstream/main itself (what the ref conflicts in before any layer is added)
+commit   e5210601 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree d44458c259de
+parent   f767ced0 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree d225c95a9a26
+commit   e5210601 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree d54e8aa158f3
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+parent   f767ced0 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree 752d495c8fea
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+control  d50ce290 with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 8c62d9dbb59e
+commit   e5210601 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 0084c707fcba
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+parent   f767ced0 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 587e4f189813
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+control  d50ce290 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 9c214e0b1f2b
+    CHANGELOG.md: 1 conflict region(s)
+    total: 1 region(s) in 1 file(s)
