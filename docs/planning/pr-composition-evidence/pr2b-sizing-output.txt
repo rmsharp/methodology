@@ -1,0 +1,124 @@
+== inputs
+git version 2.56.0
+upstream/main d50ce290; pr2/candidate 3cba1e50; base (merge-base) f34769f3
+commits to apply: 34 (merges among them: 0); upstream is 28 commits past the base
+files upstream changed since the base (8): .quality-gates.json CHANGELOG.md CLAUDE.md FRAMEWORK_APPARATUS.md HANDOFFS.md README.md starter-kit/methodology_trim.py tools/test_methodology_trim.py
+
+== 1. control: the whole candidate against upstream/main in one merge (S375 read 46 regions in 4 files)
+merge-tree exit 1; 46 region(s) in 4 file(s)
+grouped view (zdiff3): 17 region(s), 9 of them with an empty base
+   .quality-gates.json                        1 region(s); grouped 1 (0 empty-base);    1 lines ours /    1 lines theirs
+   FRAMEWORK_APPARATUS.md                     2 region(s); grouped 1 (1 empty-base);    8 lines ours /   12 lines theirs
+   starter-kit/methodology_trim.py           25 region(s); grouped 13 (6 empty-base);   58 lines ours /  139 lines theirs
+   tools/test_methodology_trim.py            18 region(s); grouped 2 (2 empty-base);  571 lines ours /  759 lines theirs
+
+== 2. prediction (derived, not measured): a commit can stop only if it touches a file upstream changed
+17 of 34 commits touch at least one of those files: 1 2 3 4 5 6 7 10 12 14 17 19 26 30 32 33 34
+
+== 3. stacked: commit i is applied onto the result of commit i-1
+policy A: a conflict is resolved to the commit's side; policy B: to upstream's side. Either is only to go on; neither is a resolution.
+ #  commit    A: stop regions   B: stop regions   touches-upstream-file  subject
+ 1  bbe0dc35  STOP      28        STOP      28        yes                    feat: ledger trimmer 1.7.0 and dashboard 2.21.0 with their t
+ 2  14ef9597   -         -         -         -        yes                    feat: the layout resolver, the fixture trees in both layouts
+ 3  fd965939   -         -         -         -        yes                    feat: the ledger hook and the quality ratchet find the files
+ 4  c8c0b213   -         -         -         -        yes                    feat(quality_ratchet): 1.5.0 -- a gate that outlives its bud
+ 5  98ca7fc9  STOP       1        STOP       3        yes                    feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a
+ 6  e9c5cb86   -         -         -         -        yes                    feat(budget): context_budget.py 1.4.0 -- the gate finds its 
+ 7  dd581fed   -         -         -         -        yes                    feat(dashboard): methodology_dashboard.py 2.22.0 -- the dash
+ 8  4c0bdded   -         -         -         -        no                     test: Test 15 counts the status table's rows, not every line
+ 9  261b8d36   -         -         -         -        no                     feat(sync): bin/sync, bin/status, bin/check-links and the ma
+10  0aa1897e   -         -         -         -        yes                    test(sync): the sync layer's own suite, its two gates, and t
+11  a459b8bb   -         -         -         -        no                     feat(checkers): bin/check-ledger and bin/check-handoff find 
+12  505541c3   -         -         -         -        yes                    test(checkers): the checkers' own suite, its gate, and the l
+13  c8d43754   -         -         -         -        no                     docs(layout): the operating files say where the methodology 
+14  04918ce3   -         -         -         -        yes                    docs(layout): the framework documents and the skills index h
+15  23e6e66a   -         -         -         -        no                     docs(layout): the workstreams name the runner, the skills in
+16  0248ebf2   -         -         -         -        no                     docs(layout): the workstreams name the runner, the skills in
+17  18cda0f2   -         -         -         -        yes                    test(layout): the distributed documents must resolve in both
+18  2942e46c   -         -         -         -        no                     feat(layout): bin/migrate-layout moves a legacy project's me
+19  ab35e965   -         -         -         -        yes                    test(layout): the migration tool's suite, its fast classes i
+20  5afc9621   -         -         -         -        no                     docs(ratchet): a cited gate run that reads unmeasured gates 
+21  c933b0f9   -         -         -         -        no                     docs: drop internal references from the sync layer's comment
+22  d31c25da   -         -         -         -        no                     docs: drop internal references from the shell suite's, the h
+23  c1cdc2ec   -         -         -         -        no                     docs: drop internal references from the layout resolver's, t
+24  71e00e89   -         -         -         -        no                     docs: drop internal references from the quality ratchet's, t
+25  ea751caa   -         -         -         -        no                     docs: drop internal references from the migration tool's and
+26  2276f4ef   -         -        STOP       7        yes                    docs: drop internal references from the ledger trimmer's and
+27  72e0c991   -         -         -         -        no                     docs: drop internal references from the dashboard's and its 
+28  8ace51e8   -         -         -         -        no                     docs: drop internal references from the text the migration t
+29  ccd5620e   -         -         -         -        no                     docs: drop internal references from the text the dashboard p
+30  28f99a70   -         -         -         -        yes                    docs: drop internal references from the shell suite's titles
+31  ced2c823   -         -         -         -        no                     docs(runner): drop the layout paragraph's duplicate example 
+32  a62bfecf   -         -         -         -        yes                    docs: correct four statements the series left stale in a gat
+33  cfcc713b   -         -         -         -        yes                    test(dashboard): restore two of upstream's CLI tests the ser
+34  3cba1e50  STOP       3        STOP       8        yes                    fix(trim): an abort before the proof's checks exits 3, not 1
+
+-- policy A (the commit's side wins): 3 of 34 commits stop; 32 region(s) in all (the one-shot control reads 46); grouped view: 12 region(s), 7 with an empty base
+   prediction check: every stopper touches an upstream-changed file (as derived)
+    #  commit    file                                      regions  grouped (empty-base)  lines ours / theirs
+    1  bbe0dc35  .quality-gates.json                             1        1 (0)              1 / 1
+    1  bbe0dc35  FRAMEWORK_APPARATUS.md                          1        1 (1)             16 / 10
+    1  bbe0dc35  starter-kit/methodology_trim.py                13        6 (3)            127 / 25
+    1  bbe0dc35  tools/test_methodology_trim.py                 13        1 (1)             27 / 24
+    5  98ca7fc9  tools/test_methodology_trim.py                  1        1 (1)            806 / 493
+   34  3cba1e50  starter-kit/methodology_trim.py                 3        2 (1)             13 / 1
+   by file:
+     starter-kit/methodology_trim.py           16 region(s); grouped 8 (4 empty-base);  140 lines ours /   26 lines theirs
+     tools/test_methodology_trim.py            14 region(s); grouped 2 (2 empty-base);  833 lines ours /  517 lines theirs
+     .quality-gates.json                        1 region(s); grouped 1 (0 empty-base);    1 lines ours /    1 lines theirs
+     FRAMEWORK_APPARATUS.md                     1 region(s); grouped 1 (1 empty-base);   16 lines ours /   10 lines theirs
+   TRIM_VERSION on this tip: TRIM_VERSION = "1.8.1"   # 1.8.1; files where this tip differs from the candidate (added, removed):
+     0	352	CHANGELOG.md
+     1	3	CLAUDE.md
+     0	80	HANDOFFS.md
+     0	13	README.md
+     4	45	starter-kit/methodology_trim.py
+
+-- policy B (upstream's side wins): 4 of 34 commits stop; 46 region(s) in all (the one-shot control reads 46); grouped view: 25 region(s), 7 with an empty base
+   prediction check: every stopper touches an upstream-changed file (as derived)
+    #  commit    file                                      regions  grouped (empty-base)  lines ours / theirs
+    1  bbe0dc35  .quality-gates.json                             1        1 (0)              1 / 1
+    1  bbe0dc35  FRAMEWORK_APPARATUS.md                          1        1 (1)             16 / 10
+    1  bbe0dc35  starter-kit/methodology_trim.py                13        6 (3)            127 / 25
+    1  bbe0dc35  tools/test_methodology_trim.py                 13        1 (1)             27 / 24
+    5  98ca7fc9  .quality-gates.json                             1        1 (0)              1 / 1
+    5  98ca7fc9  starter-kit/methodology_trim.py                 1        1 (0)             56 / 14
+    5  98ca7fc9  tools/test_methodology_trim.py                  1        1 (1)            806 / 493
+   26  2276f4ef  starter-kit/methodology_trim.py                 1        1 (0)             56 / 14
+   26  2276f4ef  tools/test_methodology_trim.py                  6        6 (0)             17 / 98
+   34  3cba1e50  .quality-gates.json                             1        1 (0)              1 / 1
+   34  3cba1e50  FRAMEWORK_APPARATUS.md                          1        1 (0)              4 / 2
+   34  3cba1e50  starter-kit/methodology_trim.py                 5        3 (1)             56 / 16
+   34  3cba1e50  tools/test_methodology_trim.py                  1        1 (0)             13 / 149
+   by file:
+     tools/test_methodology_trim.py            21 region(s); grouped 9 (2 empty-base);  863 lines ours /  764 lines theirs
+     starter-kit/methodology_trim.py           20 region(s); grouped 11 (4 empty-base);  295 lines ours /   69 lines theirs
+     .quality-gates.json                        3 region(s); grouped 3 (0 empty-base);    3 lines ours /    3 lines theirs
+     FRAMEWORK_APPARATUS.md                     2 region(s); grouped 2 (1 empty-base);   20 lines ours /   12 lines theirs
+   TRIM_VERSION on this tip: TRIM_VERSION = "1.8.2"   # 1.8.2; files where this tip differs from the candidate (added, removed):
+     1	1	.quality-gates.json
+     0	352	CHANGELOG.md
+     1	3	CLAUDE.md
+     8	12	FRAMEWORK_APPARATUS.md
+     0	80	HANDOFFS.md
+     0	13	README.md
+     42	168	starter-kit/methodology_trim.py
+     486	756	tools/test_methodology_trim.py
+
+== 4. the trimmer lineage in numbers: is upstream's copy the candidate's lineage, edited? (added / removed lines between two versions of a file)
+starter-kit/methodology_trim.py (2757 lines on upstream/main)
+   base -> upstream/main            +605 / -29       what upstream did to it since the base (#94's lineage and the maintainer's fixes)
+   base -> candidate, commit 1      +430 / -22       the lineage as the candidate carries it (to 1.7.0)
+   candidate commit 1 -> upstream   +198 / -30       how far apart the two copies of that lineage are now
+   commit 5's own change            +228 / -92       the layout hunks (1.8.0), the fork's real addition to the trimmer
+   commit 1 -> candidate tip        +259 / -96       everything the candidate adds after the lineage (1.8.0, the scrub, 1.8.1)
+   upstream -> candidate tip        +255 / -260      the two final copies
+tools/test_methodology_trim.py (4239 lines on upstream/main)
+   base -> upstream/main            +1948 / -0       what upstream did to it since the base (#94's lineage and the maintainer's fixes)
+   base -> candidate, commit 1      +1136 / -0       the lineage as the candidate carries it (to 1.7.0)
+   candidate commit 1 -> upstream   +832 / -20       how far apart the two copies of that lineage are now
+   commit 5's own change            +497 / -1        the layout hunks (1.8.0), the fork's real addition to the trimmer
+   commit 1 -> candidate tip        +632 / -8        everything the candidate adds after the lineage (1.8.0, the scrub, 1.8.1)
+   upstream -> candidate tip        +558 / -746      the two final copies
+   TRIM_VERSION on upstream/main  TRIM_VERSION = "1.8.2"   # 1.8.2
+   TRIM_VERSION on pr2/candidate  TRIM_VERSION = "1.8.1"   # 1.8.1

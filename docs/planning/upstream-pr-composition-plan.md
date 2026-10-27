@@ -185,7 +185,7 @@ its own checker does not enforce. PR2 states that in the text or carries the one
 PR2 is two to four sessions (a layer is a checkpoint, the dashboard the largest). Adopter sessions P18 to P22 run whenever an adopter is
 free and are not in this table; each leaves register rows that PR4 reads first (§7.6 of the directory plan).
 
-PR2b is two to three sessions, **a guess**: 43 of its 46 regions are the trimmer and its tests.
+PR2b is two to three sessions, **a guess**: 4 of 34 commits stop, all in 4 files (`pr2b-sizing-record.md`).
 
 ---
 
