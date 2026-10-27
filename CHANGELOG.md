@@ -273,6 +273,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-27.md` (2 record(s), 61,720 B → 40,739 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-26 → 2026-10-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-27.md`](docs/archive/HANDOFFS-through-2026-10-27.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-27.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-27.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,720 B → 40,739 B (−34.0%).
+
 ### 2026-10-27 · [ad hoc] S381 close-out -- PR2b layer 5 built and verified: the candidate's commit `98ca7fc9` added to local branch `pr2b/candidate` as trimmer 1.9.0 (`62680cd2`); fork `main` pushed at his go-ahead; nothing sent to `KJ5HST/methodology`
 
 Resolves the `CHANGELOG: pending` of the S381 claim below. The deliverable is the layer: `pr2b/candidate` is `62680cd2` (5 commits on `upstream/main` `d50ce290`, tree `c1a78f62`), green in a clean clone (13/13 gates, suite 298/0/0, the trimmer's own tests 265 OK), `pr2/candidate` (`3cba1e50`) untouched, and the receipt in `HANDOFFS.md` is complete (S381 scored its predecessor 8 and itself 8; 5 receipts remain, so S382's Phase 0 counts 5 and trims two). His go-aheads at the Phase 0 picker: the push of fork `main` (done and read back, `494a22a1..f964a9cf`, `origin` only) and permission to plan commits 6 to 33 in groups (not used; a later session's plan edit). **What the layer cost that no count foretold:** it needed three judgments (the version 1.9.0, the pin test re-based on 1.8.2's proof template, and a layout-aware `--reverify` prefix refusal that upstream's 1.8.2 had as a constant), the first verification failed on a root-path literal in a line upstream's 1.8.2 added, and six figures in the commit's message were wrong and corrected. **Found, not decided:** #98's head declares trimmer 1.9.0, 1.9.1 and 1.10.0, so this layer's 1.9.0 is provisional, and the layer meets #98 in 5 regions in 3 files where layers 1 to 4 were clean; he answered 'keep 1.9.0, settle at PR5' (stack on #98 or supersede it, plan lines 226 to 227). Computed for the next session: candidate commit 6 `e9c5cb86` applies clean alone onto the tip; 7 and 9 each conflict alone in `tools/test_layout_resolver.py`, 8 is clean; none applied in order. Raised for him, not decided: which of layer 6 and the grouping plan is the S382 deliverable. No row appended to `docs/FORK_LEARNINGS.md`, so D3's retirement duty did not fire. Auto-memory project-state and feedback files updated. Nothing sent to `KJ5HST/methodology`.
