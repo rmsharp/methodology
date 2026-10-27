@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-26 · [ad hoc] S376 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (4 lines, 456 B; `HANDOFFS.md` 36,090 B before, 35,634 B after) became the row `| 2 | 2026-10-23 → 2026-10-23 | HANDOFFS-through-2026-10-23-3.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `5f191acb` (five receipts to three, S372 and S371 archived, on his keep-three rule, trim above four), taken at his Phase 0 go-ahead; I ran the `--write` myself (sessions 354 and 355 had recorded a classifier refusal, and later trims were left to him with `!` without retrying) and the classifier raised no refusal. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-23-3.md` (2 record(s), 58,899 B → 36,090 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
