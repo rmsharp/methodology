@@ -1,0 +1,394 @@
+# PR2b layer 5 verification output (S381, 2026-10-27). Commit 62680cd234b93a8bf447ff8f20b4c58387cf5b73 (the layer's tip on pr2b/candidate).
+# Part 1: docs/planning/pr-composition-evidence/layer-verify.sh <scratch build clone> <commit> <clean clone>, started 14:51:31, finished 14:58:48 (7 min 17 s), ANSI stripped.
+# Part 2: bash bin/tests.sh run directly in that clean clone afterwards (complete, 14:59:11 to 15:04:05, 4 min 54 s), serial, ANSI stripped.
+# Part 3: starter-kit/methodology_trim.py --reverify on the one tracked shard (docs/archive/CHANGELOG-through-2026-09-30.md), in the same clean clone, exit 0.
+# The FIRST verification of this layer (commit dfa66061, before the one-line fix recorded in pr2b-layer5-record.md section 1, item 5) read 11/13 and 297 passed, 1 failed, and is not kept here: the commit verified below is the commit kept.
+
+===== Part 1: layer-verify.sh =====
+verifying 62680cd234b93a8bf447ff8f20b4c58387cf5b73 in a clean clone; 0 dirty paths
+changed against its parent 1d93579a:
+  1	1	.quality-gates.json
+  241	101	starter-kit/methodology_trim.py
+  483	0	tools/fixtures/trim-verify-template-1.8.2.sh
+  3	2	tools/test_layout_resolver.py
+  519	1	tools/test_methodology_trim.py
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  13/13 pass · 0 fail · 0 unmeasured · results d25e6e60c0ee · manifest 841d12be5065
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 298         298  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 354         354  pass
+  context-budget-unit-tests             >= 148         148  pass
+  trimmer-unit-tests                    >= 265         265  pass
+  ratchet-unit-tests                    >= 120         120  pass
+  layout-unit-tests                      >= 74          74  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 13/13 pass · 0 fail · 0 unmeasured · results d25e6e60c0ee · manifest 841d12be5065
+
+ratchet exit 0
+check-layout-literals: scanned 14 files; 101 sites (73 path, 28 text); 27 acknowledged; 172 prose not counted
+scanner exit 1
+  nothing over budget
+budget exit 0
+proof docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh exit 0
+layer-verify done
+
+===== Part 2: bash bin/tests.sh (exit 0) =====
+== Test 1: commit mode + local source (baseline) ==
+  PASS: SESSION_RUNNER matches canonical
+  PASS: SAFEGUARDS matches canonical
+  PASS: dashboard matches canonical
+  PASS: manifest declares at least one executable dest
+  PASS: methodology_dashboard.py is executable
+  PASS: methodology_trim.py is executable
+  PASS: context_budget.py is executable
+  PASS: quality_ratchet.py is executable
+  PASS: commit mode leaves .gitignore alone
+== Test 2: dry-run doesn't modify ==
+  PASS: dry-run skipped SESSION_RUNNER
+  PASS: dry-run skipped .gitignore
+== Test 3: ignore mode adds .gitignore + warns on tracked files ==
+  PASS: gitignore has SESSION_RUNNER
+  PASS: gitignore has SAFEGUARDS
+  PASS: gitignore has dashboard
+  PASS: ignore mode warns on tracked files
+  PASS: warning includes rm --cached command
+  PASS: idempotent gitignore
+== Test 4: auto-detect mode from .gitignore ==
+  PASS: auto-detected ignore mode
+== Test 5: auto-detect source prefers local sibling ==
+  PASS: auto-detected local source
+== Test 6: status reports current / modified / N-behind / missing ==
+  PASS: status: current
+  PASS: status: locally modified
+  PASS: status: N versions behind detected
+  PASS: status: missing
+== Test 7: sync refuses to overwrite locally-modified files without --force ==
+  PASS: sync exits non-zero when local drift present
+  PASS: sync prints ERROR on local drift
+  PASS: ERROR mentions --force
+  PASS: a full-history source blames local modifications
+  PASS: file unchanged when blocked
+  PASS: --force overrides block
+  PASS: --force restores canonical
+== Test 8: sync upgrades N-versions-behind without --force ==
+  PASS: upgrade from older version proceeds without --force
+  PASS: upgraded to canonical
+== Test 9: github source (needs the network; skipped if the repository is unreachable) ==
+  PASS: github source dry-run works
+== Test 10: distributed-file links resolve in the simulated adopter tree ==
+  PASS: check-links: all relative links resolve in adopter layout
+== Test 11: sync produces the full manifest tree (faithful, per-file) ==
+  PASS: all 30 manifest files present; tracked files match canonical
+  PASS: framework doc landed under docs/methodology/
+  PASS: workstream landed under docs/methodology/workstreams/
+== Test 12: seed files created once, never clobbered (even --force) ==
+  PASS: seed SESSION_NOTES created when absent
+  PASS: seed not overwritten on normal sync
+  PASS: seed not overwritten even with --force
+== Test 13: adopter-owned instances are never sync targets ==
+  PASS: sync did not create instance CONTEXT.md
+  PASS: sync did not create instance CLAUDE.md
+  PASS: template CONTEXT_TEMPLATE.md is present
+== Test 14: check-links validates the sync-produced tree without mutating it (issue #36) ==
+  PASS: check-links --tree: links resolve in the sync-produced tree
+  PASS: check-links --tree: left the validated tree unmodified (issue #36)
+== Test 15: status emits per-file rows with a disposition column (Phase 4) ==
+  PASS: status: Disposition column present
+  PASS: status: tracked disposition shown
+  PASS: status: seed disposition shown
+  PASS: status: one row per manifest file (30 == 30)
+  PASS: status: fresh tree shows current
+  PASS: status: fresh tree shows no drift
+== Test 16: an absent seed file is reported, never flagged as drift (Phase 4 DONE) ==
+  PASS: status: CHANGELOG shown with seed disposition
+  PASS: status: absent seed shown as 'absent'
+  PASS: status: absent seed NOT flagged as drift
+== Test 17: a partially-stale tree flags only the stale file (Phase 4) ==
+  PASS: status: exactly one file locally modified
+  PASS: status: the stale file is SESSION_RUNNER
+== Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) ==
+  PASS: dashboard scoring unit tests green
+  PASS: ledger trimmer unit tests green
+  PASS: context budget gate unit tests green
+  PASS: quality ratchet unit tests green
+  PASS: layout resolver, fixture trees and literal scanner unit tests green
+== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION ==
+  PASS: dashboard twins byte-identical
+  PASS: dashboard twins carry the same DASHBOARD_VERSION
+== Test 20: a seed whose format predates canonical is flagged advisory-only (BL-6 item 2) ==
+  PASS: status: current-format (fresh) seed not flagged
+  PASS: status: no stale-format note on fresh tree
+  PASS: test: in-use fixture is current-format with the sentinel deleted
+  PASS: status: in-use current-format ledger not flagged
+  PASS: status: no note on in-use current-format ledger
+  PASS: test: the frozen pre-ledger-format-2 seed carries the current title
+  PASS: status: the pre-ledger-format-2 seed flagged 'present (stale format)'
+  PASS: status: stale seed keeps its seed disposition
+  PASS: status: pre-v3.1 seed flagged 'present (stale format)'
+  PASS: status: stale seed NOT treated as drift
+  PASS: status: emits the migration note beneath the table
+  PASS: status: markerless seed never flagged stale
+  PASS: sync: stale seed left untouched (still adopter-owned)
+  PASS: status: still flags stale after a re-sync
+  PASS: status: two stale rows across two projects
+  PASS: status: note count matches flagged rows (2), not deduped file types
+  PASS: status: a stale CHANGELOG.md gets the replace-the-header route
+  PASS: status: the CHANGELOG.md route keeps what the trimmer wrote
+  PASS: status: no HANDOFFS.md route when only CHANGELOG.md is stale
+  PASS: status: a HANDOFFS.md without the size section flagged 'present (stale format)'
+  PASS: test: HANDOFFS.md is the only stale seed in P2
+  PASS: status: a stale HANDOFFS.md gets the bring-across-the-section route
+  PASS: status: no replace route for a stale HANDOFFS.md
+  PASS: test: the shipped HANDOFFS.md seed carries its format marker
+  PASS: status: a HANDOFFS.md with the old size section but no format marker flagged stale
+  PASS: status: two stale seeds in one project get both routes
+  PASS: BOOTSTRAP.md: the paragraph the note cites gives HANDOFFS.md's route too
+  PASS: BOOTSTRAP.md: the paragraph the note cites keeps the trimmer's lines in CHANGELOG.md's route too
+== Test 21: check-handoff — well-formed receipt passes; field/value defects are caught ==
+  PASS: well-formed complete receipt passes
+  PASS: missing required key (gotchas) caught
+  PASS: empty required field (next_steps) caught
+  PASS: self_score out of 1..10 caught
+  PASS: key_files missing path:line token caught
+  PASS: key_files incidental colon-digit (no path) caught
+  PASS: what_was_done decimal-only (no hex letter) caught
+== Test 22: check-handoff — anti-pattern lints, modes (--allow-pending), fresh-seed, block isolation ==
+  PASS: 'pick next from backlog' caught
+  PASS: 'need to verify' placeholder caught
+  PASS: commit: pending is accepted
+  PASS: Session-1 fixture without predecessor_score passes
+  PASS: status: pending fails by default
+  PASS: status: pending passes with --allow-pending
+  PASS: status: reconciled (Phase 0 backfill) is accepted
+  PASS: fresh-seed fixture (sentinel, no blocks) passes
+  PASS: prose outside the fenced block does not trigger the lint (block isolation)
+  PASS: control: a newest receipt missing gotchas is caught
+  PASS: a ```sh block above the receipts does not hide the newest
+  PASS: the seed's front matter does not hide the newest receipt
+  PASS: --all reads both receipts below the seed's front matter
+  PASS: a ```sh block in a receipt's prose does not hide the receipt below it
+  PASS: a ```sh block inside a 4-backtick wrapper stays inert
+  PASS: a prose line quoting a fence in inline code opens no fence
+  PASS: a ````sh fence is closed only by a run of four
+  PASS: an unclosed ```sh fence caught by --all
+  PASS: a receipt under a misspelled fence tag is reported as orphaned, at its own line
+== Test 23: check-learnings — Learnings table shape (issue #65 Evidence A) ==
+  PASS: canonical Learnings table passes (presence control)
+  PASS: canonical table + distributed-corpus citations all resolve
+  PASS: malformed 3-column row caught
+  PASS: duplicate row number caught
+  PASS: deleted row (numbering gap) caught
+  PASS: row split across two physical lines caught
+== Test 24: check-learnings — citations into the distributed corpus resolve ==
+  PASS: dangling Learning citation in a distributed file caught
+  PASS: corpus restored after the citation mutation
+== Test 25: check-handoff --all — whole-ledger invariants (issue #65 Evidence B) ==
+  PASS: live receipt ledger passes --all (presence control)
+  PASS: default mode still green on a destroyed older receipt (documents the gap)
+  PASS: orphaned receipt body caught by --all
+  PASS: duplicate session+date caught
+  PASS: repeated session id on different dates is accepted (two merged sequences)
+  PASS: session/date must lead every block
+  PASS: older pending receipt caught; --allow-pending exempts only the newest
+  PASS: unclosed fence caught
+== Test: context_budget.py ==
+  PASS: context_budget.py is executable
+  PASS: context_budget --selftest: all gates observed failing and passing
+  PASS: seed .context-budget.json parses as JSON
+  PASS: context_budget.py has no --force escape hatch (usage text may name it)
+  PASS: over-ceiling resident file exits 2
+  PASS: shrinking below the ceiling clears the breach
+  PASS: removing the budget:protected block is refused
+  PASS: install-hook honors core.hooksPath
+  PASS: install-hook writes no dead hook under .git/hooks when redirected
+  PASS: install-hook never clobbers a foreign hook in the redirected dir
+  PASS: install-hook falls back to .git/hooks when core.hooksPath is unset
+  PASS: context_budget --status writes nothing to the project
+  PASS: context_budget --check is --status: the same exit code, writing nothing
+  PASS: context_budget refuses an unknown argument with exit 3, writing nothing
+  PASS: sync distributes context_budget.py
+  PASS: sync seeds .context-budget.json
+  PASS: re-sync does not clobber an adopter-owned config
+== Test: quality_ratchet.py ==
+  PASS: quality_ratchet.py is executable
+  PASS: quality_ratchet --selftest: every gate observed failing and passing
+  PASS: seed .quality-gates.json parses as JSON and starts empty (plan §8.4)
+  PASS: quality_ratchet.py has no --force escape hatch (it refuses the flag by name)
+  PASS: sync distributes quality_ratchet.py
+  PASS: sync seeds .quality-gates.json
+  PASS: a loosened threshold cannot be committed without --no-verify
+  PASS: --no-verify bypasses the ratchet (recorded in history, not exempt)
+  PASS: a tightened threshold commits without --no-verify
+  PASS: removing a declared gate is refused like a loosening
+  PASS: removing .quality-gates.json is refused as the loosest loosening
+  PASS: a repo that removed its manifest with --no-verify is not locked
+  PASS: re-adding the manifest lower than the removed one is refused
+  PASS: re-adding the manifest at the removed thresholds passes
+  PASS: re-sync does not clobber an adopter-owned gate manifest
+  PASS: this repo's .quality-gates.json declares gates with no defects
+  PASS: .githooks/pre-commit chains the quality ratchet before the ledger gate
+  PASS: check-handoff: no manifest, no citation demanded
+  PASS: check-handoff: the empty seed demands no citation
+  PASS: check-handoff: a declared gate with no citation in the newest receipt is a finding
+  PASS: check-handoff --all: the same finding, on the newest receipt only
+  PASS: check-handoff: a cited gate run satisfies the lint
+== Test 26: status and sync recognise a version a merge hid from the default walk (RED-first) ==
+  PASS: fixture: canonical is v5 after both merges
+  PASS: fixture: the walks visit 4 (default) / 8 (full history) / 4 (first parent) commits
+  PASS: status: v5 (canonical) reads 'current'
+  PASS: status: v2 (main's own version, hidden by merge B) reads '2 versions behind'
+  PASS: status: v4side (a side version merge A discarded; no main-line position, so the full walk counts) reads '1 version behind'
+  PASS: status: v3 (landed by merge B; the side branch's two commits are one main-line version) reads '1 version behind'
+  PASS: status: v1 (the root; merged branches' own commits are not main-line versions) reads '3 versions behind'
+  PASS: status: v2-local (never in history) reads 'locally modified'
+  PASS: sync: v2 (hidden by merge B, upgraded without --force) exits 0 and leaves v5
+  PASS: sync: v4side (hidden by merge A, upgraded without --force) exits 0 and leaves v5
+  PASS: sync: v2-local (a real local edit is still refused) exits 2 and leaves v2-local
+== Test 27: --source=github clones its source, so it recognises every version Test 26 does (RED-first) ==
+  PASS: github status: v5 (canonical) reads 'current'
+  PASS: github status: v2 (hidden by merge B) reads '2 versions behind'
+  PASS: github status: v4side (discarded by merge A; counted along the full walk) reads '1 version behind'
+  PASS: github status: v3 (landed by merge B) reads '1 version behind'
+  PASS: github status: v1 (the root) reads '3 versions behind'
+  PASS: github status: v2-local (never in history) reads 'locally modified'
+  PASS: github sync: v2 (hidden by merge B, upgraded without --force) exits 0 and leaves v5
+  PASS: github sync: v4side (hidden by merge A, upgraded without --force) exits 0 and leaves v5
+  PASS: github sync: v3 (landed by merge B, upgraded) exits 0 and leaves v5
+  PASS: github sync: v1 (the root, upgraded) exits 0 and leaves v5
+  PASS: github sync: v2-local (a real local edit is still refused) exits 2 and leaves v2-local
+  PASS: github sync --dry-run: exit 0 on a file that is merely behind
+  PASS: github sync names the URL it cloned
+  PASS: github sync reports the clone's own version (e327e46)
+  PASS: github sync --dry-run wrote nothing
+  PASS: every run removed its temporary clone
+== Test 28: --source=github names every distributed file its source lacks, before writing anything (RED-first) ==
+  PASS: github sync: a source missing a distributed file exits 1
+  PASS: github sync: the inventory names the missing file and its source
+  PASS: github sync: nothing written before the inventory
+  PASS: github status: the same inventory, exit 1
+== Test 29: a source without its history is named as the cause, not the project's files (RED-first) ==
+  PASS: fixture: a shallow clone and a tree with no .git, each carrying the sync under test
+  PASS: shallow source: exit 2
+  PASS: shallow source: the refusal says 'is shallow (1 commit)'
+  PASS: shallow source: no claim of local modifications
+  PASS: shallow source: nothing written
+  PASS: a deeper shallow source: exit 2
+  PASS: a deeper shallow source: the refusal says 'is shallow (3 commits)'
+  PASS: a deeper shallow source: no claim of local modifications
+  PASS: a deeper shallow source: nothing written
+  PASS: source with no .git: exit 2
+  PASS: source with no .git: the refusal says 'has no git history'
+  PASS: source with no .git: no claim of local modifications
+  PASS: source with no .git: nothing written
+  PASS: shallow source: the refusal gives the command that deepens it
+  PASS: source with no .git: the refusal gives the clone command
+  PASS: github refusal: the inspect hint, run after the run, clones the source and diffs the edit
+  PASS: control: the full-history source upgrades the same file
+== Test 30: the .gitattributes seed merges CHANGELOG.md by union and keeps HANDOFFS.md visible (RED-first) ==
+  PASS: seed: a two-branch merge conflicts in HANDOFFS.md only
+  PASS: seed: CHANGELOG.md auto-merged by union, both new entries whole
+  PASS: seed recipe: keep-both resolves HANDOFFS.md with all three receipts whole (check-handoff --all)
+  PASS: RED control: HANDOFFS.md under union merges at exit 0 into ONE block holding two receipts
+  PASS: check-handoff --all rejects the fused block (a key repeated in one block)
+  PASS: trim vs prepend under union: clean merge, the new entry kept, no archived record back in the live file
+  PASS: sync installs the .gitattributes seed
+  PASS: sync never overwrites an adopter's .gitattributes, even with --force
+== Test 31: check-ledger reads what a union merge leaves behind (RED-first against fixtures) ==
+  PASS: check-ledger: a clean ledger passes
+  PASS: check-ledger: a heading directly under the last body (union's lost blank line) passes
+  PASS: check-ledger: dates out of order across a merge pass (not checked)
+  PASS: check-ledger: a tag quoted in inline code is not a second tag
+  PASS: check-ledger: a footer after a closing --- rule passes
+  PASS: check-ledger: the sentinel mentioned in prose is not the sentinel
+  PASS: check-ledger: a duplicated entry heading fails
+  PASS: check-ledger: a heading with no source tag fails
+  PASS: check-ledger: a heading with two source tags fails
+  PASS: check-ledger: a heading without the date prefix fails
+  PASS: check-ledger: orphaned text under a month heading fails
+  PASS: check-ledger: a surviving conflict marker fails
+  PASS: check-ledger: the seed sentinel left in a ledger with entries fails
+  PASS: check-ledger --all: this repository's ledger and its archive shard are clean
+== Test 32: --source=github installs the SOURCE's manifest, so a checkout ahead of it is not refused (RED-first) ==
+  PASS: github sync from a source behind this checkout installs the source's files and exits 0
+  PASS: github sync names the row this checkout has and the source does not
+  PASS: github status compares against the source's manifest and names the skipped row
+== Test 33: check-handoff accepts one live pending receipt per line of sessions, and only one (RED-first) ==
+  PASS: check-handoff: another line's newest pending receipt is its live claim (--allow-pending)
+  PASS: check-handoff: ...and close-out's --all accepts it too
+  PASS: check-handoff: two lines, each with a live claim below the other's receipts
+  PASS: check-handoff: a pending receipt superseded within its OWN line is still refused
+  PASS: check-handoff: a branch line's stale stub under its own newer receipt is still refused
+  PASS: check-handoff: the newest receipt pending without --allow-pending is still refused
+== Test 34: --source=github reads the source's manifest as data, and refuses rows it cannot install safely (RED-first) ==
+  PASS: github sync: an unreadable source manifest is a one-line error naming the source; nothing written
+  PASS: github status: an unreadable source manifest is a one-line error naming the source
+  PASS: github sync reads the source's manifest without running any of it
+  PASS: github status reads the source's manifest without running any of it
+  PASS: github sync refuses a source whose disposition labels differ, naming the rows; the adopter's seed is untouched
+  PASS: github status refuses the same source rather than mis-reporting it
+  PASS: github sync refuses a source row whose dest leaves the project
+  PASS: github sync refuses a source row whose src is outside the source
+  PASS: github sync refuses a dest inside .git, naming it; nothing written
+  PASS: github sync refuses a dest that names nothing ('.'), naming it; nothing written
+  PASS: github sync refuses a NUL byte in a path, naming it; nothing written
+  PASS: github sync refuses DISTRIBUTION += after its assignment, naming it; nothing written
+  PASS: github status refuses the same source, naming DISTRIBUTION
+  PASS: github sync refuses DISTRIBUTION.append(...) after its assignment, naming it; nothing written
+  PASS: github sync refuses a second DISTRIBUTION assignment, naming it; nothing written
+
+== Test 35: BOOTSTRAP's never-overwrite list is pinned to the manifest (RED-first, Learning #12) ==
+  PASS: bootstrap: a 'never overwrite' rule exists in the update path
+  PASS: bootstrap: every adopter-owned seed is named in the never-overwrite row
+  PASS: bootstrap: no tracked file is mislabelled adopter-owned
+== Test 36: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) ==
+  PASS: no early-exiting consumer decides a fail arm in bin/tests.sh
+  PASS: the scanner flags exactly the marked hidden-form lines (1 2 3 4 5 6 7 )
+  PASS: the scanner fires on a reverted site in the real file, and names it (307)
+== Test 37: the ledger hook and the ratchet chain follow the files under methodology/ (BL-101 P2, X2, RED-first) ==
+  PASS: legacy layout: a later commit that leaves the ledger out is refused, naming CHANGELOG.md (X2)
+  PASS: legacy layout: the same commit with a ledger entry passes
+  PASS: legacy layout: the ratchet chain refuses a loosened floor even with the ledger co-staged
+  PASS: new layout: a later commit that leaves the ledger out is refused, naming methodology/CHANGELOG.md (X2)
+  PASS: new layout: the same commit with a ledger entry passes
+  PASS: new layout: the ratchet chain refuses a loosened floor even with the ledger co-staged
+  PASS: the move commit (a pure rename of ledger, manifest and tool) passes the hook
+  PASS: a move that lowers a floor is refused, for the lowering and not as 'manifest removed'
+  PASS: a move that rewrites a committed ledger entry is refused (the never-edit gate crosses the move)
+  PASS: two tracked ledgers (half-migrated) are refused, naming both
+  PASS: a tie the framework anchor decides (runner under methodology/): the ledger entry passes, the root product changelog is left alone
+  PASS: a tie the anchor decides: a commit that touches only the root product changelog is refused, naming methodology/CHANGELOG.md
+  PASS: a tie the anchor cannot decide (runner at the root and under methodology/) is refused, naming both
+  PASS: a manifest tie the framework anchor decides: a loosened methodology/ floor is refused for the loosening, not as half-migrated
+  PASS: a manifest tie the framework anchor decides: a change to the root manifest, which is someone else's, passes
+  PASS: a manifest tie the anchor cannot decide (runner tracked: root) is refused, naming both
+  PASS: a manifest tie the anchor cannot decide (runner tracked: both) is refused, naming both
+  PASS: control: the new-layout ledger branch disabled turns the selftest red on 'new layout: ledger not co-staged -> REFUSED (X2'
+  PASS: control: the half-migrated refusal disabled turns the selftest red on 'a ledger in both places'
+  PASS: control: the framework anchor never decides a tie turns the selftest red on 'a tie, the runner under methodology/: the methodology ledger co-staged with a new entry -> pass'
+  PASS: control: a root runner beside the methodology one still decides the tie turns the selftest red on 'a tie, runner tracked: both -> REFUSED'
+  PASS: control: the framework anchor read from the worktree turns the selftest red on 'a tie, a runner under methodology/ that is on disk but NOT tracked'
+  PASS: control: HEAD read from the new path only (no crossing the move) turns the selftest red on 'the move commit that drops an entry'
+  PASS: control: the archive under methodology/ not recognised turns the selftest red on 'new layout, ledger: entries dropped with a shard under methodology/ staged'
+  PASS: control: a chain guard that names the root manifest only PASSES a loosened floor in the new layout (the fail-open the real hook refuses)
+  PASS: control: a ratchet that never lets the runner decide refuses the root-manifest edit the shipped tool passes
+== Summary: 298 passed, 0 failed, 0 skipped ==
+
+===== Part 3: methodology_trim.py --reverify docs/archive/CHANGELOG-through-2026-09-30.md (exit 0) =====
+== docs/archive/CHANGELOG-through-2026-09-30.md ==
+  [REVERIFY_BANNER] docs/archive/CHANGELOG-through-2026-09-30.md: re-derived by methodology_trim.py v1.9.0 from the grammar lifted out of its frozen proof (written by v1.5.0): ledger CHANGELOG.md, record kind heading, footer separator. This is a claim about today's logic against this shard, NOT the artifact that was shipped; the frozen proof is untouched. Nothing was written.
+  [REVERIFY_SUBSTITUTED] STUB_PATTERN is not in the frozen proof (it predates the stub label): the ledger table declares none for the live basename CHANGELOG.md, so no stub finalize is recognised
+  [REVERIFY_VERDICT] exit 0 (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a FAIL; 3: the proof did not finish). The proof's own output:
+    | source : the trim commit e010fdf
+    | records: 108 before = 12 retained + 96 archived; added by the trim commit: 1
+    |    added  : ### 2026-10-01 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-30.m
+    | checked: L1, L2/footer, L2/front-matter, L3
+    | OK: L1, L2/footer, L2/front-matter, L3 hold for docs/archive/CHANGELOG-through-2026-09-30.md
