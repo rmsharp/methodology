@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S383
+date: 2026-10-27
+status: pending
+active_task: **PR2b layer 7: add the candidate's commit 7 (`dd581fed`: methodology_dashboard.py 2.22.0, the dashboard reads a project that keeps its methodology files under methodology/ as it reads one that keeps them at the root; 5 files by `git show --numstat`: `.quality-gates.json` 2/2, `starter-kit/methodology_dashboard.py` +370/-115, `tools/methodology_dashboard.py` +370/-115, `tools/test_layout_resolver.py` 13/2, `tools/test_methodology_dashboard.py` +595/-4, to be re-read) to the local branch `pr2b/candidate` (`f767ced0`; layer 6's commit stays an ancestor) in a scratch `--no-local` clone, then run `layer-verify.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; the branch local and un-pushed; nothing sent to `KJ5HST/methodology`. Commit 8 (`4c0bdded`, Test 15 in `bin/tests.sh`), the sizing's pair for this layer, is NOT part of this session.** Chosen at his Phase 0 picker (the recommended option). Go-aheads at that picker: **not ticked** the push of the 8 unpushed fork commits (S381's three and S382's five), so they and these commits stay local. No trim is due (4 receipts at Phase 0).
+```
+
+```handoff
 session: S382
 date: 2026-10-27
 status: complete
