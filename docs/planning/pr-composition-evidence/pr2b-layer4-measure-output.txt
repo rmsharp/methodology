@@ -1,0 +1,75 @@
+== 1. commit and parent
+commit 1d93579a (tree 765d57e9)   parent 7d87cb2b (tree 49aa4f2b)
+subject: feat(quality_ratchet): 1.5.0 -- a gate that outlives its budget is unmeasured, and its command is stopped with its whole process group
+
+== 2. changed files (git diff --numstat parent commit)
+1	1	.quality-gates.json
+1	1	starter-kit/quality-gates.json
+203	17	starter-kit/quality_ratchet.py
+491	1	tools/test_quality_ratchet.py
+files: 4
+
+== 3. the literal scanner on the parent's tree and on the commit's tree
+parent 7d87cb2b: check-layout-literals: scanned 14 files; 122 sites (80 path, 42 text); 18 acknowledged; 169 prose not counted   (exit 1)
+       6  bin/check-handoff
+       4  bin/check-ledger
+       1  bin/check-links
+       3  bin/status
+       8  starter-kit/context_budget.py
+      79  starter-kit/methodology_dashboard.py
+      21  starter-kit/methodology_trim.py
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       1  bin/check-layout-literals
+       5  starter-kit/quality_ratchet.py
+commit 1d93579a: check-layout-literals: scanned 14 files; 122 sites (80 path, 42 text); 18 acknowledged; 170 prose not counted   (exit 1)
+       6  bin/check-handoff
+       4  bin/check-ledger
+       1  bin/check-links
+       3  bin/status
+       8  starter-kit/context_budget.py
+      79  starter-kit/methodology_dashboard.py
+      21  starter-kit/methodology_trim.py
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       1  bin/check-layout-literals
+       5  starter-kit/quality_ratchet.py
+sites per file, parent -> commit (only files that differ):
+    (none differ)
+acknowledged per file, parent -> commit (only files that differ):
+    (none differ)
+
+== 3b. what became of the parent's counted site lines in the files whose site count fell (CRUDE)
+   A site line 'survives' if its first 60 characters occur verbatim in the commit's version of the file
+   (as code, prose or an acknowledged line). Not a 1:1 map: a rewritten line does not survive, and a new
+   acknowledged line has no parent counterpart. It shows whether the counts are the SAME lines.
+
+== 4. fork-internal references on the commit's added lines (regex SCRUB; rough)
+       0 of     1 added lines  .quality-gates.json
+       0 of     1 added lines  starter-kit/quality-gates.json
+       5 of   203 added lines  starter-kit/quality_ratchet.py
+       7 of   491 added lines  tools/test_quality_ratchet.py
+    12 of 696 added lines in total
+regex: BL-\d+|\bS\d{3}\b|\bthe fork\b|[Ll]earning #\d+|plan C\d+|\(plan |decision D\d+|phase P\d+|\bP[1-9]\b.*phase|overruled|\bhe\b (?:overruled|decided)
+
+== 5. the merge of the commit with each ref (merge-tree, empty attribute tree = GitHub's view)
+   for each ref: the commit, its parent (what the earlier layers already conflict in), and, for a ref other
+   than upstream/main, upstream/main itself (what the ref conflicts in before any layer is added)
+commit   1d93579a with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 765d57e926d1
+parent   7d87cb2b with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 49aa4f2b0719
+commit   1d93579a with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 5966d52f459e
+parent   7d87cb2b with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 2bca2361f8fd
+control  d50ce290 with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 8c62d9dbb59e
+commit   1d93579a with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree b5f9fb4128c8
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+parent   7d87cb2b with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree d4df99f60843
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+control  d50ce290 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 719329bfbe8a
+    CHANGELOG.md: 1 conflict region(s)
+    total: 1 region(s) in 1 file(s)
