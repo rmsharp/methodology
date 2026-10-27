@@ -85,7 +85,7 @@ and the text's decision 3 are re-measured before PR5. Settling D4 sends nothing,
 ## 5. D4 clarified: what ends the wait (S369, 2026-10-23)
 
 Asked because S368's receipt (gotcha 4) found that the wait's end was not written down. Two sources word D4 differently. The plan
-([`../upstream-pr-composition-plan.md`](../upstream-pr-composition-plan.md) section 7, line 223, the default offered 2026-10-13) says
+([`../upstream-pr-composition-plan.md`](../upstream-pr-composition-plan.md) section 7, item 4, the default offered 2026-10-13; the plan reworded it at S375, so this quotes the original) says
 *"wait for #94 and #92 to merge or be answered before PR5, and if #94 is still open then, ask whether to stack on its head or state
 that this pull request supersedes it"*. His answer of 2026-10-18 (section 1, above) says *"Keep waiting, and ask again on or after
 2026-10-25"*, a date and no event.

@@ -22,7 +22,7 @@ Everything below is the output of a committed script, saved beside it: `i95-dayz
    `VERSION` line if both sides bump it, and the new unit-test class if it is appended at the end of `tools/test_context_budget.py`, where the candidate also appends. The
    change touches 5 files, 6 with the ledger entry the pre-commit hook requires, so it is two commits under the 5-file cap. (§4)
 5. **Recommendation, not a decision:** do not fold it into the one pull request; the plan already lists the context-budget seed work as a separate decision
-   (`docs/planning/upstream-pr-composition-plan.md:251-252`). The cheapest outward step, if he wants one, is a comment on #95 carrying §3's three verified facts, offered
+   (`docs/planning/upstream-pr-composition-plan.md:254-255`). The cheapest outward step, if he wants one, is a comment on #95 carrying §3's three verified facts, offered
    before any pull request. Every outward step is his go-ahead. (§6)
 
 ## 2. The four findings, reproduced (`i95-dayzero-output.txt`)
