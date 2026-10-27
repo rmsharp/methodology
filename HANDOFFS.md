@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S379
+date: 2026-10-27
+status: pending
+active_task: **PR2b layer 3: add the candidate's commit 3 (`fd965939`: the ledger hook and the quality ratchet find the files under `methodology/`; 6 files by S378's `git show --numstat`, to be re-read) to the local branch `pr2b/candidate` (`41a1e580`; layer 2's commit stays an ancestor) in a scratch `--no-local` clone, then run `layer-verify.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; the branch local and un-pushed; nothing sent to `KJ5HST/methodology`.** Chosen at his Phase 0 picker (the recommended option, which named commit `fd965939` alone, so one commit per session), with one go-ahead, done before this claim: the push of fork `main` (`51ea9884..494a22a1`).
+```
+
+```handoff
 session: S378
 date: 2026-10-27
 status: complete
