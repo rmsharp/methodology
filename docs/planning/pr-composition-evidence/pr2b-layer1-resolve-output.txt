@@ -1,0 +1,23 @@
+base d50ce290; commit bbe0dc35; cherry-pick -n exit 1
+
+conflicted files (regions; resolved-to-base equals the base's file):
+  .quality-gates.json                        1 region(s)  DIFFERS
+      --- base
+      +++ resolved
+      @@ -10 +10 @@
+      -      "threshold": 261,
+      +      "threshold": 271,
+      @@ -26 +26 @@
+      -      "threshold": 229,
+      +      "threshold": 354,
+  FRAMEWORK_APPARATUS.md                     1 region(s)  EQUAL
+  starter-kit/methodology_trim.py           13 region(s)  EQUAL
+  tools/test_methodology_trim.py            13 region(s)  EQUAL
+  total: 28 region(s) in 4 file(s)
+
+merged without a conflict (staged by the cherry-pick): 5 file(s)
+  bin/tests.sh
+  starter-kit/BOOTSTRAP.md
+  starter-kit/methodology_dashboard.py
+  tools/methodology_dashboard.py
+  tools/test_methodology_dashboard.py
