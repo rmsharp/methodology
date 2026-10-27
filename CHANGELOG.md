@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-26 · [ad hoc] S376 claim (in progress) -- size PR2b: apply the candidate's 34 commits to `upstream/main` `d50ce290` in a scratch clone and record which commits stop on a conflict; fork only; nothing sent to `KJ5HST/methodology`
+
+Claimed at his Phase 0 picker: the recommended option, 'PR2b: size the rebuild' (the others offered were BL-114, the fix for the maintainer's issue #95, and housekeeping only), with two go-aheads ticked, both already done and logged: the trim of `HANDOFFS.md` (`5f191acb`, fold `8de31be0`) and the push of fork `main`. A third, a `--force` trim of `CHANGELOG.md`, was offered and not ticked: it stood at 217,197 B at Phase 0, past the trimmer's 196,608 B trigger, and the trimmer refuses without `--force` (SRF 1.1238, RED). Phase 0 (read 2026-10-26) found both frontiers at `b52d6a15`, which is `HEAD` (0 undocumented commits, 0 merges, no pending receipt), `check-ledger` and `check-handoff` exit 0, the S375 receipt's gate citation (`results 007cf11d653a`, `manifest 102234f3acf8`) equal to the local `.quality-gates-results.json`, `upstream/main` unchanged at `d50ce290`, PR #98 open and CLEAN (head `65990cda`) and PR #96 open (CONFLICTING is the `merge=union` gap), each with 0 comments and 0 reviews, issues #93, #95 and #97 open and unchanged, dashboard 72/100 with 0 high-risk flags. The deliverable is a sizing record (a script, its saved output and a short record under `docs/planning/pr-composition-evidence/`); PR2b proper, with each region resolved and each layer green in a clean clone, is later sessions, one layer each. Standing instruction from him this session: do not ask him to run a command I am authorised to run (saved to auto-memory). Nothing goes to `KJ5HST/methodology`.
+
 ### 2026-10-26 · [ad hoc] S376 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 456 B; `HANDOFFS.md` 36,090 B before, 35,634 B after) became the row `| 2 | 2026-10-23 → 2026-10-23 | HANDOFFS-through-2026-10-23-3.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58); the shard's verify script, `bin/check-handoff` and `bin/check-ledger` are run after it. It follows the trim `5f191acb` (five receipts to three, S372 and S371 archived, on his keep-three rule, trim above four), taken at his Phase 0 go-ahead; I ran the `--write` myself (sessions 354 and 355 had recorded a classifier refusal, and later trims were left to him with `!` without retrying) and the classifier raised no refusal. Nothing sent to `KJ5HST/methodology`.
@@ -280,6 +284,10 @@ Moved the oldest **2** record(s) (2026-10-23 → 2026-10-23) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-23-3.md`](docs/archive/HANDOFFS-through-2026-10-23-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-23-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-23-3.md.verify.sh)
 rather than trusting a digest printed here. Live file 58,899 B → 36,090 B (−38.7%).
+
+### 2026-10-26 · [ad hoc] S376 push -- fork `main` fast-forwarded `2dab0e6e..b52d6a15` (6 commits of S375: claim, work, pointers, decision, correction, close-out); fork `origin` only
+
+His go-ahead at the Phase 0 picker ('Push main to fork'). `git merge-base --is-ancestor origin/main main` held (0 behind, 6 ahead) before it, and after it `git ls-remote origin refs/heads/main` and the local `main` both read `b52d6a15` (0 ahead, 0 behind). Nothing was pushed to `KJ5HST/methodology`.
 
 ### 2026-10-26 · [ad hoc] S375 close-out -- the one-upstream-PR plan refreshed for upstream's move (candidate 28 commits behind, 46 conflict regions); PR2b approved as the next phase; the predecessor's 11 commits pushed to the fork; nothing sent to `KJ5HST/methodology`
 
