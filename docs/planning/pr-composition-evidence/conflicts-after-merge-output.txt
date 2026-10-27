@@ -1,0 +1,55 @@
+upstream/main d50ce290: 28 commits past f34769f3; fork main 017512e0 is 2349 past upstream/main and 28 behind it
+pr2/candidate 3cba1e50: 34 commits past f34769f3; merge-base with upstream/main f34769f3
+PR #92: MERGED merged=2026-10-24T23:06:54Z mergeable=UNKNOWN head=8a232bb7
+PR #94: MERGED merged=2026-10-24T23:06:54Z mergeable=UNKNOWN head=1670c5d4
+PR #96: OPEN merged=- mergeable=CONFLICTING head=ad5c980f
+PR #98: OPEN merged=- mergeable=MERGEABLE head=65990cda
+== pr2/candidate against upstream/main: merge-tree exit 1 (0 clean, 1 conflicts)
+   .quality-gates.json: 1 conflict region(s)
+   FRAMEWORK_APPARATUS.md: 2 conflict region(s)
+   starter-kit/methodology_trim.py: 25 conflict region(s)
+   tools/test_methodology_trim.py: 18 conflict region(s)
+   total: 46 region(s)
+== pr2/candidate against #98's head (upstream/main plus #98): merge-tree exit 1 (0 clean, 1 conflicts)
+   .quality-gates.json: 1 conflict region(s)
+   FRAMEWORK_APPARATUS.md: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 28 conflict region(s)
+   tools/test_methodology_trim.py: 22 conflict region(s)
+   total: 52 region(s)
+== pr2/candidate against #96's head: merge-tree exit 1 (0 clean, 1 conflicts)
+   .quality-gates.json: 2 conflict region(s)
+   bin/tests.sh: 1 conflict region(s)
+   total: 3 region(s)
+== HEAD against upstream/main: merge-tree exit 1 (0 clean, 1 conflicts)
+   .quality-gates.json: 1 conflict region(s)
+   CHANGELOG.md: 1 conflict region(s)
+   CLAUDE.md: 1 conflict region(s)
+   FRAMEWORK_APPARATUS.md: 2 conflict region(s)
+   HANDOFFS.md: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 24 conflict region(s)
+   tools/test_methodology_trim.py: 17 conflict region(s)
+   total: 47 region(s)
+== HEAD against #98's head (upstream/main plus #98): merge-tree exit 1 (0 clean, 1 conflicts)
+   .quality-gates.json: 1 conflict region(s)
+   CHANGELOG.md: 1 conflict region(s)
+   CLAUDE.md: 1 conflict region(s)
+   FRAMEWORK_APPARATUS.md: 1 conflict region(s)
+   HANDOFFS.md: 1 conflict region(s)
+   starter-kit/methodology_trim.py: 27 conflict region(s)
+   tools/test_methodology_trim.py: 21 conflict region(s)
+   total: 53 region(s)
+== HEAD against #96's head: merge-tree exit 1 (0 clean, 1 conflicts)
+   .quality-gates.json: 2 conflict region(s)
+   CHANGELOG.md: 1 conflict region(s)
+   CLAUDE.md: 2 conflict region(s)
+   bin/tests.sh: 1 conflict region(s)
+   starter-kit/SAFEGUARDS.md: 1 conflict region(s)
+   starter-kit/close_out_report.py: 7 conflict region(s)
+   tools/test_close_out_report.py: 7 conflict region(s)
+   total: 21 region(s)
+== files each open pull request changes, against its own base, that the candidate also changes (candidate vs f34769f3)
+   #96 (9 files): .quality-gates.json bin/tests.sh starter-kit/BOOTSTRAP.md starter-kit/SAFEGUARDS.md 
+   #98 (6 files): .quality-gates.json FRAMEWORK_APPARATUS.md starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+== TRIM_VERSION on each side (upstream/main carries the maintainer's review fixes as 1.8.2)
+   upstream/main  TRIM_VERSION = "1.8.2"   # 1.8.2: issue 
+   pr2/candidate  TRIM_VERSION = "1.8.1"   # 1.8.1: issue 

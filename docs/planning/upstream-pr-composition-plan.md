@@ -1,10 +1,9 @@
 # The one upstream pull request: what it carries, what stands in front of it, how to build it
 
-**Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7).** Nothing is sent; the fork was pushed to
-its own `origin` only. **PR2 Part 1 is built** (S311: local branch `pr2/candidate`, commit `bbe0dc3`, [`part1-record.md`](pr-composition-evidence/part1-record.md))
-and **Part 2's ten layers, all of them** (S312: `14ef959`, [`layer1-record.md`](pr-composition-evidence/layer1-record.md); S313: `fd96593`, the gate layer, [`layer2-record.md`](pr-composition-evidence/layer2-record.md); S314: `c8c0b21`, the ratchet's 1.4.0 and 1.5.0, [`layer2b-record.md`](pr-composition-evidence/layer2b-record.md); S315: `98ca7fc`, the trimmer 1.8.0, [`layer3-record.md`](pr-composition-evidence/layer3-record.md); S316: `e9c5cb8`, the context-budget gate 1.4.0, [`layer4-record.md`](pr-composition-evidence/layer4-record.md); S317: `dd581fe`, the dashboard 2.22.0, [`layer5-record.md`](pr-composition-evidence/layer5-record.md); S318: `0aa1897`, the sync layers (three commits), [`layer6-record.md`](pr-composition-evidence/layer6-record.md); S320: `505541c`, the layout reading of the two checkers (two commits, D5 amended), [`layer6b-record.md`](pr-composition-evidence/layer6b-record.md); S321: `18cda0f`, the layout text of the framework documents (five commits, the layout hunks only), [`layer6c-record.md`](pr-composition-evidence/layer6c-record.md); S322: `ab35e96`, **`bin/migrate-layout` and its suite, the last layer** (two commits; D5 amended at S319, §7: [`layer7-record.md`](pr-composition-evidence/layer7-record.md) is the finding that ordered it), [`layer7b-record.md`](pr-composition-evidence/layer7b-record.md)); S323: `5afc962`, **D6's small commit** (two of its three hunks, §7 D6), [`d6-record.md`](pr-composition-evidence/d6-record.md); S324: `28f99a7`, **the scrub** (ten commits, none over 5 files; §7 D4), [`scrub-record.md`](pr-composition-evidence/scrub-record.md); the candidate is 30 commits over `upstream/main`. **BL-113's reduction commit is built (S325, `ced2c82`, [`bl113-record.md`](pr-composition-evidence/bl113-record.md): the runner reads 23.5 tokens under its ceiling). PR3 is done (S326, [`pr3-record.md`](pr-composition-evidence/pr3-record.md)). PR4's text is drafted (S327, [`upstream-pr-body.md`](upstream-pr-body.md), [`pr4-record.md`](pr-composition-evidence/pr4-record.md)); the four text fixes are on the branch (S330, `a62bfec`, [`fix32-record.md`](pr-composition-evidence/fix32-record.md)), and two of the maintainer's tests are restored (S336, `cfcc713`, 33 commits, [`restore33-record.md`](pr-composition-evidence/restore33-record.md)); draft 11 is approved (S338), D1 and D4 answered (§7), then PR5.** §3 reads Part 1 as the 24 files of `c8b9ddd`, §4 as themes A to D; S311 built §4's reading (record §1.4). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
+**Status: DECIDED (2026-10-13, his picker: D1 to D4, each as recommended, §7). Refreshed 2026-10-26 (S375) for upstream's move: #92 and #94 merged on 2026-10-24, and the candidate now conflicts with `upstream/main` (§2.2).** Nothing is sent; the fork was pushed to
+its own `origin` only. **The candidate (`pr2/candidate`, 34 commits over `f34769f`), PR3 and PR4's approved text (draft 11, S338) are done, and D1 and D4 are answered (§7). PR5 is next, but the candidate is 28 commits behind `upstream/main` and is rebuilt first (§5, PR2b).** Each commit's hash is in its record in [`pr-composition-evidence/`](pr-composition-evidence/) (`part1`, `layer1` to `layer7b`, `d6`, `scrub`, `bl113`, `pr3`, `pr4`, `fix32`, `restore33`, `bl119`). D3 overrides the dashboard hold ratified on 2026-09-27 (`dashboard-upstream-routing-plan.md`, which
 carries a pointer back here).
-Measured at fork `main` = `ffb0fd1` against `upstream/main` = `f34769f` (0 commits behind). Every figure below is printed by a
+§0, §1, §2.1, §2.3 and §2.4 were measured at fork `ffb0fd1` against `upstream/main` = `f34769f` and **have not been re-run**; §2.2 was re-measured at `d50ce290` (S375). Every figure below is printed by a
 script in [`pr-composition-evidence/`](pr-composition-evidence/) (§9) or by a command named beside it.
 **Declared budget: 30,000 B**, one read.
 
@@ -25,7 +24,7 @@ and the ledger says so*.
    (`bin/model-report`, `bin/check-overhead`, `starter-kit/close_out_report.py`) and 2,982 lines of shell tests. **20 files carry both
    halves**, the second built on the first (§1).
 2. **The cheap route is whole files, not hunks.** Porting only the `methodology/` hunks onto upstream's copies is **52 hand-resolved
-   conflict regions in 16 files** (`git merge-file`, base `c8b9ddd`; the dashboard alone is 17 in each of its two copies). So a
+   conflict regions in 16 files** (`git merge-file`, base `c8b9ddd`; §9). So a
    pull request carries the earlier work too, and it must say so.
 3. **The suite is not portable yet, and the cause is the tests, not the tools.** Upstream's tree with the fork's shipped files laid
    over it runs `bin/tests.sh` to **484 passed, 14 failed, 2 skipped** (upstream's own suite: 261/0/0; the fork's: 503/0/0). All 14
@@ -35,16 +34,18 @@ and the ledger says so*.
 4. **D8's two gates are open.** Five of twelve adopters are not migrated (`mts-system`, `Philippians`, `dalia_martinez_funeral`,
    `claude_work`, `wsfct`); 13 of the register's 31 rows are open, and on a first-pass reading 7 of those are findings the tool's own
    checks did not see (§2.1). Neither gate is a reason not to *build*: building sends nothing (§7 D1).
-5. **Two pull requests are already in front of it and conflict mechanically:** #94 (the trimmer proof fix) in 3 files, 15 regions;
-   #92 (v4.2 release notes) in 1 file, 1 region, in `CLAUDE.md`, which this pull request should not carry. In the trimmer's nine
-   regions, the only ones read so far, the fork's side is the superset: it carries issue #93's work as its own commits (§2.2).
+5. **The two pull requests that were in front of it have merged, and upstream moved under the candidate.** #92 and #94 merged on 2026-10-24. `upstream/main`
+   is now `d50ce290`, 28 commits past `f34769f`, its trimmer at 1.8.2 (the maintainer's review of #94). The candidate (1.8.1) conflicts with it
+   in 4 files, **46 regions**, 43 in the trimmer and its tests. #98 (open) edits the same four files; #96 shares four with the candidate (§2.2).
 6. **The added code carries about 700 fork-internal token hits** (lines with a backlog code 282, a session number 199, a
    `docs/planning/` path 63, a fork-learning citation 25, a plan-phase code 130; a line can carry two; upstream's copies already carry 67
    and 51 of the first two). **14 plan documents the added lines cite do not exist upstream** (§2.4).
-7. **The maintainer's record says size is not the obstacle; waiting is.** He merged #80 (+7,892 / −580, 28 files) five days after it
+7. **The maintainer's record says size is not the obstacle; waiting is, and he splits what is separable.** He merged #80 (+7,892 / −580, 28 files) five days after it
    opened and #84 (+1,264 / −303, 21 files) after 13, with 0 reviews and 3 and 1 comments (`gh pr list`, `gh pr view`); #83 to #88,
-   opened 16 to 27 September, all merged on 1 October. #92 is 10 days old and #94 8, with no reply. Upstream has no CI (`.github/` is
-   absent), so every check is local.
+   opened 16 to 27 September, all merged on 1 October. #92 (+32 / −1) and #94 (+2,806 / −30, 5 files) waited 16 and 14 days for his first reply (2026-10-19, changes
+   requested on both) and merged on 2026-10-24, five days after the fork answered. On #94 he asked that one separable piece, the trimmer's `SESSION_NOTES.md`
+   ledger-table entry, go in its own pull request; it did, as #98. He merges locally, because GitHub's button ignores `merge=union` (his comment on #94).
+   Upstream has no CI (`.github/` is absent), so every check is local.
 8. **Recommendation:** one pull request, built as a **two-part series of commits** (the earlier lineage, then the `methodology/`
    layers), carrying the **shipped set and its tests** and leaving the fork's own reporting tools and instance tests for later
    (§3). **Build the candidate now, fork-side; decide the D8 waiver at the final approval, with the then-open rows listed** (§7).
@@ -72,14 +73,11 @@ twin (`starter-kit/` and `tools/`) is counted twice, as two files.
 **Adopter impact, if everything were sent:** 19 of 23 tracked distributed files differ (the runner, `SAFEGUARDS.md`,
 `RECOMMENDED_SKILLS.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, the four tools, the three manuals, seven workstreams) and 3 of 7
 seeds (`CHANGELOG.md`, `HANDOFFS.md`, `quality-gates.json`). `bin/sync --layout auto` keeps a project in the layout it has and gives
-an empty one the legacy default, so a legacy adopter's file *locations* do not change; its file *contents* do. Versions
-(`inventory-output.txt`): ratchet 1.1.0 → 1.5.0, dashboard 2.11.3 → 2.22.0, `context_budget.py` 1.3.1 → 1.4.0, trimmer 1.5.0 → 1.8.0,
-`close_out_report.py` absent → 1.2.0.
+an empty one the legacy default, so a legacy adopter's file *locations* do not change; its file *contents* do. Versions not in the table (`inventory-output.txt`): `context_budget.py` 1.3.1 → 1.4.0, `close_out_report.py` absent → 1.2.0.
 
 The fork's own plan for the dashboard (`dashboard-upstream-routing-plan.md`, **ratified Option C, 2026-09-27**) says: send a small
 correctness fix first, **hold** the read-cap and trim stack, and keep three policy pieces (the installed-content structure, the
-scoped `--sync`, the self-scan root) out of every pull request. The fork's own code comment says its dashboard lineage "stays apart
-until a dashboard PR reconciles them". **A whole-file overlay of theme D overrides that hold** (§7, D3).
+scoped `--sync`, the self-scan root) out of every pull request. **A whole-file overlay of theme D overrides that hold** (§7, D3).
 
 ---
 
@@ -100,16 +98,18 @@ until a dashboard PR reconciles them". **A whole-file overlay of theme D overrid
   commit at P18 or at BL-105 phase 4; F4 and F7 are stated limits. This is a reading, not a ruling: each *Seen* cell is for a person to
   judge, and §7 D1 asks him to.
 
-### 2.2 The two open pull requests (`conflicts-output.txt`, recomputed today)
+### 2.2 Upstream since the plan was measured (`conflicts-after-merge.sh`, S375; `conflicts.sh` is the 2026-10-13 record)
 
-| PR | Head | Conflicts with the fork tip | Resolution |
+#92 and #94 merged on 2026-10-24. `upstream/main` is 28 commits past `f34769f`: the trimmer at 1.8.2 with its 227
+unit tests (124 before), `FRAMEWORK_APPARATUS.md`, the v4.2 notes and the ledgers (8 files, +3,019 / −31). Conflict regions from `git merge-tree`, attributes off (GitHub's view; fork `main` reads 47, 53 and 21, in the output file):
+
+| Side | against `upstream/main` | against #98's head | against #96's head |
 |---|---|---|---|
-| #94 trimmer proof fix | `972eb2cd6263` | `.quality-gates.json` (1), `starter-kit/methodology_trim.py` (9), `tools/test_methodology_trim.py` (5) | the trimmer's nine were read: they differ in placeholders, constants and the layout lookup the fork added after it carried #93's work, so the fork's side is expected to win; the other six (gates, tests) are read at PR2 |
-| #92 v4.2 release notes | `fa2bb5d464f9` | `CLAUDE.md` (1) | none needed: `CLAUDE.md` is the fork's own file and is not carried |
+| the candidate, `pr2/candidate` `3cba1e5` | **46 in 4 files**: trimmer 25, its tests 18, `FRAMEWORK_APPARATUS.md` 2, `.quality-gates.json` 1 | 52 in 4 | 3 in 2 (`.quality-gates.json` 2, `bin/tests.sh` 1) |
 
-No file of either pull request is byte-identical at the fork tip. Consequence for ordering: a pull request built now on
-`upstream/main` and merged *after* #94 conflicts in those three files **on the maintainer's side**. Build on top of #94's merge, or
-state the supersession (§7 D4).
+The earlier reading, that the fork's side wins in the trimmer's regions, was made at #94's 1.7.0 head and **no longer holds**: upstream's side carries 1.8.2, the maintainer's review fixes, which the candidate (1.8.1)
+lacks, so each region is read, not assumed (§8). #98 (open, 6 files) edits the candidate's four files; #96 (open, theme E) shares `.quality-gates.json`, `bin/tests.sh`, `BOOTSTRAP.md` and `SAFEGUARDS.md`.
+So the candidate is rebuilt on `d50ce290` (§5, PR2b); how it stands to #98 is §7 D4.
 
 ### 2.3 The suite on upstream's tree (`candidate-probe-suite-output.txt`, `candidate-probe.sh`)
 
@@ -133,8 +133,7 @@ the read-cap and overhead plans). The 17 `docs/archive/` names are test fixtures
 
 ### 2.5 The evidence
 
-`methodology-subdirectory-evidence/` is 245 files, 3.2 MB: 20 records (196 KB), 56 scripts (358 KB), the register (46 KB) and 61 further
-files, mostly recorded run outputs, plus `bl105-runs/`. The plan is 60 KB. Upstream's `docs/planning/` holds 6 plan files and no run outputs.
+`methodology-subdirectory-evidence/` is 245 files, 3.2 MB: 20 records (196 KB), 56 scripts (358 KB), the register (46 KB), the rest recorded run outputs. The plan is 60 KB. Upstream's `docs/planning/` holds 6 plan files and no run outputs.
 
 ---
 
@@ -151,7 +150,7 @@ fork's suite passed at 452/0/0, the plan's baseline in its §3.1). Part 2 is the
 the gate layer (hook and ratchet), the trimmer, the context-budget gate, the dashboard, the sync layers, the layout hunks of the two checkers (D5, amended), the
 prose, and `migrate-layout` last (its suite needs the checkers and the prose: `layer7-record.md`), with the later ratchet and companion-file changes where they belong. Each layer is a checkpoint commit with the suite run on it
 (`SESSION_RUNNER.md` §Vertical Slice Sessions, gates (b) and (c)), so a reviewer can stop at any layer. Part 1 is built from the fork's
-tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream's tree is PR2's first measurement.
+tree at `c8b9ddd`, so it was green on the fork; it is green on upstream's tree (`part1-record.md`).
 
 ---
 
@@ -168,7 +167,7 @@ tree at `c8b9ddd`, so it was green on the fork; whether it is green on upstream'
 
 One seam to keep: the runner's 3E sentence and the `HANDOFFS.md` seed's paragraph say a cited run that reads unmeasured gates must name
 them. They ship as prose (B); the lint that enforces them is `bin/check-handoff`'s (F) and stays on the fork, so upstream would hold a rule
-its own checker does not enforce. PR2 states that in the text or carries the one lint, with the ledger edit it needs. **S321: the candidate's runner and `starter-kit/HANDOFFS.md` did not carry these sentences (the prose layer left them out as not layout: 3 hunks, +7 / -4); D6 (§7) answered (a), a small commit after `bin/migrate-layout`; S323 built two of the three hunks (`5afc962`); the runner's stays on the fork.**
+its own checker does not enforce. PR2 states that in the text or carries the one lint, with the ledger edit it needs. **D6 (§7) settled it: a small commit after `bin/migrate-layout` (`5afc962`); the runner's sentence stays on the fork.**
 
 ---
 
@@ -177,13 +176,16 @@ its own checker does not enforce. PR2 states that in the text or carries the one
 | Phase | DONE looks like | Verify | Surface, and what it cannot show | Stop |
 |---|---|---|---|---|
 | **PR1** this plan | committed with its evidence; his four answers (§7) recorded in the ledger | `bash bin/tests.sh`; the evidence scripts re-run to the saved outputs | this machine; not upstream's maintainer's | his approval picker |
-| **PR2** build the candidate | a branch in a scratch clone of the then-current `upstream/main` (after #94 if merged): Part 1, then each Part 2 layer as one commit; the 9 blocks parametrised or left out; tokens and dangling paths scrubbed **in their own commit** so a reviewer can skip it; no push | in a clean `--no-local` clone of each layer's commit: `bash bin/tests.sh` failed 0, passed and skipped stated; `python3 starter-kit/quality_ratchet.py --run` all pass; `bin/check-links --layout both`; `bin/check-layout-literals` 0 sites; every shipped `.verify.sh` exit histogram equal to upstream's; the changed-file list equal to §4 (a script compares) | clean clones, serial runs, `nohup` and a done-file for the long ones. **Cannot show:** Windows, a maintainer's machine, hooks armed in another clone, upstream CI (there is none) | the branch exists locally, green, un-pushed |
+| **PR2** build the candidate | a branch in a scratch clone of the then-current `upstream/main` (after #94 if merged; built at `f34769f`, before it did): Part 1, then each Part 2 layer as one commit; the 9 blocks parametrised or left out; tokens and dangling paths scrubbed **in their own commit** so a reviewer can skip it; no push | in a clean `--no-local` clone of each layer's commit: `bash bin/tests.sh` failed 0, passed and skipped stated; `python3 starter-kit/quality_ratchet.py --run` all pass; `bin/check-links --layout both`; `bin/check-layout-literals` 0 sites; every shipped `.verify.sh` exit histogram equal to upstream's; the changed-file list equal to §4 (a script compares) | clean clones, serial runs, `nohup` and a done-file for the long ones. **Cannot show:** Windows, a maintainer's machine, hooks armed in another clone, upstream CI (there is none) | the branch exists locally, green, un-pushed |
+| **PR2b** (added S375) rebuild the candidate on `upstream/main` | a second branch from `d50ce290`, the old one kept: §3's layers re-applied, the trimmer layer being upstream's 1.8.2 plus the fork's layout hunks, each §2.2 region resolved by reading; PR3's table re-run and PR4's text re-checked (§6), their figures being the old base's | per layer, in a clean `--no-local` clone: every check of the PR2 row; and `conflicts-after-merge.sh` reads 0 for the new branch | clean clones, serial runs. **Cannot show:** the maintainer's machine, or #98 merged | the branch exists locally, green, un-pushed; a region that needs a judgment goes to him |
 | **PR3** adopter impact | a table per adopter | `bin/status` and `bin/sync --dry-run` from the candidate over all 12 adopters in `--no-local` clones, legacy and migrated: files written, files refused, seeds untouched; a legacy fixture synced by **upstream's** tool and by the candidate's, trees diffed | clones. **Cannot show:** an adopter's own CI | the table committed |
 | **PR4** the text and its approval | a body in recognised terms, every number tied to a command in the diff; a fresh reviewer's read of a **frozen** draft; shown inline | `grep` the body for session numbers, backlog codes and coined names; each claim of §6 re-run | the draft only | his approval picker lists the then-open register rows (D1) and the state of #94 and #92 (D4) |
 | **PR5** outward | each step read back before the next: push the branch to `origin`; open the pull request; answer comments | `gh pr view`; `ls-remote` | upstream | each step is its own go-ahead; none is implied by the one before |
 
 PR2 is two to four sessions (a layer is a checkpoint, the dashboard the largest). Adopter sessions P18 to P22 run whenever an adopter is
 free and are not in this table; each leaves register rows that PR4 reads first (§7.6 of the directory plan).
+
+PR2b is two to three sessions, **a guess**: 43 of its 46 regions are the trimmer and its tests.
 
 ---
 
@@ -220,8 +222,9 @@ D5 (S317 close-out picker, 2026-10-14) was also as recommended, amended at S319 
    run the fork's dashboard: `bin/status` reads `vscode_quarto_ext`'s as `current` against the fork)*; (b) hand-port the layout layer
    onto 2.11.3 and keep the lineage held; (c) ship without the dashboard layer and say that the dashboard still writes at the project
    root in a migrated project.
-4. **D4 — defaults I will follow unless you change one:** **wait** for #94 and #92 to merge or be answered before PR5, and if #94 is still
-   open then, ask whether to stack on its head or state that this pull request supersedes it (closing it is outward); **scrub** tokens and
+4. **D4 — defaults I will follow unless you change one:** the **wait** ended on 2026-10-25, on the date alone (his S369 answer, [`d1-d4-record.md`](pr-composition-evidence/d1-d4-record.md) §5),
+   and #92 and #94 merged on 2026-10-24, so the stack-or-supersede question about them is moot. **Added S375, not yet his:** the same question applies to #98 (open; it edits the
+   trimmer, §2.2): at PR5, if #98 is still open, ask whether to stack on its head or state that this pull request supersedes it (closing it is outward); **scrub** tokens and
    dangling paths in one separate commit; **carry** the register, the plan and the records, not the outputs; **tighten** gates by what is added.
    **The scrub was built at S324 as ten commits, not one** (`pr-composition-evidence/scrub-record.md` §1.2): the population is 654 lines in 28 files, and `SAFEGUARDS.md` (which wins) caps a commit at 5 files. The ten sit together at the tip, so a reviewer still skips them as one run; the first seven change comments and docstrings only, the last three the text a program prints.
 5. **D5 — does the pull request carry the layout reading of `bin/check-handoff` (6 scanner sites) and `bin/check-ledger` (4)?** §4 was silent, and the
@@ -250,6 +253,8 @@ D5 (S317 close-out picker, 2026-10-14) was also as recommended, amended at S319 
   GitHub, has not been run against a real remote (the earlier plan's own caveat).
 - Rows tagged upstream-facing and not part of this plan: BL-66 (the update route's README line), BL-70 (issue #75's plan-surface rule,
   never sent), BL-84 (the context-budget seed). They are separate decisions and were not re-adjudicated here.
+- Which side wins in each of §2.2's 46 regions; PR2b reads them.
+- §0, §1, §2.1, §2.3 and §2.4 are as of `f34769f`: theme C is smaller now that upstream carries the trimmer's earlier lineage, and 484 / 14 / 2 and the 52 regions are the old base's. PR2b re-measures.
 
 ## 9. Evidence, and how to re-run it
 
@@ -260,7 +265,8 @@ beside it. Run from inside the repository, serially.
 |---|---|---|
 | `inventory.py` | `inventory-output.txt` | §1: the difference, its halves, the themes, adopter impact, versions |
 | `register-open-rows.py` | `register-open-rows-output.txt` | §2.1: the open rows, with the register's dated lines applied |
-| `conflicts.sh` | `conflicts-output.txt` | §2.2: #94 and #92 against the fork tip |
+| `conflicts.sh` | `conflicts-output.txt` | the 2026-10-13 record of #94 and #92 against the fork tip (both have merged since) |
+| `conflicts-after-merge.sh` | `conflicts-after-merge-output.txt` | §2.2: the candidate and the fork tip against `upstream/main` and the heads of #98 and #96 |
 | `candidate-probe.sh` | `candidate-probe-suite-output.txt`, `candidate-probe-unit-failures-output.txt` | §2.3: upstream's tree plus the overlay, the suite (reproduced by the script after a first run by hand: 484 / 14 / 2 both times), and the two unit suites that fail inside it |
 | `fork-tokens.py` | `fork-tokens-output.txt` | §2.4: tokens and dangling paths |
 
