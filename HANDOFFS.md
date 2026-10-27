@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S375
+date: 2026-10-26
+status: pending
+active_task: **Refresh `docs/planning/upstream-pr-composition-plan.md` (the one large upstream PR's plan): #94 merged, D4's 2026-10-25 date gate has passed, and the plan still asks stack-or-supersede about #94. Fork `main` only; the plan is at its 30,000 B gate (29,999 B), so cut before adding.** Chosen at his Phase 0 picker (the recommended option), with a separate go-ahead to push fork `main` (11 commits) to `origin`. Nothing goes to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S374
 date: 2026-10-26
 status: complete
