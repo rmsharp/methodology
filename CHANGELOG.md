@@ -273,6 +273,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-27-2.md` (2 record(s), 63,109 B → 41,424 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-27 → 2026-10-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-27-2.md`](docs/archive/HANDOFFS-through-2026-10-27-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-27-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-27-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,109 B → 41,424 B (−34.4%).
+
 ### 2026-10-27 · [ad hoc] S383 close-out -- PR2b layer 7 built and verified: the candidate's commit `dd581fed` (methodology_dashboard.py 2.22.0) added to local branch `pr2b/candidate` (`e5210601`); the fork's 24 gates pass; nothing sent to `KJ5HST/methodology`
 
 Resolves the `CHANGELOG: pending` of the S383 claim below. The deliverable is the layer: `pr2b/candidate` is `e5210601` (7 commits on `upstream/main` `d50ce290`, tree `d44458c2`), green in a clean clone (13/13 gates, suite 298/0/0, the dashboard's own tests 395 OK), `pr2/candidate` (`3cba1e50`) untouched, and the receipt in `HANDOFFS.md` is complete (S383 scored its predecessor 9 and itself 8; 5 receipts remain, so S384's Phase 0 counts 5 and, after its report, trims two). **After the work, with the tree clean, I ran the fork's own gates:** `quality_ratchet: 24/24 pass · 0 fail · 0 unmeasured · results 32858fe46628 · manifest 102234f3acf8`, equal to S382's citation and to the local `.quality-gates-results.json`, `tests-sh-passed` 692 at its floor of 692, 21 min 36 s on `HEAD` `9729a461`. His go-aheads at the Phase 0 picker: layer 7 (done); the push of the 8 unpushed fork commits was offered and declined ('Not this session'), so all eleven (those eight and this session's three) are local. **What the layer showed that no count foretold:** the scanner's dashboard figure 79 to 0 is mostly acknowledgement (70 of the 79 site lines remain in the file with a same-line `layout: ok` marker; 83 acknowledged), unlike layer 6's rewriting; the record says so. **A finding for the grouping plan:** commits 9 and 10 apply cleanly alone onto this tip (they conflicted alone onto layers 5 and 6), while 11, 12, 17, 18 and 19 still conflict alone (`pr2b-layer7-next-alone-output.txt`; alone, not in order). **Seen, read only:** `../wsfct` archived its own `SESSION_NOTES.md` after S382 closed (its commit `5d96fcb5`, sessions 682 to 711); I wrote nothing there. **3C:** no row appended to `docs/FORK_LEARNINGS.md`, so D3's duty does not fire; the lessons are in auto-memory. Nothing sent to `KJ5HST/methodology`.
