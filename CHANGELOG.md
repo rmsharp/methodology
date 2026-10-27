@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-26 · [ad hoc] S375 correction -- the plan was 30,002 B after the decision entry below (not the 29,972 B that entry says); cut to 29,980 B
+
+**What was wrong:** the entry headed 'S375 decision -- PR2b ... is the next phase' (commit `d5c4da8d`) states the plan went 'from 29,941 B to 29,972 B of 30,000 B'. I wrote 29,972 B before measuring it; `wc -c` printed in the same command read **30,002 B**, 2 B over the `plan-size-pr-composition` gate (30,000 B), and the commit went through because the pre-commit hook guards only a loosened threshold, not a value over one. The 29,941 B in the work entries below was measured and is right. **Fixed:** two of the markers I had just added were shortened ('(added S375; next phase, his picker 2026-10-26)' to '(added S375; next, his picker 2026-10-26)'; the quoted option name in D4 dropped), measured at **29,980 B**. The committed decision entry is left as written, as the ledger rule requires. The gate run in a clean clone (exit 0, below) was of `c3ef634a`, when the plan stood at 29,941 B, so it did not see the 2 B; the gate is re-read on the final tree at close-out. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-26 · [ad hoc] S375 decision -- PR2b (rebuild the candidate on `upstream/main` `d50ce290`) is the next phase of the one-pull-request plan; his picker answer recorded in the plan; fork `main` only; nothing sent to `KJ5HST/methodology`
 
 Asked in one picker (one question, three options) after the plan refresh showed the candidate conflicts with the merged trimmer in 46 regions: **'Rebuild now (Recommended)'**, over 'Wait for #98' and 'Not yet'. That answer also settles my D4 extension: at PR5, if #98 is still open, the session asks whether to stack on its head or state supersession. The plan's PR2b row and D4 item now say 'his picker 2026-10-26' where they said 'added S375' and 'not yet his' (29,941 B to 29,972 B of 30,000 B). It starts nothing: PR2b is a later session, with its own claim, and PR5 still needs three separate go-aheads. Nothing sent to `KJ5HST/methodology`.
