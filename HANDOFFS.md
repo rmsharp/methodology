@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S382
+date: 2026-10-27
+status: pending
+active_task: **PR2b layer 6: add the candidate's commit 6 (`e9c5cb86`: context_budget.py 1.4.0, the gate finds its config, its history file and its tool at the root or under methodology/; 4 files by `git show --numstat`: `.quality-gates.json` 1/1, `starter-kit/context_budget.py` +146/-18, `tools/test_context_budget.py` +206/-1, `tools/test_layout_resolver.py` 3/2, to be re-read) to the local branch `pr2b/candidate` (`62680cd2`; layer 5's commit stays an ancestor) in a scratch `--no-local` clone, then run `layer-verify.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; the branch local and un-pushed; nothing sent to `KJ5HST/methodology`.** Chosen at his Phase 0 picker (the recommended option). Go-aheads at that picker: **ticked** the HANDOFFS.md trim, done before this claim (trim `59f7defb`, S378 and S377 archived, 5 receipts to 3; fold `5038a801`; I ran the `--write`); **not ticked** the push of S381's three commits, so they and these commits stay local.
+```
+
+```handoff
 session: S381
 date: 2026-10-27
 status: complete
