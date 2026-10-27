@@ -269,6 +269,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-26 · [ad hoc] S375 decision -- PR2b (rebuild the candidate on `upstream/main` `d50ce290`) is the next phase of the one-pull-request plan; his picker answer recorded in the plan; fork `main` only; nothing sent to `KJ5HST/methodology`
+
+Asked in one picker (one question, three options) after the plan refresh showed the candidate conflicts with the merged trimmer in 46 regions: **'Rebuild now (Recommended)'**, over 'Wait for #98' and 'Not yet'. That answer also settles my D4 extension: at PR5, if #98 is still open, the session asks whether to stack on its head or state supersession. The plan's PR2b row and D4 item now say 'his picker 2026-10-26' where they said 'added S375' and 'not yet his' (29,941 B to 29,972 B of 30,000 B). It starts nothing: PR2b is a later session, with its own claim, and PR5 still needs three separate go-aheads. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-26 · [ad hoc] S375 work (pointers) -- two evidence records' line citations into the refreshed plan corrected; fork `main` only; nothing sent to `KJ5HST/methodology`
 
 The plan refresh above moved text, so the cross-reference check (Phase 3F) searched the tree for line citations into `docs/planning/upstream-pr-composition-plan.md`. Four were found. **Corrected:** `pr-composition-evidence/d1-d4-record.md` section 5 said D4 sat at 'section 7, line 223' (it is item 4, at line 225 now, and reworded, so the record says it quotes the original); `pr-composition-evidence/i95-record.md` cited `:251-252` for the 'separate decision' bullet (now `:254-255`, re-read). **Left, on purpose:** `BACKLOG-COMPLETED.md` (BL-122 row, 'line 63', now 64) and `BACKLOG-DETAIL.md` (`:251-252`, now `:254-255`), whose bodies are pinned by their `.verify.sh` proofs and whose item prose is deliberately not edited; both still point within a few lines of the right text. Two files touched, in their own commit so the first holds the 5-file cap. Nothing sent to `KJ5HST/methodology`.
