@@ -1,0 +1,16 @@
+PR2b layer 10 expectations (S386), written BEFORE the cherry-pick and before any output of it was read.
+Read first: commit 0aa1897e's message and its four small diffs; #98's head (65990cda) and #96's head (ad5c980f) change none of its five files against upstream/main (git diff --stat, empty for both).
+E1  git cherry-pick -x 0aa1897e onto 97425a70 exits 0.
+E2  The replayed commit equals the original by git patch-id --stable.
+E3  numstat is exactly: 17 2 .quality-gates.json / 2 0 bin/check-layout-literals / 10 0 bin/tests.sh / 7 1 tools/test_layout_resolver.py / 986 0 tools/test_sync_layouts.py.
+E4  In the build clone: tools/test_layout_resolver.py reads "Ran 76 tests" OK (75 + 1 new); tools/test_sync_layouts.py reads "Ran 82 tests" OK; tools/test_methodology_dashboard.py still 395 OK.  (Least sure: the 82; the commit was written on the full series, and one of its assertions already had to be left out for a later tool.)
+E5  Ratchet in a clean clone: 15 of 15 pass (13 + sync-layout-unit-tests + layout-literals), 0 fail, 0 unmeasured; tests-sh-passed 299, layout-unit-tests 76, sync-layout-unit-tests 82, layout-literals 0, each AT its floor; every other floor unchanged.
+E6  bash bin/tests.sh run directly: 299 passed, 0 failed, 0 skipped; Test 15 still (30 == 30).
+E7  Scanner: 10 sites over 2 files (layer 9) falls to 0, by exemption not by resolution: bin/check-handoff and bin/check-ledger leave its scan set (NOT_SCANNED_ALWAYS), they are exactly the two files that hold the 10.
+E8  The shard's --reverify exits 0; the read-set budget line is as at layer 9 (exit 0); every tracked .verify.sh exits as the base does.
+E9  check-links with no flag exits 0; --layout both is still red with the same 35 dangling links in 13 files (this commit touches no document).
+E10 Merges clean with upstream/main, tree equal to the layer's own; the same 5 regions with #98's head and the same 4 with #96's (0 added, since neither head touches the five files).
+E11 The scrub regex (measure script) matches some but fewer than 15% of the added lines; I expect the BL-101 P6 comment in bin/tests.sh to be one hit. (Roughly 1,000 added lines: a test file dominates the count.)
+E12 Next commits alone onto the new tip (11 to 20): 11, 13 to 16 and 20 stay clean; 12 turns clean (its conflicted files are ones commit 10 edits); 18's conflict in tools/test_sync_layouts.py vanishes (the file now exists) but its test_layout_resolver.py hunk may still conflict; 17 and 19 (.quality-gates.json, bin/tests.sh) are the least sure. An estimate, not a prediction of the series.
+E13 The clean-clone ratchet takes 9 to 12 minutes and bin/tests.sh 5 to 6 minutes (S385: 9 m 35 s, 5 m 16 s), if the machine is quiet.
+E14 The fork's own quality_ratchet.py --run at close-out reads 24 of 24, 0 fail, 0 unmeasured (this session changes documents, evidence and ledgers only; tests-sh-passed 692 at its floor).
