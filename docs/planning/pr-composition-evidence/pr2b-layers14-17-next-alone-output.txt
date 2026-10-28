@@ -1,0 +1,30 @@
+# each remaining candidate commit (numbers 17 to 33 of pr2/candidate, in its order) applied ALONE onto the tip 109375f4,
+# by: git merge-tree --write-tree --name-only --merge-base=<commit>^ 109375f4 <commit>   (exit 0 clean, 1 conflicts)
+18cda0f2 exit 0  test(layout): the distributed documents must resolve in both layouts
+2942e46c exit 0  feat(layout): bin/migrate-layout moves a legacy project's methodology files under methodol
+ab35e965 exit 1  test(layout): the migration tool's suite, its fast classes in the shell suite and its two 
+      conflicted: .quality-gates.json
+5afc9621 exit 0  docs(ratchet): a cited gate run that reads unmeasured gates is repaired or names them
+c933b0f9 exit 0  docs: drop internal references from the sync layer's comments and docstrings
+d31c25da exit 0  docs: drop internal references from the shell suite's, the hook's and the checkers' commen
+c1cdc2ec exit 1  docs: drop internal references from the layout resolver's, the fixtures' and their tests' 
+      conflicted: tools/test_sync_layouts.py
+71e00e89 exit 0  docs: drop internal references from the quality ratchet's, the budget gate's and their tes
+ea751caa exit 1  docs: drop internal references from the migration tool's and its suite's comments
+      conflicted: bin/migrate-layout
+      conflicted: tools/test_migrate_layout.py
+2276f4ef exit 1  docs: drop internal references from the ledger trimmer's and its tests' comments
+      conflicted: starter-kit/methodology_trim.py
+      conflicted: tools/test_methodology_trim.py
+72e0c991 exit 0  docs: drop internal references from the dashboard's and its tests' comments
+8ace51e8 exit 1  docs: drop internal references from the text the migration tool and the layout scanner pri
+      conflicted: bin/migrate-layout
+      conflicted: tools/test_migrate_layout.py
+ccd5620e exit 0  docs: drop internal references from the text the dashboard prints and its tests assert on
+28f99a70 exit 1  docs: drop internal references from the shell suite's titles, the hook's selftest labels a
+      conflicted: bin/tests.sh
+ced2c823 exit 0  docs(runner): drop the layout paragraph's duplicate example command; the runner reads unde
+a62bfecf exit 1  docs: correct four statements the series left stale in a gate reason, a comment and a head
+      conflicted: bin/migrate-layout
+cfcc713b exit 1  test(dashboard): restore two of upstream's CLI tests the series dropped with their class; 
+      conflicted: tools/test_methodology_dashboard.py
