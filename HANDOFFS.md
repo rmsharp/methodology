@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S389
+date: 2026-10-28
+status: pending
+active_task: **PR2b layer 13: add the candidate's commit 13 (`c8d43754`, `docs(layout): the operating files say where the methodology files sit, and their references hold in both layouts`; it lives on `pr2/candidate`, its parent there is `505541c3`; 5 files by `git show --stat`: `starter-kit/BOOTSTRAP.md` 42 changed lines, `CLAUDE_TEMPLATE.md` 5, `HANDOFFS.md` 2, `SAFEGUARDS.md` 2, `SESSION_RUNNER.md` 24) to the local branch `pr2b/candidate` (`19a5769b`; layer 12 stays its parent) in a scratch `--no-local` clone, then run `pr2b-layer-driver.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Yes, trim it (Recommended)' and 'Add commit 13 (Recommended)'. Done before this claim: `CHANGELOG.md` trimmed (`cee05064`, no fold applies).**
+```
+
+```handoff
 session: S388
 date: 2026-10-28
 status: complete
