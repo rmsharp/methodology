@@ -1,0 +1,23 @@
+# PR2b layer 13 budget probe (S389, 2026-10-28). Scratch clone at the layer 13 tip 09ac2846; read-only on the repository, a throwaway branch in the scratch clone.
+# Question: the layer's read-set budget line is red (runner 18,921 tokens against 18,900); does the series' own later commit ced2c823 (number 31 of 34) cure it when applied right after this layer?
+
+== A. the layer 13 tip, budget status (python3 starter-kit/context_budget.py --status)
+tip 09ac2846
+  starter-kit/SESSION_RUNNER.md      ≈18,921 tok  18,900 tok  over
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  read-set total 70,132 B / no ceiling declared
+  starter-kit/SESSION_RUNNER.md — ≈18,921 tokens exceeds the 18,900-token ceiling by 21 — at 2.8107 B/token (measured)
+budget exit 2
+runner bytes: 53184  (the parent 19a5769b: 52839)
+
+== B. ced2c823 alone onto that tip (git merge-tree, then cherry-pick on a throwaway branch)
+merge-tree exit 0
+cherry-pick exit 0
+3	3	.context-budget.json
+1	1	starter-kit/SESSION_RUNNER.md
+  starter-kit/SESSION_RUNNER.md         53,100 B           —  ok
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  read-set total 70,048 B / no ceiling declared
+  nothing over budget
+budget exit 0
+back on pr2b/candidate 09ac2846, 0 dirty paths
