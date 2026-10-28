@@ -1,0 +1,39 @@
+check-links: OK — 116 relative link(s) across 23 distributed markdown files resolve in the simulated adopter tree (legacy layout).
+check-links: FAIL — 35 dangling link(s) in the simulated adopter tree (new layout):
+  methodology/SESSION_RUNNER.md:39  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+  methodology/SESSION_RUNNER.md:74  ->  docs/methodology/ITERATIVE_METHODOLOGY.md#multi-session-campaigns
+  methodology/RECOMMENDED_SKILLS.md:5  ->  docs/methodology/ITERATIVE_METHODOLOGY.md#recommended-skills
+  methodology/RECOMMENDED_SKILLS.md:28  ->  docs/methodology/ITERATIVE_METHODOLOGY.md
+  methodology/RECOMMENDED_SKILLS.md:29  ->  docs/methodology/ITERATIVE_METHODOLOGY.md
+  methodology/RECOMMENDED_SKILLS.md:30  ->  docs/methodology/ITERATIVE_METHODOLOGY.md
+  methodology/RECOMMENDED_SKILLS.md:31  ->  docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  methodology/RECOMMENDED_SKILLS.md:32  ->  docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  methodology/RECOMMENDED_SKILLS.md:37  ->  docs/methodology/ITERATIVE_METHODOLOGY.md
+  methodology/RECOMMENDED_SKILLS.md:39  ->  docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  methodology/RECOMMENDED_SKILLS.md:54  ->  docs/methodology/workstreams/AUDIT_WORKSTREAM.md
+  methodology/RECOMMENDED_SKILLS.md:55  ->  docs/methodology/workstreams/AUDIT_WORKSTREAM.md
+  methodology/RECOMMENDED_SKILLS.md:56  ->  docs/methodology/workstreams/AUDIT_WORKSTREAM.md
+  methodology/RECOMMENDED_SKILLS.md:77  ->  docs/methodology/ITERATIVE_METHODOLOGY.md#parallel-actors
+  methodology/RECOMMENDED_SKILLS.md:87  ->  docs/methodology/ITERATIVE_METHODOLOGY.md
+  methodology/RECOMMENDED_SKILLS.md:92  ->  docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  methodology/BOOTSTRAP.md:327  ->  docs/methodology/ITERATIVE_METHODOLOGY.md
+  methodology/CHANGELOG.md:11  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+  methodology/HANDOFFS.md:144  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+  methodology/ITERATIVE_METHODOLOGY.md:186  ->  ../../CONTEXT_TEMPLATE.md
+  methodology/ITERATIVE_METHODOLOGY.md:186  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/ITERATIVE_METHODOLOGY.md:218  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/ITERATIVE_METHODOLOGY.md:296  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/ITERATIVE_METHODOLOGY.md:343  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/ITERATIVE_METHODOLOGY.md:414  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/ITERATIVE_METHODOLOGY.md:418  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/ITERATIVE_METHODOLOGY.md:430  ->  ../../RECOMMENDED_SKILLS.md
+  methodology/workstreams/ARCHITECTURE_WORKSTREAM.md:189  ->  ../../../RECOMMENDED_SKILLS.md
+  methodology/workstreams/ARCHITECTURE_WORKSTREAM.md:218  ->  ../../../SAFEGUARDS.md
+  methodology/workstreams/DEVELOPMENT_WORKSTREAM.md:62  ->  ../../../RECOMMENDED_SKILLS.md
+  methodology/workstreams/AUDIT_WORKSTREAM.md:24  ->  ../../../RECOMMENDED_SKILLS.md
+  methodology/workstreams/TEMPLATE_WORKSTREAM.md:18  ->  ../../../RECOMMENDED_SKILLS.md
+  methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md:25  ->  ../../../SESSION_RUNNER.md
+  methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md:23  ->  ../../../SESSION_RUNNER.md
+  methodology/workstreams/TEMPLATE_CAMPAIGN.md:17  ->  ../../../SESSION_RUNNER.md
+
+Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.
