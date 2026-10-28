@@ -273,6 +273,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-27-4.md` (1 record(s), 54,367 B → 42,911 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-27 → 2026-10-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-27-4.md`](docs/archive/HANDOFFS-through-2026-10-27-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-27-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-27-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,367 B → 42,911 B (−21.1%).
+
 ### 2026-10-27 · [ad hoc] S386 push -- fork `main` fast-forwarded `3fdb56b9..d0b687f3` (6 commits: the trim, the fold, S386's claim, its two work commits and its close-out); fork `origin` only
 
 Taken at his Phase 0 tick ('Push main to fork origin at close-out'), after the close-out commit and the guards: the remote `main` equalled `origin/main` (`3fdb56b9`), that commit was an ancestor of `main`, the count was 6, the tree was clean. Read back after the push: `origin/main` = `main` = `d0b687f3`, 0 ahead and 0 behind. `pr2b/candidate` (`19417746`) and `pr2/candidate` (`3cba1e50`) are local branches and were not pushed. Nothing was sent to `KJ5HST/methodology`.
