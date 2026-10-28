@@ -273,6 +273,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-27 · [ad hoc] S385 push -- fork `main` fast-forwarded `613a9bbb..357dc8ce` (4 commits: S385's claim, its two work commits and its close-out); fork `origin` only
+
+Taken at his close-out go-ahead ('Push to fork origin', answered after the deliverable was chosen; the Phase 0 picker did not carry it). Guards ran in one block that stopped on any miss: the remote's `main` equalled the local `origin/main` (`613a9bbb`), that sha is an ancestor of `main`, the count to push was 4, and `origin` is `https://github.com/rmsharp/methodology.git` (the fork). Pushed as `git push origin main`; `git ls-remote origin refs/heads/main` afterwards read `357dc8ce073a332ea34f42b6a296375b56773dae`, equal to local `main`; `git ls-remote upstream refs/heads/main` still reads `d50ce290`. `pr2b/candidate` (`97425a70`) and `pr2/candidate` are local branches and were not pushed. This record is the only commit made after the push. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-27 · [ad hoc] S385 close-out -- PR2b layer 9 built and verified: the candidate's commit `261b8d36` (the sync layer) added to local branch `pr2b/candidate` (`97425a70`); the fork's gates pass 24 of 24 on the first run; nothing sent to `KJ5HST/methodology`
 
 S385's deliverable is done: layer 9 of PR2b, 5 files, +447 / -108, applied cleanly and equal to the original; 13/13 gates and 298/0/0 in a clean clone; it adds 0 merge regions against #98 and #96 (record `docs/planning/pr-composition-evidence/pr2b-layer9-record.md`, work entries below). The fork's own `quality_ratchet.py --run` on `32b8d17c` read 24/24 pass, 0 fail, 0 unmeasured, results `32858fe46628`, manifest `102234f3acf8` (22 min 34 s; the S384 red did not repeat, and the run does not say why it happened). The `HANDOFFS.md` receipt is complete (self_score 8, predecessor_score 9 for S384; five receipts now, so S386's Phase 0 trims two). Nothing in the working tree was left uncommitted; the push to fork `origin` follows at his tick, with its own entry.
