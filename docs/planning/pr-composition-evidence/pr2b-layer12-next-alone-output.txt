@@ -1,0 +1,11 @@
+# each remaining candidate commit (numbers 13 to 20 of pr2/candidate, in its order) applied ALONE onto the tip 19a5769b,
+# by: git merge-tree --write-tree --name-only --merge-base=<commit>^ 19a5769b <commit>   (exit 0 clean, 1 conflicts)
+c8d43754 exit 0  docs(layout): the operating files say where the methodology files sit, and their reference
+04918ce3 exit 0  docs(layout): the framework documents and the skills index hold in both layouts
+23e6e66a exit 0  docs(layout): the workstreams name the runner, the skills index and the safeguards without
+0248ebf2 exit 0  docs(layout): the workstreams name the runner, the skills index and the safeguards without
+18cda0f2 exit 0  test(layout): the distributed documents must resolve in both layouts
+2942e46c exit 0  feat(layout): bin/migrate-layout moves a legacy project's methodology files under methodol
+ab35e965 exit 1  test(layout): the migration tool's suite, its fast classes in the shell suite and its two 
+      conflicted: .quality-gates.json
+5afc9621 exit 0  docs(ratchet): a cited gate run that reads unmeasured gates is repaired or names them
