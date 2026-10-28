@@ -1,0 +1,47 @@
+# PR2b layers 14 to 17 build output (S390): four cherry-picks onto 09ac2846 in the scratch clone, in this order.
+09ac28460780ca9258de0c5e4d776df5a8895cf6
+cherry-pick ced2c823 exit 0 -> 6ce88cdf  patch-id orig 79fa9e8cce3b new 79fa9e8cce3b EQUAL  docs(runner): drop the layout paragraph's duplicate example command; the runner 
+cherry-pick 04918ce3 exit 0 -> 36660db6  patch-id orig 9ff36b45e5e7 new 9ff36b45e5e7 EQUAL  docs(layout): the framework documents and the skills index hold in both layouts
+cherry-pick 23e6e66a exit 0 -> 1e61fab2  patch-id orig e221cf849f0c new e221cf849f0c EQUAL  docs(layout): the workstreams name the runner, the skills index and the safeguar
+cherry-pick 0248ebf2 exit 0 -> 109375f4  patch-id orig a022aff3366b new a022aff3366b EQUAL  docs(layout): the workstreams name the runner, the skills index and the safeguar
+tip 109375f4de5be2919d7f16ef72882ab136966198  tree 5814dafb  commits on upstream/main: 17
+dirty paths: 0
+== group numstat vs 09ac2846
+3	3	.context-budget.json
+4	0	FRAMEWORK_APPARATUS.md
+4	3	HOW_TO_USE.md
+7	7	ITERATIVE_METHODOLOGY.md
+1	1	starter-kit/CHANGELOG.md
+14	14	starter-kit/RECOMMENDED_SKILLS.md
+1	1	starter-kit/SESSION_RUNNER.md
+2	2	workstreams/ARCHITECTURE_WORKSTREAM.md
+1	1	workstreams/AUDIT_WORKSTREAM.md
+1	1	workstreams/DEVELOPMENT_WORKSTREAM.md
+1	1	workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+1	1	workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+1	1	workstreams/TEMPLATE_CAMPAIGN.md
+1	1	workstreams/TEMPLATE_WORKSTREAM.md
+files 14 added 42 deleted 37
+
+== budget at the group's tip 109375f4
+──────────────────────────────────────────────────────────────────────────
+  context budget  OK   resident 51,487 B ≈ 17,572 tok
+──────────────────────────────────────────────────────────────────────────
+  file                                      size     ceiling  status
+  CLAUDE.md                             51,487 B    59,168 B  ok
+  starter-kit/SESSION_RUNNER.md         53,100 B           —  ok
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  starter-kit/FRAMEWORK_LEARNINGS.md    17,621 B    73,728 B  ok
+──────────────────────────────────────────────────────────────────────────
+  resident total 51,487 B / 59,168 B ceiling   growth run 1/10
+  read-set total 70,048 B / no ceiling declared
+──────────────────────────────────────────────────────────────────────────
+  nothing over budget
+
+budget exit 0
+
+== cheap suites (serial) at the tip
+test_layout_resolver: exit 0  Ran 76 tests in 1.816s  OK  (1 s)
+test_checker_layouts: exit 0  Ran 11 tests in 1.443s  OK  (2 s)
+test_sync_layouts: exit 0  Ran 82 tests in 33.465s  OK  (34 s)
+test_methodology_dashboard: exit 0  Ran 395 tests in 45.697s  OK  (45 s)

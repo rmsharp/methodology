@@ -1,0 +1,329 @@
+# PR2b layers 14 to 17 measurements (S390), 2026-10-28. Repository root, pr2b/candidate 109375f4; one run of pr2b-layer-measure.py per commit; refs: upstream/main d50ce290, #98 head 65990cda6afdff7242a63b6a47dd5a2eb120b55a, #96 head ad5c980f345758df3dae8276e778c0883ded833c.
+
+################ layer 14: 6ce88cdf docs(runner): drop the layout paragraph's duplicate example command; the runner reads unde
+== 1. commit and parent
+commit 6ce88cdf (tree 87005240)   parent 09ac2846 (tree 6f1718e3)
+subject: docs(runner): drop the layout paragraph's duplicate example command; the runner reads under its ceiling again
+
+== 2. changed files (git diff --numstat parent commit)
+3	3	.context-budget.json
+1	1	starter-kit/SESSION_RUNNER.md
+files: 2
+
+== 3. the literal scanner on the parent's tree and on the commit's tree
+parent 09ac2846: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+commit 6ce88cdf: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+sites per file, parent -> commit (only files that differ):
+    (none differ)
+acknowledged per file, parent -> commit (only files that differ):
+    (none differ)
+
+== 3b. what became of the parent's counted site lines in the files whose site count fell (CRUDE)
+   A site line 'survives' if its first 60 characters occur verbatim in the commit's version of the file
+   (as code, prose or an acknowledged line). Not a 1:1 map: a rewritten line does not survive, and a new
+   acknowledged line has no parent counterpart. It shows whether the counts are the SAME lines.
+
+== 4. fork-internal references on the commit's added lines (regex SCRUB; rough)
+       0 of     3 added lines  .context-budget.json
+       0 of     1 added lines  starter-kit/SESSION_RUNNER.md
+    0 of 4 added lines in total
+regex: BL-\d+|\bS\d{3}\b|\bthe fork\b|[Ll]earning #\d+|plan C\d+|\(plan |decision D\d+|phase P\d+|\bP[1-9]\b.*phase|overruled|\bhe\b (?:overruled|decided)
+
+== 5. the merge of the commit with each ref (merge-tree, empty attribute tree = GitHub's view)
+   for each ref: the commit, its parent (what the earlier layers already conflict in), and, for a ref other
+   than upstream/main, upstream/main itself (what the ref conflicts in before any layer is added)
+commit   6ce88cdf with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 8700524020e1
+parent   09ac2846 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 6f1718e35749
+commit   6ce88cdf with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree ee40ddbf81c4
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+parent   09ac2846 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree dc97929873fa
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+control  d50ce290 with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 8c62d9dbb59e
+commit   6ce88cdf with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree cf32ca4e4411
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+parent   09ac2846 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 5dfe4f984c9b
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+control  d50ce290 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 719329bfbe8a
+    CHANGELOG.md: 1 conflict region(s)
+    total: 1 region(s) in 1 file(s)
+
+################ layer 15: 36660db6 docs(layout): the framework documents and the skills index hold in both layouts
+== 1. commit and parent
+commit 36660db6 (tree 96f96a28)   parent 6ce88cdf (tree 87005240)
+subject: docs(layout): the framework documents and the skills index hold in both layouts
+
+== 2. changed files (git diff --numstat parent commit)
+4	0	FRAMEWORK_APPARATUS.md
+4	3	HOW_TO_USE.md
+7	7	ITERATIVE_METHODOLOGY.md
+1	1	starter-kit/CHANGELOG.md
+14	14	starter-kit/RECOMMENDED_SKILLS.md
+files: 5
+
+== 3. the literal scanner on the parent's tree and on the commit's tree
+parent 6ce88cdf: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+commit 36660db6: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+sites per file, parent -> commit (only files that differ):
+    (none differ)
+acknowledged per file, parent -> commit (only files that differ):
+    (none differ)
+
+== 3b. what became of the parent's counted site lines in the files whose site count fell (CRUDE)
+   A site line 'survives' if its first 60 characters occur verbatim in the commit's version of the file
+   (as code, prose or an acknowledged line). Not a 1:1 map: a rewritten line does not survive, and a new
+   acknowledged line has no parent counterpart. It shows whether the counts are the SAME lines.
+
+== 4. fork-internal references on the commit's added lines (regex SCRUB; rough)
+       0 of     4 added lines  FRAMEWORK_APPARATUS.md
+       0 of     4 added lines  HOW_TO_USE.md
+       0 of     7 added lines  ITERATIVE_METHODOLOGY.md
+       0 of     1 added lines  starter-kit/CHANGELOG.md
+       0 of    14 added lines  starter-kit/RECOMMENDED_SKILLS.md
+    0 of 30 added lines in total
+regex: BL-\d+|\bS\d{3}\b|\bthe fork\b|[Ll]earning #\d+|plan C\d+|\(plan |decision D\d+|phase P\d+|\bP[1-9]\b.*phase|overruled|\bhe\b (?:overruled|decided)
+
+== 5. the merge of the commit with each ref (merge-tree, empty attribute tree = GitHub's view)
+   for each ref: the commit, its parent (what the earlier layers already conflict in), and, for a ref other
+   than upstream/main, upstream/main itself (what the ref conflicts in before any layer is added)
+commit   36660db6 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 96f96a284d37
+parent   6ce88cdf with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 8700524020e1
+commit   36660db6 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree ac966fcc194c
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+parent   6ce88cdf with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree ee40ddbf81c4
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+control  d50ce290 with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 8c62d9dbb59e
+commit   36660db6 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 34330d3ef876
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+parent   6ce88cdf with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree cf32ca4e4411
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+control  d50ce290 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 719329bfbe8a
+    CHANGELOG.md: 1 conflict region(s)
+    total: 1 region(s) in 1 file(s)
+
+################ layer 16: 1e61fab2 docs(layout): the workstreams name the runner, the skills index and the safeguards without
+== 1. commit and parent
+commit 1e61fab2 (tree 1ca9f960)   parent 36660db6 (tree 96f96a28)
+subject: docs(layout): the workstreams name the runner, the skills index and the safeguards without a path (1 of 2)
+
+== 2. changed files (git diff --numstat parent commit)
+2	2	workstreams/ARCHITECTURE_WORKSTREAM.md
+1	1	workstreams/AUDIT_WORKSTREAM.md
+1	1	workstreams/DEVELOPMENT_WORKSTREAM.md
+1	1	workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+1	1	workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+files: 5
+
+== 3. the literal scanner on the parent's tree and on the commit's tree
+parent 36660db6: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+commit 1e61fab2: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+sites per file, parent -> commit (only files that differ):
+    (none differ)
+acknowledged per file, parent -> commit (only files that differ):
+    (none differ)
+
+== 3b. what became of the parent's counted site lines in the files whose site count fell (CRUDE)
+   A site line 'survives' if its first 60 characters occur verbatim in the commit's version of the file
+   (as code, prose or an acknowledged line). Not a 1:1 map: a rewritten line does not survive, and a new
+   acknowledged line has no parent counterpart. It shows whether the counts are the SAME lines.
+
+== 4. fork-internal references on the commit's added lines (regex SCRUB; rough)
+       0 of     2 added lines  workstreams/ARCHITECTURE_WORKSTREAM.md
+       0 of     1 added lines  workstreams/AUDIT_WORKSTREAM.md
+       0 of     1 added lines  workstreams/DEVELOPMENT_WORKSTREAM.md
+       0 of     1 added lines  workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+       0 of     1 added lines  workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+    0 of 6 added lines in total
+regex: BL-\d+|\bS\d{3}\b|\bthe fork\b|[Ll]earning #\d+|plan C\d+|\(plan |decision D\d+|phase P\d+|\bP[1-9]\b.*phase|overruled|\bhe\b (?:overruled|decided)
+
+== 5. the merge of the commit with each ref (merge-tree, empty attribute tree = GitHub's view)
+   for each ref: the commit, its parent (what the earlier layers already conflict in), and, for a ref other
+   than upstream/main, upstream/main itself (what the ref conflicts in before any layer is added)
+commit   1e61fab2 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 1ca9f960d2e6
+parent   36660db6 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 96f96a284d37
+commit   1e61fab2 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree 84a1224786f9
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+parent   36660db6 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree ac966fcc194c
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+control  d50ce290 with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 8c62d9dbb59e
+commit   1e61fab2 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 93cfdc02cece
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+parent   36660db6 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 34330d3ef876
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+control  d50ce290 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 719329bfbe8a
+    CHANGELOG.md: 1 conflict region(s)
+    total: 1 region(s) in 1 file(s)
+
+################ layer 17: 109375f4 docs(layout): the workstreams name the runner, the skills index and the safeguards without
+== 1. commit and parent
+commit 109375f4 (tree 5814dafb)   parent 1e61fab2 (tree 1ca9f960)
+subject: docs(layout): the workstreams name the runner, the skills index and the safeguards without a path (2 of 2)
+
+== 2. changed files (git diff --numstat parent commit)
+1	1	workstreams/TEMPLATE_CAMPAIGN.md
+1	1	workstreams/TEMPLATE_WORKSTREAM.md
+files: 2
+
+== 3. the literal scanner on the parent's tree and on the commit's tree
+parent 1e61fab2: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+commit 109375f4: check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted   (exit 0)
+  acknowledged (a `layout: ok -- reason` marker, not counted above), by file:
+      12  .githooks/pre-commit
+       6  bin/check-handoff
+       1  bin/check-layout-literals
+       1  bin/check-ledger
+       3  bin/status
+       4  starter-kit/context_budget.py
+      83  starter-kit/methodology_dashboard.py
+       9  starter-kit/methodology_trim.py
+       5  starter-kit/quality_ratchet.py
+sites per file, parent -> commit (only files that differ):
+    (none differ)
+acknowledged per file, parent -> commit (only files that differ):
+    (none differ)
+
+== 3b. what became of the parent's counted site lines in the files whose site count fell (CRUDE)
+   A site line 'survives' if its first 60 characters occur verbatim in the commit's version of the file
+   (as code, prose or an acknowledged line). Not a 1:1 map: a rewritten line does not survive, and a new
+   acknowledged line has no parent counterpart. It shows whether the counts are the SAME lines.
+
+== 4. fork-internal references on the commit's added lines (regex SCRUB; rough)
+       0 of     1 added lines  workstreams/TEMPLATE_CAMPAIGN.md
+       0 of     1 added lines  workstreams/TEMPLATE_WORKSTREAM.md
+    0 of 2 added lines in total
+regex: BL-\d+|\bS\d{3}\b|\bthe fork\b|[Ll]earning #\d+|plan C\d+|\(plan |decision D\d+|phase P\d+|\bP[1-9]\b.*phase|overruled|\bhe\b (?:overruled|decided)
+
+== 5. the merge of the commit with each ref (merge-tree, empty attribute tree = GitHub's view)
+   for each ref: the commit, its parent (what the earlier layers already conflict in), and, for a ref other
+   than upstream/main, upstream/main itself (what the ref conflicts in before any layer is added)
+commit   109375f4 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 5814dafb37db
+parent   1e61fab2 with d50ce290: merge-tree exit 0 (0 clean, 1 conflicts), tree 1ca9f960d2e6
+commit   109375f4 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree d40fd616629f
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+parent   1e61fab2 with 65990cda: merge-tree exit 1 (0 clean, 1 conflicts), tree 84a1224786f9
+    .quality-gates.json: 1 conflict region(s)
+    starter-kit/methodology_trim.py: 3 conflict region(s)
+    tools/test_methodology_trim.py: 1 conflict region(s)
+    total: 5 region(s) in 3 file(s)
+control  d50ce290 with 65990cda: merge-tree exit 0 (0 clean, 1 conflicts), tree 8c62d9dbb59e
+commit   109375f4 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 589b77748ad9
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+parent   1e61fab2 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 93cfdc02cece
+    .quality-gates.json: 2 conflict region(s)
+    CHANGELOG.md: 1 conflict region(s)
+    bin/tests.sh: 1 conflict region(s)
+    total: 4 region(s) in 3 file(s)
+control  d50ce290 with ad5c980f: merge-tree exit 1 (0 clean, 1 conflicts), tree 719329bfbe8a
+    CHANGELOG.md: 1 conflict region(s)
+    total: 1 region(s) in 1 file(s)
