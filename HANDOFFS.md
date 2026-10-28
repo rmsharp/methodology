@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S385
+date: 2026-10-27
+status: pending
+active_task: **PR2b layer 9: add the candidate's commit 9 (`261b8d36`: `bin/sync`, `bin/status`, `bin/check-links` and `bin/_manifest_reader.py` find a project's files at the root or under `methodology/`; 5 files by `git show --numstat`, with `tools/test_layout_resolver.py` +2/-1, to be re-read) to the local branch `pr2b/candidate` (`07ec025b`; layer 8's commit stays an ancestor) in a scratch `--no-local` clone, then run `layer-verify.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. Commit 10 (`0aa1897e`, the sync suite and its two gates) and the grouping plan are NOT part of this session.** Chosen at his Phase 0 picker (the recommended option). No go-aheads were offered this session; a push of the work commits to fork `origin` is asked once, at close-out.
+```
+
+```handoff
 session: S384
 date: 2026-10-27
 status: complete
