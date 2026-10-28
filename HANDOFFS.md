@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S390
+date: 2026-10-28
+status: pending
+active_task: **PR2b layers 14 to 17, one documentation group: add four commits of the candidate to the local branch `pr2b/candidate` (`09ac2846`) in this order, each a verbatim replay (`git cherry-pick -x`) in a scratch `--no-local` clone: series commit 31 `ced2c823` (`docs(runner)`: drop the layout paragraph's duplicate example command; the cure for layer 13's red budget line, moved up from after commit 30), then 14 `04918ce3` (`docs(layout)`: the framework documents and the skills index hold in both layouts), 15 `23e6e66a` and 16 `0248ebf2` (`docs(layout)`: the workstreams name the runner, the skills index and the safeguards without a path, 1 of 2 and 2 of 2). Each is expected to equal its original by `git patch-id --stable`. The group is verified once, at its tip, with `pr2b-layer-driver.sh` in a clean clone, serially, after the budget line is read first (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Yes, trim it (Recommended)', 'Cure plus docs group: 31, then 14 to 16, as one group' (which is his approval of the plan edit that moves commit 31 up) and 'Yes, push to fork origin (Recommended)'. Done before this claim: `HANDOFFS.md` trimmed 5 to 3 (`22d53c70`) and the fold (`7f91f572`).**
+```
+
+```handoff
 session: S389
 date: 2026-10-28
 status: complete
