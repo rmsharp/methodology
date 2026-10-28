@@ -273,6 +273,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-27-3.md` (2 record(s), 65,093 B → 42,624 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-27 → 2026-10-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-27-3.md`](docs/archive/HANDOFFS-through-2026-10-27-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-27-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-27-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 65,093 B → 42,624 B (−34.5%).
+
 ### 2026-10-27 · [ad hoc] S385 push -- fork `main` fast-forwarded `613a9bbb..357dc8ce` (4 commits: S385's claim, its two work commits and its close-out); fork `origin` only
 
 Taken at his close-out go-ahead ('Push to fork origin', answered after the deliverable was chosen; the Phase 0 picker did not carry it). Guards ran in one block that stopped on any miss: the remote's `main` equalled the local `origin/main` (`613a9bbb`), that sha is an ancestor of `main`, the count to push was 4, and `origin` is `https://github.com/rmsharp/methodology.git` (the fork). Pushed as `git push origin main`; `git ls-remote origin refs/heads/main` afterwards read `357dc8ce073a332ea34f42b6a296375b56773dae`, equal to local `main`; `git ls-remote upstream refs/heads/main` still reads `d50ce290`. `pr2b/candidate` (`97425a70`) and `pr2/candidate` are local branches and were not pushed. This record is the only commit made after the push. Nothing sent to `KJ5HST/methodology`.
