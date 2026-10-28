@@ -273,6 +273,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-27-5.md` (1 record(s), 54,468 B → 42,680 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-27 → 2026-10-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-27-5.md`](docs/archive/HANDOFFS-through-2026-10-27-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-27-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-27-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,468 B → 42,680 B (−21.6%).
+
 ### 2026-10-28 · [ad hoc] S387 correction -- three stale figures in the S387 receipt (corrected in place) and in the S387 close-out entry (left as written): the file's size (54,101 B, is 54,468 B), the room left (11,435 B, is 11,068 B) and the receipt's own size (11,635 B, is 12,012 B)
 
 I measured the file right after splicing the receipt in, then lengthened the receipt's next_steps item 2 by 367 B and did not measure again before writing the figures into the receipt and the close-out entry: a count written before the edit that changes it. Re-measured now (`wc -c HANDOFFS.md` 54,468 B; `python3 bin/check-handoff` 'file size: 54,468 B of 65,536 B ceiling; 11,068 B left'; the S387 block 12,012 B, under the 12,288 B record budget). In `HANDOFFS.md` the receipt's next_steps item 2 now carries the measured figures (same number of digits, so the file stays 54,468 B). **The close-out entry above keeps the wrong figures, because a committed ledger entry is never edited** (the ledger hook refused my first attempt and I restored it); this entry is the correction, and S388 should read the receipt, not the close-out entry, for the numbers. The consequence for S388 is the same as written (a trim question), with 11,068 B as the receipt limit. **Local only:** the push he approved covered the six commits it named, and this one edits a receipt, so it is not a ledger-only push record; fork `origin/main` stays at `931ff303` and local `main` is one commit ahead until his next push go-ahead. Nothing sent to `KJ5HST/methodology`.
