@@ -1,0 +1,24 @@
+# PR2b layer 11 scanner check (S387). Commit 505541c3's bin/check-layout-literals (the two NOT_SCANNED_ALWAYS exemptions removed), taken with git show and run by 'python3 -I' over two trees. Not a gate and not an expectation of the claim-time file (E7 was about layer 11's own scanner); a read of the layer-10 record's section 7.
+# Tree 877ba05d (layer 11, the checkers taught the layout):
+not scanned: bin/_manifest.py (the manifest is the table of paths itself)
+not scanned: bin/tests.sh (the suite encodes the layout and is parameterised over both (plan C13))
+not scanned: tools/methodology_dashboard.py (byte-identical twin of starter-kit/methodology_dashboard.py, scanned once)
+check-layout-literals: scanned 14 files; 0 sites (0 path, 0 text); 124 acknowledged; 189 prose not counted
+
+# Tree 19417746 (layer 10, the checkers not yet taught):
+bin/check-handoff: 6 sites
+  bin/check-handoff:104 [path bare] GATES_MANIFEST = ".quality-gates.json"  -> .quality-gates.json
+  bin/check-handoff:309 [text bare] "(a union merge of HANDOFFS.md does this; resolve keep-both with "  -> HANDOFFS.md
+  bin/check-handoff:400 [text bare] "`quality_ratchet: N/M pass …` summary line of `quality_ratchet.py --run` into "  -> quality_ratchet.py
+  bin/check-handoff:420 [path bare] root_file = root / "HANDOFFS.md"  -> HANDOFFS.md
+  bin/check-handoff:428 [text bare] description="Validate the newest `handoff` receipt block in a HANDOFFS.md ledger."  -> HANDOFFS.md
+  bin/check-handoff:430 [text bare] p.add_argument("--file", help="explicit HANDOFFS.md path to check (what bin/tests.sh uses)")  -> HANDOFFS.md
+bin/check-ledger: 4 sites
+  bin/check-ledger:98 [text bare] ap = argparse.ArgumentParser(description="Structural checks on a CHANGELOG.md action ledger.")  -> CHANGELOG.md
+  bin/check-ledger:99 [text bare] ap.add_argument("--file", help="ledger to check (default: CHANGELOG.md at the repository root)")  -> CHANGELOG.md
+  bin/check-ledger:101 [text layout-path] help="also check the archived shards, docs/archive/CHANGELOG-*.md, beside the ledger")  -> 
+  bin/check-ledger:103 [path bare] path = Path(args.file) if args.file else repo_root() / "CHANGELOG.md"  -> CHANGELOG.md
+not scanned: bin/_manifest.py (the manifest is the table of paths itself)
+not scanned: bin/tests.sh (the suite encodes the layout and is parameterised over both (plan C13))
+not scanned: tools/methodology_dashboard.py (byte-identical twin of starter-kit/methodology_dashboard.py, scanned once)
+check-layout-literals: scanned 14 files; 10 sites (3 path, 7 text); 117 acknowledged; 188 prose not counted
