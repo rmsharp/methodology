@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S386
+date: 2026-10-27
+status: pending
+active_task: **PR2b layer 10: add the candidate's commit 10 (`0aa1897e`, `test(sync): the sync layer's own suite, its two gates, and the scanner's scope`; it lives on `pr2/candidate`; 5 files by `git show --numstat`: `tools/test_sync_layouts.py` 986/0, `.quality-gates.json` 17/2, `bin/tests.sh` 10/0, `tools/test_layout_resolver.py` 7/1, `bin/check-layout-literals` 2/0, to be re-read) to the local branch `pr2b/candidate` (`97425a70`; layer 9's commit stays an ancestor) in a scratch `--no-local` clone, then run `pr2b-layer-driver.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Commit 10: the sync layer's suite (Recommended)' and the push tick for close-out (fork `origin` only); he left the trim unticked, I asked once more and he answered 'Yes, trim now' (trim `814d6307`, fold `f919afba`, both before this claim).**
+```
+
+```handoff
 session: S385
 date: 2026-10-27
 status: complete
