@@ -1,0 +1,14 @@
+# S385: layer 9's tree (97425a70), a project synced by its bin/sync --mode=commit and read by its bin/status, then the two forms of Test 15's count.
+# Commands run in the clean clone 97425a70 (hooks not armed):
+#   P="$(mktemp -d)"; git -C "$P" init -q; bin/sync "$P" --mode=commit; OUT="$(bin/status "$P")"
+#   OLD: echo "$OUT" | grep -c "$N"      NEW: echo "$OUT" | grep -c "^$N "      (N = basename "$P")
+bin/sync exit 0
+bin/status exit 0
+--- first 4 lines of bin/status (project name shown as <project>):
+source: local (/private/tmp/claude-501/-Users-rmsharp-Development-methodology/d3716e23-6c34-4f83-af85-8a1cb736bb21/scrat
+layout: <project>  legacy
+Project         File                                                                         Disposition  Status 
+<project>  SESSION_RUNNER.md                                                            tracked      current
+manifest entries: 30
+OLD assertion counts (every line naming the project): 31
+NEW assertion counts (lines starting with the name and a space): 30
