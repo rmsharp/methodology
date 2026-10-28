@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S388
+date: 2026-10-28
+status: pending
+active_task: **PR2b layer 12: add the candidate's commit 12 (`505541c3`, `test(checkers): the checkers' own suite, its gate, and the layout scanner now reads both`; it lives on `pr2/candidate`, its parent is layer 11's original `a459b8bb`; 5 files by `git show --numstat`: `tools/test_checker_layouts.py` 204/0, `.quality-gates.json` 9/1, `bin/tests.sh` 10/0, `tools/test_layout_resolver.py` 7/4, `bin/check-layout-literals` 0/2) to the local branch `pr2b/candidate` (`877ba05d`; layer 11 stays its parent) in a scratch `--no-local` clone, then run `pr2b-layer-driver.sh` and the PR2 row's checks on it in a clean clone, serially (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Yes, trim 4 to 3 (Recommended)', "Commit 12: checkers' suite (Recommended)" and 'Leave it at above four (Recommended)'. Done before this claim: `HANDOFFS.md` trimmed 4 to 3 (`0e5aea9a`, fold `3378f6ae`).**
+```
+
+```handoff
 session: S387
 date: 2026-10-27
 status: complete
