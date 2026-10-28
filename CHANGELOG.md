@@ -277,6 +277,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-27-6.md` (2 record(s), 65,476 B → 41,852 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-27 → 2026-10-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-27-6.md`](docs/archive/HANDOFFS-through-2026-10-27-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-27-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-27-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 65,476 B → 41,852 B (−36.1%).
+
 ### 2026-10-28 · [ad hoc] S389 direction -- his answers after the close-out: Terrell is in favor of the folder move, and the documentation changes are to be grouped; the rebuild proceeds, grouped; local only, not pushed
 
 He asked, after the receipt and the push, whether the rebuild is premature while Terrell has not decided on the other open pull requests. What I read to answer (read-only `gh` and `git log`, 2026-10-28): #98 (2 days) and #96 (8 days) are inside Terrell's usual wait, since #94 and #92 waited 21 and 19 days and were merged in the same minute, and #84 to #88 waited 10 to 14 days and were merged the same day; I found no upstream issue about the folder move (issue titles and bodies only; pull-request comments and the planning documents were not searched). He then said: 'I spoke to Terrell and he is in favor of the folder move.' (said outside GitHub, so there is no link to cite) and, before that, 'If we proceed, we will want to group the documentation changes to the extent possible.' **Recorded:** the rebuild proceeds and the documentation steps are grouped. Clearly covered: the Markdown-only steps 14 to 16, 20 and 31 of `pr2/candidate` (`git show --name-only` per commit: 5, 5, 2, 2 and 1 `.md` files); steps 21 to 30 only edit comments and printed text in code files, so whether they count is asked at the S390 picker. My proposed grouping, **unmeasured** (each group's order and clean application still has to be tested with `pr2b-next-alone.sh`): 31 with 14 to 16; 17 to 19 (19 conflicts alone until 17 is in); 20 with 32; 21 to 27; 28 to 30; 33. About six checked steps instead of twenty, an estimate. The receipt `S389` gains its item 7 and its '(needs his word)' becomes 'his word is given'; `HANDOFFS.md` is 65,476 B of 65,536 B, so S390's Phase 0 trim of two receipts is not optional. This commit is not pushed: fork `main` is one commit ahead of `origin/main` (`4d524d1d`), and the push waits for his tick. Nothing was sent to `KJ5HST/methodology`.
