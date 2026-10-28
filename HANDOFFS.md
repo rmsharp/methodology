@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S391
+date: 2026-10-28
+status: pending
+active_task: **PR2b layers 18 to 20, one code group: add three commits of the candidate to the local branch `pr2b/candidate` (`109375f4`) in this order, each a verbatim replay (`git cherry-pick -x`) in a scratch `--no-local` clone: series commit 17 `18cda0f2` (test: the distributed documents must resolve in both layouts), 18 `2942e46c` (`bin/migrate-layout`, the tool that moves a project's files under `methodology/`) and 19 `ab35e965` (the tool's suite, its fast classes in the shell suite and its two gates). Each is expected to equal its original by `git patch-id --stable`; 19 conflicts alone in `.quality-gates.json` and should clear once 17 is in (a forecast to measure). The group is verified once, at its tip, with `pr2b-layer-driver.sh` in a clean clone, serially, after the read-set budget and the three commits' overlap with the open heads are read first from the repository root (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Commits 17-19 as one group (Recommended)' and 'Yes, push to fork origin (Recommended)'. No trim before this claim (four receipts; the rule fires at S392).**
+```
+
+```handoff
 session: S390
 date: 2026-10-28
 status: complete
