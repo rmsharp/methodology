@@ -1,0 +1,26 @@
+PR3 re-run (S396): expectations, written BEFORE the run. Each is a prediction with a confidence, scored afterwards in pr3b-record.md.
+Candidate = pr2b/candidate 47637be2 (33 commits on upstream/main d50ce290). Baseline = S326's pr3-adopters-output.md (candidate ced2c82 on f34769f).
+Adopters with the SAME HEAD as at S326 ("unmoved", 8): model_project_constructor, feedback-loop-comparison, Philippians, airqino,
+chat_verification, church_growth, dalia_martinez_funeral, claude_work (no commits).
+Adopters that MOVED since S326 (4): nprcgenekeepr (623 commits), vscode_quarto_ext (374), wsfct (14), mts-system (2).
+Caveat on independence: E1, E2 and E5 all ride one fact (an adopter's blob is a fork version, so the candidate's changed history does not
+reach it); a clean score on the three is weaker evidence than its count.
+
+E1  (85%) At the 8 unmoved adopters the candidate's `--dry-run` exit and refused-file counts equal S326's: 2/4, 2/4, 2/4, 2/4, 2/4, 2/4, 0/0, 0/0
+    (model_project_constructor, feedback-loop-comparison, Philippians, airqino, chat_verification, church_growth, dalia_martinez_funeral, claude_work).
+E2  (85%) The layout read at all 12 equals S326's (7 new, 4 legacy, 1 none): the four that moved did not change layout.
+E3  (95%) Every dry run leaves its clone clean: 72 of 72 (3 tools x 12 adopters x 2 dry runs).
+E4  (95%) Seeds changed by the candidate's real sync: 0 at 12 of 12.
+E5  (85%) The audit "the tool's refusal list equals the rule (adopter blob in neither history and not current)" reads yes at 12 of 12.
+E6  (90%) A second plain sync after the forced sync's commit exits 0 and writes nothing at 12 of 12.
+E7  (80%) Seeds the candidate CREATED at the 8 unmoved adopters total 11 (Philippians 1, dalia_martinez_funeral 3, claude_work 7); none beside an adopter's own.
+E8  (65%) The number of adopters whose plain candidate sync is refused (dry-run exit 2) is 10 of 12, as at S326.
+E9  (40%) nprcgenekeepr still has exactly one refused file in no history at all (a local edit; the register's F19, methodology/methodology_trim.py).
+E10 (85%) Upstream's tool at the migrated adopters exits 0 on a dry run and would write 23 framework files outside methodology/ (a second copy) at each.
+E11 (75%) chat_verification's and church_growth's own hook refuses the commit of upstream's second copy ("half-migrated").
+E12 (90%) Fixture (a), an empty project: the two tools write the same set of paths.
+E13 (70%) ... and that set is 30 paths, with no methodology/ directory.
+E14 (85%) Fixture (b), upstream's current files plus the adopter's own seeds: upstream's tool writes 0; the candidate's writes every changed tracked source
+    and no seed, and needs no --force.
+E15 (97%) The 12 real adopter trees are untouched by the run: HEAD, every ref and `git status --porcelain` equal before and after (a fingerprint taken first).
+E16 (70%) The run takes between 200 s and 500 s (S326: 303 s) at the load of the moment.
