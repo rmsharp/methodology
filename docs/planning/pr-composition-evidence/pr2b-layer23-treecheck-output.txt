@@ -1,0 +1,9 @@
+# S395 PR2b layer 23, tree check (bash pr2b-layer23-treecheck.sh <fork> <scratch>), 2026-10-29 11:43:50
+eleven picks (21-25, 27, 32, 33, 28, 29, 30; no 26): 11 commits on d818ca17
+tree of the eleven: 866ea59c87387947b7c01cee90ebeeabb60cc7e1
+plan's tree prefix 866ea59c8738 matches: 1   (1 = yes)
+layer tip (pr2b/candidate): 47637be21425e5a5ad3603e85a4a0d4259f8f2e7
+diff, eleven-pick tree to layer tip: 2 files changed, 18 insertions(+), 18 deletions(-)
+  files: starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+patch-id of that diff: 97131e63dc6a
+patch-id of 26' d9f583c3: 97131e63dc6a

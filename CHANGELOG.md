@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S395 work -- PR2b layer 23 built and verified: 33 and the printed-text group (28, 29, 30) are four commits on the local `pr2b/candidate`, `fd43f707` to `47637be2` (33 commits on `upstream/main` `d50ce290`); record `docs/planning/pr-composition-evidence/pr2b-layer23-record.md`; nothing sent to `KJ5HST/methodology`
+
+All four were replays (patch-ids equal), 9 files, +99 / −53. Clean-clone verification (`pr2b-layer-driver.sh 23`, 22 min 3 s): ratchet 18/18, 0 unmeasured, `dashboard-unit-tests` 397 against its floor of 397, shell suite 302 / 0 / 0, the inertness proof over 28 to 30 holds (and over the whole layer refuses, as designed, because 33 adds test code), scanner and budget unchanged, `--reverify` and four `check-links` forms exit 0. Merges clean with `upstream/main`; #98 5 regions and #96 4, 0 added; fork-token lines 17 in 5 files (the plan's figure). The plan's tree criterion (`866ea59c8738` plus 26′'s edits) was checked after the fact by rebuilding that tree (`pr2b-layer23-treecheck.sh`): it holds, patch-id `97131e63dc6a` on both sides. Expectations: fifteen of sixteen confirmed and the sixteenth, the branch move, done; none missed. This entry follows the evidence commit `e1d8169e`; the close-out entry follows the fork's gate run.
+
 ### 2026-10-29 · [ad hoc] S395 work (evidence 1 of 2) -- PR2b layer 23: the sixteen expectations (file time 11:08:04, before the build script's first line at 11:08:29), the build output, the clean-clone verification output and the measurements against `upstream/main` and the two open heads, under `docs/planning/pr-composition-evidence/`; local only; nothing sent to `KJ5HST/methodology`
 
 Four files and this entry (the 5-file cap). The layer is `pr2b/candidate` `fd43f707` to `47637be2` (33, 28, 29, 30, each `git cherry-pick -x`, patch-ids equal), already moved by `git update-ref` with the old value guarded; the record, the tree check and the work entry follow in the next commit.
