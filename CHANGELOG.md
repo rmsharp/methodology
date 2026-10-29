@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S394 push -- fork `main` fast-forwarded `d84ec98c..c413d0fd` (7 commits); the fork's `origin` only, nothing sent to `KJ5HST/methodology`
+
+At his 'Yes, push to fork origin (Recommended)' (asked during the gate run). Guarded before the push: `git ls-remote origin refs/heads/main` equalled `origin/main` (`d84ec98c`), that sha was an ancestor of `main`, and `git rev-list --count origin/main..main` read 7, as expected. Read back after: the remote's `main` is `c413d0fd`, equal to local, 0 ahead; the remote holds no `pr2*` branch. `pr2b/candidate` (`fd43f707`) and `pr2/candidate` (`3cba1e50`) are local branches and were not pushed.
+
 ### 2026-10-29 · [ad hoc] S394 close-out -- PR2b layer 22 built and verified (the documentation group: series 21 to 25, a hand-written 26-prime, 27 and 32); local `pr2b/candidate` fast-forwarded `d818ca17` to `fd43f707`, 29 commits on `upstream/main`; twelve of fourteen expectations confirmed; the fork's gates pass 24 of 24 on the second run (the first read 22 of 24); `HANDOFFS.md` trimmed 4 to 3 and folded; nothing sent to `KJ5HST/methodology`
 
 The close-out of the work entries beneath it. **The fork's gates** on `HEAD` `70d90331` with a clean tree: the first run (00:55:59 to 01:27:03, load 46.8 at its start) read 22/24 with one shell-suite test red (`tests-sh-passed` 691 against its floor of 692), and the ratchet keeps no output, so the test is unnamed; a direct `bash bin/tests.sh` on the same `HEAD` read 692 passed, 0 failed, 0 skipped; the re-run (01:38:27 to 02:04:56) read `quality_ratchet: 24/24 pass · 0 fail · 0 unmeasured · results 32858fe46628 · manifest 102234f3acf8`, equal to S393's citation. The first run's red is not reproduced and its cause is unproven. The receipt is in `HANDOFFS.md` (S394, 53,624 B in all). Local `main` is pushed to the fork's `origin` only, at his 'Yes, push to fork origin (Recommended)', in the entry above this one if it was made; `pr2b/candidate` and `pr2/candidate` are local branches and are not pushed.
