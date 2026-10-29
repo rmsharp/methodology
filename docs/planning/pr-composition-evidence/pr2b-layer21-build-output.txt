@@ -1,0 +1,46 @@
+# PR2b layer 21 build output (S392, 2026-10-28). Scratch --no-local clone, branch layer21, tip d818ca17f8dc1e4c3f5f98a98be89fb13941ccd7.
+# The cherry-pick below is the saved output of the replay itself (20:10:27). Everything after it is the SAME commands re-run at 20:37:22 on the same tree
+# to keep their output (the first run, 20:10 to 20:12, was read in the session but not saved); the clone had 0 dirty paths before and after.
+uptime: load average: 11.46, 12.11, 10.24
+
+===== cherry-pick -x 5afc9621 onto 4e07877f (saved at the time) =====
+[layer21 d818ca17] docs(ratchet): a cited gate run that reads unmeasured gates is repaired or names them
+ Date: Thu Oct 15 09:59:34 2026 -0500
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+===== patch-ids and the commit's numstat against 4e07877f =====
+patch-id replay  : 7bb5a98f511f
+patch-id original: 7bb5a98f511f
+1	1	HOW_TO_USE.md
+4	1	starter-kit/HANDOFFS.md
+dirty paths: 0
+
+===== read-set budget at the tip =====
+
+──────────────────────────────────────────────────────────────────────────
+  context budget  OK   resident 51,487 B ≈ 17,572 tok
+──────────────────────────────────────────────────────────────────────────
+  file                                      size     ceiling  status
+  CLAUDE.md                             51,487 B    59,168 B  ok
+  starter-kit/SESSION_RUNNER.md         53,100 B           —  ok
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  starter-kit/FRAMEWORK_LEARNINGS.md    17,621 B    73,728 B  ok
+──────────────────────────────────────────────────────────────────────────
+  resident total 51,487 B / 59,168 B ceiling   growth run 1/10
+  read-set total 70,048 B / no ceiling declared
+──────────────────────────────────────────────────────────────────────────
+  nothing over budget
+
+budget exit 0
+
+===== cheap suites =====
+tools/test_layout_resolver.py: Ran 76 tests in 2.156s OK exit 0
+tools/test_checker_layouts.py: Ran 11 tests in 1.624s OK exit 0
+tools/test_sync_layouts.py: Ran 82 tests in 41.416s OK exit 0
+tools/test_methodology_dashboard.py: Ran 395 tests in 53.087s OK exit 0
+tools/test_migrate_layout.py TestThePureRules TestUsageAndNothingToDo: Ran 95 tests in 0.634s OK exit 0
+
+===== the literal scanner =====
+check-layout-literals: scanned 15 files; 0 sites (0 path, 0 text); 138 acknowledged; 195 prose not counted
+scanner exit 0
+dirty paths after: 0
