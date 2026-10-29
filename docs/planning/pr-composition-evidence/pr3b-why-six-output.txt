@@ -1,0 +1,60 @@
+model_project_constructor methodology/methodology_trim.py blob 24306a827e (source starter-kit/methodology_trim.py)
+   pr2/candidate   in history at 1 commit(s); oldest 98ca7fc9 feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a ledger at the root or under m
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 26bc97a2 feat(layout): the tie rule is unconditional, the ratchet reads the methodology manifest at
+model_project_constructor methodology/FRAMEWORK_APPARATUS.md blob 7288b95288 (source FRAMEWORK_APPARATUS.md)
+   pr2/candidate   in history at 1 commit(s); oldest 04918ce3 docs(layout): the framework documents and the skills index hold in both layouts
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 7eb78713 docs: S282 -- the three framework documents name files by bare name and know the second la
+feedback-loop-comparison methodology/methodology_trim.py blob 24306a827e (source starter-kit/methodology_trim.py)
+   pr2/candidate   in history at 1 commit(s); oldest 98ca7fc9 feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a ledger at the root or under m
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 26bc97a2 feat(layout): the tie rule is unconditional, the ratchet reads the methodology manifest at
+feedback-loop-comparison methodology/FRAMEWORK_APPARATUS.md blob 7288b95288 (source FRAMEWORK_APPARATUS.md)
+   pr2/candidate   in history at 1 commit(s); oldest 04918ce3 docs(layout): the framework documents and the skills index hold in both layouts
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 7eb78713 docs: S282 -- the three framework documents name files by bare name and know the second la
+airqino methodology/methodology_trim.py blob 24306a827e (source starter-kit/methodology_trim.py)
+   pr2/candidate   in history at 1 commit(s); oldest 98ca7fc9 feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a ledger at the root or under m
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 26bc97a2 feat(layout): the tie rule is unconditional, the ratchet reads the methodology manifest at
+airqino methodology/FRAMEWORK_APPARATUS.md blob 7288b95288 (source FRAMEWORK_APPARATUS.md)
+   pr2/candidate   in history at 1 commit(s); oldest 04918ce3 docs(layout): the framework documents and the skills index hold in both layouts
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 7eb78713 docs: S282 -- the three framework documents name files by bare name and know the second la
+chat_verification methodology/methodology_trim.py blob 24306a827e (source starter-kit/methodology_trim.py)
+   pr2/candidate   in history at 1 commit(s); oldest 98ca7fc9 feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a ledger at the root or under m
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 26bc97a2 feat(layout): the tie rule is unconditional, the ratchet reads the methodology manifest at
+chat_verification methodology/FRAMEWORK_APPARATUS.md blob 7288b95288 (source FRAMEWORK_APPARATUS.md)
+   pr2/candidate   in history at 1 commit(s); oldest 04918ce3 docs(layout): the framework documents and the skills index hold in both layouts
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 7eb78713 docs: S282 -- the three framework documents name files by bare name and know the second la
+church_growth methodology/methodology_trim.py blob 24306a827e (source starter-kit/methodology_trim.py)
+   pr2/candidate   in history at 1 commit(s); oldest 98ca7fc9 feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a ledger at the root or under m
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 26bc97a2 feat(layout): the tie rule is unconditional, the ratchet reads the methodology manifest at
+church_growth methodology/FRAMEWORK_APPARATUS.md blob 7288b95288 (source FRAMEWORK_APPARATUS.md)
+   pr2/candidate   in history at 1 commit(s); oldest 04918ce3 docs(layout): the framework documents and the skills index hold in both layouts
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 7eb78713 docs: S282 -- the three framework documents name files by bare name and know the second la
+vscode_quarto_ext methodology/methodology_trim.py blob 24306a827e (source starter-kit/methodology_trim.py)
+   pr2/candidate   in history at 1 commit(s); oldest 98ca7fc9 feat(trim): methodology_trim.py 1.8.0 -- the trimmer finds a ledger at the root or under m
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 26bc97a2 feat(layout): the tie rule is unconditional, the ratchet reads the methodology manifest at
+vscode_quarto_ext methodology/FRAMEWORK_APPARATUS.md blob 7288b95288 (source FRAMEWORK_APPARATUS.md)
+   pr2/candidate   in history at 1 commit(s); oldest 04918ce3 docs(layout): the framework documents and the skills index hold in both layouts
+   pr2b/candidate  NOT in history
+   upstream/main   NOT in history
+   main            in history at 1 commit(s); oldest 7eb78713 docs: S282 -- the three framework documents name files by bare name and know the second la
