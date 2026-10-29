@@ -1,0 +1,41 @@
+# PR2b layer 23 (33, then the printed-text group 28, 29, 30): expectations, written BEFORE the first cherry-pick (S395, 2026-10-29).
+# The file's modification time is the proof of order; the first pick follows it. Confidence is my own, in percent.
+# Read first (nothing run yet except these): the grouping plan section 5, the layer 22 record (sections 4 and 7), the four commits'
+# `git show --stat`, `python3 starter-kit/context_budget.py --status` at fd43f707 (resident 51,487 B, read-set 70,048 B, nothing over budget),
+# `scrub-derive.py HEAD d50ce290` at fd43f707 (60 lines in 11 files), `.quality-gates-results.json` (a gate row is name, measured, threshold,
+# status, direction, note; the results digest is a hash of those rows, so a changed floor or measured value moves it), and scrub-proof.py's header.
+# Machine: load average 4.62 at 11:07.
+
+BUILD  Scratch --no-local clone of the fork, branch layer23 at fd43f707 (pr2b/candidate, 29 commits on upstream/main d50ce290).
+       Order: 33 cfcc713b, then 28 8ace51e8, 29 ccd5620e, 30 28f99a70. All four are `git cherry-pick -x`; none is hand-written.
+
+E1  (95)  The four picks each exit 0 and each equals its original by `git patch-id --stable`.
+E2  (85)  The layer is 9 distinct files (33: .quality-gates.json, tools/test_methodology_dashboard.py; 28: bin/check-layout-literals, bin/migrate-layout,
+          tools/test_migrate_layout.py; 29: starter-kit/methodology_dashboard.py, tools/methodology_dashboard.py, tools/test_methodology_dashboard.py;
+          30: .githooks/pre-commit, .quality-gates.json, bin/tests.sh), and `git diff --numstat fd43f707 HEAD` totals about +99 / -53 (the commits' own
+          figures add to 99 and 53; an overlap between 33 and 29 in the dashboard test file could make the net smaller).
+E3  (90)  `scrub-proof.py <clone> <33's commit> <tip>` (the B range alone: 28, 29, 30) exits 0 and prints CUMULATIVE PROOF: HOLDS.
+E4  (80)  The same proof over the whole layer (fd43f707 to the tip, which holds 33) REFUSES (exit not 0), naming tools/test_methodology_dashboard.py
+          (33 adds test code, so its tokens change). The gate file stays equal with `why` masked ONLY if 33's floor edit counts as a `why`: it does not, so
+          .quality-gates.json is named too (70). This is the by-design refusal the layer 22 record names.
+E5  (90)  scrub-derive.py at the new tip: 17 strict lines in 5 files: the frozen fixture 11, bin/tests.sh 2, bin/check-layout-literals 2,
+          tools/test_migrate_layout.py 1, tools/test_methodology_trim.py 1 (the `P1` line left on purpose). Fixture and trimmer lines are unchanged by this layer.
+E6  (90)  The dashboard suite prints `Ran 397 tests` and OK in the build clone (33 restores two tests; no other commit changes a count).
+          The other cheap suites unchanged: layout 76, checker 11, trimmer 265 (OK, skipped=2), sync 82, migration fast classes 95.
+E7  (90)  `quality_ratchet.py --precommit` accepts the floor raise: 33's change staged on fd43f707 (`git cherry-pick -n`) exits 0, since tightening never needs approval.
+E8  (85)  Quality ratchet --run in the clean clone: 18/18 pass, 0 fail, 0 unmeasured. The dashboard gate measures 397 against a floor of 397; every other gate value
+          equals layer 22's (tests-sh-passed 302, context budget 163, trimmer 265, ratchet 120, layout 76, checker 11, sync 82, migrate 280, the nine zero-ceiling gates 0).
+          Results digest DIFFERENT from layer 22's a2482a2d9ae3 (95: a measured value and a threshold change). Manifest digest DIFFERENT from 09a751d541b8 (97).
+E9  (80)  `bash bin/tests.sh` run directly: 302 passed, 0 failed, 0 skipped; Test 15 (30 == 30). The doubt (20): a test that greps a shell-suite title commit 30 renamed.
+E10 (85)  Scanner: 15 files, 0 sites. Acknowledged 138 (75: commit 28 edits two text lines in the scanner and the migration tool; the prose-not-counted figure,
+          194 at layer 22, may move and I do not predict which way).
+E11 (90)  Read-set budget exit 0, resident 51,487 B and read-set 70,048 B unchanged (no commit touches the runner, SAFEGUARDS or the learnings file).
+E12 (90)  `--reverify` on the tracked shard and `check-links` (no flag, legacy, new, both) all exit 0, 80 links in 23 files.
+E13 (65)  Clean with upstream/main (merged tree equal to the tip's own: 85). Against the open heads, regions NOT above layer 22's (#98: 5 in 3 files; #96: 4 in 3 files)
+          with 0 added. The doubt (35 each): commits 30 and 33 edit .quality-gates.json and 28 to 30 edit files #98 and #96 also edit; the layer 22 record measured
+          layer 23's commits alone onto the tip, never against the open heads.
+E14 (85)  The scrub regex over the layer's added lines finds 0 fork tokens (it is the rule that built the 17-line target; 33's restored tests carry none).
+E15 (70)  The driver takes 20 to 28 minutes under the present load (layer 22: 21 min 40 s at load about 4).
+E16 (85)  After the verification, `pr2b/candidate` fast-forwards from fd43f707 to the new tip with `git update-ref` guarded by the old value, fd43f707 an ancestor, 33 commits on upstream/main.
+
+SCORING: after the verification, each expectation is marked confirmed or missed in pr2b-layer23-record.md, with the line that decides it.

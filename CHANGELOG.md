@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S395 work (evidence 1 of 2) -- PR2b layer 23: the sixteen expectations (file time 11:08:04, before the build script's first line at 11:08:29), the build output, the clean-clone verification output and the measurements against `upstream/main` and the two open heads, under `docs/planning/pr-composition-evidence/`; local only; nothing sent to `KJ5HST/methodology`
+
+Four files and this entry (the 5-file cap). The layer is `pr2b/candidate` `fd43f707` to `47637be2` (33, 28, 29, 30, each `git cherry-pick -x`, patch-ids equal), already moved by `git update-ref` with the old value guarded; the record, the tree check and the work entry follow in the next commit.
+
 ### 2026-10-29 · [ad hoc] S395 claim (in progress) -- build PR2b layer 23 (series commits 33, 28, 29 and 30) in a scratch clone onto the local `pr2b/candidate`; local only; nothing sent to `KJ5HST/methodology`
 
 Claimed at his Phase 0 picker: 'Build layer 23 (Recommended)' (the others offered were the third BL-94 paid run and the three adopter ledgers with real defects), with 'Yes, trim 4 to 3 (Recommended)' (done first: the trim `b4c303a1` and the fold `16cdc96d`, whose entries sit below; S391 archived, proof exit 0, `HANDOFFS.md` 41,880 B after the fold). Phase 0 (read 2026-10-29, `uptime` load 2.43 at 10:26): the `CHANGELOG.md` frontier = `HEAD` `7921d0ff` (0 undocumented, 0 merges); the `HANDOFFS.md` frontier `c413d0fd` is one commit behind (S394's ledger-only push record, not a session), no pending receipt; `check-ledger` and `check-handoff` exit 0; the newest receipt's gate citation (results `32858fe46628`, manifest `102234f3acf8`) equals `.quality-gates-results.json`; `upstream/main` unchanged `d50ce290` (fetched); #98 open, MERGEABLE, CLEAN (`65990cda`); #96 open, CONFLICTING (`ad5c980f`); each 0 comments, 0 reviews; issues #93, #95, #97 no new activity; dashboard 72/100, 0 high-risk flags (its one history line rides this claim); `pr2b/candidate` 29 commits on `upstream/main`. The close-out entry follows when the layer is built.
