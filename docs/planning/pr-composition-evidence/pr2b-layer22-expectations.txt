@@ -1,0 +1,33 @@
+# PR2b layer 22 (the documentation group): expectations, written BEFORE the first cherry-pick (S394, 2026-10-29).
+# The file's modification time is the proof of order; the first pick follows it. Confidence is my own, in percent.
+# Read first (nothing run yet except these): the grouping plan section 5, the layer 21 record, the scrub record section 3,
+# `python3 starter-kit/context_budget.py --status` at d818ca17 (resident 51,487 B, read-set 70,048 B, nothing over budget),
+# and `scrub-derive.py d818ca17 d50ce290` (the 12 + 5 strict lines in the trimmer and its tests, listed by position).
+# Machine: load average 24.58 at 00:17 (other projects' test runs).
+
+BUILD  Scratch --no-local clone of the fork, branch layer22 at d818ca17 (pr2b/candidate, 21 commits on upstream/main d50ce290).
+       Order: 21 c933b0f9, 22 d31c25da, 23 c1cdc2ec, 24 71e00e89, 25 ea751caa, then 26' (written by hand), then 27 72e0c991, 32 a62bfecf.
+
+E1  (95)  Picks of 21, 22, 23, 24 and 25 each exit 0 and each equals its original by `git patch-id --stable`.
+E2  (90)  Picks of 27 and 32, after 26', each exit 0 and each equals its original by patch-id (neither touches the trimmer or its tests).
+E3  (85)  26' is TWO files, starter-kit/methodology_trim.py (13 changed lines: 57, 61, 67, 338, 339, 343, 347, 745, 1133, 1186, 2471, 2809, 2810)
+          and tools/test_methodology_trim.py (5 changed lines: 4239, 4243, 4284, 4285, 4569): +18 / -18 in all.
+          ONE of the 17 strict lines is left on purpose: tools/test_methodology_trim.py:4622 ("no P1 finding"), because P1 is the trimmer's
+          own finding code, the same call the old scrub made (scrub-record.md section 3; commit 26's message: 'The trimmer's own "P1" check ... untouched').
+E4  (90)  scrub-derive.py at the new tip: strict lines 17 (33 less the 16 edited), in 5 files (the trimmer drops out): fixture 11, test_methodology_trim 1,
+          bin/check-layout-literals 2, bin/tests.sh 2, tools/test_migrate_layout.py 1.
+E5  (85)  scrub-proof.py <clone> d818ca17 <new tip> exits 0 (no code token changes; the gate manifest equal with every `why` masked).
+E6  (85)  Quality ratchet --run in the clean clone: 18/18 pass, 0 fail, 0 unmeasured; every gate value equal to layer 21's
+          (tests-sh-passed 302, dashboard 395, context-budget 163, trimmer 265, ratchet 120, layout 76, checker 11, sync 82, migrate 280).
+          Results digest equal to layer 21's a2482a2d9ae3 (80). Manifest digest DIFFERENT from 4669bce5b261 (97: commit 32 rewrites two gate reasons).
+E7  (80)  bash bin/tests.sh run directly: 302 passed, 0 failed, 0 skipped; Test 15 (30 == 30). The doubt: a test that greps comment text in a tool (20).
+E8  (90)  Scanner 15 files, 0 sites, 138 acknowledged (no commit adds a literal path). Read-set budget exit 0, resident 51,487 B and read-set 70,048 B unchanged.
+E9  (90)  --reverify on the tracked shard exits 0; check-links exits 0 in all four forms, 80 links in 23 files.
+E10 (75)  Clean with upstream/main (merged tree equal to the tip's own). Against the open heads: #96 4 regions in 3 files, 0 added (85);
+          #98 between 5 and 9 regions (5 now), because 26' is the one commit of the eight editing #98's source files; at most 7 (60).
+E11 (85)  The scrub regex over 26's added lines finds 0 fork tokens (it is the same rule that built the 17-line target).
+E12 (85)  Layer 23's four commits applied alone onto the new tip are all clean: 33 (needs 27), 28, 29, 30 (needs 22).
+E13 (70)  The driver takes 22 to 30 minutes under the present load (layer 21: 23 min 24 s at load 6 to 13).
+E14 (85)  The dashboard suite prints 395 tests OK and the trimmer suite 265 OK at the new tip (no test counts a comment).
+
+SCORING: after the verification, each expectation is marked confirmed or missed in pr2b-layer22-record.md, with the line that decides it.

@@ -1,0 +1,177 @@
+# S394 PR2b layer 22 build output, scratch clone branch layer22 at fd43f707 (8 commits on d818ca17), 2026-10-29 00:25:22; load: 3.96, 5.56, 5.88
+# Section 1 is RE-DERIVED after the picks (the picks were run and read at 00:21 to 00:30; patch-ids are deterministic).
+
+===== 1. the eight commits and their patch-ids (git patch-id --stable) =====
+c933b0f9 -> e051462e  orig 8db8c9fc0960  new 8db8c9fc0960  EQUAL   5 files changed, 19 insertions(+), 19 deletions(-)
+d31c25da -> a4d4a961  orig af4c32875e3d  new af4c32875e3d  EQUAL   5 files changed, 40 insertions(+), 40 deletions(-)
+c1cdc2ec -> 3f282718  orig 2531af70cb37  new 2531af70cb37  EQUAL   5 files changed, 55 insertions(+), 60 deletions(-)
+71e00e89 -> 911c82fe  orig afbaafa7d598  new afbaafa7d598  EQUAL   4 files changed, 31 insertions(+), 31 deletions(-)
+ea751caa -> f11397f3  orig f7bef8ce5840  new f7bef8ce5840  EQUAL   2 files changed, 75 insertions(+), 77 deletions(-)
+26' d9f583c3  (hand-written, no original)  patch-id 97131e63dc6a   2 files changed, 18 insertions(+), 18 deletions(-)
+72e0c991 -> 8c37c285  orig c1df2f065f3d  new c1df2f065f3d  EQUAL   3 files changed, 404 insertions(+), 437 deletions(-)
+a62bfecf -> fd43f707  orig 2203762314f9  new 2203762314f9  EQUAL   4 files changed, 8 insertions(+), 5 deletions(-)
+tree 788e6885f6b6d5e84afe1f15c8437fbaf3a7c69c  commits on d818ca17: 8  dirty paths: 0
+
+===== 2. read-set budget =====
+  starter-kit/SESSION_RUNNER.md         53,100 B           —  ok
+  starter-kit/SAFEGUARDS.md             16,948 B           —  ok
+  starter-kit/FRAMEWORK_LEARNINGS.md    17,621 B    73,728 B  ok
+──────────────────────────────────────────────────────────────────────────
+  resident total 51,487 B / 59,168 B ceiling   growth run 1/10
+  read-set total 70,048 B / no ceiling declared
+──────────────────────────────────────────────────────────────────────────
+  nothing over budget
+
+budget exit 0
+
+===== 3. cheap suites =====
+tools/test_layout_resolver.py : Ran 76 tests in 1.884s OK exit 0
+tools/test_checker_layouts.py : Ran 11 tests in 1.478s OK exit 0
+tools/test_methodology_trim.py : Ran 265 tests in 52.208s OK (skipped=2) exit 0
+tools/test_sync_layouts.py : Ran 82 tests in 34.308s OK exit 0
+tools/test_methodology_dashboard.py : Ran 395 tests in 46.210s OK exit 0
+tools/test_migrate_layout.py TestThePureRules TestUsageAndNothingToDo: Ran 95 tests in 0.574s OK exit 0
+
+===== 4. the literal scanner =====
+check-layout-literals: scanned 15 files; 0 sites (0 path, 0 text); 138 acknowledged; 194 prose not counted
+scanner exit 0
+dirty paths after: 0
+done 00:27:40
+
+===== 5. scrub-proof.py over the layer (python3 -I scrub-proof.py <build clone> d818ca17 fd43f707; READ-ONLY) =====
+files in both trees: 96; the sets are equal
+executable bits / modes unchanged: yes
+27 file(s) differ
+  .githooks/pre-commit                           sh -n parses                                 ok
+  .quality-gates.json                            JSON, `why` masked                           ok
+  bin/_manifest.py                               Python tokens, strings and comments masked   ok
+  bin/_manifest_reader.py                        Python tokens, strings and comments masked   ok
+  bin/check-handoff                              Python tokens, strings and comments masked   ok
+  bin/check-layout-literals                      Python tokens, strings and comments masked   ok
+  bin/check-ledger                               Python tokens, strings and comments masked   ok
+  bin/check-links                                Python tokens, strings and comments masked   ok
+  bin/migrate-layout                             Python tokens, strings and comments masked   ok
+  bin/status                                     Python tokens, strings and comments masked   ok
+  bin/sync                                       Python tokens, strings and comments masked   ok
+  bin/tests.sh                                   bash -n parses                               ok
+  starter-kit/context_budget.py                  Python tokens, strings and comments masked   ok
+  starter-kit/methodology_dashboard.py           Python tokens, strings and comments masked   ok
+  starter-kit/methodology_trim.py                Python tokens, strings and comments masked   ok
+  starter-kit/quality_ratchet.py                 Python tokens, strings and comments masked   ok
+  tools/layout_fixtures.py                       Python tokens, strings and comments masked   ok
+  tools/layout_resolver.py                       Python tokens, strings and comments masked   ok
+  tools/methodology_dashboard.py                 Python tokens, strings and comments masked   ok
+  tools/test_checker_layouts.py                  Python tokens, strings and comments masked   ok
+  tools/test_context_budget.py                   Python tokens, strings and comments masked   ok
+  tools/test_layout_resolver.py                  Python tokens, strings and comments masked   ok
+  tools/test_methodology_dashboard.py            Python tokens, strings and comments masked   ok
+  tools/test_methodology_trim.py                 Python tokens, strings and comments masked   ok
+  tools/test_migrate_layout.py                   Python tokens, strings and comments masked   ok
+  tools/test_quality_ratchet.py                  Python tokens, strings and comments masked   ok
+  tools/test_sync_layouts.py                     Python tokens, strings and comments masked   ok
+the two dashboard copies byte-identical in HEAD: yes
+diff against FROM: +650 / -687 over 27 files (git diff --numstat)
+CUMULATIVE PROOF: HOLDS
+
+===== 6. scrub-derive.py at the layer tip fd43f707 (the head of its output; the cited-but-missing list is left out) =====
+# python3 -I scrub-derive.py HEAD d50ce290d9218dc91d9a36069b4d936868964298   (run in the build clone at fd43f707)
+# 60 lines in 11 files: the layer WITHOUT phase B (28 to 30) and 33, which sit in layer 23. The 17 of the grouping plan is the count after B.
+candidate fd43f70 (tree 788e6885f6b6d5e84afe1f15c8437fbaf3a7c69c) against d50ce29: 47 changed files
+
+STRICT classes, added lines carrying one (a line with two counts once per class):
+  BL         20
+  S           7
+  LEARN       1
+  PLANDOC     3
+  PHASE       7
+  PLANREF    15
+  PRPLAN      0
+  ADOPTER     0
+  PLANFILE    1
+  FINDING    13
+  SECTION     2
+  lines with at least one strict token: 60 in 11 files
+  lines with only a soft word (not counted):  46 in 10 files
+
+per file (strict lines / soft-only lines / classes):
+  tools/test_methodology_dashboard.py                15   12   BL=1 PLANREF=9 PLANFILE=1 S=4 SECTION=1 LEARN=1 PHASE=2
+  tools/fixtures/trim-verify-template-1.8.2.sh       11    5   BL=10 PLANDOC=1
+  tools/test_migrate_layout.py                       10    0   PLANREF=1 SECTION=1 S=1 FINDING=7 PHASE=1
+  bin/tests.sh                                        9    0   BL=3 S=2 PHASE=1 FINDING=5
+  .githooks/pre-commit                                5    0   BL=2 FINDING=1 PLANREF=2
+  bin/check-layout-literals                           3    0   PLANDOC=2 PLANREF=1
+  bin/migrate-layout                                  3    0   PLANREF=2 BL=1 PHASE=1
+  .quality-gates.json                                 1    0   BL=1 PHASE=1
+  starter-kit/methodology_dashboard.py                1   10   BL=1
+  tools/methodology_dashboard.py                      1   10   BL=1
+  tools/test_methodology_trim.py                      1    0   PHASE=1
+  .context-budget.json                                0    1   
+  ITERATIVE_METHODOLOGY.md                            0    1   
+  bin/check-links                                     0    1   
+  starter-kit/methodology_trim.py                     0    2   
+  starter-kit/quality_ratchet.py                      0    2   
+  tools/test_quality_ratchet.py                       0    2   
+
+STRICT lines by where the token sits (comment, tcomment (a trailing comment) and docstring are inert; string and code are behaviour-bearing):
+  comment      11
+  tcomment      1
+  docstring     1
+  string       19
+  code         28
+
+per file, behaviour-bearing strict lines (string + code):
+  tools/test_methodology_dashboard.py              string=13 code=2 (of 15)
+  tools/test_migrate_layout.py                     string=2 code=8 (of 10)
+  bin/tests.sh                                     string=0 code=8 (of 9)
+  .githooks/pre-commit                             string=0 code=5 (of 5)
+
+===== 7. scrub-derive.py with layer 23's four commits added (a TEMPORARY branch tmp-ab in the build clone: cherry-picks of cfcc713b, 8ace51e8, ccd5620e, 28f99a7, then deleted) =====
+# tree 382d305a4c27 at the temporary tip 57c0c1ee. Layer 23 is not built by this; only the count is read.
+candidate 57c0c1e (tree 382d305a4c27713f56ccb60d80817c8bddba23f8) against d50ce29: 47 changed files
+
+STRICT classes, added lines carrying one (a line with two counts once per class):
+  BL         10
+  S           3
+  LEARN       0
+  PLANDOC     3
+  PHASE       1
+  PLANREF     0
+  PRPLAN      0
+  ADOPTER     0
+  PLANFILE    0
+  FINDING     0
+  SECTION     0
+  lines with at least one strict token: 17 in 5 files
+  lines with only a soft word (not counted):  45 in 10 files
+
+per file (strict lines / soft-only lines / classes):
+  tools/fixtures/trim-verify-template-1.8.2.sh       11    5   BL=10 PLANDOC=1
+  bin/check-layout-literals                           2    0   PLANDOC=2
+  bin/tests.sh                                        2    0   S=2
+  tools/test_methodology_trim.py                      1    0   PHASE=1
+  tools/test_migrate_layout.py                        1    0   S=1
+  .context-budget.json                                0    1   
+  ITERATIVE_METHODOLOGY.md                            0    1   
+  bin/check-links                                     0    1   
+  starter-kit/methodology_dashboard.py                0   10   
+  starter-kit/methodology_trim.py                     0    2   
+  starter-kit/quality_ratchet.py                      0    2   
+  tools/methodology_dashboard.py                      0   10   
+  tools/test_methodology_dashboard.py                 0   11   
+  tools/test_quality_ratchet.py                       0    2   
+
+STRICT lines by where the token sits (comment, tcomment (a trailing comment) and docstring are inert; string and code are behaviour-bearing):
+  comment      11
+  tcomment      1
+  docstring     1
+  string        1
+  code          3
+
+per file, behaviour-bearing strict lines (string + code):
+  bin/check-layout-literals                        string=0 code=1 (of 2)
+  bin/tests.sh                                     string=0 code=1 (of 2)
+  tools/fixtures/trim-verify-template-1.8.2.sh     string=0 code=1 (of 11)
+  tools/test_migrate_layout.py                     string=1 code=0 (of 1)
+
+129 distinct repository paths cited on added lines; 75 are not in the candidate's tree:
+  .githooks/h                                                            <- tools/test_layout_resolver.py
