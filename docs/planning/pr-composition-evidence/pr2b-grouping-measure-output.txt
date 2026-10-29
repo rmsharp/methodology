@@ -1,0 +1,218 @@
+# PR2b grouping measurement (S393). repo /Users/rmsharp/Development/methodology
+# uptime: 22:37:02  up 2 days  6:57,  6 users,  load average: 102.70, 128.26, 105.40
+# tip d818ca17 (pr2b/candidate)  upstream/main d50ce290  old candidate pr2/candidate: 34 commits
+# not in the twelve: 31 ced2c823 docs(runner): drop the layout paragraph's duplicate example command; the runner reads under its ceil
+# not in the twelve: 34 3cba1e50 fix(trim): an abort before the proof's checks exits 3, not 1, the FAIL code (issue #93; 1.8.1)
+
+==== 1. inventory and class (as each commit was authored, against its own parent) ====
+  21 c933b0f9  5 files +19/-19  worst class: comments and docstrings only
+     docs: drop internal references from the sync layer's comments and docstrings
+      bin/_manifest.py                             +4    -4    comments and docstrings only
+      bin/_manifest_reader.py                      +1    -1    comments and docstrings only
+      bin/check-links                              +4    -4    comments and docstrings only
+      bin/status                                   +4    -4    comments and docstrings only
+      bin/sync                                     +6    -6    comments and docstrings only
+  22 d31c25da  5 files +40/-40  worst class: comments and docstrings only
+     docs: drop internal references from the shell suite's, the hook's and the checkers' comments
+      .githooks/pre-commit                         +15   -15   comments only (shell)
+      bin/check-handoff                            +2    -2    comments and docstrings only
+      bin/check-layout-literals                    +6    -6    comments and docstrings only
+      bin/check-ledger                             +2    -2    comments and docstrings only
+      bin/tests.sh                                 +15   -15   comments only (shell)
+  23 c1cdc2ec  5 files +55/-60  worst class: comments and docstrings only
+     docs: drop internal references from the layout resolver's, the fixtures' and their tests' comments
+      tools/layout_fixtures.py                     +10   -10   comments and docstrings only
+      tools/layout_resolver.py                     +8    -8    comments and docstrings only
+      tools/test_checker_layouts.py                +3    -3    comments and docstrings only
+      tools/test_layout_resolver.py                +19   -23   comments and docstrings only
+      tools/test_sync_layouts.py                   +15   -16   comments and docstrings only
+  24 71e00e89  4 files +31/-31  worst class: comments and docstrings only
+     docs: drop internal references from the quality ratchet's, the budget gate's and their tests' comments
+      starter-kit/context_budget.py                +4    -4    comments and docstrings only
+      starter-kit/quality_ratchet.py               +10   -10   comments and docstrings only
+      tools/test_context_budget.py                 +3    -3    comments and docstrings only
+      tools/test_quality_ratchet.py                +14   -14   comments and docstrings only
+  25 ea751caa  2 files +75/-77  worst class: comments and docstrings only
+     docs: drop internal references from the migration tool's and its suite's comments
+      bin/migrate-layout                           +29   -31   comments and docstrings only
+      tools/test_migrate_layout.py                 +46   -46   comments and docstrings only
+  26 2276f4ef  2 files +25/-26  worst class: comments and docstrings only
+     docs: drop internal references from the ledger trimmer's and its tests' comments
+      starter-kit/methodology_trim.py              +14   -14   comments and docstrings only
+      tools/test_methodology_trim.py               +11   -12   comments and docstrings only
+  27 72e0c991  3 files +404/-437  worst class: comments and docstrings only
+     docs: drop internal references from the dashboard's and its tests' comments
+      starter-kit/methodology_dashboard.py         +129  -143  comments and docstrings only
+      tools/methodology_dashboard.py               +129  -143  comments and docstrings only
+      tools/test_methodology_dashboard.py          +146  -151  comments and docstrings only
+  28 8ace51e8  3 files +13/-13  worst class: string literals changed
+     docs: drop internal references from the text the migration tool and the layout scanner print
+      bin/check-layout-literals                    +1    -1    string literals changed
+      bin/migrate-layout                           +3    -3    string literals changed
+      tools/test_migrate_layout.py                 +9    -9    string literals changed
+  29 ccd5620e  3 files +17/-17  worst class: string literals changed
+     docs: drop internal references from the text the dashboard prints and its tests assert on
+      starter-kit/methodology_dashboard.py         +1    -1    string literals changed
+      tools/methodology_dashboard.py               +1    -1    string literals changed
+      tools/test_methodology_dashboard.py          +15   -15   string literals changed
+  30 28f99a70  3 files +13/-13  worst class: shell lines changed (not full-line comments)
+     docs: drop internal references from the shell suite's titles, the hook's selftest labels and a gate's reason
+      .githooks/pre-commit                         +5    -5    shell lines changed (not full-line comments)
+      .quality-gates.json                          +1    -1    gate reason text only
+      bin/tests.sh                                 +7    -7    shell lines changed (not full-line comments)
+  32 a62bfecf  4 files +8/-5  worst class: gate reason text only
+     docs: correct four statements the series left stale in a gate reason, a comment and a header
+      .quality-gates.json                          +2    -2    gate reason text only
+      bin/migrate-layout                           +2    -1    comments and docstrings only
+      starter-kit/methodology_dashboard.py         +2    -1    comments and docstrings only
+      tools/methodology_dashboard.py               +2    -1    comments and docstrings only
+  33 cfcc713b  2 files +56/-10  worst class: code changed
+     test(dashboard): restore two of upstream's CLI tests the series dropped with their class; dashboard-unit-tests
+      .quality-gates.json                          +1    -1    a gate value changed
+      tools/test_methodology_dashboard.py          +55   -9    code changed
+
+==== 2. each commit ALONE onto the tip (merge-tree --write-tree --merge-base=<commit>^; exit 0 clean, 1 conflicts) ====
+  21 c933b0f9 exit 0  
+  22 d31c25da exit 0  
+  23 c1cdc2ec exit 0  
+  24 71e00e89 exit 0  
+  25 ea751caa exit 0  
+  26 2276f4ef exit 1  regions: starter-kit/methodology_trim.py 1, tools/test_methodology_trim.py 4
+  27 72e0c991 exit 0  
+  28 8ace51e8 exit 0  
+  29 ccd5620e exit 0  
+  30 28f99a70 exit 1  regions: bin/tests.sh 1
+  32 a62bfecf exit 0  
+  33 cfcc713b exit 1  regions: tools/test_methodology_dashboard.py 1
+
+==== 3. the twelve IN ORDER onto the tip (git cherry-pick -x in a --no-local clone; a conflict is described, aborted, and the replay goes on) ====
+  21 c933b0f9 clean -> d7018652; patch-id original 8db8c9fc0960 replay 8db8c9fc0960 EQUAL
+  22 d31c25da clean -> 5f4d4a32; patch-id original af4c32875e3d replay af4c32875e3d EQUAL
+  23 c1cdc2ec clean -> 00b4deff; patch-id original 2531af70cb37 replay 2531af70cb37 EQUAL
+  24 71e00e89 clean -> ecac0df3; patch-id original afbaafa7d598 replay afbaafa7d598 EQUAL
+  25 ea751caa clean -> 0ab9e1c4; patch-id original f7bef8ce5840 replay f7bef8ce5840 EQUAL
+  26 2276f4ef CONFLICT in 2 file(s): starter-kit/methodology_trim.py, tools/test_methodology_trim.py
+      starter-kit/methodology_trim.py:57  ours 1 lines, theirs 1 lines; ours[0]='TRIM_VERSION = "1.9.0"   # 1.9.0: BL-101 P3 (the methodology/ director' theirs[0]='TRIM_VERSION = "1.8.0"   # 1.8.0: a ledger'
+      tools/test_methodology_trim.py:1278  ours 1 lines, theirs 1 lines; ours[0]='# design and a control built that way passes for the wrong reason: it ' theirs[0]='# design and a control built that way passes for the wrong reason.'
+      tools/test_methodology_trim.py:1407  ours 2 lines, theirs 2 lines; ours[0]='# BL-27 refused to excuse a bundled frontier edit ("a real loss can ha' theirs[0]='# An earlier fix refused to excuse a bundled frontier edit ("a real lo'
+      tools/test_methodology_trim.py:1424  ours 2 lines, theirs 1 lines; ours[0]='# tamper is made BEFORE the one commit: the proof reads the trim commi' theirs[0]='# tamper is made BEFORE the one commit: the proof reads the trim commi'
+      tools/test_methodology_trim.py:3443  ours 810 lines, theirs 1 lines; ours[0]='# Issue #93, the first of its suggestions: when the trim commit also e' theirs[0]='# A ledger under methodology/.'
+  27 72e0c991 clean -> 669de6df; patch-id original c1df2f065f3d replay c1df2f065f3d EQUAL
+  28 8ace51e8 clean -> 0f93d7ef; patch-id original 5e782b717544 replay 5e782b717544 EQUAL
+  29 ccd5620e clean -> 1caff948; patch-id original 475bcf367153 replay 475bcf367153 EQUAL
+  30 28f99a70 clean -> 0dbc40dd; patch-id original fee4604f8ce4 replay fee4604f8ce4 EQUAL
+  32 a62bfecf clean -> c6d61ca9; patch-id original 2203762314f9 replay 2203762314f9 EQUAL
+  33 cfcc713b clean -> 0f5944da; patch-id original f197a6d5ebea replay f197a6d5ebea EQUAL
+  applied clean in order: [21, 22, 23, 24, 25, 27, 28, 29, 30, 32, 33]; conflicting: [26]
+  tip -> replayed 0f5944da: 25 files changed, 726 insertions(+), 717 deletions(-)
+  cumulative shortstat after each clean commit (tip..that commit):
+    after 21: 5 files changed, 19 insertions(+), 19 deletions(-)
+    after 22: 10 files changed, 59 insertions(+), 59 deletions(-)
+    after 23: 15 files changed, 114 insertions(+), 119 deletions(-)
+    after 24: 19 files changed, 145 insertions(+), 150 deletions(-)
+    after 25: 21 files changed, 220 insertions(+), 227 deletions(-)
+    after 27: 24 files changed, 624 insertions(+), 664 deletions(-)
+    after 28: 24 files changed, 637 insertions(+), 677 deletions(-)
+    after 29: 24 files changed, 654 insertions(+), 694 deletions(-)
+    after 30: 25 files changed, 667 insertions(+), 707 deletions(-)
+    after 32: 25 files changed, 675 insertions(+), 712 deletions(-)
+    after 33: 25 files changed, 726 insertions(+), 717 deletions(-)
+
+==== 3b. does the ORDER matter? (each order from a clean tip, stopping at the first conflict; equal tree ids mean the same result) ====
+  the replay of section 3 (all eleven, skipping 26): tree 866ea59c8738
+  A, 32, then B, then 33             [21, 22, 23, 24, 25, 27, 32, 28, 29, 30, 33]  tree 866ea59c8738  all clean
+  A, 32, 33, then B                  [21, 22, 23, 24, 25, 27, 32, 33, 28, 29, 30]  tree 866ea59c8738  all clean
+  A, B, 33 (no 32)                   [21, 22, 23, 24, 25, 27, 28, 29, 30, 33]  tree 051a32599035  all clean
+  A, 33 (B refused)                  [21, 22, 23, 24, 25, 27, 33]  tree a6696d12d5f1  all clean
+  A, 32 (B and 33 left)              [21, 22, 23, 24, 25, 27, 32]  tree 57d4347592f2  all clean
+  A, B (32 and 33 left)              [21, 22, 23, 24, 25, 27, 28, 29, 30]  tree 01c979d9450a  all clean
+  B alone on the tip                 [28, 29, 30]  tree d932852b0787  CONFLICT at 30 in ['bin/tests.sh']
+  B without 30, on the tip           [28, 29]  tree d932852b0787  all clean
+  33 alone on the tip                [33]  tree bc6e439b822f  CONFLICT at 33 in ['tools/test_methodology_dashboard.py']
+  22 then 30 (what 30 needs)         [22, 30]  tree b9a3c42b94d3  all clean
+  27 then 33 (what 33 needs)         [27, 33]  tree 5464256308d2  all clean
+
+==== 4. scrub-proof.py (no code token changed; strings and comments masked): the scrub-only range, then with commit 33 ====
+  tip..after 32 (A without 26, B, 32): exit 0
+    the two dashboard copies byte-identical in c6d61ca: yes
+    diff against FROM: +675 / -712 over 25 files (git diff --numstat)
+    CUMULATIVE PROOF: HOLDS
+  tip..after 33 (commit 33 is code, not a scrub): exit 1
+      .quality-gates.json                            JSON, `why` masked                           FAILED
+      tools/test_methodology_dashboard.py            Python tokens, strings and comments masked   FAILED
+    the two dashboard copies byte-identical in 0f5944d: yes
+    diff against FROM: +726 / -717 over 25 files (git diff --numstat)
+    CUMULATIVE PROOF: FAILS
+
+==== 5. fork-token lines per file (scrub-derive.py: strict classes, added lines against upstream/main) ====
+  at the tip:        lines with at least one strict token: 639 in 28 files
+  after the replay:  lines with at least one strict token: 33 in 6 files
+  file                                             tip  after   touched by
+  tools/test_methodology_dashboard.py              138      0   27,29,33
+  starter-kit/methodology_dashboard.py             114      0   27,29,32
+  tools/methodology_dashboard.py                   114      0   27,29,32
+  tools/test_migrate_layout.py                      56      1   25,28
+  bin/migrate-layout                                34      0   25,28,32
+  bin/tests.sh                                      24      2   22,30
+  tools/test_layout_resolver.py                     19      0   23
+  .githooks/pre-commit                              18      0   22,30
+  tools/test_sync_layouts.py                        14      0   23
+  tools/test_quality_ratchet.py                     14      0   24
+  starter-kit/methodology_trim.py                   12     12   26
+  tools/fixtures/trim-verify-template-1.8.2.sh      11     11   -
+  starter-kit/quality_ratchet.py                    10      0   24
+  bin/check-layout-literals                          9      2   22,28
+  tools/layout_fixtures.py                           8      0   23
+  tools/layout_resolver.py                           6      0   23
+  bin/sync                                           6      0   21
+  tools/test_methodology_trim.py                     5      5   26
+  bin/check-links                                    4      0   21
+  starter-kit/context_budget.py                      4      0   24
+  bin/status                                         4      0   21
+  tools/test_context_budget.py                       3      0   24
+  tools/test_checker_layouts.py                      3      0   23
+  bin/_manifest.py                                   3      0   21
+  bin/check-ledger                                   2      0   22
+  bin/check-handoff                                  2      0   22
+  bin/_manifest_reader.py                            1      0   21
+  .quality-gates.json                                1      0   30,32,33
+  ITERATIVE_METHODOLOGY.md                           0      0   -
+  .context-budget.json                               0      0   -
+  files with token lines at the tip that none of the twelve touches: .context-budget.json, ITERATIVE_METHODOLOGY.md, tools/fixtures/trim-verify-template-1.8.2.sh
+
+==== 6. the two open pull requests ====
+  feat/trim-session-notes-ledger-issue93 changes 6 files; control starter-kit/methodology_trim.py in the list: True
+    26 overlaps by file: starter-kit/methodology_trim.py, tools/test_methodology_trim.py
+    30 overlaps by file: .quality-gates.json
+    32 overlaps by file: .quality-gates.json
+    33 overlaps by file: .quality-gates.json
+    merge-tree tip with it: exit 1  .quality-gates.json 1, starter-kit/methodology_trim.py 3, tools/test_methodology_trim.py 1
+    merge-tree after the replay with it: exit 1  .quality-gates.json 1, starter-kit/methodology_trim.py 3, tools/test_methodology_trim.py 1
+  feat/close-out-report-tool changes 9 files; control bin/tests.sh in the list: True
+    22 overlaps by file: bin/tests.sh
+    30 overlaps by file: .quality-gates.json, bin/tests.sh
+    32 overlaps by file: .quality-gates.json
+    33 overlaps by file: .quality-gates.json
+    merge-tree tip with it: exit 1  .quality-gates.json 2, CHANGELOG.md 1, bin/tests.sh 1
+    merge-tree after the replay with it: exit 1  .quality-gates.json 2, CHANGELOG.md 1, bin/tests.sh 1
+
+==== 7. the read-set budget (context_budget.py --status) ====
+  at the tip: exit 0
+    context budget  OK   resident 51,487 B ≈ 17,572 tok
+    resident total 51,487 B / 59,168 B ceiling   growth run 1/10
+    read-set total 70,048 B / no ceiling declared
+  after the replay: exit 0
+    context budget  OK   resident 51,487 B ≈ 17,572 tok
+    resident total 51,487 B / 59,168 B ceiling   growth run 1/10
+    read-set total 70,048 B / no ceiling declared
+
+==== 8. the dashboard suite at the replayed tip (the gate dashboard-unit-tests: floor 395 at the tip, 397 in commit 33) ====
+  exit 0
+    ----------------------------------------------------------------------
+    Ran 397 tests in 92.227s
+    
+    OK
+  gate floor in the replayed tree: 397
+
+# clone dirty paths at the end: 0
+# uptime: 22:39:19  up 2 days  7:00,  6 users,  load average: 60.85, 105.72, 99.97

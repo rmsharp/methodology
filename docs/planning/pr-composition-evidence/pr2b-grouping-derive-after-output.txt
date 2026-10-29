@@ -1,0 +1,50 @@
+# S393: scrub-derive.py at the replayed tip (the eleven clean commits on pr2b/candidate d818ca17), saved by hand beside pr2b-grouping-measure-output.txt.
+# Command, run inside the scratch clone at HEAD 0f5944da (tree 866ea59c8738):
+#   python3 -I docs/planning/pr-composition-evidence/scrub-derive.py HEAD d50ce290d9218dc91d9a36069b4d936868964298
+# The list of cited-but-missing paths that follows these blocks in the tool's output is left out.
+candidate 0f5944d (tree 866ea59c87387947b7c01cee90ebeeabb60cc7e1) against d50ce29: 47 changed files
+
+STRICT classes, added lines carrying one (a line with two counts once per class):
+  BL         14
+  S           3
+  LEARN       0
+  PLANDOC     3
+  PHASE       5
+  PLANREF    14
+  PRPLAN      0
+  ADOPTER     0
+  PLANFILE    0
+  FINDING     0
+  SECTION     3
+  lines with at least one strict token: 33 in 6 files
+  lines with only a soft word (not counted):  45 in 10 files
+
+per file (strict lines / soft-only lines / classes):
+  starter-kit/methodology_trim.py                    12    2   BL=3 PHASE=3 PLANREF=10 SECTION=2
+  tools/fixtures/trim-verify-template-1.8.2.sh       11    5   BL=10 PLANDOC=1
+  tools/test_methodology_trim.py                      5    0   BL=1 PHASE=2 PLANREF=4 SECTION=1
+  bin/check-layout-literals                           2    0   PLANDOC=2
+  bin/tests.sh                                        2    0   S=2
+  tools/test_migrate_layout.py                        1    0   S=1
+  .context-budget.json                                0    1   
+  ITERATIVE_METHODOLOGY.md                            0    1   
+  bin/check-links                                     0    1   
+  starter-kit/methodology_dashboard.py                0   10   
+  starter-kit/quality_ratchet.py                      0    2   
+  tools/methodology_dashboard.py                      0   10   
+  tools/test_methodology_dashboard.py                 0   11   
+  tools/test_quality_ratchet.py                       0    2   
+
+STRICT lines by where the token sits (comment, tcomment (a trailing comment) and docstring are inert; string and code are behaviour-bearing):
+  comment      17
+  tcomment      5
+  docstring     7
+  string        1
+  code          3
+
+per file, behaviour-bearing strict lines (string + code):
+  bin/check-layout-literals                        string=0 code=1 (of 2)
+  bin/tests.sh                                     string=0 code=1 (of 2)
+  tools/fixtures/trim-verify-template-1.8.2.sh     string=0 code=1 (of 11)
+  tools/test_migrate_layout.py                     string=1 code=0 (of 1)
+
