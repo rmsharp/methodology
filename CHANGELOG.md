@@ -277,6 +277,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-28.md` (2 record(s), 65,066 B → 42,362 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-27 → 2026-10-28) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-28.md`](docs/archive/HANDOFFS-through-2026-10-28.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-28.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-28.md.verify.sh)
+rather than trusting a digest printed here. Live file 65,066 B → 42,362 B (−34.9%).
+
 ### 2026-10-28 · [ad hoc] S391 push -- fork `main` fast-forwarded `85da5d21..1f99d19d` (4 commits: S391's claim, its two work commits and its close-out); fork `origin` only
 
 At his Phase 0 answer 'Yes, push to fork origin (Recommended)'. Guarded before the push: `git ls-remote origin refs/heads/main` and `origin/main` both `85da5d21`, that sha an ancestor of `main`, `main` 4 ahead and 0 behind. After it: `git ls-remote origin refs/heads/main` = `main` = `1f99d19d`, 0 ahead and 0 behind; `git ls-remote origin 'refs/heads/pr2*'` is empty, so `pr2b/candidate` (`4e07877f`) and `pr2/candidate` (`3cba1e50`) stay local. Nothing sent to `KJ5HST/methodology`. This entry is the CHANGELOG-only push record, which goes to fork `origin` under his standing grant.
