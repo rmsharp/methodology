@@ -277,6 +277,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-28-2.md` (1 record(s), 53,869 B → 42,212 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-28 → 2026-10-28) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-28-2.md`](docs/archive/HANDOFFS-through-2026-10-28-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-28-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-28-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 53,869 B → 42,212 B (−21.6%).
+
 ### 2026-10-28 · [ad hoc] S392 receipt figures -- the room stated in the correction below is 103 B short: `HANDOFFS.md` is 53,869 B (11,667 B of room), not 53,972 B (11,564 B)
 
 The correction entry below and the first version of next_steps (2) quoted the file size from before that same correction shortened two phrases of the receipt by 103 B. The S392 receipt now says 53,869 B and 11,667 B (`bin/check-handoff` prints the same). The entry below is left as written (a committed entry is never edited; my first attempt to amend it was refused by the ledger hook and I did not bypass the hook). Local only.
