@@ -1,0 +1,38 @@
+expectations mtime 18:38:42
+first cherry-pick starts 18:38:50
+base: 109375f4 dirty: 0
+cherry-pick 18cda0f2 exit 0 -> bb35ffc9
+  patch-id original: 7a0c5f741fa9  replay: 7a0c5f741fa9
+cherry-pick 2942e46c exit 0 -> c9cda410
+  patch-id original: 9857b7cb9ef2  replay: 9857b7cb9ef2
+cherry-pick ab35e965 exit 0 -> 4e07877f
+  patch-id original: 3ce46281e670  replay: 3ce46281e670
+== group numstat vs 109375f4
+18	1	.quality-gates.json
+1458	0	bin/migrate-layout
+19	0	bin/tests.sh
+2	1	tools/test_layout_resolver.py
+2993	0	tools/test_migrate_layout.py
+1	0	tools/test_sync_layouts.py
+ 6 files changed, 4491 insertions(+), 2 deletions(-)
+tip: 4e07877f5c10b4b0476f3dea5bf3f21183c1f98d  tree: 83d7be52  commits on upstream/main: 20
+##### budget at the tip 4e07877f
+  resident total 51,487 B / 59,168 B ceiling   growth run 1/10
+  read-set total 70,048 B / no ceiling declared
+  nothing over budget
+budget exit 0
+##### tools/test_layout_resolver.py
+Ran 76 tests in 1.925s OK 
+##### tools/test_checker_layouts.py
+Ran 11 tests in 1.413s OK 
+##### tools/test_sync_layouts.py
+Ran 82 tests in 35.273s OK 
+##### tools/test_methodology_dashboard.py
+Ran 395 tests in 47.371s OK 
+##### fast classes of the new suite
+Ran 95 tests in 0.628s OK 
+##### scanner
+not scanned: tools/methodology_dashboard.py (byte-identical twin of starter-kit/methodology_dashboard.py, scanned once)
+check-layout-literals: scanned 15 files; 0 sites (0 path, 0 text); 138 acknowledged; 195 prose not counted
+scanner exit 0
+dirty paths after the suites: 0
