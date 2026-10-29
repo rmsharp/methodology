@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S395
+date: 2026-10-29
+status: pending
+active_task: **Build PR2b layer 23, the last group of the documentation work, in a scratch `--no-local` clone from `pr2b/candidate` `fd43f707` (29 commits on `upstream/main` `d50ce290`):** `git cherry-pick -x` of series commits 33 `cfcc713b`, then 28 `8ace51e8`, 29 `ccd5620e`, 30 `28f99a70` (patch-ids equal to the originals), expectations written before the first pick, verify per the grouping plan section 5 (`pr2b-layer-driver.sh 23`, the dashboard suite at 397 tests, the scrub proof over the B range, the ratchet floor, the fork-token count 17 in 5 files), then fast-forward the local `pr2b/candidate`. Local only; nothing is sent to `KJ5HST/methodology`. Claimed at his Phase 0 picker: 'Build layer 23 (Recommended)' and 'Yes, trim 4 to 3 (Recommended)' (the trim `b4c303a1` and the fold `16cdc96d` are done).
+```
+
+```handoff
 session: S394
 date: 2026-10-29
 status: complete
