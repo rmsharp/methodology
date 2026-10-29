@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S396
+date: 2026-10-29
+status: pending
+active_task: **Re-run PR3, the adopter-impact table, from the 33-commit candidate** (composition plan `docs/planning/upstream-pr-composition-plan.md` line 181): `pr2b/candidate` `47637be2` (33 commits on `upstream/main` `d50ce290`) against upstream's tool, over the 12 adopters in `--no-local` clones, plus the two legacy fixtures. S326's `pr3-adopters.py` is frozen; the run is a minimal-diff copy `pr3b-adopters.py` (names and refs only), expectations saved before the run, the real trees fingerprinted before and after. Output: `docs/planning/pr-composition-evidence/pr3b-*`; the record compares with S326's old-base figures (`pr3-record.md`). Local only; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'PR3 adopter table (Recommended)' and 'Yes, trim 4 to 3 (Recommended)' (done first: trim `11ea5f3d`, fold `83f3aeed`).
+```
+
+```handoff
 session: S395
 date: 2026-10-29
 status: complete
