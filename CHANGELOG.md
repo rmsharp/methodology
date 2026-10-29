@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] S392 receipt figures -- the room stated in the correction below is 103 B short: `HANDOFFS.md` is 53,869 B (11,667 B of room), not 53,972 B (11,564 B)
+
+The correction entry below and the first version of next_steps (2) quoted the file size from before that same correction shortened two phrases of the receipt by 103 B. The S392 receipt now says 53,869 B and 11,667 B (`bin/check-handoff` prints the same). The entry below is left as written (a committed entry is never edited; my first attempt to amend it was refused by the ledger hook and I did not bypass the hook). Local only.
+
 ### 2026-10-28 · [ad hoc] S392 receipt correction -- next_steps (2) now says S393's receipt must fit the 11,564 B of room or a required Yes/No trims 4 to 3 first
 
 The close-out receipt said no trim is needed at S393's Phase 0 (four receipts, the rule is above four) and left out that `HANDOFFS.md` is 53,972 B of 65,536 B, so S393's receipt (about 12,000 B at the usual size) would have passed the ceiling that `bin/check-handoff` fails. Found when writing the memory note for it. The text of next_steps (2) is replaced, and two phrases in the same receipt are shortened to keep it under the 12,288 B record budget. Local only: the commit is not pushed (the push he approved, and its record, were the two commits before this one).
