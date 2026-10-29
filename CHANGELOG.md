@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S394 claim (in progress) -- build PR2b layer 22, the documentation group (series 21 to 25, a hand-written 26-prime, 27 and 32), in a scratch clone onto the local `pr2b/candidate`; local only; nothing sent to `KJ5HST/methodology`
+
+Claimed at his Phase 0 picker: 'Build layer 22 (Recommended)' (the others offered were the three adopter ledgers with real defects and a local rebase of #96), with 'Yes, trim 4 to 3 (Recommended)' (done first: the trim `ac873475` and the fold `c626df26`, whose entries sit below; S390 archived, proof exit 0, `HANDOFFS.md` 42,002 B). Phase 0 (read 2026-10-29, `uptime` load 24.58 at 00:17): the `CHANGELOG.md` frontier = `HEAD` `d84ec98c` (0 undocumented, 0 merges); the `HANDOFFS.md` frontier `f72710fd` is one commit behind (S393's ledger-only push record, not a session), no pending receipt; `check-ledger` and `check-handoff` exit 0; the newest receipt's gate citation (results `32858fe46628`, manifest `102234f3acf8`) equals `.quality-gates-results.json`; `upstream/main` unchanged `d50ce290` (fetched); #98 open, MERGEABLE, CLEAN (`65990cda`); #96 open, CONFLICTING (`ad5c980f`); each 0 comments, 0 reviews; issues #93, #95, #97 no new activity; dashboard 72/100, 0 high-risk flags (its one history line rides this claim); `pr2b/candidate` `d818ca17`, `pr2/candidate` `3cba1e50`. The close-out entry follows when the layer is built.
+
 ### 2026-10-29 · [ad hoc] S394 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
 
 The block (4 lines, 456 B; `HANDOFFS.md` 42,458 B before) became the row `| 1 | 2026-10-28 → 2026-10-28 | HANDOFFS-through-2026-10-28-3.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58). It follows the trim `ac873475` (four receipts to three, S390 archived), taken at his Phase 0 'Yes'. Local only; nothing sent to `KJ5HST/methodology`.

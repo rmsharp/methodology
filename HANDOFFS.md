@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S394
+date: 2026-10-29
+status: pending
+active_task: **Build PR2b layer 22, the documentation group, in a scratch `--no-local` clone from `pr2b/candidate` `d818ca17` (21 commits on `upstream/main` `d50ce290`):** replay series 21 to 25, hand-write 26-prime on the tip's trimmer (its diff shown inline before the branch moves), replay 27 and 32, verify per the grouping plan section 5, then fast-forward the local `pr2b/candidate`. Local only; nothing sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S393
 date: 2026-10-28
 status: complete
