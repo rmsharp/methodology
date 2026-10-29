@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] S392 receipt correction -- next_steps (2) now says S393's receipt must fit the 11,564 B of room or a required Yes/No trims 4 to 3 first
+
+The close-out receipt said no trim is needed at S393's Phase 0 (four receipts, the rule is above four) and left out that `HANDOFFS.md` is 53,972 B of 65,536 B, so S393's receipt (about 12,000 B at the usual size) would have passed the ceiling that `bin/check-handoff` fails. Found when writing the memory note for it. The text of next_steps (2) is replaced, and two phrases in the same receipt are shortened to keep it under the 12,288 B record budget. Local only: the commit is not pushed (the push he approved, and its record, were the two commits before this one).
+
 ### 2026-10-28 · [ad hoc] S392 push -- fork `main` fast-forwarded `b4daa23f..a2b55b34` (6 commits: S392's trim and its fold, the claim, its two work commits and its close-out); fork `origin` only
 
 At his answer 'Yes, push to fork origin (Recommended)', asked during the gate run. Guarded before the push: `git ls-remote origin refs/heads/main` and `origin/main` both `b4daa23f`, that sha an ancestor of `main`, `main` 6 ahead and 0 behind, tree clean. After it: `git ls-remote origin refs/heads/main` = `main` = `a2b55b34`, 0 ahead and 0 behind; `git ls-remote origin 'refs/heads/pr2*'` is empty, so `pr2b/candidate` (`d818ca17`) and `pr2/candidate` (`3cba1e50`) are local branches and were not pushed. Pushed `main` only. Nothing sent to `KJ5HST/methodology`.
