@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] S393 push -- fork `main` fast-forwarded `69d1a104..f72710fd` (7 commits); the fork's `origin` only, nothing sent to `KJ5HST/methodology`
+
+At his Phase 0 'Yes, push to fork origin'. Guarded: `origin` is `https://github.com/rmsharp/methodology.git`, the remote's `main` read `69d1a104` by `ls-remote` and is an ancestor of `main`, the ahead count was 7 as expected; a plain `git push origin main`, no force. Read back: `ls-remote` now `f72710fd` = local `main`, ahead count 0. The seven are the two S392 receipt corrections (`6fe6bc02`, `a22e8165`) and this session's trim, fold, claim, work and close-out. This record is a `CHANGELOG.md`-only commit pushed to `origin` under his standing grant.
+
 ### 2026-10-28 · [ad hoc] S393 close-out -- PR2b grouping plan written, measured and decided (his D1, D2, D3 each as recommended: documentation group = commits 21 to 27 and 32, two layers, leftovers named in the pull request's text); nothing built, `pr2b/candidate` still `d818ca17`; the fork's gates pass 24 of 24; `HANDOFFS.md` trimmed 4 to 3 and folded; nothing sent to `KJ5HST/methodology`
 
 Plan `docs/planning/pr-composition-evidence/pr2b-grouping-plan.md` (13,981 B of its declared 14,000; status DECIDED) with `pr2b-grouping-measure.py`, `pr2b-grouping-measure-output.txt` and `pr2b-grouping-derive-after-output.txt`; work commit `8a42e366f311`, the claim `cafc8d845b8f`, the trim `31d3abe8ff5b` and the fold `c5897b6ced0c`. Layer 22 (the documentation group: 21 to 25, a hand-written 26, 27, 32) is the next build; layer 23 is 33 then 28 to 30 (plan section 5). The fork's gates on `HEAD` `8a42e366f311` with a clean tree, 22:41:30 to 23:05:44 (24 min 14 s): quality_ratchet: 24/24 pass · 0 fail · 0 unmeasured · results 32858fe46628 · manifest 102234f3acf8, equal to S392's citation (`tests-sh-passed` 692 at its floor). Local until the close-out push, which his 'Yes, push to fork origin' covers for the fork's `origin` only.
