@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S397
+date: 2026-10-29
+status: pending
+active_task: **PR4, the text of the one upstream pull request, re-checked against the 33-commit candidate** (composition plan `docs/planning/upstream-pr-composition-plan.md` line 182): `docs/planning/upstream-pr-body.md` is draft 11 written at the OLD base; it names the old candidate and its 34 commits (`:8`, `:34`, `:91`) and carries S326's PR3 figures (`:79`: 10 of 12 over 39 files). Re-check every number against `pr2b/candidate` `47637be2` (33 commits on `upstream/main` `d50ce290`) and S396's `pr3b-record.md`, scan for session numbers, backlog codes and coined names, then a fresh reader on a frozen copy. Local only; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'PR4: refresh the PR text (Recommended)' and 'Yes, trim 4 to 3 (Recommended)'.
+```
+
+```handoff
 session: S396
 date: 2026-10-29
 status: complete
