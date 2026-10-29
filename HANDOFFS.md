@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S392
+date: 2026-10-28
+status: pending
+active_task: **PR2b layer 21, one commit: add series commit 20 `5afc9621` (`HOW_TO_USE.md` and `starter-kit/HANDOFFS.md`; the last Markdown-only step) to the local branch `pr2b/candidate` (`4e07877f`) as one verbatim replay (`git cherry-pick -x`) in a scratch `--no-local` clone. It is expected to equal its original by `git patch-id --stable`, and S391's next-alone run read it clean onto this tip. The commit is verified at its tip with `pr2b-layer-driver.sh` in a clean clone, serially, after the read-set budget and the commit's overlap with the open heads (#98 `65990cda`, #96 `ad5c980f`) are read first from the repository root (plan `docs/planning/upstream-pr-composition-plan.md:179`, the PR2b row `:180`). A record under `docs/planning/pr-composition-evidence/`; `pr2/candidate` (`3cba1e50`) kept; nothing sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Yes, trim 5 to 3' (done before this claim: trim `9d477fd9`, fold `7a9ec9a7`, S388 and S387 archived) and 'Add commit 20 alone (Recommended)'. No push to fork `origin` was asked at this Phase 0, so none is made without asking.**
+```
+
+```handoff
 session: S391
 date: 2026-10-28
 status: complete
