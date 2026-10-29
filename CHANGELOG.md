@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-28 · [ad hoc] S392 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (4 lines, 448 B; `HANDOFFS.md` 42,362 B before, 41,914 B after) became the row `| 2 | 2026-10-27 → 2026-10-28 | HANDOFFS-through-2026-10-28.md | v1.8.1 |` (120 B). Own commit, as the index's rule says (fork Learning #58). It follows the trim `9d477fd9` (five receipts to three, S388 and S387 archived), taken at his Phase 0 go-ahead (a required Yes/No question, 'Yes, trim 5 to 3'); the dry run named the shard `HANDOFFS-through-2026-10-28.md` and the cut size exactly (65,066 B to 42,362 B), the proof exited 0, and I ran the `--write` myself. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-28.md` (2 record(s), 65,066 B → 42,362 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
