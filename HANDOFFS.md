@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S393
+date: 2026-10-28
+status: pending
+active_task: **A planning session: write the grouping plan for the twelve remaining commits of the candidate (series numbers 21 to 30, 32 and 33; 31 `ced2c823` is already in the tip as a replay) as one record under `docs/planning/pr-composition-evidence/`, onto `pr2b/candidate` (`d818ca17`, 21 commits on `upstream/main` `d50ce290`). It groups them into a few layers by measured touch sets and by what each clean-alone commit really conflicts with, asks him the question still unasked (do steps 21 to 30, the comment and printed-text scrubs in code files, count as documentation for the grouping rule?), and names for each layer its done criterion, its verification commands, its surface and its session boundary (the Planning Sessions checklist in `starter-kit/SESSION_RUNNER.md`). Nothing is built, no layer is added, `pr2b/candidate` and `pr2/candidate` stay untouched, and nothing is sent to `KJ5HST/methodology`. His steps: 'go'; at the Phase 0 picker 'Grouping plan for commits 21-33 (Recommended)', 'Yes, trim 4 to 3 (Recommended)' (done before this claim: trim `31d3abe8`, fold `c5897b6c`, S389 archived) and 'Yes, push to fork origin (Recommended)' (for the two local receipt-correction commits `6fe6bc02` and `a22e8165` plus this session's local commits; done after the close-out commit, guarded).**
+```
+
+```handoff
 session: S392
 date: 2026-10-28
 status: complete
