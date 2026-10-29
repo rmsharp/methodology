@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S394 close-out -- PR2b layer 22 built and verified (the documentation group: series 21 to 25, a hand-written 26-prime, 27 and 32); local `pr2b/candidate` fast-forwarded `d818ca17` to `fd43f707`, 29 commits on `upstream/main`; twelve of fourteen expectations confirmed; the fork's gates pass 24 of 24 on the second run (the first read 22 of 24); `HANDOFFS.md` trimmed 4 to 3 and folded; nothing sent to `KJ5HST/methodology`
+
+The close-out of the work entries beneath it. **The fork's gates** on `HEAD` `70d90331` with a clean tree: the first run (00:55:59 to 01:27:03, load 46.8 at its start) read 22/24 with one shell-suite test red (`tests-sh-passed` 691 against its floor of 692), and the ratchet keeps no output, so the test is unnamed; a direct `bash bin/tests.sh` on the same `HEAD` read 692 passed, 0 failed, 0 skipped; the re-run (01:38:27 to 02:04:56) read `quality_ratchet: 24/24 pass · 0 fail · 0 unmeasured · results 32858fe46628 · manifest 102234f3acf8`, equal to S393's citation. The first run's red is not reproduced and its cause is unproven. The receipt is in `HANDOFFS.md` (S394, 53,624 B in all). Local `main` is pushed to the fork's `origin` only, at his 'Yes, push to fork origin (Recommended)', in the entry above this one if it was made; `pr2b/candidate` and `pr2/candidate` are local branches and are not pushed.
+
 ### 2026-10-29 · [ad hoc] S394 correction -- `pr2b-grouping-plan.md` §5, layer 22's verify column, said the fork-token count would read "639 → 33 less 26-prime's reach"; it reads 60 in 11 files at that layer and 17 in 5 only after layer 23
 
 The 33 was measured after all eleven commits, including the printed-text commits 28 to 30 that sit in layer 23. One phrase replaced (37 B for 45 B; the file is 13,989 B of its declared 14,000). Found by the layer's own measurement (`pr2b-layer22-build-output.txt:93` and `:144`). Local only; nothing sent to `KJ5HST/methodology`.
