@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S395 push -- fork `main` fast-forwarded `7921d0ff..37e773e3` (6 commits); the fork's `origin` only, nothing sent to `KJ5HST/methodology`
+
+At his 'Yes, push to fork origin (Recommended)' (asked during the gate run). Guarded before the push: `git remote get-url origin` was `https://github.com/rmsharp/methodology.git` (the fork), `git ls-remote origin refs/heads/main` equalled `origin/main` (`7921d0ff`), that sha was an ancestor of `main`, and `git rev-list --count origin/main..main` read 6, as expected. Read back after: the remote's `main` is `37e773e3`, equal to local, 0 ahead and 0 behind; the remote holds no `pr2*` branch. `pr2b/candidate` (`47637be2`) and `pr2/candidate` (`3cba1e50`) are local branches and were not pushed.
+
 ### 2026-10-29 · [ad hoc] S395 close-out -- PR2b layer 23 built and verified (commit 33 and the printed-text group 28, 29, 30); local `pr2b/candidate` fast-forwarded `fd43f707` to `47637be2`, 33 commits on `upstream/main`, the rebuilt candidate complete; fifteen of sixteen expectations confirmed, none missed; the fork's gates pass 24 of 24; `HANDOFFS.md` trimmed 4 to 3 and folded; nothing sent to `KJ5HST/methodology`
 
 The close-out of the work entries beneath it. **The fork's gates** on `HEAD` `b2052776865d` with a clean tree, one run (11:48:39 to 12:14:16, 25 min 37 s; load 7.54 at its start, after waiting for it to fall from 23): `quality_ratchet: 24/24 pass · 0 fail · 0 unmeasured · results 32858fe46628 · manifest 102234f3acf8`, equal to S394's citation. Re-read at close-out (14:03): `upstream/main` unchanged `d50ce290`, #98 open, MERGEABLE, CLEAN, #96 open, CONFLICTING, each 0 comments and 0 reviews. The receipt is in `HANDOFFS.md` (S395, 53,924 B in all, 11,612 B of room). Local `main` is pushed to the fork's `origin` only, at his 'Yes, push to fork origin (Recommended)', in the entry above this one if it was made; `pr2b/candidate` and `pr2/candidate` are local branches and are not pushed.
