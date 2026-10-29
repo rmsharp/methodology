@@ -277,6 +277,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-28-3.md` (1 record(s), 53,928 B → 42,458 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-28 → 2026-10-28) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-28-3.md`](docs/archive/HANDOFFS-through-2026-10-28-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-28-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-28-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 53,928 B → 42,458 B (−21.3%).
+
 ### 2026-10-28 · [ad hoc] S393 push -- fork `main` fast-forwarded `69d1a104..f72710fd` (7 commits); the fork's `origin` only, nothing sent to `KJ5HST/methodology`
 
 At his Phase 0 'Yes, push to fork origin'. Guarded: `origin` is `https://github.com/rmsharp/methodology.git`, the remote's `main` read `69d1a104` by `ls-remote` and is an ancestor of `main`, the ahead count was 7 as expected; a plain `git push origin main`, no force. Read back: `ls-remote` now `f72710fd` = local `main`, ahead count 0. The seven are the two S392 receipt corrections (`6fe6bc02`, `a22e8165`) and this session's trim, fold, claim, work and close-out. This record is a `CHANGELOG.md`-only commit pushed to `origin` under his standing grant.
