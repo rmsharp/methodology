@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S404
+date: 2026-10-30
+status: pending
+active_task: **BL-114: make a fresh `bin/sync` (legacy layout) pass its own `.context-budget.json`** (his pick at the S404 Phase 0 picker, 'BL-114: fix fresh-sync failure (Recommended)'). Upstream issue #95's four findings (the seed `SESSION_NOTES.md` line 5 is 321 B against 280 and has one `## ` heading against an expected two; `CLAUDE_TEMPLATE.md` has no `budget:protected` fence; the line cap counts characters), plus the gap its suggested fix 3 leaves (a fenced placeholder is 182 B against the 800 floor) and the same characters-for-bytes slip at the fence floor (`context_budget.py:546,548`). Fork-only; nothing is sent to `KJ5HST/methodology`. Present gate before any edit; the design choice inside fix 3 is his.
+```
+
+```handoff
 session: S403
 date: 2026-10-30
 status: complete
