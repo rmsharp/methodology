@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S402
+date: 2026-10-30
+status: pending
+active_task: **Correct the stale sentence at `CLAUDE.md:57`** ("`.context-budget.json` still calls the figure a warning until the plan's P5 rewrites it"). It was true when `24fe658b` wrote it (BL-53 P4, 2026-09-20) and false from `9db2c181` (BL-53 P5, the same day), which rewrote that entry to read 'reported series, not a limit'. Plan: delete the sentence (the one before it already says the ceiling is a reported series; `CLAUDE.md` is 18,737 B against an 18,600 B ceiling, so the edit must not grow it). Fork-only; nothing is sent to `KJ5HST/methodology`. Claimed at his Phase 0 picker 'Fix stale CLAUDE.md line 57 (Recommended)'.
+```
+
+```handoff
 session: S401
 date: 2026-10-30
 status: complete
