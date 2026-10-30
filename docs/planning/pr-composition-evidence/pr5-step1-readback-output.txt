@@ -1,0 +1,27 @@
+upstream  d50ce290d9218dc91d9a36069b4d936868964298
+candidate 47637be21425e5a5ad3603e85a4a0d4259f8f2e7
+remote branch origin/feat/methodology-directory
+
+== 1. the candidate, locally (git rev-list, git merge-base)
+  commits over upstream: 33
+  ok   merges inside the range: 0
+  ok   merge-base equals upstream's tip: d50ce290d9218dc91d9a36069b4d936868964298
+
+== 2. the fork's origin (git ls-remote --heads origin)
+  ok   origin's feat/methodology-directory equals the candidate: 47637be21425e5a5ad3603e85a4a0d4259f8f2e7
+  origin's other heads: bl57/changelog-rules docs/release-v4.2 feat/close-out-report-tool feat/trim-session-notes-ledger-issue93 fix/bootstrap-never-overwrite-rules fix/context-budget-status fix/pre-commit-stale-rebase-marker fix/sync-github-history fix/trim-verify-false-red-issue93 main 
+
+== 3. GitHub's own comparison with upstream's main (gh api repos/KJ5HST/methodology/compare/...)
+  status=ahead ahead_by=33 behind_by=0 merge_base=d50ce290d921 files=47
+  ok   GitHub status: ahead
+  ok   GitHub ahead_by: 33
+  ok   GitHub behind_by: 0
+  ok   GitHub merge base: d50ce290d9218dc91d9a36069b4d936868964298
+
+== 4. upstream, now (git ls-remote upstream; gh pr list)
+  ok   upstream main: d50ce290d9218dc91d9a36069b4d936868964298
+  ok   pull requests from head 'feat/methodology-directory' on upstream (none yet): 0
+  open #98 head 65990cda MERGEABLE CLEAN
+  open #96 head ad5c980f CONFLICTING DIRTY
+
+READ-BACK OK (0 failed)
