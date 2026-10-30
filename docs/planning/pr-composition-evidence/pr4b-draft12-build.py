@@ -25,7 +25,8 @@ DRAFT = ROOT / "docs" / "planning" / "upstream-pr-body.md"
 DRAFT11 = "7d00d29"   # draft 11, approved: the text this script starts from
 
 READ = "@@READ@@"     # filled from the constant below, so the status paragraph can say what read the draft had
-READ_TEXT = ("Draft 12 has had no read of its own, and neither had drafts 9 to 11.")
+READ_TEXT = ("Draft 12 was read cold by one fresh agent after it was frozen at `357ae739` (6 of 10; "
+             "[`pr4b-record.md`](pr-composition-evidence/pr4b-record.md) section 7); drafts 9 to 11 had no read.")
 
 # ---------------------------------------------------------------------------------------------------------
 # kind "sub":   (old, new)                  the old text occurs exactly once in the file
@@ -82,12 +83,11 @@ EDITS = [
      "3. **In what order should this and #98 go?** #98 (open) and this branch both rewrite "
      "`starter-kit/methodology_trim.py` and its tests. Against #98's current head (`65990cd`), "
      "`git merge-tree` reports conflicts in 3 files and 5 regions (the trimmer 3, its tests 1, `.quality-gates.json` "
-     "1); #96 (open) conflicts in 2 files and 3 regions (`.quality-gates.json` 2, `bin/tests.sh` 1). Counted in a "
-     "checkout, where your `merge=union` rule applies. This branch carries none of #98's "
+     "1); #96 (open) conflicts in 2 files and 3 regions (`.quality-gates.json` 2, `bin/tests.sh` 1). This branch carries none of #98's "
      "three commits (`SESSION_NOTES.md` in the trimmer's ledger table; two messages and three exit-3 statements made "
      "true; a warning for an uncommitted front-matter edit): the trimmer here is your 1.8.2 with the layout changes "
      "on top. Both name the trimmer 1.9.0 for different changes (#98's first commit, and this branch's trimmer "
-     "commit), and #98 goes on to 1.9.1 and 1.10.0, so whichever lands second takes a later number. Please say "
+     "commit), so whichever lands second takes a later number. Please say "
      "whether I should wait for #98 and rebase on it, or whether you will take this first and I rebase #98 and #96 "
      "on it. I have not resolved the conflicts."),
 
@@ -104,7 +104,7 @@ EDITS = [
      "runs, and its gate configuration. The dashboard is counted twice in that total (as "
      "`starter-kit/methodology_dashboard.py` and as an identical copy in `tools/`). About 37% of the added lines "
      "(6,883, in `fbcef39` and `1d93579`) are earlier work of mine that is not about the directory "
-     "(`pr4-distribution.py`, and `pr4b-facts.sh` for the 37%)."),
+     "(`pr4-distribution.py` prints the split, `pr4b-facts.sh` the 37%)."),
 
     # ---- the commits ------------------------------------------------------------------------------------------
     ("line", "Each commit's message describes it.",
@@ -211,10 +211,26 @@ def main():
 
 # Edits that rest on the last runs (first commit alone, cost, fixtures); filled in from their saved outputs.
 EXTRA_EDITS = [
-    # decision 4: in the rebuilt series the ten are not one run at the tip (22-28, then 29 and 30, then 31-33)
-    ("sub", "If you keep them, a merge commit or a rebase leaves them as a separable run; a squash folds them in.",
-     "If you keep them, a merge commit or a rebase leaves them as seven commits and a tail of three, and a squash "
-     "folds them in. The tail can be dropped alone; the seven only with `9848b62` rebased."),
+    # cold read, finding 1: the changed paragraph is the third, and the documents' path mentions change with it
+    ("sub", "and finds the first paragraph of `SESSION_RUNNER.md` changed (it says where to look for the other "
+            "framework files)",
+     "and finds its framework documents naming one another by bare name (28 fewer lines name `docs/methodology/`), "
+     "with a new paragraph, the third of `SESSION_RUNNER.md`, saying where to look"),
+    # cold read: the 138 is the scanner's own count, not a grep
+    ("sub", "`# layout: ok -- <reason>` (`python3 bin/check-layout-literals`)",
+     "`# layout: ok -- <reason>` (the \"acknowledged\" count of `python3 bin/check-layout-literals`)"),
+    # cold read: two classes of the migration suite do run in bin/tests.sh
+    ("sub", "Its own suite of 280 tests (separate from `bin/tests.sh`) takes about 6 minutes,",
+     "Its own suite of 280 tests takes about 6 minutes (two fast classes of it also run in `bin/tests.sh`),"),
+    # decision 4 (cold read): the ten are seven commits and a tail of three, not one run at the tip; the seven and the
+    # tail are named; 27 of the 33 commits end in a cherry-pick line that names a commit only the fork has
+    ("line", "   - Ten commits remove references",
+     "   - Ten commits remove references that only my fork can resolve, such as backlog and session codes in comments and "
+     "messages: seven (`e051462` to `8c37c28`) and a tail of three (`1477af2` to `47637be`). Please tell me whether to "
+     "keep these commits or drop them; if you drop them, the references stay in the code. A merge commit or a rebase "
+     "keeps them as separate commits and a squash folds them in. The tail can be dropped alone; the seven only with "
+     "`9848b62` rebased. They are not exhaustive: some references of that kind remain, and 27 of the 33 commits end "
+     "with a `(cherry picked from commit ...)` line that names a commit only my fork has."),
     # the cost run (pr4b-cost-output.txt): the dashboard on the larger project is now quicker, not "within 0.1 s"
     ("sub", "took the same time as upstream's versions, within 0.1 s on two test projects (`pr4-cost.sh`).",
      "took no longer than upstream's: the same on a project of 3 commits, and on one of 517 the dashboard took "

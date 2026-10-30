@@ -277,6 +277,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-29 · [ad hoc] S397 work (cold read, files) -- PR4: the revised draft 12, its builder, the checker's output and the record `pr4b-record.md`, committed after the entry just below them; local only; nothing sent to `KJ5HST/methodology`
+
+The entry headed "S397 work (cold read)" was written one commit early and rides with evidence 4's commit (`78fddc2f`), so that commit's diff carries it; this commit holds what it describes: `docs/planning/upstream-pr-body.md` (draft 12, 26 edits, 21,802 B), `pr4b-draft12-build.py`, `pr4b-body-check-output.txt` and `pr4b-record.md` (19.9 KB; sections 1 to 8, the reader's findings with what I did with each, and his seven calls). I first tried to edit that earlier entry to give this commit a ledger change; the ledger hook refused it (a committed entry is never edited) and this entry is the correction.
+
 ### 2026-10-29 · [ad hoc] S397 work (evidence 4) -- PR4: `pr4b-facts.sh` gains three sections after the cold read: where the documents say the framework files are, the cherry-pick lines, the migration suite's classes in `bin/tests.sh`; local only; nothing sent to `KJ5HST/methodology`
 
 Section 9: the runner's "Where the files are" paragraph is at line 7 (the third paragraph) and 38 lines of the changed markdown files name `docs/methodology/` at upstream's tip against 10 on the branch (the runner 11 to 1, the skills index 14 to 0, `SAFEGUARDS.md` 1 to 0, `BOOTSTRAP.md` 9 to 8, two seed sources 1 to 0). Section 10: 27 of the 33 commits end with a `(cherry picked from commit ...)` line. Section 11: `bin/tests.sh:326` runs two classes of the migration suite (95 tests). Each was a finding of the cold reader that I re-ran before acting on it; the output is `pr4b-facts-output.txt`, replaced whole.
