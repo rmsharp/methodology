@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S398
+date: 2026-10-29
+status: pending
+active_task: **PR5 step 1: push the candidate branch to the fork's `origin` and read it back** (composition plan `docs/planning/upstream-pr-composition-plan.md` §5, the PR5 row at line 183): local `pr2b/candidate` `47637be21425` (33 commits on `upstream/main` `d50ce290d921`) goes to the fork's `origin` only, as `feat/methodology-directory` (his pick; local name unchanged), guarded and read back with `git ls-remote`. Nothing is sent to `KJ5HST/methodology`; step 2 (opening the pull request) and step 3 (answering comments) are separate go-aheads, not started.
+```
+
+```handoff
 session: S397
 date: 2026-10-29
 status: complete
