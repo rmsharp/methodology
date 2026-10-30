@@ -1,0 +1,18 @@
+no banned token, no placeholder
+hash `07ec025` resolves; in upstream..candidate: True
+hash `1d93579` resolves; in upstream..candidate: True
+hash `41a1e58` resolves; in upstream..candidate: True
+hash `62680cd` resolves; in upstream..candidate: True
+hash `65990cd` resolves; in upstream..candidate: False
+hash `6ce88cd` resolves; in upstream..candidate: True
+hash `7d87cb2` resolves; in upstream..candidate: True
+hash `9848b62` resolves; in upstream..candidate: True
+hash `c8b9ddd` resolves; in upstream..candidate: False
+hash `d50ce29` resolves; in upstream..candidate: False
+hash `d818ca1` resolves; in upstream..candidate: True
+hash `e7b389f` resolves; in upstream..candidate: False
+hash `fbcef39` resolves; in upstream..candidate: True
+hash `fd43f70` resolves; in upstream..candidate: True
+32 paths cited
+git diff --shortstat: 47 files changed, 18367 insertions(+), 1098 deletions(-)
+commits: 33
