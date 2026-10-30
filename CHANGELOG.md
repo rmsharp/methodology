@@ -277,6 +277,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-29-2.md` (1 record(s), 53,484 B → 41,896 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-29 → 2026-10-29) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-29-2.md`](docs/archive/HANDOFFS-through-2026-10-29-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-29-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-29-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 53,484 B → 41,896 B (−21.7%).
+
 ### 2026-10-30 · [ad hoc] S398 push record -- fork `main` fast-forwarded `b063c61a..32c47468` (5 commits); the fork's `origin` only, nothing sent to `KJ5HST/methodology`
 
 At his 'Yes, push main to the fork's origin (Recommended)' during the gate run. Guards read first: the remote's `main` equalled `origin/main` (`b063c61a`), that sha was an ancestor of `main`, the count was 5 (the trim, fold, claim, work and close-out commits), no merges, one author. `git push origin main` exit 0; after it `git ls-remote origin refs/heads/main` equals the local `main` (`32c47468`), `feat/methodology-directory` still `47637be21425`, `upstream/main` still `d50ce290`. This entry is the one commit after that push; it is pushed to `origin` under his standing grant for ledger-only push records. The pull request is unopened.
