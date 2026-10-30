@@ -54,7 +54,7 @@ criterion and retired **none** — the row-by-row basis is in
 [`fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md) §5;
 read it before re-adjudicating anything. The operator ratified **option C** the same day: the ceiling
 becomes a reported series and the per-row budget (`bin/check-learnings`, `ROW_BUDGET_BYTES` = 1,500)
-stays. `.context-budget.json` still calls the figure a warning until the plan's P5 rewrites it.
+stays.
 
 ## Document Hierarchy
 
