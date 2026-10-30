@@ -281,6 +281,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-30 · [ad hoc] S403 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (4 lines) became the row `| 2 | 2026-10-29 → 2026-10-30 | HANDOFFS-through-2026-10-30.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58). It follows the trim `99121212` (five receipts to three, S398 and S399 archived; its proof `bash docs/archive/HANDOFFS-through-2026-10-30.md.verify.sh` exit 0 before and after that commit and after this fold), taken at his required Yes/No 'Yes, trim now (Recommended)' at the S403 Phase 0 picker. Local only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-30.md` (2 record(s), 59,198 B → 36,744 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
