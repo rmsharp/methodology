@@ -281,6 +281,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-30 · [ad hoc] S400 work (2 of 3) -- the squash-merge check's comparison: `squash-compare.py` (read-only), the squash run's report, the run times and the adopters' reflogs
+
+`squash-compare.py` reads both `rows.json` and S396's and asks git which commits of `upstream/main..pr2b/candidate` carry each version the squash newly refuses; it exits 0 when every property expectation holds (it did). `squash-adopters-output.md` is the squash run's own report (its header sentence names `pr2b/candidate` because the ref name is hard-coded in the script; the sha `ea256ad` is the squash branch's). `squash-run-times.txt`: the three timestamps and loads. `squash-reflog-output.txt`: the adopters' `HEAD` reflog entries since 13:00, read after the runs (three projects were committed to by their own sessions in or just after the window). The output and the record follow. Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-30 · [ad hoc] S400 work (1 of 3) -- the squash-merge check's runs: the 14 expectations (saved before the squash ref was built), then `pr3b-adopters.py` over the 12 adopters against `pr2b/candidate` (the control: 52 files refused, 272 s) and against the new local `pr2b/squash-check` (71, 266 s); both `rows.json`
 
 The local branch `pr2b/squash-check` (`ea256adbe208`, never pushed) is `upstream/main` `d50ce290d921` plus one commit holding the candidate's tree `382d305a4c27` (the same tree as `47637be21425`, one commit above upstream, 47 files each). Two runs of S396's `pr3b-adopters.py`, unchanged, back to back from the repository root, each with its own `--work` and `--out` in the scratchpad (13:12:37 to 13:17:09 and 13:17:09 to 13:21:35, load 5.0 to 7.0). Files: `squash-expectations.txt`, `squash-control-rows.json`, `squash-control-adopters-output.md`, `squash-rows.json` in `docs/planning/pr-composition-evidence/`. The comparison and the record follow in the next two commits. Nothing sent to `KJ5HST/methodology`.

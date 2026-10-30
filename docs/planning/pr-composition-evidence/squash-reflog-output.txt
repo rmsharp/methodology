@@ -1,0 +1,24 @@
+Reflog entries (HEAD) of the 12 adopters since 2026-10-30 13:00:00 -0500, read at 2026-10-30 13:25:03 -0500 after both runs (control 13:12:37 to 13:17:09, squash 13:17:09 to 13:21:35).
+Command: git -C ~/Development/<name> reflog --date=iso --since='2026-10-30 13:00:00' --format='%h %gd %gs'
+== model_project_constructor
+efca54b HEAD@{2026-10-30 13:22:12 -0500} commit: examples: layer 3 of the Larkspur worked example — the driver, the wh
+a9bb137 HEAD@{2026-10-30 13:20:07 -0500} commit: examples: layer 2 of the Larkspur worked example — the data stage aga
+24629e6 HEAD@{2026-10-30 13:14:07 -0500} commit: examples: layer 1 of the Larkspur worked example — the interview, key
+d7ed920 HEAD@{2026-10-30 13:09:43 -0500} commit: docs: re-scope S286 claim — from the second tutorial to a keyless wor
+== feedback-loop-comparison
+== nprcgenekeepr
+c127334cd HEAD@{2026-10-30 13:18:56 -0500} commit: docs: S1097 -- record the owner's rulings on the CRAN plan's open dec
+0890874dc HEAD@{2026-10-30 13:04:17 -0500} commit: docs: S1097 -- CRAN plan Phase 3 DONE: plan Status line, Phase 3 DONE
+== mts-system
+== vscode_quarto_ext
+== Philippians
+== airqino
+== chat_verification
+== church_growth
+== dalia_martinez_funeral
+== claude_work
+fatal: your current branch 'main' does not have any commits yet
+== wsfct
+2823664d HEAD@{2026-10-30 13:12:47 -0500} commit: docs(s743): close-out - handoff, predecessor evaluation (8/10), self-a
+c20ee0c9 HEAD@{2026-10-30 13:12:47 -0500} commit: docs(s743): ledger and backlog - fault-injection outcome, container ac
+33071c23 HEAD@{2026-10-30 13:07:24 -0500} commit: docs(s743): REFACTOR - RUNBOOK and prover docstring now state the meas
