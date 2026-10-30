@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S400
+date: 2026-10-30
+status: pending
+active_task: **The squash-merge check for pull request #99** (plan `docs/planning/upstream-pr-composition-plan.md` section 5; S396's `pr3b-record.md:94` and `pr4b-record.md` item 6 left it 'Not measured' and said a squash 'can only raise the 52'). Build a local ref that is `upstream/main` `d50ce290d921` plus ONE commit holding the candidate's tree (what GitHub's squash button would produce from `47637be21425`), run `pr3b-adopters.py` over the 12 adopters against it AND against `pr2b/candidate` as a same-day control (the adopters have moved since 10-29), compare the refused-file counts, and write the record. Local only: nothing is sent to `KJ5HST/methodology`; #99, #98 and #96 are not touched.
+```
+
+```handoff
 session: S399
 date: 2026-10-30
 status: complete

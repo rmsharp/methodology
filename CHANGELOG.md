@@ -281,6 +281,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-30 · [ad hoc] S400 claim (in progress) -- the squash-merge check for #99: a local `upstream/main`-plus-one-commit ref holding the candidate's tree, `pr3b-adopters.py` over the 12 adopters against it and against `pr2b/candidate` as a same-day control; local only
+
+Claimed at his Phase 0 picker: 'Squash-merge check (Recommended)' (the others offered were a fix to `pr4-body-check.py` and stopping after Phase 0), with 'Yes, trim it (Recommended)' answered in the same picker as a required Yes/No for `CHANGELOG.md` (199,263 B against its 196,608 B trigger), which is why the trim `2eb43868` (63 of 127 records to `docs/archive/CHANGELOG-through-2026-10-28.md`, 99,272 B live, proof exit 0 before and after the commit) came first and its entry sits below. Phase 0 (read 2026-10-30 at 13:06, `uptime` load 5.87): the `CHANGELOG.md` frontier = `HEAD` `5f1a05e7` (0 undocumented, 0 merges); the `HANDOFFS.md` frontier `8f4b5e2a` is one commit behind (S399's ledger-only push record, not a session), no pending receipt, 4 receipts at 53,089 B; `check-ledger` and `check-handoff` exit 0; the newest receipt's gate citation (results `32858fe46628`, manifest `102234f3acf8`) equals `.quality-gates-results.json` (run on `d3f73511`, no code changed since); `upstream/main` unchanged `d50ce290` (fetched); `pr5-step2-readback.sh 99 d50ce290d921 47637be21425 feat/methodology-directory` exit 0, 'READ-BACK OK (0 failed)'; #99 open, MERGEABLE, CLEAN, 0 comments, 0 reviews; #98 open, MERGEABLE, CLEAN (`65990cda`); #96 open, CONFLICTING (`ad5c980f`); issues #93, #95, #97 no activity since 10-24; dashboard 72/100, 0 high-risk flags (its history line rides this claim). Nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-30 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-28.md` (63 record(s), 199,263 B → 99,272 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
