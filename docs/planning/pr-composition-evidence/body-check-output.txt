@@ -1,0 +1,9 @@
+old script on the posted draft: exit 0, 14 True, 4 False
+PASS E1  no extras: exit 1 (got 1), three outside (got 3): 65990cd c8b9ddd e7b389f; d50ce29 allowed as upstream's tip
+PASS E2  three extras: exit 0 (got 0), no outside line, three 'named on the command line'
+PASS E3  against the old output only the four False lines changed (old exit 0; 4 removed, 4 added)
+PASS E4  negative control (`e66ee17`, outside the range): exit 1 (got 1), exactly that one outside (got 1)
+PASS E5  unresolved extra: exit 1 (got 1); uncited extra: exit 0 (got 0) with its line
+PASS E6  in-range hash named as an extra: exit 0 (got 0), its line equals the old script's
+PASS E7  two arguments: old exit 1, new exit 1, both a ValueError from the unpacking
+expectations failed: 0
