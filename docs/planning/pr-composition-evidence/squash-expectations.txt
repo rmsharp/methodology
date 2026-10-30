@@ -1,0 +1,41 @@
+Squash-merge check for pull request #99: expectations, written BEFORE the squash ref is built or either run starts.
+
+The question (S396's pr3b-record.md:94 and pr4b-record.md item 6 left it unmeasured): if the maintainer merges #99 with
+GitHub's squash button, history of each distributed file in `upstream/main` is upstream's own history plus ONE commit
+holding the final blob, instead of upstream's history plus the 33 commits' intermediate blobs. The candidate's tool
+refuses an adopter's file when the adopter's blob is in neither that history of the file nor the current blob, so a squash
+can refuse MORE files than the merge S396 measured (52 at 10 of 12 adopters, 267 s), and cannot refuse fewer.
+
+Method: ref `pr2b/squash-check` = one commit, parent `upstream/main` d50ce290d921, tree = `pr2b/candidate`'s tree
+(47637be21425). `pr3b-adopters.py` unchanged, run twice back to back, serially, from the repository root, each with its own
+--work and --out under the scratchpad: first `--candidate-ref pr2b/candidate` (the CONTROL: the adopters have moved since
+S396's 2026-10-29 run, so S396's 52 is not a same-day baseline), then `--candidate-ref pr2b/squash-check`.
+
+Each line: id, claim, confidence that it will be confirmed.
+
+E1  (99%) The squash ref has one commit above upstream/main and its tree id equals `47637be21425^{tree}`; `git diff
+    --stat upstream/main pr2b/squash-check` equals `upstream/main..pr2b/candidate`'s 47 files.
+E2  (85%) The CONTROL reproduces S396's exit-code pattern: 10 of 12 adopters refuse a plain sync (exit 2), `dalia_martinez_funeral`
+    and `claude_work` do not.
+E3  (55%) The CONTROL's refused-file total is exactly 52. (Four adopters have commits since S396 and one, `nprcgenekeepr`,
+    re-synced on 10-22; a changed HEAD can change its refused set.)
+E4  (97%) The squash run refuses at least as many files as the control at EVERY adopter (a subset of history can only refuse
+    more). A single adopter where squash refuses fewer falsifies the premise, not just the number.
+E5  (50%) The squash run's refused-file total equals the control's. The premise is that no adopter holds a blob that exists only
+    as an intermediate blob of the 33 commits. 27 of the 33 are cherry-picks of fork commits, so an intermediate blob can equal
+    the version an adopter synced from the fork, and that is the case that would raise the count; I cannot rule it out without
+    running the rule. If it differs: the total lies between 52 and 80 (80%).
+E6  (85%) The 10 adopters that refuse in the control still refuse under squash, and the 2 that do not (`dalia_martinez_funeral`,
+    `claude_work`) still do not.
+E7  (90%) The forced sync writes the same number of files at each adopter under both runs (a forced sync writes every changed
+    file whatever the refusal).
+E8  (97%) Seeds changed: 0 at all 12, in both runs.
+E9  (90%) The sync that follows a forced one (plain, after its commit) exits 0 and writes 0 at 12 of 12, in both runs.
+E10 (90%) The report's audit column (the tool's refusal list equals the rule "the adopter's blob is in neither the source's
+    history of that file nor its current blob") reads yes at 12 of 12, in both runs.
+E11 (95%) Upstream's tool gives the same result in the two runs (same ref, same adopters, minutes apart) at every adopter
+    that did not move between them.
+E12 (95%) Fixtures (a) and (b): the squash run's write sets equal the control's.
+E13 (75%) Each run takes under 400 s (S396: 267 s; the machine's load average was 4.8 at 13:12).
+E14 (80%) The real trees of the 12 adopters have identical HEAD, refs, status and config before and after each run, except any
+    that a session of that project moves meanwhile (S396: `wsfct` moved).
