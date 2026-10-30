@@ -281,6 +281,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-30.md` (2 record(s), 59,198 B → 36,744 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-29 → 2026-10-30) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-30.md`](docs/archive/HANDOFFS-through-2026-10-30.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-30.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-30.md.verify.sh)
+rather than trusting a digest printed here. Live file 59,198 B → 36,744 B (−37.9%).
+
 ### 2026-10-30 · [ad hoc] S402 push record -- fork `main` fast-forwarded `e79af8c9..5ebb43d2` (3 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed `main` only (never `--all` or `--mirror`) to `https://github.com/rmsharp/methodology.git` at his 'Yes, push main to the fork's origin (Recommended)'. Guard before the push: `git ls-remote origin refs/heads/main` = `e79af8c9`, an ancestor of local `main`, `git rev-list --count` = 3 (the claim `f8ca7a78`, the work `b33b2546`, the close-out `5ebb43d2`). Read-back after: `git ls-remote origin refs/heads/main` = `5ebb43d2` = local `main`. This entry is a ledger-only commit that goes to `origin` under his standing grant; if `git rev-list --count origin/main..main` is not 0, that commit was not pushed.
