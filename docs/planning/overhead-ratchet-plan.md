@@ -54,7 +54,7 @@ A plan that re-proposes a ratified decision costs a session and loses trust. Fou
 | S1 | The `FORK_LEARNINGS.md` 81,920 B figure is a **reported series, not a limit**; the per-row `ROW_BUDGET_BYTES` = 1,500 is what still refuses | operator, S201, ratified S202 (BL-53 D4, option C) | **That file's row only.** It says nothing about the read-set class total, and nothing about whether the tool runs |
 | S2 | `starter-kit/SAFEGUARDS.md`'s row is a **reported series** | operator, S205 (BL-78 P2, option β) | That file's row only |
 | S3 | **No enforcement** — do not build a growth comparison into the distributed tool and wire it into the distributed hook | **operator, S206 (BL-78 P3)** | The **hook shape**. The evidence put to him was the merge finding (§4 F1). He was not asked about a ratchet gate, and `.quality-gates.json` was not on the table |
-| S4 | The `.context-budget.json` ceiling is a reported series; the per-row budget stays | operator, S202, option C | `CLAUDE.md` §Contributing records this. `.context-budget.json` still calls the figure a warning until BL-53's P5 rewrites it |
+| S4 | The `.context-budget.json` ceiling is a reported series; the per-row budget stays | operator, S202, option C | `CLAUDE.md` §Contributing records this. `.context-budget.json` says so too (BL-53's P5 rewrote its entry) |
 
 **S3 is the one a reader will misremember as wider than it is.** It is a decision about a *mechanism*,
 taken against that mechanism's measured incompleteness and its distributed blast radius. It is not a
