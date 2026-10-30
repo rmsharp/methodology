@@ -1,0 +1,29 @@
+pr4-body-check.py: a cited commit hash outside upstream..candidate fails check 3. Expectations, written BEFORE the script is edited.
+
+The defect (pr4b-record.md item 5 and section 7 item 7): check 3 prints `in upstream..candidate: False` for a hash
+that is outside the branch and still exits 0; it fails only on a hash that does not resolve. Reproduced today, before any
+edit, with the committed script (blob 7733b493f116) on docs/planning/upstream-pr-body.md, candidate 47637be21425,
+upstream d50ce290d921: exit 0, 14 hashes `True`, four `False`: 65990cd (#98's head), c8b9ddd and e7b389f (fork `main`),
+d50ce29 (upstream's tip). The old script's copy and its run are in the scratchpad, not committed.
+
+The change (decided before writing it): every cited hash must be inside upstream..candidate, except (a) the tip of
+<upstream> itself, which is allowed without being named (it is the base the text says the branch sits on), and (b) a hash
+named as an extra argument after <upstream>, one per exemption, so the exemption is on the command line that is recorded
+beside the run and cannot go stale inside the script. An extra that does not resolve fails, so a typo cannot silently
+exempt nothing. An extra the body does not cite is printed and does not fail (a stale exemption is not a fault in the text).
+The `True` lines stay byte for byte as they are; a `False` line gains a verdict after it.
+
+Each line: id, claim, confidence that it will be confirmed.
+
+E1  (90%) The edited script with NO extras on the posted draft exits 1 and names exactly three hashes as outside and not
+    allowed: 65990cd, c8b9ddd, e7b389f. d50ce29 passes as upstream's tip.
+E2  (90%) With the three as extras it exits 0.
+E3  (90%) Its 14 `True` hash lines and every output line of checks 1, 2, 4 and 5 equal the old script's, byte for byte
+    (diff of the two outputs shows only the four `False` lines changed).
+E4  (95%) NEGATIVE CONTROL: a copy of the draft with one more backticked hash that resolves but is outside the range (a
+    commit of the fork's `main` that is not an ancestor of the candidate) exits 1 even with the three extras given.
+E5  (85%) An extra that does not resolve (`deadbee`) exits 1 and says so; an extra that resolves but is not cited in the
+    body is printed and does not change the exit code.
+E6  (80%) A cited hash that is in range but ALSO named as an extra changes nothing (still `True`, no verdict suffix).
+E7  (97%) With fewer than three arguments the script fails as it does now (an unpacking error from sys.argv), because the
+    change adds no argument handling beyond the extras: I will not widen the script past the one gate.

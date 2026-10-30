@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """PR4: read-only checks of the pull request's body (the text below the first rule of the draft file).
 
-  python3 docs/planning/pr-composition-evidence/pr4-body-check.py <draft.md> <candidate> <upstream>
+  python3 docs/planning/pr-composition-evidence/pr4-body-check.py <draft.md> <candidate> <upstream> [<hash> ...]
 
 1. no session number, backlog or plan code, finding label, or coined name (the pattern list is printed, with each hit);
 2. no `@@placeholder@@` left;
-3. every commit hash the body cites resolves in the repository, and is inside <upstream>..<candidate> when it claims to be;
+3. every commit hash the body cites resolves in the repository and is inside <upstream>..<candidate>, unless it is
+   <upstream>'s own tip or one of the <hash> arguments (the hashes the text itself names as not the branch's);
 4. every path the body cites in backticks exists in the candidate's tree, in upstream's tree, or is one of the two
    fork-side evidence scripts it names;
 5. the size, byte and count the body states about the repository, recomputed.
@@ -56,14 +57,36 @@ if not bad:
 # 3: hashes
 shas = sorted(set(re.findall(r"`([0-9a-f]{7,12})`", body)))
 inrange = set(git("rev-list", f"{up}..{cand}").split())
+allowed = {git("rev-parse", "--verify", "-q", up + "^{commit}").strip(): "upstream's tip"}
+named = {}
+for a in sys.argv[4:]:
+    full = git("rev-parse", "--verify", "-q", a + "^{commit}").strip()
+    if not full:
+        print(f"UNRESOLVED allowed hash {a!r}")
+        bad += 1
+    else:
+        allowed.setdefault(full, "named on the command line")
+        named[full] = a
 n_bad = 0
+cited = set()
 for s in shas:
     full = git("rev-parse", "--verify", "-q", s + "^{commit}").strip()
     if not full:
         print(f"UNRESOLVED hash `{s}`")
         n_bad += 1
+        continue
+    cited.add(full)
+    line = f"hash `{s}` resolves; in upstream..candidate: {full in inrange}"
+    if full in inrange:
+        print(line)
+    elif full in allowed:
+        print(f"{line}; allowed ({allowed[full]})")
     else:
-        print(f"hash `{s}` resolves; in upstream..candidate: {full in inrange}")
+        print(f"{line}; OUTSIDE and not allowed")
+        n_bad += 1
+for full, a in named.items():
+    if full not in cited:
+        print(f"allowed hash {a!r} is not cited in the body")
 bad += n_bad
 
 # 4: paths
