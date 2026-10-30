@@ -1687,6 +1687,107 @@ def token_partition(cfg):
     return violations, checked
 
 
+class TestAFreshProjectPassesItsOwnBudget(unittest.TestCase):
+    """Upstream issue #95. `bin/sync` installs a seed `.context-budget.json`, a seed
+    `SESSION_NOTES.md` and `CLAUDE_TEMPLATE.md` (which BOOTSTRAP.md tells the adopter to copy to
+    `CLAUDE.md`), and the tool rejected that set on day zero with exit 2: the seed's line 5 is 321 B
+    against a 280 B cap and its `^## ` check saw one heading of an expected two, and the template had
+    no `budget:protected` fence. The issue's suggested fix 3 (fence the Purpose placeholder) is not
+    enough on its own: the fenced placeholder is 182 B against the 800 B floor, so the tool still said
+    "it looks emptied". Both counts were also characters printed as B (`len(l)`, `len(body.strip())`),
+    while the file size beside them is bytes. The rows are measured with the tool's own
+    `measure_file`, on the files `bin/sync` ships; the real route, through `bin/sync`, is Test 35 in
+    bin/tests.sh. RED first: every test below except the fixture and the three controls (the
+    short block without the key, the emptied block with it, the real purpose) fails on 1.4.0."""
+
+    SEEDS = REPO / "starter-kit"
+
+    def setUp(self):
+        self.cfg = json.loads((self.SEEDS / "context-budget.json").read_text())
+        self.rows = {s["path"]: s for s in self.cfg["files"]}
+
+    def measure_text(self, text, spec):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_text(text, encoding="utf-8")
+            return cb.measure_file(d, dict(spec, path="t.md"), cfg={})
+
+    def measure_seed(self, seed, spec, as_name):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, as_name).write_bytes((self.SEEDS / seed).read_bytes())
+            return cb.measure_file(d, spec, cfg=self.cfg)
+
+    @staticmethod
+    def fenced(body):
+        return "<!-- pf -->\n" + body + "\n<!-- /pf -->\n"
+
+    def test_fixture_the_seed_config_declares_the_rows_this_class_measures(self):
+        notes, claude = self.rows["SESSION_NOTES.md"], self.rows["CLAUDE.md"]
+        self.assertEqual(notes["max_line_bytes"], 280)
+        self.assertEqual([s["pattern"] for s in notes["structure"]],
+                         ["^## ACTIVE TASK", "^## "])
+        self.assertEqual((claude["protected_fence"], claude["protected_min_bytes"]),
+                         ("budget:protected", 800))
+
+    def test_the_line_cap_counts_bytes_not_characters(self):
+        spec = {"max_line_bytes": 280}
+        r = self.measure_text("—" * 200 + "\n", spec)       # 200 characters, 600 bytes
+        self.assertEqual(r["status"], "over")
+        self.assertIn("at 600 B", r["findings"][0]["msg"])
+        # presence control: 200 ASCII characters are 200 bytes
+        r = self.measure_text("a" * 200 + "\n", spec)
+        self.assertEqual((r["status"], r["findings"]), ("ok", []))
+
+    def test_the_fence_floor_counts_bytes_not_characters(self):
+        spec = {"protected_fence": "pf", "protected_min_bytes": 800}
+        r = self.measure_text(self.fenced("—" * 300), spec)  # 300 characters, 900 bytes
+        self.assertEqual((r["status"], r["findings"]), ("ok", []))
+        # presence control: 300 ASCII characters are 300 bytes, under the floor
+        r = self.measure_text(self.fenced("y" * 300), spec)
+        self.assertEqual(r["status"], "over")
+        self.assertIn("only 300 B", r["findings"][0]["msg"])
+
+    def test_a_block_still_holding_the_placeholder_is_a_warning(self):
+        spec = {"protected_fence": "pf", "protected_min_bytes": 800,
+                "protected_placeholder": "<project-name>"}
+        r = self.measure_text(self.fenced("This is the `<project-name>` project."), spec)
+        self.assertEqual(r["status"], "warn")
+        self.assertEqual([f["kind"] for f in r["findings"]], ["placeholder"])
+        self.assertIn("placeholder", r["findings"][0]["msg"])
+        self.assertIn("placeholder", cb.REMEDIES)         # the finding prints a remedy
+
+    def test_without_the_placeholder_key_a_short_block_is_still_over(self):
+        """A config written before the key existed behaves exactly as it did."""
+        spec = {"protected_fence": "pf", "protected_min_bytes": 800}
+        r = self.measure_text(self.fenced("This is the `<project-name>` project."), spec)
+        self.assertEqual(r["status"], "over")
+        self.assertEqual([f["kind"] for f in r["findings"]], ["protected"])
+
+    def test_an_emptied_block_is_still_over_when_the_placeholder_key_is_set(self):
+        """The placeholder rule must not weaken the guard that exists to catch an emptied purpose."""
+        spec = {"protected_fence": "pf", "protected_min_bytes": 800,
+                "protected_placeholder": "<project-name>"}
+        for body in ("tiny", ""):
+            r = self.measure_text(self.fenced(body), spec)
+            self.assertEqual((r["status"], [f["kind"] for f in r["findings"]]),
+                             ("over", ["protected"]), repr(body))
+
+    def test_a_real_purpose_without_the_placeholder_passes(self):
+        spec = {"protected_fence": "pf", "protected_min_bytes": 800,
+                "protected_placeholder": "<project-name>"}
+        r = self.measure_text(self.fenced("y" * 900), spec)
+        self.assertEqual((r["status"], r["findings"]), ("ok", []))
+
+    def test_a_placeholder_warning_never_lowers_a_worse_status(self):
+        """A check may raise a row's status, never lower it (measure_file's own rule)."""
+        spec = {"max_bytes": 10, "protected_fence": "pf", "protected_min_bytes": 800,
+                "protected_placeholder": "<project-name>"}
+        r = self.measure_text(self.fenced("This is the `<project-name>` project."), spec)
+        self.assertEqual(r["status"], "over")
+        kinds = [f["kind"] for f in r["findings"]]
+        self.assertIn("bytes", kinds)                     # the finding that made it over
+        self.assertIn("placeholder", kinds)               # and the warning is still reported
+
+
 class TestThisRepoReadSetPartition(unittest.TestCase):
     """The repo's OWN config declares the Phase 0 mandatory-read pair in TOKENS, one ceiling per
     file, and the two are meant to PARTITION the 25,000-token read cap: the pair fits one Read

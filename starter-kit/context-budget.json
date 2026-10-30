@@ -32,6 +32,8 @@
       "warn_bytes": 24000,
       "protected_fence": "budget:protected",
       "protected_min_bytes": 800,
+      "protected_placeholder": "<project-name>",
+      "_protected_placeholder": "The text CLAUDE_TEMPLATE.md puts in the fence until you write your purpose. While the block still holds it the row WARNS ('replace it') instead of failing as an emptied block, so a fresh sync does not start at exit 2. Once you have written your purpose the text is gone, the key matches nothing, and the plain 800 B floor applies.",
       "_": "Auto-loaded in full by Claude Code. Wrap your project's statement of purpose in <!-- budget:protected --> ... <!-- /budget:protected --> and the tool will refuse to let a later compaction remove it. On the project this came from, 32.5% of this file was an index of past failures and 0.5% was what the software is for."
     },
     {

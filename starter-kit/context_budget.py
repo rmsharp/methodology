@@ -39,7 +39,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-VERSION = "1.4.0"   # 1.4.0: BL-101 P4 -- the config and its history file live at the root or under methodology/
+VERSION = "1.4.1"   # 1.4.1: issue #95 -- line cap and purpose floor count bytes; a placeholder purpose warns. 1.4.0: BL-101 P4 -- the config and its history file live at the root or under methodology/
 CONFIG_NAME = ".context-budget.json"  # layout: ok -- the config's own name; where it lives is resolved below
 HISTORY_NAME = ".context-budget-history.jsonl"  # layout: ok -- the history file's own name; it lives beside the config
 TOOL_NAME = "context_budget.py"  # layout: ok -- this tool's own name, cited in messages and found by the hook it installs
@@ -474,7 +474,10 @@ def measure_file(root, spec, cfg=None):
 
     cap = spec.get("max_line_bytes")
     if cap:
-        long = [(i + 1, len(l)) for i, l in enumerate(lines) if len(l) > cap]
+        # BYTES, like every other figure on the row and the "B" in the message: a line of
+        # em dashes is a third as long in characters as it costs.
+        widths = [len(l.encode()) for l in lines]
+        long = [(i + 1, w) for i, w in enumerate(widths) if w > cap]
         if long:
             worst = max(long, key=lambda t: t[1])
             over(f"{len(long)} line(s) exceed {cap} B — worst is line {worst[0]} at "
@@ -543,9 +546,22 @@ def measure_file(root, spec, cfg=None):
         else:
             body = text.split(o, 1)[1].split(c, 1)[0]
             out["protected_bytes"] = len(body.encode())
-            if len(body.strip()) < spec.get("protected_min_bytes", 400):
+            held = len(body.strip().encode())
+            # A seed project has not written its purpose yet: the template's placeholder text
+            # is not an emptied block, and the floor below would fail every fresh sync. Name
+            # the placeholder in the row (`protected_placeholder`) and it is a warning until
+            # replaced; a config without the key is judged exactly as before. A check may
+            # raise a row's status, never lower it.
+            marker = spec.get("protected_placeholder")
+            if marker and marker in body:
+                out["findings"].append({"kind": "placeholder", "msg":
+                    f"the {fence} block still holds the template placeholder {marker!r} — "
+                    f"replace it with your statement of purpose"})
+                if out["status"] == "ok":
+                    out["status"] = "warn"
+            elif held < spec.get("protected_min_bytes", 400):
                 out["findings"].append({"kind": "protected", "msg":
-                    f"the {fence} block is only {len(body.strip())} B — it looks emptied"})
+                    f"the {fence} block is only {held} B — it looks emptied"})
                 out["status"] = "over"
     return out
 
@@ -663,6 +679,9 @@ REMEDIES = {
                  "have been updated.")],
  "protected":  [("Restore it", "This block states what the project is for. Recover it from "
                  "git and put it back before anything else.")],
+ "placeholder": [("Write your purpose", "The block still holds the template's placeholder. "
+                  "Replace it with one paragraph on what this project is and what it is for; "
+                  "the emptied-block floor applies from then on.")],
  "instrument": [("Fix the pattern", "A pattern matching fewer records than declared is a "
                  "broken instrument reporting green.")],
  "sync":       [("Re-sync", "Run the methodology repo's bin/sync. Do NOT edit the local "
