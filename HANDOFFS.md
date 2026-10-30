@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S403
+date: 2026-10-30
+status: pending
+active_task: **Remove the stale budget text from two live documents (his pick of options 1 and 2 at the S403 Phase 0 picker, treated as ONE deliverable: the same defect in two places).** (1) `CLAUDE.md` is 18,648 B against its 18,600 B ceiling; the cut is the hand-kept counts and history in the tool rows, which `context_budget.py`'s own remedy 2 says to compute or delete. Found in Phase 0: `CLAUDE.md:112` says the trimmer's suite has 218 tests and it runs 222, so that count is wrong now. (2) `docs/planning/overhead-ratchet-plan.md:57` (decision row S4) still says `.context-budget.json` "still calls the figure a warning until BL-53's P5 rewrites it"; P5 was done the day it was written. Fork-only; nothing is sent to `KJ5HST/methodology`. Before this claim the S403 trim `99121212` and fold `e84a0bd0` ran at his required Yes/No 'Yes, trim now (Recommended)' (`HANDOFFS.md` 5 to 3 receipts, 59,198 B to 36,744 B).
+```
+
+```handoff
 session: S402
 date: 2026-10-30
 status: complete
