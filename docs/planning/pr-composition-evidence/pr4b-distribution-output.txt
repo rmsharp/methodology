@@ -1,0 +1,68 @@
+== 1. the manifest (bin/_manifest.py): the rows a project is given
+upstream d50ce29: 30 rows; candidate 47637be: 30 rows; same sources: True
+  at the project root        18 rows: 11 TRACKED,  7 SEED
+  under docs/methodology/    12 rows: 12 TRACKED,  0 SEED
+  elsewhere                   0 rows
+  all                        30 rows: 23 TRACKED,  7 SEED
+
+== 2. every file the candidate changes against upstream, by what `bin/sync` does with it
+git diff --shortstat: 47 files changed, 18367 insertions(+), 1098 deletions(-)   (the per-file sums below add to exactly this)
+  19  files  +2540   -526     13.8% of the added lines   kept current by bin/sync (a project receives it at its next sync)
+  3   files  +7      -4        0.0% of the added lines   a seed's source (a NEW project receives it once; an existing project never does)
+  25  files  +15820  -568     86.1% of the added lines   not distributed (stays in this repository)
+
+-- file by file, largest first
+[kept current by bin/sync (a project receives it at its next sync)]
+  +1672  -287  starter-kit/methodology_dashboard.py
+  +394   -59   starter-kit/quality_ratchet.py
+  +241   -101  starter-kit/methodology_trim.py
+  +146   -18   starter-kit/context_budget.py
+  +32    -14   starter-kit/BOOTSTRAP.md
+  +14    -14   starter-kit/RECOMMENDED_SKILLS.md
+  +13    -11   starter-kit/SESSION_RUNNER.md
+  +7     -7    ITERATIVE_METHODOLOGY.md
+  +5     -4    HOW_TO_USE.md
+  +4     -0    FRAMEWORK_APPARATUS.md
+  +3     -2    starter-kit/CLAUDE_TEMPLATE.md
+  +2     -2    workstreams/ARCHITECTURE_WORKSTREAM.md
+  +1     -1    workstreams/TEMPLATE_WORKSTREAM.md
+  +1     -1    workstreams/TEMPLATE_CAMPAIGN.md
+  +1     -1    workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  +1     -1    workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  +1     -1    workstreams/DEVELOPMENT_WORKSTREAM.md
+  +1     -1    workstreams/AUDIT_WORKSTREAM.md
+  +1     -1    starter-kit/SAFEGUARDS.md
+[a seed's source (a NEW project receives it once; an existing project never does)]
+  +5     -2    starter-kit/HANDOFFS.md
+  +1     -1    starter-kit/quality-gates.json
+  +1     -1    starter-kit/CHANGELOG.md
+[not distributed (stays in this repository)]
+  +3827  -65   tools/test_methodology_dashboard.py
+  +2993  -0    tools/test_migrate_layout.py
+  +1672  -287  tools/methodology_dashboard.py
+  +1457  -0    bin/migrate-layout
+  +986   -0    tools/test_sync_layouts.py
+  +881   -1    tools/test_quality_ratchet.py
+  +723   -0    tools/test_layout_resolver.py
+  +519   -1    tools/test_methodology_trim.py
+  +484   -16   bin/tests.sh
+  +483   -0    tools/fixtures/trim-verify-template-1.8.2.sh
+  +299   -0    bin/check-layout-literals
+  +246   -63   .githooks/pre-commit
+  +206   -1    tools/test_context_budget.py
+  +204   -0    tools/test_checker_layouts.py
+  +150   -47   bin/check-links
+  +145   -32   bin/sync
+  +88    -0    tools/layout_fixtures.py
+  +85    -21   bin/status
+  +76    -0    tools/layout_resolver.py
+  +72    -5    bin/check-ledger
+  +65    -7    bin/_manifest_reader.py
+  +60    -13   bin/check-handoff
+  +53    -5    .quality-gates.json
+  +43    -1    bin/_manifest.py
+  +3     -3    .context-budget.json
+
+== 3. the dashboard is counted twice in that diff
+tools/methodology_dashboard.py and starter-kit/methodology_dashboard.py are the same blob at 47637be: True
+added lines counted once: 18367 - 1672 = 16695

@@ -1,0 +1,89 @@
+upstream d50ce290d9218dc91d9a36069b4d936868964298
+candidate 47637be21425e5a5ad3603e85a4a0d4259f8f2e7 (33 commits over upstream)
+old candidate 3cba1e50d01233dc0a9f937741037d43994dbced
+
+== 1. each commit: files, added, removed (git show --shortstat --format=), in series order
+ 1 fbcef390   6 files  +6187  -552    feat: dashboard 2.21.0 with its tests, the suite's skip primitive and pipeline lint, and B
+ 2 41a1e580   7 files  +1225  -2      feat: the layout resolver, the fixture trees in both layouts and the literal scanner
+ 3 7d87cb2b   6 files  +1035  -113    feat: the ledger hook and the quality ratchet find the files under methodology/
+ 4 1d93579a   4 files  +696   -20     feat(quality_ratchet): 1.5.0 -- a gate that outlives its budget is unmeasured, and its com
+ 5 62680cd2   5 files  +1247  -105    feat(trim): methodology_trim.py 1.9.0 -- the trimmer finds a ledger at the root or under m
+ 6 f767ced0   4 files  +356   -22     feat(budget): context_budget.py 1.4.0 -- the gate finds its config, its history file and i
+ 7 e5210601   5 files  +1350  -238    feat(dashboard): methodology_dashboard.py 2.22.0 -- the dashboard reads a project that kee
+ 8 07ec025b   1 files  +3     -1      test: Test 15 counts the status table's rows, not every line that names the project
+ 9 97425a70   5 files  +447   -108    feat(sync): bin/sync, bin/status, bin/check-links and the manifest reader find a project's
+10 19417746   5 files  +1022  -3      test(sync): the sync layer's own suite, its two gates, and the scanner's scope
+11 877ba05d   3 files  +134   -19     feat(checkers): bin/check-ledger and bin/check-handoff find a project's ledger at the root
+12 19a5769b   5 files  +230   -7      test(checkers): the checkers' own suite, its gate, and the layout scanner now reads both
+13 09ac2846   5 files  +48    -27     docs(layout): the operating files say where the methodology files sit, and their reference
+14 6ce88cdf   2 files  +4     -4      docs(runner): drop the layout paragraph's duplicate example command; the runner reads unde
+15 36660db6   5 files  +30    -25     docs(layout): the framework documents and the skills index hold in both layouts
+16 1e61fab2   5 files  +6     -6      docs(layout): the workstreams name the runner, the skills index and the safeguards without
+17 109375f4   2 files  +2     -2      docs(layout): the workstreams name the runner, the skills index and the safeguards without
+18 bb35ffc9   2 files  +9     -1      test(layout): the distributed documents must resolve in both layouts
+19 c9cda410   3 files  +1461  -1      feat(layout): bin/migrate-layout moves a legacy project's methodology files under methodol
+20 4e07877f   3 files  +3022  -1      test(layout): the migration tool's suite, its fast classes in the shell suite and its two 
+21 d818ca17   2 files  +5     -2      docs(ratchet): a cited gate run that reads unmeasured gates is repaired or names them
+22 e051462e   5 files  +19    -19     docs: drop internal references from the sync layer's comments and docstrings
+23 a4d4a961   5 files  +40    -40     docs: drop internal references from the shell suite's, the hook's and the checkers' commen
+24 3f282718   5 files  +55    -60     docs: drop internal references from the layout resolver's, the fixtures' and their tests' 
+25 911c82fe   4 files  +31    -31     docs: drop internal references from the quality ratchet's, the budget gate's and their tes
+26 f11397f3   2 files  +75    -77     docs: drop internal references from the migration tool's and its suite's comments
+27 d9f583c3   2 files  +18    -18     docs: drop internal references from the ledger trimmer's and its tests' comments
+28 8c37c285   3 files  +404   -437    docs: drop internal references from the dashboard's and its tests' comments
+29 fd43f707   4 files  +8     -5      docs: correct four statements the series left stale in a gate reason, a comment and a head
+30 9848b62b   2 files  +56    -10     test(dashboard): restore two of upstream's CLI tests the series dropped with their class; 
+31 1477af2b   3 files  +13    -13     docs: drop internal references from the text the migration tool and the layout scanner pri
+32 85d4c840   3 files  +17    -17     docs: drop internal references from the text the dashboard prints and its tests assert on
+33 47637be2   3 files  +13    -13     docs: drop internal references from the shell suite's titles, the hook's selftest labels a
+most files in one commit: 7
+
+== 2. the commits that remove references only my fork can resolve (subject starts 'docs: drop internal references')
+10
+
+== 3. earlier work, not about the directory: the first commit and the ratchet commit (git show --numstat, added lines)
+commits: fbcef390 1d93579a 
+added lines in them: 6,883 of 18,367 = 37.5%
+
+== 4. the old candidate's tree against this one: the files that differ (everything else is byte-identical)
+M	.quality-gates.json
+M	CHANGELOG.md
+M	CLAUDE.md
+M	FRAMEWORK_APPARATUS.md
+M	HANDOFFS.md
+M	README.md
+M	starter-kit/methodology_trim.py
+R075	tools/fixtures/trim-verify-template-1.7.0.sh	tools/fixtures/trim-verify-template-1.8.2.sh
+M	tools/test_methodology_trim.py
+files differing: 9
+
+== 5. upstream's history of the trimmer: commits that touched it, each with its TRIM_VERSION line
+commits: 17; without a TRIM_VERSION line: 0; distinct versions: 1.5.0 1.5.1 1.6.0 1.7.0 1.8.0 1.8.1 1.8.2 
+
+== 6. the dashboard's own tests: names in upstream's file and not in the candidate's (def test_*)
+upstream distinct names: 228; candidate: 396
+absent from the candidate: test_every_framework_installed_source_name_has_a_signature
+absent from the candidate: test_stale_warning_leads_with_the_project_scoped_remedy
+
+== 7. #98 and the candidate: the trimmer's version at each commit of #98, and whether the candidate carries its content
+#98 39825279 TRIM_VERSION 1.9.0
+#98 3df5b0cd TRIM_VERSION 1.9.1
+#98 65990cda TRIM_VERSION 1.10.0
+candidate TRIM_VERSION 1.9.0
+FRONTIER_FRONT_MATTER_UNCOMMITTED      occurrences in the trimmer: upstream 0, candidate 0, #98 head 2
+"SESSION_NOTES.md"                     occurrences in the trimmer: upstream 0, candidate 0, #98 head 2
+#96 commits over its merge-base with upstream: 2
+
+== 8. git merge-tree --write-tree --name-only, with the repository's attributes (merge=union applies, as in a checkout) and with none (as GitHub merges); controls are upstream's tip
+#98 head 65990cda
+  upstream tip, attributes   : exit 0
+  upstream tip, no attributes: exit 0
+  candidate, attributes      : exit 1; .quality-gates.json 1; starter-kit/methodology_trim.py 3; tools/test_methodology_trim.py 1
+  candidate, no attributes   : exit 1; .quality-gates.json 1; starter-kit/methodology_trim.py 3; tools/test_methodology_trim.py 1
+#96 head ad5c980f
+  upstream tip, attributes   : exit 0
+  upstream tip, no attributes: exit 1; CHANGELOG.md 1
+  candidate, attributes      : exit 1; .quality-gates.json 2; bin/tests.sh 1
+  candidate, no attributes   : exit 1; .quality-gates.json 2; CHANGELOG.md 1; bin/tests.sh 1
+
+pr4b-facts done
