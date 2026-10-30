@@ -1,0 +1,27 @@
+pull request #99; upstream d50ce290d9218dc91d9a36069b4d936868964298; candidate 47637be21425e5a5ad3603e85a4a0d4259f8f2e7 (33 commits);  47 files changed, 18367 insertions(+), 1098 deletions(-)
+
+== 1. the pull request (gh pr view)
+  ok   state: OPEN
+  ok   draft: false
+  ok   base: main
+  ok   head: rmsharp:feat/methodology-directory
+  ok   head commit: 47637be21425e5a5ad3603e85a4a0d4259f8f2e7
+  ok   commits: 33
+  ok   files changed: 47
+  ok   lines added: 18367
+  ok   lines removed: 1098
+  info mergeable=MERGEABLE mergeStateStatus=CLEAN comments=0 reviews=0
+
+== 2. the title and the body, against the approved draft
+  ok   title: A methodology/ directory for a project's framework files, and bin/migrate-layout to move a project there
+  ok   body bytes: 21750
+  ok   body text (sha of the two): 849ddf357ec3
+
+== 3. the fork's branch and upstream, now (git ls-remote)
+  ok   origin's feat/methodology-directory equals the candidate: 47637be21425e5a5ad3603e85a4a0d4259f8f2e7
+  ok   upstream main: d50ce290d9218dc91d9a36069b4d936868964298
+  open #99 head 47637be2 MERGEABLE CLEAN
+  open #98 head 65990cda MERGEABLE CLEAN
+  open #96 head ad5c980f CONFLICTING DIRTY
+
+READ-BACK OK (0 failed)
