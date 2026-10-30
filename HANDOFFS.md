@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S399
+date: 2026-10-30
+status: pending
+active_task: **PR5 step 2: open the one upstream pull request** (composition plan `docs/planning/upstream-pr-composition-plan.md` §5, the PR5 row at line 183): from the fork's branch `feat/methodology-directory` (= local `pr2b/candidate` `47637be21425`, 33 commits on `upstream/main` `d50ce290d921`) into `KJ5HST/methodology` `main`. Title is line 7 and body lines 9 to 105 of `docs/planning/upstream-pr-body.md` (draft 12, approved by him in S397). Order: re-run the read-back and `pr4b-claims.sh`, show the exact `gh pr create` command, title and body, open ONLY on his second go-ahead, then read the pull request back. Step 3 (answering comments) is not part of this session.
+```
+
+```handoff
 session: S398
 date: 2026-10-29
 status: complete
