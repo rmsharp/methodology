@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S401
+date: 2026-10-30
+status: pending
+active_task: **Fix `docs/planning/pr-composition-evidence/pr4-body-check.py` so a commit hash cited in a pull-request draft body that is outside `<upstream>..<candidate>` fails check 3 unless it is on a named allowlist** (S400's handoff item 4(b): the allowlist is `c8b9ddd`, `e7b389f`, #98's head and upstream's tip). Fork-only and read-only toward GitHub: nothing is sent to `KJ5HST/methodology`. Claimed at his Phase 0 picker 'Fix pr4-body-check.py (Recommended)', with 'Yes, trim it (Recommended)' answered in the same picker (done first: trim `d7784581`, fold `6fdfe9ac`).
+```
+
+```handoff
 session: S400
 date: 2026-10-30
 status: complete
