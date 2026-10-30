@@ -2,7 +2,9 @@
 
 **Purpose:** Continuity between sessions. Each session reads this first and writes to it before closing out.
 
-**This file is transient — it is overwritten every session** (*"what's next, what traps?"*). The cumulative, append-only record of *what was done, ever* lives in `CHANGELOG.md`; the commit SHA is the shared key. At close-out, distill the durable outcome into a `CHANGELOG.md` entry — do not copy this handoff into it.
+**This file is transient — it is overwritten every session** (*"what's next, what traps?"*).
+The cumulative, append-only record of *what was done, ever* lives in `CHANGELOG.md`; the commit SHA is the shared key.
+At close-out, distill the durable outcome into a `CHANGELOG.md` entry — do not copy this handoff into it.
 
 ---
 
@@ -23,5 +25,7 @@ The user rates every session's handoff. Your handoff will be scored on:
 4. Was the "what's next" actionable and specific?
 
 ---
+
+## Session History
 
 *Session history accumulates below this line. Newest session at the top.*

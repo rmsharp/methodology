@@ -20,9 +20,11 @@ Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure
 
 ## Purpose
 
-<!-- Customize: one-paragraph description of what this project is and what it's for. -->
+<!-- Customize: one-paragraph description of what this project is and what it's for. Keep it between the markers below. -->
 
+<!-- budget:protected -->
 This is the `<project-name>` project. It does `<what>`. The primary deliverable is `<what>`.
+<!-- /budget:protected -->
 
 ---
 

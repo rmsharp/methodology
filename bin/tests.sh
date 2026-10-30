@@ -2129,6 +2129,32 @@ printf 'tiny\n' > "$P/CLAUDE.md"
     || fail "protected-block removal was not caught"
 rm -rf "$P"
 
+# Day zero (upstream issue #95): the files `bin/sync` ships to a NEW project, with the template copied to
+# CLAUDE.md as BOOTSTRAP.md tells the adopter, must not start the project over budget. It cannot reach
+# exit 0 (no LEARNINGS.md, no canonical checkout beside it, so those rows read unmeasured), so the
+# assertion is read from the tool's own --status --json: no row over, and the one finding is the
+# placeholder warning. Legacy layout: a new-layout project's root paths name files that are not there.
+FRESH_PROBE='import json,sys
+j = json.load(open(sys.argv[1]))
+print("over=%d kinds=%s" % (sum(r["status"] == "over" for r in j["files"]),
+      ",".join(sorted(f["kind"] for r in j["files"] for f in r["findings"])) or "none"))'
+P="$(mktemp_project)"
+"$BIN/sync" "$P" --layout legacy >/dev/null 2>&1
+cp "$STARTER/CLAUDE_TEMPLATE.md" "$P/CLAUDE.md"
+(cd "$P" && python3 context_budget.py --status --json > "$P/.fresh.json" 2>/dev/null); FRESH_RC=$?
+FRESH_GOT="$(python3 -c "$FRESH_PROBE" "$P/.fresh.json" 2>&1)"
+[ "$FRESH_RC" != "2" ] && [ "$FRESH_GOT" = "over=0 kinds=placeholder" ] \
+    && pass "a fresh sync (template as CLAUDE.md) starts with no row over budget; the placeholder warns" \
+    || fail "a fresh sync starts over budget (exit $FRESH_RC; $FRESH_GOT)"
+# Paired control: the same probe reports a breach when the seed's own line cap is broken.
+printf '%0400d\n' 0 >> "$P/SESSION_NOTES.md"
+(cd "$P" && python3 context_budget.py --status --json > "$P/.fresh.json" 2>/dev/null)
+FRESH_GOT="$(python3 -c "$FRESH_PROBE" "$P/.fresh.json" 2>&1)"
+[ "$FRESH_GOT" = "over=1 kinds=line_bytes,placeholder" ] \
+    && pass "the day-zero probe sees a breach (a 400-byte line in the seed SESSION_NOTES.md)" \
+    || fail "the day-zero probe missed a planted breach ($FRESH_GOT)"
+rm -rf "$P"
+
 # install-hook must write where git will actually LOOK. `core.hooksPath` redirects git
 # away from <git-dir>/hooks, and BOOTSTRAP.md Step 10 tells adopters to set it — so a
 # hook written to .git/hooks on such a repo is never run while "installed" is printed.

@@ -1728,6 +1728,24 @@ class TestAFreshProjectPassesItsOwnBudget(unittest.TestCase):
         self.assertEqual((claude["protected_fence"], claude["protected_min_bytes"]),
                          ("budget:protected", 800))
 
+    def test_the_seed_session_notes_passes_its_own_row(self):
+        r = self.measure_seed("SESSION_NOTES.md", self.rows["SESSION_NOTES.md"],
+                              "SESSION_NOTES.md")
+        self.assertEqual((r["status"], r["findings"]), ("ok", []))
+
+    def test_the_seed_template_is_a_placeholder_warning_never_over(self):
+        r = self.measure_seed("CLAUDE_TEMPLATE.md", self.rows["CLAUDE.md"], "CLAUDE.md")
+        self.assertEqual(r["status"], "warn")
+        self.assertEqual([f["kind"] for f in r["findings"]], ["placeholder"])
+
+    def test_the_placeholder_the_config_names_is_the_one_in_the_template(self):
+        """If the template's placeholder text is edited without the config key, the fresh
+        project goes back to exit 2 and nothing else says why."""
+        marker = self.rows["CLAUDE.md"]["protected_placeholder"]
+        tpl = (self.SEEDS / "CLAUDE_TEMPLATE.md").read_text(encoding="utf-8")
+        body = tpl.split("<!-- budget:protected -->", 1)[1].split("<!-- /budget:protected -->", 1)[0]
+        self.assertIn(marker, body)
+
     def test_the_line_cap_counts_bytes_not_characters(self):
         spec = {"max_line_bytes": 280}
         r = self.measure_text("—" * 200 + "\n", spec)       # 200 characters, 600 bytes
