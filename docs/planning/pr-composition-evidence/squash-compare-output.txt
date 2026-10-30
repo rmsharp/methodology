@@ -1,0 +1,60 @@
+== 1. the refs (E1)
+  pr2b/candidate 47637be21425 tree 382d305a4c27
+  pr2b/squash-check ea256adbe208 tree 382d305a4c27, parent ['d50ce290d921']
+  E1   ok    one commit above upstream/main, same tree as the candidate, 47 files each
+  rows.json: control candidate 47637be21425, squash candidate ea256adbe208, upstream d50ce290d921 / d50ce290d921
+
+== 2. per adopter: plain sync exit, files refused, forced sync wrote, seeds changed / created, the sync after it
+  adopter                    head ctl  head sq   ex c ex s | refused c refused s new     | wrote c wrote s | seeds     | again c/s
+  model_project_constructor  d7ed920   24629e6   2    2    | 6         9         3       | 9       9       | 0/0 0/0 | 0,0 / 0,0
+  feedback-loop-comparison   2e77a73   2e77a73   2    2    | 6         9         3       | 9       9       | 0/0 0/0 | 0,0 / 0,0
+  nprcgenekeepr              0890874d  0890874d  2    2    | 6         7         1       | 7       7       | 0/0 0/0 | 0,0 / 0,0
+  mts-system                 512b3f7   512b3f7   2    2    | 4         4         0       | 22      22      | 0/1 0/1 | 0,0 / 0,0
+  vscode_quarto_ext          89c9f6b4  89c9f6b4  2    2    | 4         7         3       | 7       7       | 0/0 0/0 | 0,0 / 0,0
+  Philippians                427e634   427e634   2    2    | 4         4         0       | 22      22      | 0/1 0/1 | 0,0 / 0,0
+  airqino                    f7a0194   f7a0194   2    2    | 6         9         3       | 9       9       | 0/0 0/0 | 0,0 / 0,0
+  chat_verification          0a8ef90   0a8ef90   2    2    | 6         9         3       | 9       9       | 0/0 0/0 | 0,0 / 0,0
+  church_growth              62f7d8a   62f7d8a   2    2    | 6         9         3       | 9       9       | 0/0 0/0 | 0,0 / 0,0
+  dalia_martinez_funeral     5cd7b91   5cd7b91   None None | 0         0         0       | 25      25      | 0/3 0/3 | 0,0 / 0,0
+  claude_work                no commi  no commi  None None | 0         0         0       | 30      30      | 0/7 0/7 | 0,0 / 0,0
+  wsfct                      2823664d  2823664d  2    2    | 4         4         0       | 22      22      | 0/1 0/1 | 0,0 / 0,0
+  TOTAL refused: control 52, squash 71, difference +19
+
+== 3. the expectations that are properties
+  E2   ok    control: 10 of 12 refuse a plain sync (exit 2)
+  E3   (count) control total 52, S396's total 52; per-adopter refused sets equal S396's at 12 of 12
+  E4   ok    the squash's refused set contains the control's at every adopter
+  E5   (count) refused: control 52, squash 71
+  E6   ok    the same 10 adopters refuse under both runs (10 under squash)
+  E7   ok    the forced sync writes the same number of files at every adopter
+  E8   ok    seeds changed: 0 at 12 of 12, both runs
+  E9   ok    the plain sync after the forced one exits 0 and writes 0 at 12 of 12, both runs
+  E10  ok    the refusal list equals the history rule at 12 of 12, both runs
+  E11  upstream's tool: identical result in the two runs at 12 of 12 adopters; HEAD moved between the runs at: model_project_constructor
+       (E11 is a count of agreement, judged in the record; the HEAD moves above are checked in section 5)
+  E12  ok    fixtures (a) and (b): same paths, same only-candidate / only-upstream sets, same unexplained, same content_differs
+
+== 4. the files the squash refuses and the merge does not: where each blob lives in the 33 commits
+  19 newly refused file(s), 4 distinct (file, blob) pair(s)
+  methodology/context_budget.py  blob f824ed6178  at 7 adopter(s): model_project_constructor, feedback-loop-comparison, nprcgenekeepr, vscode_quarto_ext, airqino, chat_verification, church_growth
+      in upstream/main history of starter-kit/context_budget.py: False; in pr2b/squash-check: False; the candidate's final blob: no
+      carried by 1 of the 33 commits: f767ced0a
+      first: f767ced0 feat(budget): context_budget.py 1.4.0 -- the gate finds its config, its history file and its tool at the root or under methodology/
+  methodology/methodology_dashboard.py  blob 6a3147468b  at 6 adopter(s): model_project_constructor, feedback-loop-comparison, vscode_quarto_ext, airqino, chat_verification, church_growth
+      in upstream/main history of starter-kit/methodology_dashboard.py: False; in pr2b/squash-check: False; the candidate's final blob: no
+      carried by 1 of the 33 commits: e5210601f
+      first: e5210601 feat(dashboard): methodology_dashboard.py 2.22.0 -- the dashboard reads a project that keeps its methodology files under methodology/ as it r
+  methodology/quality_ratchet.py  blob 04da5abc2a  at 5 adopter(s): model_project_constructor, feedback-loop-comparison, airqino, chat_verification, church_growth
+      in upstream/main history of starter-kit/quality_ratchet.py: False; in pr2b/squash-check: False; the candidate's final blob: no
+      carried by 1 of the 33 commits: 7d87cb2bd
+      first: 7d87cb2b feat: the ledger hook and the quality ratchet find the files under methodology/
+  methodology/quality_ratchet.py  blob 312f230140  at 1 adopter(s): vscode_quarto_ext
+      in upstream/main history of starter-kit/quality_ratchet.py: False; in pr2b/squash-check: False; the candidate's final blob: no
+      carried by 1 of the 33 commits: 1d93579a1
+      first: 1d93579a feat(quality_ratchet): 1.5.0 -- a gate that outlives its budget is unmeasured, and its command is stopped with its whole process group
+
+== 5. a HEAD that moved between the runs: the framework files it holds are the same at both heads
+  model_project_constructor: 1 commit(s) between d7ed920 and 24629e6; changed paths under methodology/, .githooks/, bin/: none
+  E11x ok    model_project_constructor: no framework file differs between its two cloned heads
+
+RESULT: every property holds
