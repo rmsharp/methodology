@@ -1,0 +1,58 @@
+PR4b (S397): what I expect the claims run to print, written BEFORE it starts. Candidate = pr2b/candidate 47637be21425
+(33 commits on upstream/main d50ce290). Control = upstream d50ce290. Draft 11's figures were measured at the OLD base
+(pr2/candidate 3cba1e5 over f34769f). Confidence is my own, in percent. Premises I tested first, with one read-only
+command each, are named; the command's output is in the record.
+
+Premises tested before writing this (git diff --stat f34769f d50ce290; ls-tree; .quality-gates.json):
+  P1 upstream moved only 8 files: methodology_trim.py, test_methodology_trim.py, .quality-gates.json (2 lines),
+     CLAUDE.md, FRAMEWORK_APPARATUS.md, README.md, CHANGELOG.md, HANDOFFS.md. bin/tests.sh did NOT move.
+  P2 gates at upstream: 12 at f34769f, 12 at d50ce290; 18 at the candidate.
+  P3 tracked *.verify.sh: 1 at f34769f, 1 at d50ce290, 1 at the candidate.
+
+E1  Section 1: 47 files, 18,367 insertions, 1,098 deletions, 33 commits, merge-base is upstream's tip (measured by hand
+    a few minutes ago with git diff --shortstat; the run must equal it). 97%.
+E2  Candidate shell suite: 302 passed, 0 failed, 0 skipped (layer 23, verify:394). 90%.
+E3  Upstream shell suite at d50ce290: 261 passed, 0 failed (P1: bin/tests.sh unchanged). 75%. The risk is a test that
+    runs the trimmer and now sees 1.8.2.
+E4  Candidate gates: 18/18 pass, 0 fail, 0 unmeasured, results 8c7362ca5b27, manifest 72583325c300 (layer 23). 80% that
+    both ids are equal to layer 23's; 92% for 18/18 alone.
+E5  Upstream gates at d50ce290: 12/12, 0 unmeasured. 85%.
+E6  check-links --layout both on the candidate: exit 0, 80 links in 23 documents in each layout. 90%. Upstream's own
+    count of "116 at your tip" moves, because upstream's README, CLAUDE.md and FRAMEWORK_APPARATUS.md changed: 55%.
+E7  check-layout-literals: exit 0, 15 files, 0 sites. 90%.
+E8  tools/test_layout_resolver.py: 76 tests OK, exit 0; the resolver block equal in 11 of 11 files. 90%.
+E9  Every tracked *.verify.sh exits 0 at both tips (one proof at each). 85%.
+E10 Ratchet compare over the 33 commits: 0 refusals, 0 warnings, 0 manifest defects, gates 12 to 18, nothing removed.
+    80%. The number of thresholds that differ from upstream's: five or fewer, 55%; the trimmer's floor differs (265
+    at the candidate), 85%.
+E11 merge-tree against #98 (65990cda): exit 1, 5 regions in 3 files; against #96 (ad5c980f): exit 1, 4 regions in 3
+    files (layer 23, measure). 90% each.
+E12 Wall time: 25 to 40 minutes. 70%.
+
+---- scored after the claims run (pr4b-claims-output.txt), written 18:5x, BEFORE the four runs below start ----
+E1 confirmed. E2 confirmed (302/0/0). E3 confirmed (261/0). E4 confirmed (18/18, results 8c7362ca5b27, manifest
+72583325c300, both equal to layer 23's). E5 confirmed (12/12, results b49e29a9e5ea). E7 confirmed. E8 confirmed
+(76 OK; 11 of 11 equal). E9 confirmed (one proof, CHANGELOG-through-2026-09-30, exit 0 at both tips).
+E10 confirmed (33 commits, 0 refusals, 0 warnings; five floors raised: context-budget 148 to 163, dashboard 229 to
+397, ratchet 45 to 120, tests-sh 261 to 302, trimmer 227 to 265). E12 confirmed (about 29 min).
+E6 half confirmed: the candidate reads 80 links in 23 documents in each layout; upstream's own count is STILL 116
+(my 55% that it moved was wrong; read by hand from a clean export, pr4b-up-links-output.txt).
+E11 half confirmed: #98 reads 5 regions in 3 files (gates 1, trimmer 3, trimmer tests 1) as predicted; #96 reads
+3 regions in 2 files (gates 2, bin/tests.sh 1), NOT the 4 in 3 I took from layer 23. Cause: layer 23's tool counts
+as GitHub does (no merge=union), which adds a CHANGELOG.md region this branch does not cause (upstream/main with
+#96 has the same one); this run merges in a checkout that applies the repository's union rule, as the maintainer
+does. I took the number without reading how its tool counted: the premise was untested.
+
+New expectations, for the four runs that follow (serial: first commit alone, cost, fixture, moved):
+E13 The first commit alone on upstream's tip (fbcef390): bash bin/tests.sh 271 passed, 0 failed, 0 skipped; gates
+    12/12, 0 unmeasured (its message: tests-sh-passed 261 to 271, dashboard 229 to 354, trimmer floor stays 227).
+    80%.
+E14 Cost: the runner and SAFEGUARDS.md together 244 bytes (0.35%) larger than upstream's; both files are byte-
+    identical to the old candidate's and upstream did not touch them. 95%. Wall time of the dashboard, the
+    trimmer's --check and the budget tool equal upstream's within 0.1 s on both projects: 60% (the trimmer is the
+    one tool that differs from the old measurement).
+E15 Fixture: both tools write the same 30 paths into an empty project, 22 differ in bytes; with the 7 seeds edited
+    and upstream's files, upstream's tool writes 0, this branch's 19, 0 of 7 seeds changed, no --force. 90%
+    (pr3b-adopters-output.md section 6 already reads these).
+E16 Moved: for a project whose 30 files are under methodology/, upstream's tool writes 30 paths outside
+    methodology/ and this branch's writes none. 85%.
