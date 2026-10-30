@@ -41,7 +41,7 @@
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 692,
+      "threshold": 694,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "timeout_seconds": 3600,
@@ -67,7 +67,7 @@
     {
       "name": "context-budget-unit-tests",
       "direction": "min",
-      "threshold": 163,
+      "threshold": 174,
       "command": "python3 tools/test_context_budget.py",
       "extract": "Ran (\\d+) tests"
     },
