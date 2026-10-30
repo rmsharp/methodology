@@ -86,4 +86,22 @@ FRONTIER_FRONT_MATTER_UNCOMMITTED      occurrences in the trimmer: upstream 0, c
   candidate, attributes      : exit 1; .quality-gates.json 2; bin/tests.sh 1
   candidate, no attributes   : exit 1; .quality-gates.json 2; CHANGELOG.md 1; bin/tests.sh 1
 
+== 9. what a project's documents say about where the framework files are (added after the cold read)
+position of the runner's 'Where the files are' paragraph (line of the file; line 1 is the title): 7
+  starter-kit/BOOTSTRAP.md                          9 ->  8
+  starter-kit/CHANGELOG.md                          1 ->  0
+  starter-kit/HANDOFFS.md                           1 ->  0
+  starter-kit/RECOMMENDED_SKILLS.md                14 ->  0
+  starter-kit/SAFEGUARDS.md                         1 ->  0
+  starter-kit/SESSION_RUNNER.md                    11 ->  1
+lines naming docs/methodology/ in the changed markdown files: upstream 38, candidate 10
+
+== 10. commit messages ending with a (cherry picked from commit ...) line, which names a commit only the fork has
+27 of 33 commits
+
+== 11. the migration tool's own suite: classes that bin/tests.sh also runs
+326:if python3 "$METHODOLOGY/tools/test_migrate_layout.py" TestThePureRules TestUsageAndNothingToDo 
+test(layout): the migration tool's suite, its fast classes in the shell suite and its two gates (2 of 2)
+bin/tests.sh runs only its two fast classes (95 tests, half a second); wired in whole it would
+
 pr4b-facts done

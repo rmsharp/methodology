@@ -76,4 +76,20 @@ for pr in "98 $H98" "96 $H96"; do set -- $pr
   mt "candidate, attributes      " merge-tree --write-tree --name-only "$CANDF" "$2"
   mt "candidate, no attributes   " --attr-source="$EMPTY" merge-tree --write-tree --name-only "$CANDF" "$2"
 done
+echo; echo "== 9. what a project's documents say about where the framework files are (added after the cold read)"
+echo "position of the runner's 'Where the files are' paragraph (line of the file; line 1 is the title): $(git show "$CANDF:starter-kit/SESSION_RUNNER.md" | grep -n '^\*\*Where the files are' | cut -d: -f1)"
+tot_up=0; tot_c=0
+for f in $(git diff --name-only "$UPF" "$CANDF" -- '*.md' ':!docs' ':!CHANGELOG.md' ':!HANDOFFS.md' ':!README.md' ':!CLAUDE.md'); do
+  a=$(git show "$UPF:$f" 2>/dev/null | grep -c 'docs/methodology'); b=$(git show "$CANDF:$f" 2>/dev/null | grep -c 'docs/methodology')
+  [ "$a" != "$b" ] && printf "  %-48s %2d -> %2d\n" "$f" "$a" "$b"
+  tot_up=$((tot_up+a)); tot_c=$((tot_c+b))
+done
+echo "lines naming docs/methodology/ in the changed markdown files: upstream $tot_up, candidate $tot_c"
+
+echo; echo "== 10. commit messages ending with a (cherry picked from commit ...) line, which names a commit only the fork has"
+echo "$(git log --format=%B "$UPF..$CANDF" | grep -c '^(cherry picked from commit') of $(git rev-list --count "$UPF..$CANDF") commits"
+
+echo; echo "== 11. the migration tool's own suite: classes that bin/tests.sh also runs"
+git show "$CANDF:bin/tests.sh" | grep -n 'test_migrate_layout.py' | sed 's/>\/dev\/null.*//' | cut -c1-170
+git show "$(git rev-list --reverse "$UPF..$CANDF" | sed -n '20p')" --format=%B --no-patch | grep -i 'fast class' | head -2
 echo; echo "pr4b-facts done"
