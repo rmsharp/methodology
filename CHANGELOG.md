@@ -281,6 +281,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-31 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-30-3.md` (2 record(s), 55,272 B → 34,843 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-30 → 2026-10-30) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-30-3.md`](docs/archive/HANDOFFS-through-2026-10-30-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-30-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-30-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 55,272 B → 34,843 B (−37.0%).
+
 ### 2026-10-31 · [ad hoc] S406 push record -- fork `main` fast-forwarded `66b80229..42aa962e` (5 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at his 'Yes, push main (Recommended)' (asked as a required Yes/No after the close-out commit `42aa962e`). Guarded first: `git fetch origin`, origin's `main` still `66b80229`, an ancestor of local `main`, exactly 5 commits ahead (the claim `ddb78579`, the work `754b9a4e`, the follow-up `4df45d18`, the post record `b397f475`, the close-out `42aa962e`), 0 behind, clean tree. Only `main` was pushed (never `--all` or `--mirror`); read back after a second `git fetch origin`: `origin/main` equals local `main` (`42aa962e`), 0 ahead. This entry rides the next push under his standing grant for a CHANGELOG-only push record. The one comment on `KJ5HST/methodology` issue #95 is recorded in its own 'S406 post' entry; nothing else went there.
