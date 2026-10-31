@@ -1,6 +1,29 @@
-Thanks for the detailed write-up. I reproduced all four findings on `main` @ `f34769f` (the four files involved are unchanged on `main` today), and your control passes. While checking the suggested fixes I found three things that bear on them, and I have built the change with those taken into account. The repros below run against `f34769f`. ("The tool" means `starter-kit/context_budget.py`.)
+Thanks for the detailed write-up. I reproduced all four findings on `main` @ `f34769f` (the four files involved are unchanged on `main` today), and your control passes. I have built a fix for all four. While doing it I found three things that bear on your suggested fixes. I label them A, B and C so they cannot be mixed up with your findings 1 to 4. ("The tool" means `starter-kit/context_budget.py`.)
 
-**1. Fix 3, as first worded, changes the message but not the exit code.** The placeholder under `## Purpose` in `CLAUDE_TEMPLATE.md` is 182 characters (182 bytes), and `protected_min_bytes` is 800 (`starter-kit/context-budget.json:34`). With only the fence added, finding 3 changes from "the budget:protected fence is missing" to "the budget:protected block is only 182 B — it looks emptied", and a fresh project still exits 2:
+**The result.** With my change, a fresh `bin/sync` into an empty project, with `CLAUDE_TEMPLATE.md` copied to `CLAUDE.md`, exits 1 with no row over budget. That is the same exit as your control (`LEARNINGS.md` does not exist yet, so that row is unmeasured). The only finding is a warning that the Purpose section still holds the template's placeholder, and `SESSION_NOTES.md` reads ok.
+
+**A. Fencing the placeholder alone (your finding 3) still exits 2.**
+The placeholder under `## Purpose` in `CLAUDE_TEMPLATE.md` is 182 bytes, but the minimum size of a fenced block (`protected_min_bytes`, `starter-kit/context-budget.json:34`) is 800. So with only the fence added, the message changes from "the budget:protected fence is missing" to "the budget:protected block is only 182 B — it looks emptied", and a fresh project still exits 2. The script at the end reproduces this.
+
+There are two ways out:
+- Treat a block that still holds the placeholder as unmeasured instead of over budget (your "alternatively").
+- Make the placeholder at least 800 bytes. I tried this: 800 passes and 799 does not. But it adds 618 characters to a template every project copies, and a project that never writes its own purpose would then pass the check that exists to notice an emptied one.
+
+I built the first, with one difference: the row reads `warn` rather than unmeasured. The config names a marker string that the template's placeholder contains (`protected_placeholder`, set to `<project-name>`). While the fenced block still contains it, the `CLAUDE.md` row reads `warn`, keeps its size in the table, and prints the remedy "Write your purpose"; the 800-byte minimum is not applied. Once the placeholder is replaced, the minimum applies as before (799 bytes is under, 800 passes). "Unmeasured" is the status the tool already uses for a file it cannot measure. Which of the two statuses is better is your design call.
+
+**B. The 800-byte minimum has the same characters-versus-bytes slip as your finding 4.**
+At `:453` the tool compares `len(body.strip())`, a count of characters, with `protected_min_bytes`, and `:455` prints that count followed by "B". One line earlier, `:452`, it already records the block's size in bytes (`len(body.encode())`). So fixing only the line cap (`:384`) would leave the tool counting in two different ways. For non-English text the minimum is stricter than its message says: 300 Chinese characters are 900 bytes, yet the tool reports "only 300 B — it looks emptied". (To see it, run the script below after `export BODY=$(python3 -c 'print("目" * 300)')`.) A byte count is never smaller than a character count, so measuring bytes here can only turn refusals into passes, never the reverse.
+
+**C. Measuring the line cap in bytes (your finding 4) changes no result on the projects I can check.**
+I have 12 projects that use the framework. Ten declare `max_line_bytes`, all on `SESSION_NOTES.md`. Read at each project's committed `HEAD`, no line goes from within the cap to over it when counted in bytes. The tool's own `measure_file` gives the same count as my script on every file. (Raw bytes and `len(l.encode("utf-8"))` differ only when a file contains invalid UTF-8; the two counts are equal on all 10.)
+
+**The change** is two small commits:
+1. The tool: bytes for both the line cap and the minimum, the placeholder warning, the config line that names the marker (`protected_placeholder`), and tests.
+2. The two seed files and the pass-control test you describe. In `SESSION_NOTES.md`, line 5 is wrapped and a second `##` heading is added; in `CLAUDE_TEMPLATE.md`, the Purpose placeholder is fenced. The test, in `bin/tests.sh`, syncs into a temporary project, copies the template to `CLAUDE.md`, and checks that no row is over budget and the only finding is the placeholder warning. A paired control plants a 400-byte line in the seed `SESSION_NOTES.md` and checks that the same probe reports the breach.
+
+It is built and passing on my own copy of the repository, which has other changes beside it, so I would re-run it on your `main` before opening anything. If you want it, say so and I'll open a pull request; otherwise I'll leave the fix with you.
+
+**Repro for A and B**, run against `f34769f`:
 
 ```sh
 M=/path/to/methodology   # checked out at f34769f
@@ -18,15 +41,5 @@ open(r + "/CLAUDE.md", "w").write(t)
 PY
 (cd "$R" && git init -q && python3 context_budget.py --status; echo "exit=$?")
 ```
-
-The two ways out that I can see are to treat a still-placeholder purpose as not over budget (your "alternatively"), or to make the placeholder at least 800 characters. I tried the second: 800 characters passes and 799 does not, so it means 618 more characters in a template every project copies, and a project that never wrote its own purpose then passes the check that exists to notice an emptied one. So I built the first, as a warning rather than as "unmeasured": the config names the placeholder text, and while the fenced block still holds it, `CLAUDE.md` reads `warn` with the remedy "Write your purpose", keeps its size in the table, and the 800 floor is not applied. Once the placeholder is replaced the floor applies as before (799 bytes is over, 800 passes). Which of the two statuses is better is your design call.
-
-**2. The 800 floor has the same characters-versus-bytes slip as finding 4.** `starter-kit/context_budget.py:453` compares `len(body.strip())` with `protected_min_bytes`, and `:455` prints that count followed by "B". One line earlier, `:452`, the tool already records `len(body.encode())` as the block's size in bytes. So a fix that changes only the line cap (`:384`) leaves the tool counting two ways. For multi-byte text the floor is stricter than its message says: a fenced block of 300 Chinese characters is 900 bytes, and the tool reports "only 300 B — it looks emptied" (run the repro above after `export BODY=$(python3 -c 'print("目" * 300)')`). A byte count is never smaller than a character count, so measuring bytes here can only turn refusals into passes, never the reverse.
-
-**3. Measuring the line cap in bytes changes no result on the projects I can check.** Of 12 projects of mine that use the framework, 10 declare `max_line_bytes`, all on `SESSION_NOTES.md`. Read at each project's committed `HEAD`, no line goes from within the cap to over it under a byte count, and the tool's own `measure_file` gives the same count as my script on every file. (Raw bytes and `len(l.encode("utf-8"))` differ only when a file contains invalid UTF-8; the two counts are equal on all 10.)
-
-With the change, a fresh `bin/sync` into an empty project, with `CLAUDE_TEMPLATE.md` copied to `CLAUDE.md`, exits 1 with no row over budget, the same exit as your control (`LEARNINGS.md` does not exist yet, so that row is unmeasured). The one finding is the placeholder warning, and `SESSION_NOTES.md` reads ok. Both the line cap and the floor count bytes.
-
-The change is two small commits: the tool (bytes for the cap and the floor, and the placeholder warning) with its tests, then the two seed files, the config line that names the placeholder, and the pass-control test you describe in `bin/tests.sh`, with a control that fails when a seed line goes over the cap. It is built and passing on my own copy of the repository, which has other changes beside it, so I would re-run it on your `main` before opening anything. If you want it, say so and I'll open a pull request; otherwise I'll leave the fix with you.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
