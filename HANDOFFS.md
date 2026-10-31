@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S406
+date: 2026-10-31
+status: pending
+active_task: **Make the drafted comment on upstream issue #95 (route R1 of BL-114) readable: recompose `docs/planning/pr-composition-evidence/i95-comment-draft.md` from the recomposed text he asked for (shown inline, saved only in the scratchpad until this claim), correct its 'over/under' slip (799 bytes is UNDER the 800 minimum), keep `i95-comment-record.md` true to it, re-verify every statement, and show the final text; post NOTHING unless he says 'post'.** His steps: 'go'; the Phase 0 picker was clarified, not answered; 'where can I read the comment?'; 'I find this text hard to understand. Clarify'; 'yes, recompose it and show me here'; his correction 'it should read ... (799 bytes is under, 800 passes)'; 'yes' to taking the deliverable with the recomposed text replacing the draft. Posting on `KJ5HST/methodology`, any branch pushed to the fork and any pull request stay his explicit go-ahead.
+```
+
+```handoff
 session: S405
 date: 2026-10-30
 status: complete
