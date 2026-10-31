@@ -1,0 +1,9 @@
+upstream pinned commit f34769f; this tree HEAD 312477b8748d
+up-notes      exit=2 over=1 kinds=instrument,line_bytes | CLAUDE.md=unmeasured SESSION_NOTES.md=over LEARNINGS.md=unmeasured
+up-template   exit=2 over=1 kinds=protected | CLAUDE.md=over SESSION_NOTES.md=unmeasured LEARNINGS.md=unmeasured
+fork-notes      exit=1 over=0 kinds=none | CLAUDE.md=unmeasured SESSION_NOTES.md=ok LEARNINGS.md=unmeasured
+fork-template   exit=1 over=0 kinds=placeholder | CLAUDE.md=warn SESSION_NOTES.md=unmeasured LEARNINGS.md=unmeasured
+fork-day-zero   exit=1 over=0 kinds=placeholder | CLAUDE.md=warn SESSION_NOTES.md=ok LEARNINGS.md=unmeasured
+floor-799       exit=2 over=1 kinds=protected | CLAUDE.md=over SESSION_NOTES.md=unmeasured LEARNINGS.md=unmeasured   (body: 799 chars, 799 bytes)
+floor-800       exit=1 over=0 kinds=none | CLAUDE.md=ok SESSION_NOTES.md=unmeasured LEARNINGS.md=unmeasured   (body: 800 chars, 800 bytes)
+floor-cjk-300   exit=1 over=0 kinds=none | CLAUDE.md=ok SESSION_NOTES.md=unmeasured LEARNINGS.md=unmeasured   (body: 300 chars, 900 bytes)

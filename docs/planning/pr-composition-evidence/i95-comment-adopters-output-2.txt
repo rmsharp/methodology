@@ -1,0 +1,21 @@
+i95-adopters.py: lines over `max_line_bytes`, characters (today) against bytes (the fix)
+
+adopter                     HEAD     file                                   cap  chars  bytes encode flips
+----------------------------------------------------------------------------------------------------------
+model_project_constructor   fbf1cbf  SESSION_NOTES.md                       280     64     64     64     0
+feedback-loop-comparison    2e77a73  methodology/SESSION_NOTES.md           280     44     44     44     0
+nprcgenekeepr               897ad786d methodology/SESSION_NOTES.md           280      0      0      0     0
+mts-system                  512b3f7  SESSION_NOTES.md                      4000      0      0      0     0
+vscode_quarto_ext           3be8ca8  methodology/SESSION_NOTES.md           280      0      0      0     0
+Philippians                 427e634  SESSION_NOTES.md                       280      0      0      0     0
+airqino                     f7a0194  methodology/SESSION_NOTES.md           280      0      0      0     0
+chat_verification           0a8ef90  methodology/SESSION_NOTES.md           280      1      1      1     0
+church_growth               62f7d8a  methodology/SESSION_NOTES.md           280      1      1      1     0
+dalia_martinez_funeral      5cd7b91  (no max_line_bytes declared at HEAD)
+claude_work                 -        (no commits yet: nothing at HEAD to read)
+wsfct                       ba081977 SESSION_NOTES.md                      2000      7      7      7     0
+
+Rows where the fix would turn a passing line into an over-cap line (line, characters, bytes, non-ASCII characters):
+  none
+
+Totals: 10 of 12 adopters declare the cap (dalia_martinez_funeral, claude_work (no commits) do not); 10 files measured; 0 would gain at least one over-cap line; 0 lines would flip. The tool's own measure_file agreed with the character count on every file.
