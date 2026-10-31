@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S408
+date: 2026-10-31
+status: pending
+active_task: **Settle the disagreement between `bin/check-handoff` and `starter-kit/HANDOFFS.md` about a receipt's `commit:` slot (S407's receipt, gotchas and report Structural Observations item 4: the checker flags `commit: pending` slots as errors and its note at `bin/check-handoff:56-60` and `:748` and BL-14 (`docs/planning/BACKLOG-DETAIL.md:174-212`) say the spec promises the next session reconciles them, while `starter-kit/HANDOFFS.md:76-80` says `pending` is a legitimate resting value).** Every one of those statements is S407's and is re-derived today from the files before it is relied on. His step: 'go'; at the Phase 0 picker 'Fix checker vs spec (Recommended)'. Workstream: `workstreams/DEVELOPMENT_WORKSTREAM.md`; the choice between changing the checker (canonical-only) and the spec (distributed to adopters) is his, so the plan is shown to him before any edit. Fork only; nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S407
 date: 2026-10-31
 status: complete
