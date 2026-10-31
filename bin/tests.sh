@@ -943,8 +943,9 @@ PY
 echo '== Test 25: check-handoff — the `commit:` answer-slot rule (BL-14, RED-first per Learning #12) =='
 # WHY THIS TEST EXISTS. `commit:` may legitimately read `pending` when written — a
 # close-out receipt ships INSIDE the commit whose sha it would name. The distributed
-# spec (starter-kit/HANDOFFS.md:64, :78-79) then promises the NEXT session reconciles
-# it. Nothing performed that promise: 9 of 32 receipts named no sha in the answer
+# spec then PROMISED the NEXT session reconciles it (upstream PR #69 later deleted that
+# promise; bin/check-handoff's docstring has the history and Test 62 pins its note to
+# the spec). Nothing performed that promise: 9 of 32 receipts named no sha in the answer
 # slot, one 25 days old, and this checker passed every one of them because it reads
 # only blocks[0] and `pending` is not a BARE_PLACEHOLDER.
 #
@@ -5451,6 +5452,32 @@ grep -qxF "  Compare against a full clone of it instead, with --source=local." <
 grep -qF 'The 1 file marked "unknown" below could be either.' <<<"$OUT61" \
     && pass "the note reads in the singular for one unknown file" || fail "the note does not read 'The 1 file marked' for one unknown file"
 rm -rf "$M" "$H" "$P"
+
+echo "== Test 62: check-handoff's answer-slot note quotes the spec's own words and asserts no promise the spec deleted (RED-first) =="
+# The note under an answer-slot finding said "the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session reconciles `commit:`
+# to a real sha". The distributed spec stopped saying that on 2026-08-10 (33d8c640; upstream PR #69 deleted the promise, 2026-08-12) and now
+# calls `pending` "a legitimate resting value ... not a promise a later session owes". The note stayed for 83 days, printed in every red run,
+# and S407 found it only while counting 305 older slots in 10 adopter ledgers. A line number cannot be checked against the words it points
+# at, so the note now QUOTES the spec and this test asserts the quotation is in the spec: when the spec's position changes, this goes red
+# and the note is revisited. The rule itself is unchanged (Test 25 and Test 59 hold it): it is this ledger's, stricter than the spec's.
+# Reuses two_block_ledger and nslot from Test 25.
+H62="$(mktemp -d)"
+two_block_ledger 'pending' > "$H62/two.md"
+[ "$(nslot "$H62/two.md")" = "1" ] \
+    && pass "check-handoff: control: an older receipt reading 'pending' gives one answer-slot finding, so the note is printed" \
+    || fail "check-handoff: the control ledger gave $(nslot "$H62/two.md") answer-slot finding(s), wanted 1"
+NOTE62="$("$BIN/check-handoff" --file "$H62/two.md" 2>&1 | grep -A8 '^  note:')"
+Q62="$(grep -o '"[^"]*"' <<<"$NOTE62" | head -1 | tr -d '"')"
+[ -n "$Q62" ] && tr -s '\n ' '  ' < "$STARTER/HANDOFFS.md" | grep -qF "$Q62" \
+    && pass "check-handoff: the note's quoted words ('$Q62') are in starter-kit/HANDOFFS.md" \
+    || fail "check-handoff: the note quotes '$Q62', which is not in starter-kit/HANDOFFS.md (or the note quotes nothing)"
+grep -qi 'reconcile' <<<"$NOTE62" \
+    && fail "check-handoff: the note still speaks of reconciling, a promise the spec no longer makes: $NOTE62" \
+    || pass "check-handoff: the note asserts no reconcile-by-the-next-session promise"
+[ "$(grep -c 'HANDOFFS\.md:64' "$BIN/check-handoff")" = "0" ] \
+    && pass "check-handoff: its source cites no 'HANDOFFS.md:64', the line the deleted promise stood on" \
+    || fail "check-handoff: its source still cites 'HANDOFFS.md:64' ($(grep -c 'HANDOFFS\.md:64' "$BIN/check-handoff") place(s))"
+rm -rf "$H62"
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="

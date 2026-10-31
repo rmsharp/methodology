@@ -53,12 +53,24 @@ wiring; P2: this checker + bin/tests.sh Tests 21-22).
 THE ANSWER-SLOT RULE (the `commit:` field, every receipt EXCEPT the newest).
 `commit:` is the receipt's join key into git. It may legitimately read `pending`
 when written, because a close-out receipt ships INSIDE the very commit whose sha it
-would name — the chicken-egg the ratified plan solved by deferring. What the
-distributed spec then promises (starter-kit/HANDOFFS.md:64 and :78-79) is that the
-NEXT session reconciles it to a real sha. Nothing performed that promise: measured
-over both ledger files, 9 of 32 receipts named no sha in the answer slot, one of
-them 25 days old, and this checker passed all of them because it reads only the
-newest block and `pending` is not a BARE_PLACEHOLDER.
+would name — the chicken-egg the ratified plan solved by deferring. When this rule
+was written (BL-14) the distributed spec promised that the NEXT session reconciles it
+to a real sha, and nothing performed that promise: measured over both ledger files, 9
+of 32 receipts named no sha in the answer slot, one of them 25 days old, and this
+checker passed all of them because it reads only the newest block and `pending` is
+not a BARE_PLACEHOLDER.
+
+THAT PROMISE IS GONE, AND THE RULE IS THIS REPOSITORY'S OWN. Upstream pull request #69
+(commit 33d8c640; its review dropped the "legal only for the newest receipt" wording
+in dc3b405d) deleted it: the distributed spec now calls `pending` "a legitimate
+resting value ... not a promise a later session owes" and does not restrict it to the
+newest receipt. So this rule is stricter than the spec, on purpose, and what carries
+it is no longer a promise but the join key: a receipt can name the last WORK commit,
+which exists before the close-out commit that carries the receipt does, so a sha is
+always available to its writer. This checker is canonical-only: an adopter ledger that
+holds `pending` below its newest receipt broke nothing the adopter was told, so count
+it as a difference of rule, never as that project's defect. (Test 62 pins the quoted
+words to the spec; BL-14 is closed and its detail records the premise as it stood.)
 
 So the rule enforced here is a state predicate over the FILE, not a duty assigned to
 a session: the answer slot is the value's FIRST token, and on every receipt except
@@ -745,9 +757,10 @@ def check_answer_slots(blocks: list, archived: bool = False) -> list:
 def print_answer_slot_note() -> None:
     """The note under a block of `check_answer_slots` findings. One copy, because the everyday run
     and --all (BL-128) print the same rows and owe the reader the same way out."""
-    print("  note: the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session")
-    print("        reconciles `commit:` to a real sha. Find the sha a receipt should name")
-    print("        with: git log --all --full-history --format=%H -- <this file>")
+    print("  note: this is this ledger's rule, stricter than the distributed spec's, which calls")
+    print("        `pending` \"a legitimate resting value\". The slot is the receipt's join key")
+    print("        into git: name the last WORK commit, which exists before the close-out commit.")
+    print("        Find a sha with: git log --all --full-history --format=%H -- <this file>")
     print("        then the first commit whose copy of that block reads `status: complete`.")
 
 
