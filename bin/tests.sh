@@ -1983,14 +1983,15 @@ EOF_IDS
                 || fail "repeated session id on different dates was wrongly flagged"
         else fail "merged-sequence mutation was vacuous"; fi
 
-        # session:/date: must lead every block.
-        if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: ([0-9-]+)\nstatus: complete', r'status: complete\nsession: $A1\ndate: \1', s, count=1)"; then
+        # session:/date: must lead every block. The anchor's status may be `complete` or `reconciled`
+        # (a closed state a later session's Phase 0 writes); the mutation keeps whichever it finds.
+        if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: ([0-9-]+)\n(status: (?:complete|reconciled))', r'\2\nsession: $A1\ndate: \1', s, count=1)"; then
             "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
                 && fail "session/date not leading a block was not caught" || pass "session/date must lead every block"
         else fail "key-order mutation was vacuous"; fi
 
         # An OLDER receipt left pending — --allow-pending exempts only the newest.
-        if mutate "$LEDGER" "$F" "re.sub(r'(session: $A1\ndate: [0-9-]+\n)status: complete', r'\1status: pending', s, count=1)"; then
+        if mutate "$LEDGER" "$F" "re.sub(r'(session: $A1\ndate: [0-9-]+\n)status: (?:complete|reconciled)', r'\1status: pending', s, count=1)"; then
             "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
                 && fail "older pending receipt not caught (--allow-pending over-applied)" \
                 || pass "older pending receipt caught; --allow-pending exempts only the newest"
