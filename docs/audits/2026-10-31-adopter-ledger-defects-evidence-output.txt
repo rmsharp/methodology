@@ -1,0 +1,85 @@
+check-handoff: last commit touching it 3f97ba72; fork HEAD 137238ee
+ledgers found: 15
+
+== A. SURVEY (default mode: the newest receipt's schema, the ledger's structure, `commit:` slots, size ceiling)
+ledger                     sha256    bytes    HEAD      dirty exit   | newest structure slots ceiling other
+Philippians                f4bdd29a  130271   427e634   no   exit 1 |      0         0    24       1     0
+claude_work                f9a83f51  4595     no git    no   exit 0 |      0         0     0       0     0
+dalia_martinez_funeral     5513a4d1  48203    5cd7b91   no   exit 0 |      0         0     0       0     0
+data_quality_assurance     8f112910  76648    31fb7a8   no   exit 1 |      0         0     2       1     0
+methodology                ed68a423  35233    137238ee  no   exit 0 |      0         0     0       0     0
+methodology-bl57           b8d4b2a5  134164   77afc127  no   exit 1 |      0         0     2       1     3
+model_project_constructor  cb66fdd8  167696   66fbd6f   no   exit 1 |      0         0    20       1     0
+mts-system                 2174c09d  273535   512b3f7   no   exit 1 |      1         2    20       1     0
+      structure | error: line 398: a ```handoff opener inside the receipt opened at line 383 — the receipt was begun twice and is read as one block
+      structure | error: block at line 367 (S195): duplicate receipt identity — session 'S195' on date '2026-10-05' (first seen at line 351)
+wsfct                      e209a54c  696592   3ce0cc41  no   exit 1 |      0         0   137       1     0
+airqino                    06a02646  86590    f7a0194   no   exit 1 |      0         0     6       1     0
+chat_verification          59453713  66903    0a8ef90   no   exit 1 |      0         0     0       1     0
+church_growth              dbb62d30  70347    62f7d8a   no   exit 1 |      2         1     5       1     0
+      structure | error: block at line 817 (S4): duplicate receipt identity — session 'S4' on date '2026-07-11' (first seen at line 756)
+feedback-loop-comparison   60fa0a03  13487    2e77a73   no   exit 0 |      0         0     0       0     0
+nprcgenekeepr              3cb6544d  44385    8d847443f no   exit 1 |      0         0     1       0     0
+vscode_quarto_ext          beb4464e  548946   3be8ca8   no   exit 1 |      3        12    88       1     0
+      structure | error: line 922: a ```handoff opener inside the 3-backtick fence opened at line 920 — every check skips a receipt there; only a 4-backtick wrapper may hold a documentation example
+      structure | error: line 908: receipt field outside any ```handoff fence — an orphaned receipt body: 'session: S284'
+      structure | error: line 909: receipt field outside any ```handoff fence — an orphaned receipt body: 'date: 2026-10-01'
+      structure | error: line 910: receipt field outside any ```handoff fence — an orphaned receipt body: 'status: complete'
+      structure | error: line 911: receipt field outside any ```handoff fence — an orphaned receipt body: 'self_score: 8'
+      structure | error: line 912: receipt field outside any ```handoff fence — an orphaned receipt body: 'predecessor_score: 8'
+      structure | error: line 913: receipt field outside any ```handoff fence — an orphaned receipt body: 'active_task: NONE -- S284 closed out. cmx blank-title callou'
+      structure | error: line 914: receipt field outside any ```handoff fence — an orphaned receipt body: 'what_was_done: (1) Orient clean; operator picked the cmx tit'
+      structure | error: line 916: receipt field outside any ```handoff fence — an orphaned receipt body: 'key_files: src/core/qmd/model.ts (legacyDivCalloutTitleSlot '
+      structure | error: line 917: receipt field outside any ```handoff fence — an orphaned receipt body: 'gotchas: (1) commonmark readers bypass the tokenizer branch;'
+      structure | error: line 918: receipt field outside any ```handoff fence — an orphaned receipt body: 'runtime_smoke: none; test:integration not run (needs the scr'
+      structure | error: line 919: receipt field outside any ```handoff fence — an orphaned receipt body: 'changelog_ref: CHANGELOG.md 2026-10-01 -- the cmx blank-titl'
+
+== B. THE VERSION S352 READ (the last ledger commit before 2026-10-20 23:00 -0500), the three projects
+church_growth: version 62f7d8a (2026-10-10); 1 structure issue(s) then; ledger commits since: 0; lines then 958, now 958 (+0)
+      then | error: block at line 817 (S4): duplicate receipt identity — session 'S4' on date '2026-07-11' (first seen at line 756)
+mts-system: version 467c11d (2026-10-14); 2 structure issue(s) then; ledger commits since: 2; lines then 1253, now 1269 (+16)
+      then | error: line 382: a ```handoff opener inside the receipt opened at line 367 — the receipt was begun twice and is read as one block
+      then | error: block at line 351 (S195): duplicate receipt identity — session 'S195' on date '2026-10-05' (first seen at line 335)
+vscode_quarto_ext: version ada8bfb (2026-10-19); 12 structure issue(s) then; ledger commits since: 41; lines then 1331, now 1548 (+217)
+      then | error: line 705: a ```handoff opener inside the 3-backtick fence opened at line 703 — every check skips a receipt there; only a 4-backtick wrapper may hold a documentation example
+      then | error: line 691: receipt field outside any ```handoff fence — an orphaned receipt body: 'session: S284'
+      then | error: line 692: receipt field outside any ```handoff fence — an orphaned receipt body: 'date: 2026-10-01'
+      then | ... and 9 more orphaned-field lines of the same receipt
+
+== C. REPAIR TESTS ON COPIES (the adopter's own file is never written)
+church_growth (line 818 is the `session:` line of the block opened at 817):
+  relabel 817 as `ad-hoc`                              structure issues: 1 (expected 1) [ok]; --all sees 19 receipts
+        | error: block at line 817 (ad-hoc): duplicate receipt identity — session 'ad-hoc' on date '2026-07-11' (first seen at line 795)
+  relabel 817 as `ad-hoc-2`                            structure issues: 0 (expected 0) [ok]; --all sees 19 receipts
+mts-system (352 and 384 are the `session:` lines of the two `reconciled` receipts; 396 ends the S194 one):
+  closing fence after line 396 only                    structure issues: 2 (expected 2) [ok]; --all sees 65 receipts
+        | error: block at line 367 (S195): duplicate receipt identity — session 'S195' on date '2026-10-05' (first seen at line 351)
+        | error: block at line 399 (S194): duplicate receipt identity — session 'S194' on date '2026-10-05' (first seen at line 383)
+  relabel the two reconciled receipts only             structure issues: 1 (expected 1) [ok]; --all sees 64 receipts
+        | error: line 398: a ```handoff opener inside the receipt opened at line 383 — the receipt was begun twice and is read as one block
+  both, ids `ad-hoc-1` and `ad-hoc-2`                  structure issues: 0 (expected 0) [ok]; --all sees 65 receipts
+  both, ids in the project's own line-662 style        structure issues: 0 (expected 0) [ok]; --all sees 65 receipts
+vscode_quarto_ext (line 907 is the one-line stub of the front-matter sentence):
+  delete line 907                                      structure issues: 12 (expected 12) [ok]; --all sees 91 receipts
+        | error: line 921: a ```handoff opener inside the 3-backtick fence opened at line 919 — every check skips a receipt there; only a 4-backtick wrapper may hold a documentation example
+        | error: line 907: receipt field outside any ```handoff fence — an orphaned receipt body: 'session: S284'
+        | error: line 908: receipt field outside any ```handoff fence — an orphaned receipt body: 'date: 2026-10-01'
+        | error: line 909: receipt field outside any ```handoff fence — an orphaned receipt body: 'status: complete'
+        | error: line 910: receipt field outside any ```handoff fence — an orphaned receipt body: 'self_score: 8'
+        | error: line 911: receipt field outside any ```handoff fence — an orphaned receipt body: 'predecessor_score: 8'
+        | error: line 912: receipt field outside any ```handoff fence — an orphaned receipt body: 'active_task: NONE -- S284 closed out. cmx blank-title callou'
+        | error: line 913: receipt field outside any ```handoff fence — an orphaned receipt body: 'what_was_done: (1) Orient clean; operator picked the cmx tit'
+        | error: line 915: receipt field outside any ```handoff fence — an orphaned receipt body: 'key_files: src/core/qmd/model.ts (legacyDivCalloutTitleSlot '
+        | error: line 916: receipt field outside any ```handoff fence — an orphaned receipt body: 'gotchas: (1) commonmark readers bypass the tokenizer branch;'
+        | error: line 917: receipt field outside any ```handoff fence — an orphaned receipt body: 'runtime_smoke: none; test:integration not run (needs the scr'
+        | error: line 918: receipt field outside any ```handoff fence — an orphaned receipt body: 'changelog_ref: CHANGELOG.md 2026-10-01 -- the cmx blank-titl'
+  replace line 907 with an opening fence               structure issues: 0 (expected 0) [ok]; --all sees 93 receipts
+
+== D. EXPOSURE: lines holding the text ```handoff NOT at the start of the line (prose), per ledger
+  methodology/HANDOFFS.md                          4 line(s): [22, 41, 76, 92]
+  methodology-bl57/HANDOFFS.md                     2 line(s): [130, 132]
+  mts-system/HANDOFFS.md                           3 line(s): [71, 828, 829]
+  vscode_quarto_ext/methodology/HANDOFFS.md        2 line(s): [907, 1448]
+  (every ledger not listed holds none, including the distributed seed starter-kit/HANDOFFS.md)
+
+adopter originals unchanged while this ran: yes (15 of 15)
