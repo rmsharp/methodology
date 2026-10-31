@@ -229,7 +229,7 @@ changelog_ref: CHANGELOG.md [BL-F1] entry
 commit: pending
 ```
 
-`predecessor_score` is omitted — Session 1 has no predecessor to score. `commit: pending` is legal (the receipt ships in the very commit it would name; the next session reconciles it). `bin/check-handoff --file HANDOFFS.md` would pass this — presence and structure, never quality.
+`predecessor_score` is omitted — Session 1 has no predecessor to score. `commit: pending` is legal (the receipt ships in the very commit it would name, and no later session is assigned to fill it in, so `pending` may rest). `bin/check-handoff --file HANDOFFS.md` would pass this — presence and structure, never quality.
 
 ### 3E — Runtime smoke test
 
