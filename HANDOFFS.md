@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S407
+date: 2026-10-31
+status: pending
+active_task: **Read-only audit report on the three adopter receipt ledgers that S352 (2026-10-20) found with real defects: `church_growth`, `mts-system`, `vscode_quarto_ext` (each by project, receipt and line, every finding re-derived today with the fork's `bin/check-handoff`, because S352's line numbers are ten days old).** His steps: 'go'; at the Phase 0 picker 'Yes, trim now (Recommended)' (done first: trim `0dd39ed6`, fold `ead3fc2f`, `HANDOFFS.md` 5 to 3 receipts) and 'Adopter ledger report (Recommended)'. Workstream: `workstreams/AUDIT_WORKSTREAM.md`. No adopter file is edited (the repair is a session in that project); the report is a committed document in this repo; anything sent to `KJ5HST/methodology`, any adopter or any branch pushed stays his explicit go-ahead.
+```
+
+```handoff
 session: S406
 date: 2026-10-31
 status: complete
