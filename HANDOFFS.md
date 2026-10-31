@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S405
+date: 2026-10-30
+status: pending
+active_task: **Refresh the drafted comment on upstream issue #95 (route R1 of BL-114) so it matches what S404 built; show it to him inline; post NOTHING** (his pick at the S405 Phase 0 picker, 'Draft the #95 comment (Recommended)'; also at that picker: 'Yes, trim now' (done: trim `f0bbf8e2`, fold in its own commit) and 'Yes, push main' (after close-out, guarded)). Premise found while claiming: a draft already exists (`docs/planning/pr-composition-evidence/i95-comment-draft.md`, S329, written against upstream `f34769f` before the fix was built), so the deliverable is the REFRESH of that draft and its record `i95-comment-record.md`, not new prose: the lean in its item 1 (placeholder as unmeasured) is not what was built (a warning, S404's choice A), and its closing offer predates a built, tested change. Posting on `KJ5HST/methodology`, any branch pushed to the fork, and any pull request stay his explicit go-ahead.
+```
+
+```handoff
 session: S404
 date: 2026-10-30
 status: reconciled
