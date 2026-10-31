@@ -281,6 +281,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-30-2.md` (2 record(s), 52,819 B → 32,951 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-30 → 2026-10-30) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-30-2.md`](docs/archive/HANDOFFS-through-2026-10-30-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-30-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-30-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 52,819 B → 32,951 B (−37.6%).
+
 ### 2026-10-30 · [ad hoc] Backfilled (reconcile-on-read): S404's `HANDOFFS.md` receipt -- built and gated, never closed out; now `status: reconciled`; fork only, nothing sent to KJ5HST/methodology
 
 S405's Phase 0 found S404's receipt still `status: pending` after S404's work commit `90493814` (the claim `a9b3f063`, the two fix commits `cadb4780` and `19a4ecb8`): no close-out commit, no close-out ledger entry, no push. The ledger itself had no gap (`check-ledger` exit 0; the frontier `90493814` is the newest commit; 0 merges since). The receipt is rewritten from `git log`, the three S404 work entries and the gate results file (24 of 24 on `HEAD` `90493814`, results `0d2914e1e18a`, manifest `1d7041808739`), marked `reconciled` with S405's reading of the scores, and lists what was never done: Phase 3A to 3G, the 3C decision, the push. No code or configuration changed.
