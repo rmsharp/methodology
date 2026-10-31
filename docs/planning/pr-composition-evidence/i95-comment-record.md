@@ -6,7 +6,7 @@
 `i95-comment-refresh.py` and its saved output), its lean in item 1 became the choice that was built, and its closing offer describes the two commits. Nothing else in the text changed except a clause
 saying the four files are unchanged on upstream's `main` today (`git diff f34769f..upstream/main` on them is empty at `d50ce290`; the issue is still open with 0 comments, last edited 2026-10-15T23:54:35Z).
 
-The draft is `i95-comment-draft.md`: the exact text, nothing else, so it can be pasted. **It is not posted.** Posting a comment on `KJ5HST/methodology` is his explicit go-ahead,
+The draft is `i95-comment-draft.md`: the exact text, nothing else, so it can be pasted. **It was POSTED on 2026-10-31T20:39:05Z** as <https://github.com/KJ5HST/methodology/issues/95#issuecomment-6548843872> (S406, from his GitHub account, on his 'Yes, post it as shown' to the exact 5,426 B text of this file; read back through `gh api`: the issue then held 1 comment, its author the account that posted it, its body identical to this file, 5,426 B, sha256 prefix `5141b0b0f7b2e705` on both). Posting a comment on `KJ5HST/methodology` was his explicit go-ahead,
 each time. The issue is <https://github.com/KJ5HST/methodology/issues/95>; it is the maintainer's own, opened 2026-10-15 21:00Z. Its body was edited at 23:54:35Z the same day; the diff
 (`gh api graphql`, `userContentEdits`) removes the "Generated with Claude Code" footer and nothing else, so the derivation in `i95-record.md` still stands. The route is R1 of
 `i95-record.md` §6, his S328 pick.
