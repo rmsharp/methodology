@@ -41,7 +41,7 @@
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 694,
+      "threshold": 698,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "timeout_seconds": 3600,
