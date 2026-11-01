@@ -155,14 +155,14 @@ What is specific to *this* file, and gets receipts wrong if assumed:
   their numbers collide. The record's identity is **session + date**.
 - **A trim leaves the newest-receipt check alone and moves what the older-receipt checks see.**
   Phase 0 reconcile is frontier-based and a structural checker applies the full schema to the newest
-  receipt only, so neither is disturbed. Its other passes are not so confined — an answer-slot rule
-  reads every receipt below the newest, and a locator-form rule reads every receipt in the file. So
-  after a trim, **run the checker against each shard as well**, and recompute any "all N older
-  receipts" count from the files rather than carrying it forward.
+  receipt only, so neither is disturbed. Its other passes are not so confined — `--all` reads every
+  receipt, and a rule a project adds over its older receipts reads them too. So after a trim,
+  **run the checker against each shard as well**, and recompute any "all N older receipts" count from
+  the files rather than carrying it forward.
 - **Never trim to zero receipts.** An empty receipt ledger is indistinguishable from a broken one.
-- **A shard freezes, with one exception this file needs:** a `commit:` answer slot may still be
-  reconciled inside an archived receipt, because that field was always going to be filled by a later
-  session. Nothing else in a shard is rewritten.
+- **A shard freezes, and nothing in it is rewritten** — not even a `commit:` slot. A `pending` there
+  stays `pending`: it is a legitimate resting value (above), and no later session is assigned to fill
+  it in.
 
 ## Three files, three questions, one shared key
 

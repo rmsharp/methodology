@@ -5479,6 +5479,28 @@ grep -qi 'reconcile' <<<"$NOTE62" \
     || fail "check-handoff: its source still cites 'HANDOFFS.md:64' ($(grep -c 'HANDOFFS\.md:64' "$BIN/check-handoff") place(s))"
 rm -rf "$H62"
 
+echo "== Test 63: the spec's 'Size, and when to archive' section promises nothing the spec deleted and names no rule only this repository's checker has (RED-first) =="
+# starter-kit/HANDOFFS.md said, in that section, that a `commit:` slot may be reconciled inside an archived receipt "because that field was
+# always going to be filled by a later session" (the promise upstream PR #69 deleted from the spec's main text on 2026-08-12, which still says
+# `pending` is "a legitimate resting value ... not a promise a later session owes"), and that "an answer-slot rule" and "a locator-form rule"
+# read the older receipts. Both rules live only in THIS repository's bin/check-handoff (upstream's has neither; no open pull request head
+# carries either). The sentences were written 2026-09-02, after the main text, and stood for 59 days; S408 found them while fixing the checker's
+# note (Test 62). A later resync from upstream would bring the old sentence back silently, so the words are pinned here, in the SPEC and not in
+# the checker. The control is the lead the other assertions are about, so a renamed bullet cannot make them vacuous.
+S63="$(tr -s '\n ' '  ' < "$STARTER/HANDOFFS.md")"
+grep -qF 'A shard freezes' <<<"$S63" \
+    && pass "spec: control: the archive section still has its 'A shard freezes' bullet, so the assertions below read the right text" \
+    || fail "spec: no 'A shard freezes' bullet in starter-kit/HANDOFFS.md; renamed? the assertions below would be vacuous"
+grep -qF 'filled by a later session' <<<"$S63" \
+    && fail "spec: starter-kit/HANDOFFS.md still says a commit: slot is 'filled by a later session', the promise it deleted" \
+    || pass "spec: it says no later session fills a commit: slot in"
+{ grep -qF 'answer-slot rule' <<<"$S63" || grep -qF 'locator-form rule' <<<"$S63"; } \
+    && fail "spec: starter-kit/HANDOFFS.md names an 'answer-slot rule' or a 'locator-form rule', which only this repository's bin/check-handoff has" \
+    || pass "spec: it names neither the answer-slot rule nor the locator-form rule, which only this repository's checker has"
+grep -qF 'A `pending` there stays `pending`' <<<"$S63" \
+    && pass "spec: a shard says a 'pending' commit: slot stays 'pending' there" \
+    || fail "spec: the 'A shard freezes' bullet does not say a pending commit: slot stays pending in a shard"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
