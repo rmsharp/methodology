@@ -128,7 +128,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-37** | This repo ships a size-ceiling gate it does not run on itself; the shipped list has no `BACKLOG.md` entry | [detail](BACKLOG-DETAIL.md#bl-37) |
 | **BL-39** | Issue #75's two *Related* items — carry the named surface forward into close-out | [detail](BACKLOG-DETAIL.md#bl-39) |
 | **BL-42** | `methodology_trim.py` still generates the fat pointer block S109's compaction removed | [detail](BACKLOG-DETAIL.md#bl-42) |
-| **BL-46** | An adopter's trimmer inert since bootstrap; the seed's own removal has no detector | [detail](BACKLOG-DETAIL.md#bl-46) |
+| **BL-46** | An adopter's trimmer inert since bootstrap; the seed's own removal has no detector. **Rider (S409): two upstream-facing hunks this fork holds and `upstream/main` lacks, to ride the same batch as this item's seed change** — `starter-kit/HANDOFFS.md:156-165` (the archive section: it no longer says a later session fills a `commit:` slot or names two rules only this fork's checker has; `8fd92bfa`; the detail body's "Rider from BL-14's close" is the same sentence, now reworded on the fork) and `docs/tutorials/T2_worked_transcript.md:232` (S408, `c7ef874e`). Both are fork-only until a pull request carries them | [detail](BACKLOG-DETAIL.md#bl-46) |
 | **BL-47** | Seed `context-budget.json` omits the two ledgers `methodology_trim.py` exists to bound | [detail](BACKLOG-DETAIL.md#bl-47) |
 | **BL-48** | Seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares | [detail](BACKLOG-DETAIL.md#bl-48) |
 | **BL-49** | `content_probe` runs only at zero records, so a partial grammar mismatch freezes into a shard | [detail](BACKLOG-DETAIL.md#bl-49) |
