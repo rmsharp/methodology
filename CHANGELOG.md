@@ -281,6 +281,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-31 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-30-4.md` (2 record(s), 57,431 B → 40,612 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-30 → 2026-10-30) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-30-4.md`](docs/archive/HANDOFFS-through-2026-10-30-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-30-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-30-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,431 B → 40,612 B (−29.3%).
+
 ### 2026-10-31 · [ad hoc] S408 push record -- fork `main` fast-forwarded `535973bb..5acd8948` (5 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at his 'Yes, push main (Recommended)' (asked as a required Yes/No after the close-out commit `5acd8948`). Guarded first: `git fetch origin`, origin's `main` still `535973bb`, an ancestor of local `main`, exactly 5 commits ahead (the claim `d2f610fe`, the work `99b95ee5` and `c7ef874e`, the floor `72253ec1`, the close-out `5acd8948`) and 0 behind, clean tree. Only `main` was pushed (never `--all` or `--mirror`), to `https://github.com/rmsharp/methodology.git`, the fork. Read back after the push: `git fetch origin` shows origin's `main` at `5acd8948f16e` and `git rev-list --count origin/main..main` reads 0. Nothing was sent to `KJ5HST/methodology`: no pull request, issue, comment or branch. This entry is the only change in its commit.
