@@ -281,6 +281,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-10
 
+### 2026-10-31 · [ad hoc] S409 floor -- `tests-sh-passed` raised 698 to 702, the count a clean clone measured after Test 63; tightening only
+
+A clean `--no-local` clone of `8fd92bfa` (work 1, tree clean; work 2 changes only `BACKLOG.md` and `CHANGELOG.md`, which no assertion reads for count), `bash bin/tests.sh > file`, 19:40:43 to 19:49:19 (8 min 36 s, load average 2.5 at start, 5 at the end): `== Summary: 702 passed, 0 failed, 0 skipped ==`, exit 0, no FAIL and no SKIP line, Test 63's four assertions among the passes. 698 + 4 = 702, so expectation E4 held. The floor in `.quality-gates.json` moves from 698 to 702 and nothing else in the file changes; a threshold is only ever tightened here (`SAFEGUARDS.md` Blast Radius Limits). The 26-minute `quality_ratchet.py --run` follows on the final tree, then the close-out.
+
 ### 2026-10-31 · [ad hoc] S409 work (2 of 2) -- BL-46's INDEX row records the two upstream-facing hunks this fork holds and `upstream/main` lacks, so a composed batch cannot lose them; fork only
 
 `docs/planning/BACKLOG.md` BL-46's row (the INDEX row, not the DETAIL body, whose proof pins the routing block and the pre-split bodies) now carries a rider naming `starter-kit/HANDOFFS.md:156-165` (work 1, `8fd92bfa`; the detail body's 'Rider from BL-14's close' is the same sentence, now reworded on the fork) and `docs/tutorials/T2_worked_transcript.md:232` (S408 work 2, `c7ef874e`), as S408's receipt asked. Proofs from the repository root after the edit: `BACKLOG-COMPLETED.md.verify.sh` exit 0, `BACKLOG-DETAIL.md.verify.sh` exit 0, `bin/check-backlog-anchors` exit 0, `bin/check-links` exit 0. Nothing sent to `KJ5HST/methodology`.
