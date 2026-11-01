@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S409
+date: 2026-10-31
+status: pending
+active_task: **Fix the archive section of `starter-kit/HANDOFFS.md` (S408's receipt, next_steps (5) and key hunks: the section at about `:158` and `:163-165` still speaks of an answer-slot rule and of a slot 'always going to be filled by a later session', which the maintainer's own review of upstream PR #69 (`dc3b405d`, 2026-08-11) removed from the rest of the spec).** Every one of those statements is S408's and is re-derived today from the file, `upstream/main` and the history before it is relied on. His steps: 'go'; at the S409 Phase 0 picker 'Yes, trim now (Recommended)' (done: trim `75fb9254`, fold `d6f7b20f`) and 'Fix the spec's archive section (Recommended)'. Workstream: `workstreams/DEVELOPMENT_WORKSTREAM.md`. The file is distributed to adopters, so choosing the option was his go-ahead to edit that ONE file on fork `main`; nothing is sent to `KJ5HST/methodology`, no branch is pushed, no adopter file is touched.
+```
+
+```handoff
 session: S408
 date: 2026-10-31
 status: complete
