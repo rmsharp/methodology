@@ -1,0 +1,71 @@
+## 5563a7c8 fix(trim): name a ledger kept out of git as the cause, not a 
+
+### piece5-probe-check-and-dry-run.py
+
+### A tracked (control)  [CHANGELOG.md: tracked=yes ignored=no frontier=ebea6c5]
+  --check  exit=1    [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_MONTH_BOUNDARY] this entry opens a new month section (## 2026-11) while the ledger's front matter still ends with ## 2026-01, which now heads nothing. Move that one line below the new entry before committing — the tool w |   [DRY_RUN] would archive 17 of 30 record(s) (2026-01-01 → 2026-01-28) to docs/archive/CHANGELOG-through-2026-01-28.md; live 213,704 B → 93,909 B. Nothing written
+
+### B never committed, not ignored  [CHANGELOG.md: tracked=no ignored=no frontier=none]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] CHANGELOG.md is not tracked and no commit has ever recorded it. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while i |   [CHECK] trigger FIRES
+  dry-run  exit=2    [LEDGER_NOT_IN_GIT] CHANGELOG.md is not tracked and no commit has ever recorded it. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while i |   [P1_NO_LEDGER] no commit has ever recorded CHANGELOG.md — self-provision and reconcile before trimming
+
+### C never committed, ignored  [CHANGELOG.md: tracked=no ignored=yes frontier=none]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] CHANGELOG.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was o |   [CHECK] trigger FIRES
+  dry-run  exit=2    [LEDGER_NOT_IN_GIT] CHANGELOG.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was o |   [P1_NO_LEDGER] no commit has ever recorded CHANGELOG.md — it is listed in .gitignore, so track it (git add -f CHANGELOG.md) and commit it, then reconcile before tri
+
+### D committed once, then untracked (not ignored)  [CHANGELOG.md: tracked=no ignored=no frontier=7dc6c17]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] CHANGELOG.md is no longer tracked (the last commit that touched it is 7dc6c17). The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an arch |   [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_NOT_IN_GIT] CHANGELOG.md is no longer tracked (the last commit that touched it is 7dc6c17). The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an arch |   [LEDGER_MONTH_BOUNDARY] this entry opens a new month section (## 2026-11) while the ledger's front matter still ends with ## 2026-01, which now heads nothing. Move th
+
+### E committed once, then untracked and ignored  [CHANGELOG.md: tracked=no ignored=yes frontier=c7a414d]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] CHANGELOG.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was o |   [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_NOT_IN_GIT] CHANGELOG.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was o |   [LEDGER_MONTH_BOUNDARY] this entry opens a new month section (## 2026-11) while the ledger's front matter still ends with ## 2026-01, which now heads nothing. Move th
+
+### A tracked (control)  [HANDOFFS.md: tracked=yes ignored=no frontier=d93d44d]
+  --check  exit=1    [CHECK] trigger FIRES
+  dry-run  exit=0    [FRONTMATTER_FIELD_REGENERATED] retained receipt count: 0 → 2 |   [DRY_RUN] would archive 4 of 6 record(s) (2026-01-01 → 2026-01-04) to docs/archive/HANDOFFS-through-2026-01-04.md; live 205,662 B → 69,043 B. Nothing written — pass --write.
+
+### B never committed, not ignored  [HANDOFFS.md: tracked=no ignored=no frontier=none]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] HANDOFFS.md is not tracked and no commit has ever recorded it. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it |   [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_NOT_IN_GIT] HANDOFFS.md is not tracked and no commit has ever recorded it. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it |   [FRONTMATTER_FIELD_REGENERATED] retained receipt count: 0 → 2 |   [DRY_RUN] would archive 4 of 6 record(s) (2026-01-01 → 2026-01-04) to docs/archive/HANDOFFS-thro
+
+### C never committed, ignored  [HANDOFFS.md: tracked=no ignored=yes frontier=none]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] HANDOFFS.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was ou |   [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_NOT_IN_GIT] HANDOFFS.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was ou |   [FRONTMATTER_FIELD_REGENERATED] retained receipt count: 0 → 2 |   [DRY_RUN] would archive 4 of 6 record(s) (2026-01-01 → 2026-01-04) to docs/archive/HANDOFFS-thro
+
+### D committed once, then untracked (not ignored)  [HANDOFFS.md: tracked=no ignored=no frontier=5c28295]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] HANDOFFS.md is no longer tracked (the last commit that touched it is 5c28295). The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archi |   [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_NOT_IN_GIT] HANDOFFS.md is no longer tracked (the last commit that touched it is 5c28295). The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archi |   [FRONTMATTER_FIELD_REGENERATED] retained receipt count: 0 → 2 |   [DRY_RUN] would archive 4 of 6 record(s) (2026-01-01 → 2026-01-04) to docs/archive/HANDOFFS-thro
+
+### E committed once, then untracked and ignored  [HANDOFFS.md: tracked=no ignored=yes frontier=0c0ffe8]
+  --check  exit=1    [LEDGER_NOT_IN_GIT] HANDOFFS.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was ou |   [CHECK] trigger FIRES
+  dry-run  exit=0    [LEDGER_NOT_IN_GIT] HANDOFFS.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh an archive made while it was ou |   [FRONTMATTER_FIELD_REGENERATED] retained receipt count: 0 → 2 |   [DRY_RUN] would archive 4 of 6 record(s) (2026-01-01 → 2026-01-04) to docs/archive/HANDOFFS-thro
+
+### piece5-probe-write-and-proof.py
+
+### E committed once, then untracked and ignored [CHANGELOG.md]
+  --write exit=0
+      [SRF_UNDEFINED] no prior archive — SRF is undefined before a ledger's first archive (H3's own stated limit). Abstaining rather than computing a zero.
+      [LEDGER_NOT_IN_GIT] CHANGELOG.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh 
+      [LEDGER_MONTH_BOUNDARY] this entry opens a new month section (## 2026-11) while the ledger's front matter still ends with ## 2026-01, which now heads nothing. Move that one line below the new entry 
+      [P1A_OK] ledger gained exactly one entry (13 → 14)
+      [WROTE] archived 17 record(s) to docs/archive/CHANGELOG-through-2026-01-28.md; live 213,704 B → 93,909 B
+  verify.sh (uncommitted, as the trimmer leaves it) exit=1
+    FAIL: CHANGELOG.md is absent from HEAD, a commit this clone can read: there is nothing to account for the records against
+  verify.sh after `git add -A && git commit` exit=1
+    FAIL: CHANGELOG.md is absent from f68d0f2e20ba203f7cda9918170538263b6518a8^, a commit this clone can read: there is nothing to account for the records against
+  after: tracked=False
+
+### E committed once, then untracked and ignored [HANDOFFS.md]
+  --write exit=0
+      [SRF_UNDEFINED] no prior archive — SRF is undefined before a ledger's first archive (H3's own stated limit). Abstaining rather than computing a zero.
+      [LEDGER_NOT_IN_GIT] HANDOFFS.md is listed in .gitignore and is not tracked. The generated proof reads it as of HEAD, so it exits 1 ('absent from HEAD'), and the size-ratio check (SRF) cannot weigh a
+      [FRONTMATTER_FIELD_REGENERATED] retained receipt count: 0 → 2
+      [P1A_OK] ledger gained exactly one entry (3 → 4)
+      [WROTE] archived 4 record(s) to docs/archive/HANDOFFS-through-2026-01-04.md; live 205,662 B → 69,043 B
+  verify.sh (uncommitted, as the trimmer leaves it) exit=1
+    FAIL: HANDOFFS.md is absent from HEAD, a commit this clone can read: there is nothing to account for the records against
+  verify.sh after `git add -A && git commit` exit=1
+    FAIL: HANDOFFS.md is absent from c83d6266d1d10e4bff094e5dda990022760f0108^, a commit this clone can read: there is nothing to account for the records against
+  after: tracked=False
