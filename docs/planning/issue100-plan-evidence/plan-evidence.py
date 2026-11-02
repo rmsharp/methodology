@@ -162,6 +162,84 @@ def extras():
             print(f"[no-config{flag}] exit {r.returncode}: {msg[:70]}")
 
 
+def blob_bytes(ref, path):
+    r = subprocess.run(["git", "show", f"{ref}:{path}"], capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def budget():
+    """The runner and SAFEGUARDS.md each have a token ceiling in the repository's own .context-budget.json.
+    The two ceilings sum to the read cap, so a byte added to either is paid for by a cut in either."""
+    import json
+    print("\n# budget: each read-set file's configured token ceiling against its size at the ref")
+    for k in ("MAIN", "PR99", "FORK"):
+        raw = blob_bytes(REFS[k], ".context-budget.json")
+        if raw is None:
+            print(f"[budget-{k}] no .context-budget.json at this ref")
+            continue
+        cfg = json.loads(raw)
+        cap = cfg.get("read_cap_tokens")
+        parts = []
+        total_ceiling = 0
+        for f in cfg.get("files", []):
+            if f.get("class") != "read-set" or "max_tokens" not in f:
+                continue
+            data = blob_bytes(REFS[k], f["path"])
+            size = len(data) if data is not None else None
+            bpt = f.get("bytes_per_token", cfg.get("bytes_per_token"))  # a file may inherit the config-wide density
+            ceiling = f["max_tokens"] * bpt
+            total_ceiling += f["max_tokens"]
+            head = None if size is None else round(ceiling) - size
+            parts.append(f"{f['path'].split('/')[-1]}: {size} B of {round(ceiling)} B "
+                         f"({f['max_tokens']} tok @ {bpt}), headroom {head} B")
+        print(f"[budget-{k}] read cap {cap} tok, per-file ceilings sum {total_ceiling} tok; " + "; ".join(parts))
+    src = blob(REFS["MAIN"], "starter-kit/context_budget.py") or []
+    for i, ln in enumerate(src, 1):
+        if re.match(r"^CLEAN, WARN, BREACH, USAGE\s*=", ln):
+            print(f"[exit-codes-MAIN] context_budget.py:{i}: {ln.strip()}  (0 clean, 1 warn, 2 breach, 3 usage OR no config)")
+    rc, out = git("tag", "-l")
+    tags = sorted(t for t in out.split() if re.match(r"^v[0-9]", t))
+    other = sorted(t for t in out.split() if not re.match(r"^v[0-9]", t))
+    print(f"[tags-release-shaped] {len(tags)}: " + " ".join(tags))
+    print(f"[tags-other] {len(other)}: " + " ".join(other))
+
+
+def fresh_sync():
+    """What `context_budget.py --status` says about a project made of MAIN's stock seed files (the files
+    bin/sync installs), with nothing edited: the state of an adopter on the day of the sync (upstream issue #95)."""
+    print("\n# fresh-sync: the budget tool on a project made only of MAIN's stock files, nothing edited")
+    layout = {  # published name in the project <- path at MAIN
+        "context_budget.py": "starter-kit/context_budget.py",
+        ".context-budget.json": "starter-kit/context-budget.json",
+        "CLAUDE.md": "starter-kit/CLAUDE_TEMPLATE.md",
+        "SESSION_NOTES.md": "starter-kit/SESSION_NOTES.md",
+        "SESSION_RUNNER.md": "starter-kit/SESSION_RUNNER.md",
+        "SAFEGUARDS.md": "starter-kit/SAFEGUARDS.md",
+    }
+    with tempfile.TemporaryDirectory(prefix="plan-evidence-fresh-") as tmp:
+        proj = Path(tmp) / "proj"
+        proj.mkdir()
+        subprocess.run(["git", "init", "-q", str(proj)], capture_output=True)
+        for name, src in layout.items():
+            data = blob_bytes(REFS["MAIN"], src)
+            if data is None:
+                print(f"[fresh-sync-skipped] {src} absent at MAIN")
+                return
+            (proj / name).write_bytes(data)
+        r = subprocess.run([sys.executable, "-I", "context_budget.py", "--status"], cwd=proj,
+                           capture_output=True, text=True)
+        rows = [ANSI.sub("", ln) for ln in r.stdout.splitlines()]
+        head = next((ln.strip() for ln in rows if "context budget" in ln), "")
+        print(f"[fresh-sync-exit] {r.returncode}   headline: {' '.join(head.split())[:60]}")
+        for ln in rows:
+            m = re.match(r"^\s+(CLAUDE\.md|SESSION_NOTES\.md|LEARNINGS\.md)\s+.*?(over|unmeasured|warn|ok)\b", ln)
+            if m:
+                print(f"[fresh-sync-row] {m.group(1)}: {m.group(2)}")
+        for ln in rows:
+            if re.match(r"^\s+\S.* — .*(fence is missing|exceed \d+ B|fewer than the declared minimum)", ln):
+                print("[fresh-sync-finding] " + " ".join(ln.split())[:140])
+
+
 def main():
     rc, _ = git("rev-parse", "--git-dir")
     if rc:
@@ -203,6 +281,8 @@ def main():
         print(f"[size-runner-{k}] {size if size is not None else 'ABSENT'} B")
 
     extras()
+    budget()
+    fresh_sync()
 
     print("\n# mode: upstream's atomic_write on a 0644 ledger, a new shard, and a verify script (umask 022)")
     src = "\n".join(blob(REFS["MAIN"], "starter-kit/methodology_trim.py") or [])

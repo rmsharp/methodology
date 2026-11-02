@@ -1,7 +1,7 @@
 # refs
 [ref-V42] v4.2 = f34769f3
 [ref-MAIN] upstream/main = d50ce290
-[ref-FORK] HEAD = b7df93f6
+[ref-FORK] HEAD = b5863d1e
 [ref-PR99] origin/feat/methodology-directory = 47637be2
 [ref-PR98] origin/feat/trim-session-notes-ledger-issue93 = 65990cda
 [ref-PR96] origin/feat/close-out-report-tool = ad5c980f
@@ -81,6 +81,23 @@
 # no-config: what the budget tool does in a project with no .context-budget.json (MAIN's copy, temp dir)
 [no-config--status] exit 3: no .context-budget.json found
 [no-config--precommit] exit 3: no .context-budget.json found
+
+# budget: each read-set file's configured token ceiling against its size at the ref
+[budget-MAIN] read cap 25000 tok, per-file ceilings sum 25000 tok; SESSION_RUNNER.md: 52839 B of 53122 B (18900 tok @ 2.8107), headroom 283 B; SAFEGUARDS.md: 16965 B of 17115 B (6100 tok @ 2.8058), headroom 150 B
+[budget-PR99] read cap 25000 tok, per-file ceilings sum 25000 tok; SESSION_RUNNER.md: 53100 B of 53166 B (18900 tok @ 2.813), headroom 66 B; SAFEGUARDS.md: 16948 B of 17115 B (6100 tok @ 2.8058), headroom 167 B
+[budget-FORK] read cap 25000 tok, per-file ceilings sum 24999 tok; SESSION_RUNNER.md: 55578 B of 51022 B (18222 tok @ 2.8), headroom -4556 B; SAFEGUARDS.md: 16919 B of 18976 B (6777 tok @ 2.8), headroom 2057 B
+[exit-codes-MAIN] context_budget.py:50: CLEAN, WARN, BREACH, USAGE = 0, 1, 2, 3  (0 clean, 1 warn, 2 breach, 3 usage OR no config)
+[tags-release-shaped] 31: v1.0.0 v1.1 v1.2 v1.3 v1.4 v1.5 v1.6 v2.0 v2.1 v2.2 v2.3 v2.5 v2.6 v2.6.1 v2.6.2 v2.7 v2.8 v2.9 v3.0 v3.0.1 v3.1 v3.2 v3.3 v3.4 v3.5 v3.6 v3.7 v3.8 v4.0 v4.1 v4.2
+[tags-other] 2: archive/bl-10-citations backup/pr9-pre-rebase
+
+# fresh-sync: the budget tool on a project made only of MAIN's stock files, nothing edited
+[fresh-sync-exit] 2   headline: context budget OVER resident 3,137 B ≈ 1,071 tok
+[fresh-sync-row] CLAUDE.md: over
+[fresh-sync-row] SESSION_NOTES.md: over
+[fresh-sync-row] LEARNINGS.md: unmeasured
+[fresh-sync-finding] CLAUDE.md — the budget:protected fence is missing — the statement of purpose it guards may have been removed
+[fresh-sync-finding] SESSION_NOTES.md — 1 line(s) exceed 280 B — worst is line 5 at 317 B. A line ceiling alone just creates longer lines.
+[fresh-sync-finding] SESSION_NOTES.md — pattern '^## ' matched 1, fewer than the declared minimum 2 — the check is not measuring what it claims
 
 # mode: upstream's atomic_write on a 0644 ledger, a new shard, and a verify script (umask 022)
 [mode-existing-ledger] before 644 -> after 600
