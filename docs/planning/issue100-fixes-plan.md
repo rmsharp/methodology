@@ -1,6 +1,6 @@
 # Plan: fixing the six findings in upstream issue #100
 
-**Status: DRAFT (S411, 2026-11-02) until the operator approves it. A fork-only record. No code, test, gate or distributed file was changed; nothing was sent to `KJ5HST/methodology`.** Size: about 34 KB, one read.
+**Status: APPROVED by the operator at the S411 close-out picker (2026-11-02), with D6 and D7 as recommended; D1 to D5 and D8 stay open until their pieces start. Written as a DRAFT in S411. A fork-only record. No code, test, gate or distributed file was changed; nothing was sent to `KJ5HST/methodology`.** Size: about 34 KB, one read.
 A planning session's deliverable is the plan. Each *piece* below is a later session of its own. A cold, read-only review of the first draft (`b5863d1e`) found eight points; each one I checked held at least in part, and this version recomposes the sections they touch (§6).
 
 ## Words used here
@@ -110,8 +110,8 @@ Every piece: a scratch clone of `upstream/main` for the upstream-facing text (sc
 | D3 | F1: where the remote check runs. (i) by default in `bin/status`, a command a person runs; (ii) in `context_budget.py` only on a flag (`--remote`), so Phase 0's `--status` makes no network call at every session start and prints no "not checked" line that sessions learn to ignore; (iii) by default in both | **(i) and (ii)**, with the timeout, `BatchMode` and process-group kill of piece 2; never in `--precommit` | piece 2 |
 | D4 | Runner and `SAFEGUARDS.md` text: each added byte is paid for by a cut in the same commit (§0 item 4), or the maintainer is asked to re-split the ceilings (a loosening, plan mode) | **pay with cuts**; the piece names each cut in its commit message | piece 3 |
 | D5 | F6: warn only, or also make the trimmer prove losslessness on an untracked ledger | **warn only**. The trimmer's in-process L1 to L3 assertions read parsed text (`methodology_trim.py:2636-2639`), but the shipped `.verify.sh`, the P1 check and the SRF read git history, so a content-only mode needs a second proof script and a different trust story: its own plan | piece 5 |
-| D6 | S1: preserve the existing mode (and group, best effort), or always 0644 | **preserve**; new files `0666 & ~umask` | piece 1 |
-| D7 | Session granularity: twelve sessions, each with a 25-minute gate run, or merge pieces 1 and 5 (same file, same test file) | strict for different capabilities; pieces 1 and 5 may share a session only if the operator waives "one deliverable" for them | before piece 1 |
+| D6 | S1: preserve the existing mode (and group, best effort), or always 0644 | **Decided 2026-11-02 (the operator): preserve**; new files `0666 & ~umask` | piece 1 |
+| D7 | Session granularity: twelve sessions, each with a 25-minute gate run, or merge pieces 1 and 5 (same file, same test file) | **Decided 2026-11-02 (the operator): strict**, one finding per session; pieces 1 and 5 do not share a session (no waiver given) | before piece 1 |
 | D8 | F2 and #95: a fresh sync reads `OVER` today, so a Phase 0 step that runs the budget tool reports a breach on day one. (a) Piece 3 waits until #95 is settled upstream; (b) Batch A also carries the fork's fix for #95 (BL-114's R2, a pull request, the operator's call to propose); (c) the step's wording tolerates a stock `OVER` | **(a)**: pieces 1, 2, 4 and 5 go ahead meanwhile; (b) is the operator's, as BL-114 already says | piece 3 |
 
 ## 5. What this plan does not establish
