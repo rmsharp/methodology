@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S413
+date: 2026-11-02
+status: pending
+active_task: **Piece 5 of `docs/planning/issue100-fixes-plan.md` (finding F6, trimmer part, of the maintainer's upstream issue #100): the trimmer names WHY a ledger kept out of git cannot be trimmed (ignored, never committed, committed once then untracked, other), in `--check` as well as in the refusal; decision D5 taken as 'warn only' (no new proof mode). Built on a scratch clone of `upstream/main`, tests first and shown red, as a second commit on the LOCAL branch `issue100-batch-a`.** A fork-only build; nothing sent to `KJ5HST/methodology`. Chosen by the operator at the S413 Phase 0 picker, 'Piece 5, warn only (Recommended)'; he also answered Yes to trimming `HANDOFFS.md` first (trim `557fe787`, fold `68df9c8a`).
+```
+
+```handoff
 session: S412
 date: 2026-11-02
 status: complete
