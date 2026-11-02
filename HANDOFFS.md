@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S414
+date: 2026-11-02
+status: pending
+active_task: **Piece 4 of `docs/planning/issue100-fixes-plan.md` (finding F5, runner part, of the maintainer's upstream issue #100): one sentence in `starter-kit/SESSION_RUNNER.md` after 3G's "Then STOP. The session is over." saying a new task in the same conversation is a new session that starts again at Phase 0, then 1B; about 110 B, paid for by a cut in the same commit (decision D4 taken as 'pay with cuts'). Built on a scratch clone of `upstream/main`, as the third commit on the LOCAL branch `issue100-batch-a`.** A fork-only build; nothing sent to `KJ5HST/methodology`. Chosen by the operator at the S414 Phase 0 picker, 'Piece 4 (Recommended)'; the operator also answered Yes to trimming `HANDOFFS.md` first (trim `6f27e5ff`, fold `b8c6535a`).
+```
+
+```handoff
 session: S413
 date: 2026-11-02
 status: complete
