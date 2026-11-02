@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S411
+date: 2026-11-02
+status: pending
+active_task: **Write ONE plan document under `docs/planning/` for fixing the six findings in the maintainer's upstream issue #100 (an adopter ran three months behind with every size guard silent), which the S410 triage recorded as BL-130 in `docs/planning/issue100-101-triage.md`.** A planning session: the plan is the deliverable, no code, no distributed file changes, nothing sent to `KJ5HST/methodology`. Chosen by the operator at the S411 Phase 0 picker, 'Plan fixes for #100 (Recommended)'; the operator also said Yes to trimming `HANDOFFS.md` first, as its own commit. Each finding gets a grep-based inventory of what it touches, a completion criterion, the surface the criterion is shown on, and a session boundary.
+```
+
+```handoff
 session: S410
 date: 2026-11-01
 status: complete
