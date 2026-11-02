@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S410
+date: 2026-11-01
+status: pending
+active_task: **Triage the maintainer's two new upstream issues, #100 (an adopter ran three months behind with every size guard silent; six findings) and #101 (remove the Disclosure Hook: `.githooks/commit-msg`, the 'Disclosure Hook' section of `starter-kit/SAFEGUARDS.md`, the `commit-msg-selftest` gate), into ONE fork-only record under `docs/planning/` plus backlog rows.** For each finding: what this fork already holds, what `upstream/main` (`d50ce290`) has, what is new, and what acting on it would touch here. Every statement is re-derived from the files, not from the issue text. Chosen by him at the S410 Phase 0 picker, 'Triage #100 and #101 (Recommended)'. Nothing is sent to `KJ5HST/methodology`: no comment, no reply, no branch, no pull request. No gate is removed or loosened (that needs plan mode).
+```
+
+```handoff
 session: S409
 date: 2026-10-31
 status: complete
