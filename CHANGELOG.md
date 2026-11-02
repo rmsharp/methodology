@@ -285,6 +285,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [ad hoc] S412 push record -- fork `main` fast-forwarded `6939d365..b1c2b381` (4 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
+
+Pushed at the operator's 'Yes, push main (Recommended)' at the S412 close-out picker. Guarded: `6939d365` was an ancestor of local `main` (`git merge-base --is-ancestor`); only `main` was pushed, never `--all` or `--mirror`. Read back after a fetch: `origin/main` and local `main` both `b1c2b381`, 0 commits ahead. The four commits are the trim `8ffbc1eb`, the claim `38347bbb`, the work `bf676b19` and the close-out `b1c2b381`. The local branch `issue100-batch-a` (`4aea4eda`) was not pushed. This entry's own commit goes to `origin` under the standing grant for a CHANGELOG-only push record.
+
 ### 2026-11-02 · [BL-130] S412 close-out -- piece 1 of the #100 fixes plan (the trimmer keeps a file's mode and group) is built on the local branch issue100-batch-a, one commit on upstream/main; CHANGELOG.md trimmed 202,666 B to 97,811 B; the fork's gates pass 24 of 24
 
 The receipt in `HANDOFFS.md` is `complete` (self-score 8, S411's handoff scored 8). The fork's own gates on `HEAD` `bf676b190dd6` with a clean tree: 24/24 pass, 0 fail, 0 unmeasured, results `aaf5767c1279`, manifest `94dff02bae74` (both equal S411's), run 2026-11-02 17:50:37 to 18:17:03 UTC. No row appended to `docs/FORK_LEARNINGS.md`, so D3's duty does not fire. `HANDOFFS.md` closes at four receipts and 53,388 B of 65,536 B, with room for 0 more records at the per-record budget, so S413 should trim it at Phase 0 (the by-count rule alone would wait for S414). The branch `issue100-batch-a` is local only; whether `main` was pushed is in an entry headed 'S412 push record'. Fork only; nothing sent to `KJ5HST/methodology`.
