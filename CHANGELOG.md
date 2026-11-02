@@ -281,6 +281,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-31.md` (3 record(s), 63,799 B → 30,222 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **3** record(s) (2026-10-31 → 2026-10-31) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-31.md`](docs/archive/HANDOFFS-through-2026-10-31.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-31.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-31.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,799 B → 30,222 B (−52.6%).
+
 ### 2026-11-02 · [ad hoc] S411 claim (in progress) -- a plan for fixing the six findings in the maintainer's upstream issue #100 (BL-130), fork-only
 
 Claimed at the operator's S411 Phase 0 picker, 'Plan fixes for #100 (Recommended)' (the other options were the BL-129 route, the #99 and #98 calls, and the adopter ledger report); the operator also answered Yes to trimming `HANDOFFS.md` first, as its own commit after this claim. `CHANGELOG: pending` -- this entry says (in progress); Phase 3F records the rest. Phase 0 found: 0 undocumented commits, 0 merges, S410's receipt `complete`, its gate citation (24/24, results `aaf5767c1279`, manifest `94dff02bae74`) equal to `.quality-gates-results.json`, `check-ledger` and `check-handoff` exit 0, the #99 read-back script 0 failed, `upstream/main` still `d50ce290`, #99 and #98 OPEN/CLEAN and #96 OPEN/CONFLICTING each 0 comments and 0 reviews, the open-issue list read in full (#101, #100, #97 at 0 comments; #95 and #93 at 1 each; nothing new from the maintainer), 5 receipts (a trim is due), `CHANGELOG.md` 192,208 B of 196,608 B (`--check`: trigger does not fire), dashboard 72/100 (its one appended history line rides this claim). Nothing is sent to `KJ5HST/methodology`.
