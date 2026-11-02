@@ -1,0 +1,11 @@
+piece issue100-batch-a 9f3bf724; merge-base with upstream/main d50ce290; upstream/main d50ce290
+commits past upstream/main: 3; files: starter-kit/SESSION_RUNNER.md starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+#99 head 47637be2
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=0 regions=0
+#98 head 65990cda
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=0 regions=0
+#96 head ad5c980f
+   (a) upstream/main + head : exit=1 regions=1 [ CHANGELOG.md:1 ]
+   (b) piece        + head : exit=1 regions=1 [ CHANGELOG.md:1 ]

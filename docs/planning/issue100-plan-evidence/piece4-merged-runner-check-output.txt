@@ -1,0 +1,21 @@
+piece issue100-batch-a 9f3bf724; upstream/main d50ce290
+upstream/main: runner at head 52839 B; merged with piece 52828 B (delta -11); ceiling at that head 53122; headroom before 283, after 294; sentence occurs 1x
+     296-
+     297-**Then STOP. The session is over.**
+     298-
+     299:A new task in this conversation is a new session: start again at Phase 0, then 1B.
+#99 head 47637be2: runner at head 53100 B; merged with piece 53089 B (delta -11); ceiling at that head 53166; headroom before 66, after 77; sentence occurs 1x
+     298-
+     299-**Then STOP. The session is over.**
+     300-
+     301:A new task in this conversation is a new session: start again at Phase 0, then 1B.
+#98 head 65990cda: runner at head 52839 B; merged with piece 52828 B (delta -11); ceiling at that head 53122; headroom before 283, after 294; sentence occurs 1x
+     296-
+     297-**Then STOP. The session is over.**
+     298-
+     299:A new task in this conversation is a new session: start again at Phase 0, then 1B.
+#96 head ad5c980f: runner at head 52839 B; merged with piece 52828 B (delta -11); ceiling at that head 53122; headroom before 283, after 294; sentence occurs 1x
+     296-
+     297-**Then STOP. The session is over.**
+     298-
+     299:A new task in this conversation is a new session: start again at Phase 0, then 1B.
