@@ -285,6 +285,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-31-2.md` (1 record(s), 53,388 B → 43,079 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-31 → 2026-10-31) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-31-2.md`](docs/archive/HANDOFFS-through-2026-10-31-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-31-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-31-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 53,388 B → 43,079 B (−19.3%).
+
 ### 2026-11-02 · [ad hoc] S412 push record -- fork `main` fast-forwarded `6939d365..b1c2b381` (4 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at the operator's 'Yes, push main (Recommended)' at the S412 close-out picker. Guarded: `6939d365` was an ancestor of local `main` (`git merge-base --is-ancestor`); only `main` was pushed, never `--all` or `--mirror`. Read back after a fetch: `origin/main` and local `main` both `b1c2b381`, 0 commits ahead. The four commits are the trim `8ffbc1eb`, the claim `38347bbb`, the work `bf676b19` and the close-out `b1c2b381`. The local branch `issue100-batch-a` (`4aea4eda`) was not pushed. This entry's own commit goes to `origin` under the standing grant for a CHANGELOG-only push record.
