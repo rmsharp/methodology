@@ -1,0 +1,188 @@
+== refs ==
+V42 f34769f3 -> f34769f3
+MAIN d50ce290 -> d50ce290
+FORK HEAD -> 290576d1
+
+== #101 -- remove the Disclosure Hook ==
+[101-a] V42  HOLDS     'this file wins' (SAFEGUARDS) -- starter-kit/SAFEGUARDS.md:3
+[101-a] MAIN HOLDS     'this file wins' (SAFEGUARDS) -- starter-kit/SAFEGUARDS.md:3
+[101-a] FORK HOLDS     'this file wins' (SAFEGUARDS) -- starter-kit/SAFEGUARDS.md:3
+[101-b] V42  HOLDS     Disclosure Hook section + trailer rule -- starter-kit/SAFEGUARDS.md:184-187
+[101-b] MAIN HOLDS     Disclosure Hook section + trailer rule -- starter-kit/SAFEGUARDS.md:184-187
+[101-b] FORK HOLDS     Disclosure Hook section + trailer rule -- starter-kit/SAFEGUARDS.md:184-187
+[101-c] V42  HOLDS     commit-msg-selftest gate block -- .quality-gates.json:80-86
+[101-c] MAIN HOLDS     commit-msg-selftest gate block -- .quality-gates.json:80-86
+[101-c] FORK MOVED     commit-msg-selftest gate block -- .quality-gates.json now at 173,184
+[101-d] V42  HOLDS     .githooks/commit-msg is 78 lines -- 78 lines
+[101-d] MAIN HOLDS     .githooks/commit-msg is 78 lines -- 78 lines
+[101-d] FORK HOLDS     .githooks/commit-msg is 78 lines -- 78 lines
+[101-e] V42  HOLDS     hook header says 'honesty counterpart of failure mode #16' -- .githooks/commit-msg:1-4
+[101-e] MAIN HOLDS     hook header says 'honesty counterpart of failure mode #16' -- .githooks/commit-msg:1-4
+[101-e] FORK HOLDS     hook header says 'honesty counterpart of failure mode #16' -- .githooks/commit-msg:1-4
+[101-f] V42  HOLDS     FM #16 row exists -- starter-kit/SESSION_RUNNER.md:322
+[101-f] MAIN HOLDS     FM #16 row exists -- starter-kit/SESSION_RUNNER.md:322
+[101-f] FORK HOLDS     FM #16 row exists -- starter-kit/SESSION_RUNNER.md:325
+[101-g] V42  HOLDS     FM #16 row does NOT ask for a trailer -- row read
+[101-g] MAIN HOLDS     FM #16 row does NOT ask for a trailer -- row read
+[101-g] FORK HOLDS     FM #16 row does NOT ask for a trailer -- row read
+[101-h] V42  HOLDS     CLAUDE_TEMPLATE 'base files govern unless explicitly overridden' -- starter-kit/CLAUDE_TEMPLATE.md:51
+[101-h] MAIN HOLDS     CLAUDE_TEMPLATE 'base files govern unless explicitly overridden' -- starter-kit/CLAUDE_TEMPLATE.md:51
+[101-h] FORK MOVED     CLAUDE_TEMPLATE 'base files govern unless explicitly overridden' -- starter-kit/CLAUDE_TEMPLATE.md now at 54
+[101-i] V42  HOLDS     BOOTSTRAP names 'a gate removed' as refused -- starter-kit/BOOTSTRAP.md:327
+[101-i] MAIN HOLDS     BOOTSTRAP names 'a gate removed' as refused -- starter-kit/BOOTSTRAP.md:327
+[101-i] FORK MOVED     BOOTSTRAP names 'a gate removed' as refused -- starter-kit/BOOTSTRAP.md now at 345
+[101-j] V42  HOLDS     quality_ratchet.py refuses a removed gate -- starter-kit/quality_ratchet.py
+[101-j] MAIN HOLDS     quality_ratchet.py refuses a removed gate -- starter-kit/quality_ratchet.py
+[101-j] FORK HOLDS     quality_ratchet.py refuses a removed gate -- starter-kit/quality_ratchet.py
+[101-k] V42  HOLDS     FRAMEWORK_APPARATUS mentions trailers / model-report -- FRAMEWORK_APPARATUS.md:433-436
+[101-k] MAIN HOLDS     FRAMEWORK_APPARATUS mentions trailers / model-report -- FRAMEWORK_APPARATUS.md:433-436
+[101-k] FORK HOLDS     FRAMEWORK_APPARATUS mentions trailers / model-report -- FRAMEWORK_APPARATUS.md:433-436
+[101-l] V42  HOLDS     HANDOFFS seed mentions trailers / model-report -- starter-kit/HANDOFFS.md:44-46
+[101-l] MAIN HOLDS     HANDOFFS seed mentions trailers / model-report -- starter-kit/HANDOFFS.md:44-46
+[101-l] FORK HOLDS     HANDOFFS seed mentions trailers / model-report -- starter-kit/HANDOFFS.md:44-46
+[101-m] V42  ABSENT    bin/model-report is in the tree -- not in the tree
+[101-m] MAIN ABSENT    bin/model-report is in the tree -- not in the tree
+[101-m] FORK HOLDS     bin/model-report is in the tree -- present
+[101-n] V42  ZERO      'nothing in tests.sh, _manifest.py or other hooks names the hook' -- 3 files searched
+[101-n] MAIN ZERO      'nothing in tests.sh, _manifest.py or other hooks names the hook' -- 3 files searched
+[101-n] FORK ZERO      'nothing in tests.sh, _manifest.py or other hooks names the hook' -- 3 files searched
+
+== #101 -- what ELSE names the hook or the trailer on the FORK (files, hits; evidence/archives excluded) ==
+-- hook / section / env switch: 14 files
+    10  .githooks/commit-msg
+     8  docs/planning/upstream-resync-2026-09-plan.md
+     4  .quality-gates.json
+     3  docs/planning/BACKLOG-DETAIL.md
+     3  docs/planning/changelog-rules-contradictions-plan.md
+     2  docs/planning/upstream-resync-2026-10-plan.md
+     2  starter-kit/SAFEGUARDS.md
+     2  tools/test_migrate_layout.py
+     1  docs/FORK_LEARNINGS.md
+     1  docs/planning/BACKLOG-COMPLETED.md
+     1  docs/planning/changelog-rules-pr-body.md
+     1  docs/planning/close-out-report-actuator-plan.md
+     1  docs/planning/context-budget-status-pr-body.md
+     1  docs/planning/fork-learnings-adjudication-2026-09-20.md
+-- the Co-Authored-By trailer: 14 files
+     7  .githooks/commit-msg
+     6  bin/model-report
+     5  tools/test_migrate_layout.py
+     4  docs/planning/model-use-provenance-plan.md
+     2  docs/planning/upstream-resync-2026-09-plan.md
+     1  FRAMEWORK_APPARATUS.md
+     1  bin/migrate-layout
+     1  bin/tests.sh
+     1  docs/FORK_LEARNINGS.md
+     1  docs/audits/2026-05-02-mattpocock-skills-evaluation.md
+     1  docs/planning/changelog-rules-contradictions-plan.md
+     1  starter-kit/HANDOFFS.md
+     1  starter-kit/SAFEGUARDS.md
+     1  tools/fixtures/seed-CHANGELOG-ledger-format-1.md
+
+== #100 -- finding 1: bin/status trusts an unfetched checkout ==
+[100-1a] V42  ZERO      bin/status never asks the remote (ls-remote) -- 1 files searched
+[100-1a] MAIN ZERO      bin/status never asks the remote (ls-remote) -- 1 files searched
+[100-1a] FORK ZERO      bin/status never asks the remote (ls-remote) -- 1 files searched
+[100-1b] V42  HOLDS     seed budget's synced check reads a sibling checkout -- starter-kit/context-budget.json:61-70
+[100-1b] MAIN HOLDS     seed budget's synced check reads a sibling checkout -- starter-kit/context-budget.json:61-70
+[100-1b] FORK HOLDS     seed budget's synced check reads a sibling checkout -- starter-kit/context-budget.json:61-70
+
+== #100 -- finding 2: no protocol step runs context_budget.py ==
+[100-2a] V42  HOLDS     context_budget.py header: measurement alone did not work -- starter-kit/context_budget.py:17
+[100-2a] MAIN HOLDS     context_budget.py header: measurement alone did not work -- starter-kit/context_budget.py:17
+[100-2a] FORK HOLDS     context_budget.py header: measurement alone did not work -- starter-kit/context_budget.py:17
+[100-2b] V42  HOLDS     install-hook is opt-in -- starter-kit/context_budget.py:1378
+[100-2b] MAIN HOLDS     install-hook is opt-in -- starter-kit/context_budget.py:1378
+[100-2b] FORK MOVED     install-hook is opt-in -- starter-kit/context_budget.py now at 1520
+[100-2c] V42  HOLDS     FM #28 row -- starter-kit/SESSION_RUNNER.md:334
+[100-2c] MAIN HOLDS     FM #28 row -- starter-kit/SESSION_RUNNER.md:334
+[100-2c] FORK HOLDS     FM #28 row -- starter-kit/SESSION_RUNNER.md:337
+[100-2d] V42  ZERO      no session-read doc names the tool in any spelling -- 14 files searched
+[100-2d] MAIN ZERO      no session-read doc names the tool in any spelling -- 14 files searched
+[100-2d] FORK ZERO      no session-read doc names the tool in any spelling -- 14 files searched
+[100-2e] V42  HOLDS     BOOTSTRAP names it only in update tables (:352 merge=union, :381-382 tables) -- starter-kit/BOOTSTRAP.md:352-382
+[100-2e] MAIN HOLDS     BOOTSTRAP names it only in update tables (:352 merge=union, :381-382 tables) -- starter-kit/BOOTSTRAP.md:352-382
+
+== #100 -- finding 3: the extraction instruction is an HTML comment ==
+[100-3a] V42  HOLDS     PROJECT_LEARNINGS instruction sits inside <!-- --> -- comment opens line 81, closes line 83
+[100-3a] MAIN HOLDS     PROJECT_LEARNINGS instruction sits inside <!-- --> -- comment opens line 81, closes line 83
+[100-3a] FORK HOLDS     PROJECT_LEARNINGS instruction sits inside <!-- --> -- comment opens line 84, closes line 86
+[100-3b] V42  HOLDS     BOOTSTRAP 'Keep CLAUDE.md lean' -- starter-kit/BOOTSTRAP.md:200
+[100-3b] MAIN HOLDS     BOOTSTRAP 'Keep CLAUDE.md lean' -- starter-kit/BOOTSTRAP.md:200
+[100-3b] FORK HOLDS     BOOTSTRAP 'Keep CLAUDE.md lean' -- starter-kit/BOOTSTRAP.md:218
+[100-3c] V42  HOLDS     BOOTSTRAP customization table: 'nears CLAUDE.md's size budget' -- starter-kit/BOOTSTRAP.md:421
+[100-3c] MAIN HOLDS     BOOTSTRAP customization table: 'nears CLAUDE.md's size budget' -- starter-kit/BOOTSTRAP.md:421
+[100-3c] FORK HOLDS     BOOTSTRAP customization table: 'nears CLAUDE.md's size budget' -- starter-kit/BOOTSTRAP.md:439
+[100-3d] V42  HOLDS     seed budget names the file LEARNINGS.md (BOOTSTRAP: PROJECT_LEARNINGS.md) -- starter-kit/context-budget.json:53
+[100-3d] MAIN HOLDS     seed budget names the file LEARNINGS.md (BOOTSTRAP: PROJECT_LEARNINGS.md) -- starter-kit/context-budget.json:53
+[100-3d] FORK HOLDS     seed budget names the file LEARNINGS.md (BOOTSTRAP: PROJECT_LEARNINGS.md) -- starter-kit/context-budget.json:55
+[100-3e] V42  HOLDS     3C sends adopter learnings into CLAUDE.md -- starter-kit/SESSION_RUNNER.md:222
+[100-3e] MAIN HOLDS     3C sends adopter learnings into CLAUDE.md -- starter-kit/SESSION_RUNNER.md:222
+[100-3e] FORK HOLDS     3C sends adopter learnings into CLAUDE.md -- starter-kit/SESSION_RUNNER.md:230
+
+== #100 -- finding 4: SESSION_NOTES.md transient or accumulating ==
+[100-4a] V42  HOLDS     seed header: transient, overwritten -- starter-kit/SESSION_NOTES.md:5
+[100-4a] MAIN HOLDS     seed header: transient, overwritten -- starter-kit/SESSION_NOTES.md:5
+[100-4a] FORK HOLDS     seed header: transient, overwritten -- starter-kit/SESSION_NOTES.md:5
+[100-4b] V42  HOLDS     seed footer: history accumulates below this line -- starter-kit/SESSION_NOTES.md:27
+[100-4b] MAIN HOLDS     seed footer: history accumulates below this line -- starter-kit/SESSION_NOTES.md:27
+[100-4b] FORK HOLDS     seed footer: history accumulates below this line -- starter-kit/SESSION_NOTES.md:31
+[100-4c] V42  HOLDS     runner 3D: 'Update SESSION_NOTES.md' -- starter-kit/SESSION_RUNNER.md:239
+[100-4c] MAIN HOLDS     runner 3D: 'Update SESSION_NOTES.md' -- starter-kit/SESSION_RUNNER.md:239
+[100-4c] FORK HOLDS     runner 3D: 'Update SESSION_NOTES.md' -- starter-kit/SESSION_RUNNER.md:247
+[100-4d] V42  HOLDS     ITERATIVE_METHODOLOGY: rewritten, not merged -- ITERATIVE_METHODOLOGY.md:400
+[100-4d] MAIN HOLDS     ITERATIVE_METHODOLOGY: rewritten, not merged -- ITERATIVE_METHODOLOGY.md:400
+[100-4d] FORK HOLDS     ITERATIVE_METHODOLOGY: rewritten, not merged -- ITERATIVE_METHODOLOGY.md:400
+[100-4e] V42  HOLDS     FRAMEWORK_APPARATUS: transient handoff -- FRAMEWORK_APPARATUS.md:535
+[100-4e] MAIN MOVED     FRAMEWORK_APPARATUS: transient handoff -- FRAMEWORK_APPARATUS.md now at 552
+[100-4f] V42  HOLDS     HANDOFFS seed: transient -- starter-kit/HANDOFFS.md:6
+[100-4f] MAIN HOLDS     HANDOFFS seed: transient -- starter-kit/HANDOFFS.md:6
+[100-4g] V42  HOLDS     budget config records UPDATE read as ADD -- starter-kit/context-budget.json:46
+[100-4g] MAIN HOLDS     budget config records UPDATE read as ADD -- starter-kit/context-budget.json:46
+[100-4g] FORK HOLDS     budget config records UPDATE read as ADD -- starter-kit/context-budget.json:48
+
+== #100 -- finding 5: no rule for work after the 3G STOP ==
+[100-5a] V42  HOLDS     runner has the 3G heading -- starter-kit/SESSION_RUNNER.md:288
+[100-5a] MAIN HOLDS     runner has the 3G heading -- starter-kit/SESSION_RUNNER.md:288
+[100-5a] FORK HOLDS     runner has the 3G heading -- starter-kit/SESSION_RUNNER.md:296
+[100-5b] V42  ZERO      runner names no rule for a new task after the STOP -- 1 files searched
+[100-5b] MAIN ZERO      runner names no rule for a new task after the STOP -- 1 files searched
+[100-5b] FORK ZERO      runner names no rule for a new task after the STOP -- 1 files searched
+[100-5c] V42  HOLDS     SAFEGUARDS: Close-Out Completeness Hook is the recommended Stop hook -- starter-kit/SAFEGUARDS.md:175
+[100-5c] MAIN HOLDS     SAFEGUARDS: Close-Out Completeness Hook is the recommended Stop hook -- starter-kit/SAFEGUARDS.md:175
+[100-5c] FORK HOLDS     SAFEGUARDS: Close-Out Completeness Hook is the recommended Stop hook -- starter-kit/SAFEGUARDS.md:175
+
+== #100 -- finding 6 and the smaller points: the trimmer ==
+[100-6a] V42  HOLDS     P1_NO_LEDGER refusal -- line 1640
+[100-6b] V42  HOLDS     SRF_UNDEFINED reported -- line 1863
+[100-s1] V42  HOLDS     mkstemp then os.replace (no chmod of the ledger) -- mkstemp 1612, replace 1620
+[100-s2] V42  HOLDS     front-matter field 'This file currently holds **N**' expected -- line 337
+[100-6a] MAIN HOLDS     P1_NO_LEDGER refusal -- line 2131
+[100-6b] MAIN HOLDS     SRF_UNDEFINED reported -- line 2418
+[100-s1] MAIN HOLDS     mkstemp then os.replace (no chmod of the ledger) -- mkstemp 2103, replace 2111
+[100-s2] MAIN HOLDS     front-matter field 'This file currently holds **N**' expected -- line 460
+[100-6a] FORK HOLDS     P1_NO_LEDGER refusal -- line 2100
+[100-6b] FORK HOLDS     SRF_UNDEFINED reported -- line 2400
+[100-s1] FORK HOLDS     mkstemp then os.replace (no chmod of the ledger) -- mkstemp 2072, replace 2080
+[100-s2] FORK HOLDS     front-matter field 'This file currently holds **N**' expected -- line 489
+[100-6c] V42  HOLDS     BOOTSTRAP: seeds committed under --mode=ignore -- starter-kit/BOOTSTRAP.md:72
+[100-6c] MAIN HOLDS     BOOTSTRAP: seeds committed under --mode=ignore -- starter-kit/BOOTSTRAP.md:72
+
+== #100 -- smaller point 3: the dashboard's size risks (the fork carries the rows #99 (d) adds) ==
+[100-s3a] V42  ZERO      size-risk rows reading 'past the read limits' ('lines) — past') -- 1 files searched
+[100-s3a] MAIN ZERO      size-risk rows reading 'past the read limits' ('lines) — past') -- 1 files searched
+[100-s3a] FORK 3 HITS    size-risk rows reading 'past the read limits' ('lines) — past') -- 1 files searched
+[100-s3b] V42  2 HITS    the older 'Large files detected' row -- 1 files searched
+[100-s3b] MAIN 2 HITS    the older 'Large files detected' row -- 1 files searched
+[100-s3b] FORK 2 HITS    the older 'Large files detected' row -- 1 files searched
+
+== #100 -- finding 3: which tools already know the name PROJECT_LEARNINGS.md (the budget seed says LEARNINGS.md) ==
+   MAIN: bin/check-links:1, starter-kit/BOOTSTRAP.md:4, starter-kit/CLAUDE_TEMPLATE.md:1
+   FORK: bin/check-links:1, bin/migrate-layout:2, starter-kit/BOOTSTRAP.md:4, starter-kit/CLAUDE_TEMPLATE.md:1, tools/test_migrate_layout.py:37, tools/test_sync_layouts.py:3
+
+== #100 -- smaller point 1 re-run on the FORK's own tree: modes of files the trimmer wrote ==
+    152 files in docs/archive with mode 0o600
+     81 files in docs/archive with mode 0o644
+    229 files in docs/archive with mode 0o755
+   (git records only the executable bit, so a 0600 file is invisible in a commit and gone in a fresh clone;
+    it is a property of the working tree the trimmer ran in.)
