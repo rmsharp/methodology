@@ -1,0 +1,88 @@
+# refs
+[ref-V42] v4.2 = f34769f3
+[ref-MAIN] upstream/main = d50ce290
+[ref-FORK] HEAD = b7df93f6
+[ref-PR99] origin/feat/methodology-directory = 47637be2
+[ref-PR98] origin/feat/trim-session-notes-ledger-issue93 = 65990cda
+[ref-PR96] origin/feat/close-out-report-tool = ad5c980f
+
+# sites: line span of each edit region at each ref (ABSENT = pattern not found)
+[site-f1-status-main] bin/status: V42 253-276; MAIN 253-276; FORK 346-369
+[site-f1-budget-synced] starter-kit/context_budget.py: V42 460-483; MAIN 460-483; FORK 569-592
+[site-f2-runner-step5] starter-kit/SESSION_RUNNER.md: V42 17-17; MAIN 17-17; FORK 19-19
+[site-f2-runner-3f] starter-kit/SESSION_RUNNER.md: V42 278-287; MAIN 278-287; FORK 286-295
+[site-f2-runner-degradation] starter-kit/SESSION_RUNNER.md: V42 363-363; MAIN 363-363; FORK 366-366
+[site-f2-bootstrap-step10] starter-kit/BOOTSTRAP.md: V42 315-358; MAIN 315-358; FORK 333-376
+[site-f3-template-comment] starter-kit/CLAUDE_TEMPLATE.md: V42 81-83; MAIN 81-83; FORK 84-86
+[site-f3-bootstrap-step5] starter-kit/BOOTSTRAP.md: V42 200-228; MAIN 200-228; FORK 218-246
+[site-f3-bootstrap-table] starter-kit/BOOTSTRAP.md: V42 421-421; MAIN 421-421; FORK 439-439
+[site-f3-seed-name] starter-kit/context-budget.json: V42 53-53; MAIN 53-53; FORK 55-55
+[site-f3-runner-3c] starter-kit/SESSION_RUNNER.md: V42 222-222; MAIN 222-222; FORK 230-230
+[site-f4-seed-footer] starter-kit/SESSION_NOTES.md: V42 27-27; MAIN 27-27; FORK 31-31
+[site-f4-runner-3d] starter-kit/SESSION_RUNNER.md: V42 239-239; MAIN 239-239; FORK 247-247
+[site-f5-runner-3g-stop] starter-kit/SESSION_RUNNER.md: V42 297-297; MAIN 297-297; FORK 300-300
+[site-f5-safeguards-hook] starter-kit/SAFEGUARDS.md: V42 175-183; MAIN 175-183; FORK 175-183
+[site-f6-trim-p1] starter-kit/methodology_trim.py: V42 1637-1658; MAIN 2128-2149; FORK 2097-2118
+[site-f6-sync-ignore] bin/sync: V42 223-240; MAIN 223-240; FORK 275-292
+[site-f6-status-seed] bin/status: V42 221-242; MAIN 221-242; FORK 305-335
+[site-s1-trim-atomic] starter-kit/methodology_trim.py: V42 1610-1628; MAIN 2101-2119; FORK 2070-2088
+
+# overlap: does an open pull request change lines in or beside the region on upstream/main?
+[overlap-f1-status-main] region MAIN 253-276: PR99 no; PR98 no; PR96 no
+[overlap-f1-budget-synced] region MAIN 460-483: PR99 no; PR98 no; PR96 no
+[overlap-f2-runner-step5] region MAIN 17-17: PR99 no; PR98 no; PR96 no
+[overlap-f2-runner-3f] region MAIN 278-287: PR99 no; PR98 no; PR96 no
+[overlap-f2-runner-degradation] region MAIN 363-363: PR99 no; PR98 no; PR96 no
+[overlap-f2-bootstrap-step10] region MAIN 315-358: PR99 yes 327-327; PR98 no; PR96 yes 344-345
+[overlap-f3-template-comment] region MAIN 81-83: PR99 yes 82-83; PR98 no; PR96 no
+[overlap-f3-bootstrap-step5] region MAIN 200-228: PR99 yes 200-200,202-202,204-204; PR98 no; PR96 no
+[overlap-f3-bootstrap-table] region MAIN 421-421: PR99 no; PR98 no; PR96 no
+[overlap-f3-seed-name] region MAIN 53-53: PR99 no; PR98 no; PR96 no
+[overlap-f3-runner-3c] region MAIN 222-222: PR99 no; PR98 no; PR96 no
+[overlap-f4-seed-footer] region MAIN 27-27: PR99 no; PR98 no; PR96 no
+[overlap-f4-runner-3d] region MAIN 239-239: PR99 no; PR98 no; PR96 no
+[overlap-f5-runner-3g-stop] region MAIN 297-297: PR99 no; PR98 no; PR96 no
+[overlap-f5-safeguards-hook] region MAIN 175-183: PR99 no; PR98 no; PR96 yes 179-180
+[overlap-f6-trim-p1] region MAIN 2128-2149: PR99 no; PR98 no; PR96 no
+[overlap-f6-sync-ignore] region MAIN 223-240: PR99 yes 223-223,227-227,241-241; PR98 no; PR96 no
+[overlap-f6-status-seed] region MAIN 221-242: PR99 yes 221-223,229-229,231-232,237-237,239-240; PR98 no; PR96 no
+[overlap-s1-trim-atomic] region MAIN 2101-2119: PR99 no; PR98 no; PR96 no
+
+# size: the runner every session reads in full
+[size-runner-V42] 52839 B
+[size-runner-MAIN] 52839 B
+[size-runner-FORK] 55578 B
+[size-runner-PR99] 53100 B
+[size-runner-PR98] 52839 B
+[size-runner-PR96] 52839 B
+
+# none: claims of the shape 'nothing does X' (a count over a file that exists; None = file absent)
+[none-remote-calls-V42] ls-remote in bin/status: 0; in context_budget.py: 0
+[none-remote-calls-MAIN] ls-remote in bin/status: 0; in context_budget.py: 0
+[none-remote-calls-FORK] ls-remote in bin/status: 0; in context_budget.py: 0
+[none-runner-V42] 'context_budget' in the runner: 0; 'bin/status' in the runner: 0; 'bin/status' in SAFEGUARDS.md: 0
+[none-runner-MAIN] 'context_budget' in the runner: 0; 'bin/status' in the runner: 0; 'bin/status' in SAFEGUARDS.md: 0
+[none-runner-FORK] 'context_budget' in the runner: 0; 'bin/status' in the runner: 0; 'bin/status' in SAFEGUARDS.md: 0
+[sync-seeds-not-ignored-V42] bin/sync says seeds are deliberately excluded from ignore mode: HOLDS
+[sync-seeds-not-ignored-MAIN] bin/sync says seeds are deliberately excluded from ignore mode: HOLDS
+[sync-seeds-not-ignored-FORK] bin/sync says seeds are deliberately excluded from ignore mode: HOLDS
+
+# comments: the HTML comments in the CLAUDE.md template (Claude Code strips block-level ones from CLAUDE.md)
+[comments-claude-template-MAIN] 8 comments
+[comment-1] line 22: Customize: one-paragraph description of what this project is and what it's for.
+[comment-2] line 30: Customize: languages, frameworks, key dependencies.
+[comment-3] line 40: Customize: the command(s) that confirm the deliverable is not broken. See SAFEGUARDS.md "Verify 
+[comment-4] line 57: Example: - Before reporting findings: run `<project>/scripts/check-env.sh` and include status in
+[comment-5] line 65: Example: | If the user says... | Deliverable | Workstream doc | |---|---|---| | "Design the X pr
+[comment-6] line 75: Example: | # | Lesson | From | When to apply | |---|---|---|---| | 1 | Plans must include grep i
+[comment-7] line 81: This table is loaded every session and grows with no cap. When CLAUDE.md nears its size budget, 
+[comment-8] line 89: Extends the base failure modes in SESSION_RUNNER.md. Number continues from the base table.
+
+# no-config: what the budget tool does in a project with no .context-budget.json (MAIN's copy, temp dir)
+[no-config--status] exit 3: no .context-budget.json found
+[no-config--precommit] exit 3: no .context-budget.json found
+
+# mode: upstream's atomic_write on a 0644 ledger, a new shard, and a verify script (umask 022)
+[mode-existing-ledger] before 644 -> after 600
+[mode-new-shard] 600
+[mode-verify-script] 755
