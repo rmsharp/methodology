@@ -281,6 +281,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [ad hoc] S411 push record -- fork `main` fast-forwarded `86b5d0c4..91a42c8d` (7 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
+
+Pushed at the operator's 'Yes, push main (Recommended)' at the S411 close-out picker. Guarded: `86b5d0c4` was an ancestor of local `main` (`git merge-base --is-ancestor`); only `main` was pushed, never `--all` or `--mirror`; the remote is `https://github.com/rmsharp/methodology.git`, the fork. Read back after a fetch: `origin/main` and local `main` both `91a42c8d`, 0 commits ahead. The seven commits are the claim `36ba3210`, the trim `69136931`, the fold `b7df93f6`, the work `b5863d1e` and `a07cc4e2`, the close-out `f75e5a7d` and the approval `91a42c8d`. This entry's own commit goes to `origin` under the standing grant for a CHANGELOG-only push record.
+
 ### 2026-11-02 · [BL-130] S411 approval -- the operator approved the plan for fixing upstream issue #100, with decisions D6 (the trimmer keeps a file's mode) and D7 (one finding per session) as recommended; fork only
 
 At the S411 close-out picker the operator chose 'Approve; D6 and D7 as recommended (Recommended)'. `docs/planning/issue100-fixes-plan.md` now says APPROVED in its status line and marks D6 and D7 decided; D1 to D5 and D8 stay open until their pieces start (D8, the route for #95, gates piece 3). This is the operator's approval of a fork-only plan: it authorises S412 or a later session to start at piece 1 (the trimmer keeps a file's mode and group; a scratch clone of `upstream/main`; tests written first and shown red), and nothing outward. The S411 receipt in `HANDOFFS.md` still reads 'a DRAFT until the operator approves it' because a complete receipt is not rewritten; this entry and the plan's status line supersede it. Nothing sent to `KJ5HST/methodology`.
