@@ -281,6 +281,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [ad hoc] S411 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (3 lines) became the row `| 3 | 2026-10-31 → 2026-10-31 | HANDOFFS-through-2026-10-31.md | v1.8.1 |`. Own commit, as the index's rule says (fork Learning #58). It follows the trim `69136931` (six records to three: the shard's `session:` lines read S408, S407 and S406, and the live file keeps S411's pending stub, S410 and S409; its proof `bash docs/archive/HANDOFFS-through-2026-10-31.md.verify.sh` exit 0 before the trim commit and after it). Taken at the operator's required Yes/No 'Yes (Recommended)' at the S411 Phase 0 picker. The trim ran AFTER the claim, so record 0 was S411's pending stub, unchanged by the trim (the trimmer's advisory `FRONTIER_PENDING_STUB` names the hazard only when the trim and the finalize share a commit; they do not here). Local only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-11-02 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-31.md` (3 record(s), 63,799 B → 30,222 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
