@@ -227,6 +227,7 @@ and `methodology_dashboard.py` all find shards by that glob, so an index there w
 | 2 | 2026-10-30 → 2026-10-30 | [`HANDOFFS-through-2026-10-30-4.md`](archive/HANDOFFS-through-2026-10-30-4.md) | v1.8.1 |
 | 3 | 2026-10-31 → 2026-10-31 | [`HANDOFFS-through-2026-10-31.md`](archive/HANDOFFS-through-2026-10-31.md) | v1.8.1 |
 | 1 | 2026-10-31 → 2026-10-31 | [`HANDOFFS-through-2026-10-31-2.md`](archive/HANDOFFS-through-2026-10-31-2.md) | v1.8.1 |
+| 1 | 2026-11-01 → 2026-11-01 | [`HANDOFFS-through-2026-11-01.md`](archive/HANDOFFS-through-2026-11-01.md) | v1.8.1 |
 
 **Adding a row — the fold.** A trim writes a pointer block (three lines and a blank) into `HANDOFFS.md`'s
 front matter — before its last standalone `---` line if it has one, at its end otherwise, which is where it
