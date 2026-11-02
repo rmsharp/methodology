@@ -4659,3 +4659,36 @@ The two plans BL-106 gated were last changed 2026-10-20 (36 and 25 commits). Non
 **Done when** `--all` reads the slots or says in its usage text that it does not, and no statement in the backlog (BL-127's option (e), the table at `:1995`) is left claiming it does; or a recorded decision to leave it. Not started.
 
 ---
+
+<a id="bl-129"></a>
+**BL-129 — The Disclosure Hook: upstream issue [#101](https://github.com/KJ5HST/methodology/issues/101) asks to remove it; decide what the fork does. Raised 2026-11-01 (S410). Not started.**
+
+**What was asked.** The maintainer opened #101 on 2026-11-01 (00:22 UTC): remove `.githooks/commit-msg` (78 lines), the "Disclosure Hook" section of `starter-kit/SAFEGUARDS.md` (lines 184 to 187) and the gate `commit-msg-selftest`. The reasons given: a `Co-Authored-By` trailer is credit, not disclosure (GitHub lists the agent as a co-author); the rule reaches every adopter through a file that says it wins over other guidance; failure mode #16 does not ask for a trailer; where a project wants disclosure, that is the project's own policy.
+
+**What was measured (S410, [`issue100-101-triage.md`](issue100-101-triage.md); evidence in `issue100-101-evidence/`).** Every line citation in the issue holds at v4.2 and on `upstream/main` (`d50ce290`); on the fork the gate is at `.quality-gates.json:173` (the issue says 80 to 86, which is upstream's file). The issue's claim that nothing in `bin/tests.sh`, `bin/_manifest.py` or the other hook depends on the hook is right on the fork (zero hits in each). Six references the issue could not see: (1) the gate itself, and `pre-commit-selftest`'s `why` text at `:184`, which cites it; (2) fork Learning #67 (`docs/FORK_LEARNINGS.md:85`), about this hook's arrival at the S175 resync; (3) `bin/model-report`, a tool only the fork has, whose "corroboration-only" section reads the trailers (`:24`, `:626-644`; `bin/tests.sh:706`); (4) `bin/migrate-layout --trailer` and 5 test lines; (5) two frozen evidence scripts that set `METHODOLOGY_REQUIRE_COAUTHOR=0`; (6) backlog and plan prose. 2,005 of the 2,006 commits since the S176 fix carry the trailer; the one that does not is the merge of upstream PR #82.
+
+**Options (none run).** (a) *Wait:* upstream decides first and the fork takes the removal at its next resync, as its own plan-mode session, because removing a declared gate is a loosening (`SAFEGUARDS.md:55`; `quality_ratchet.py` refuses it). Costs nothing now. (b) *Take it on the fork now* in a plan-mode session: the hook, the section, the gate, the `why` text, and an adjudication of Learning #67 against the retirement rule (criterion (c): the artifact it is about no longer exists). The `SAFEGUARDS.md` hunk is distributed, so it also joins BL-46's held hunks. No gain over (a): the fork would differ from main before main has decided. (c) *Comment on #101* with the fork-side facts: outward, needs the operator's go-ahead each time. Recommended (a). Until a decision, the hook is live and every commit keeps its trailer.
+
+**Done when** the operator picks one and it is carried out, or the hook is gone from `upstream/main` and the fork has taken the removal at a resync (with Learning #67 adjudicated), or a recorded decision to keep it.
+
+---
+
+<a id="bl-130"></a>
+**BL-130 — Upstream issue [#100](https://github.com/KJ5HST/methodology/issues/100): six findings from an adopter three months behind, candidates for the next upstream-facing batch. Raised 2026-11-01 (S410). Not started.**
+
+**What was reported.** The maintainer opened #100 on 2026-11-01 (00:05 UTC) from an adopter project that ran 93 sessions on v3.5 and never received the size guards of v3.6 to v4.2. Facts about that project are its own and were not checked. Each finding ends in a proposal.
+
+**What was measured (S410, [`issue100-101-triage.md`](issue100-101-triage.md)).** All six findings hold on `upstream/main` and on the fork; the cited text or code is where the issue says (the code sites for finding 6, not its behaviour on an untracked ledger, which was not run). None had a backlog row. The six, the files each would touch, and its kind (T = distributed text, D = distributed code, C = canonical-only code):
+1. `bin/status` local mode and the budget's `synced` check never ask the remote for the newest tag. Touches `bin/status` (C), `starter-kit/context_budget.py` (D).
+2. No protocol step runs `context_budget.py`; FM #28's countermeasure names no tool. Touches `SESSION_RUNNER.md` Phase 0 step 5 and close-out (T), `BOOTSTRAP.md` Step 10 (T). Related: PR #99 (d), which the issue names as another route.
+3. The only resident instruction to extract Learnings is an HTML comment (`CLAUDE_TEMPLATE.md:84-86` here), and the file is `PROJECT_LEARNINGS.md` in `BOOTSTRAP.md` but `LEARNINGS.md` in the budget seed (`context-budget.json:55`). Touches `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, the seed, 3C (T). The fork's move tooling already uses `PROJECT_LEARNINGS.md`, so agreeing the name means editing the seed only.
+4. `SESSION_NOTES.md`, transient or accumulating: the adopter chose transient and says that makes PR #98's first commit unnecessary for projects that follow it. This is the question PR #98's own body asks ("Underneath"), and #98 says that if the file is transient "Commit 1 would not merge". **It is the operator's to see and decide; nothing is answered on #98 unasked.** Touches the seed and 3D (T).
+5. No rule for work after the 3G STOP, so a follow-on session skips Phase 0 and writes no stub. Touches one runner sentence (T) and a hook recipe near `SAFEGUARDS.md:175` (T). Related: PR #96 (CONFLICTING).
+6. An adopter with untracked seeds gets no commit-keyed guard and the trimmer refuses with `P1_NO_LEDGER`. Touches `bin/sync` and `bin/status` warnings (C) and the trimmer's refusal wording (D).
+Smaller: the trimmer writes ledgers and shards at mode 0600 (`methodology_trim.py:2072-2080` here; 152 of 462 files in this fork's `docs/archive/`), one line to fix (D); the `FRONTMATTER_FIELD_ABSENT` warning is BL-60; the dashboard's size risk is answered by PR #99 (d).
+
+**Options (none run).** (a) Hold until the operator reads the record and ranks the six; (b) compose the cheapest independent ones (the mode, finding 3's name and comment, finding 5's sentence) into a batch with BL-46's held hunks, after the order of #99, #98 and #96 is settled (the fork's rule is one substantial, fully vetted pull request, not several small ones); (c) comment on #100 or #98 with what the fork found: outward, needs the operator's go-ahead each time. No prototype was built for any proposal, so none is shown to work.
+
+**Done when** each of the six and the mode point is either carried by a pull request the operator authorised, or recorded as declined or answered by the maintainer.
+
+---

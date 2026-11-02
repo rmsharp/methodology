@@ -45,9 +45,9 @@ Both issues were opened by the maintainer on 2026-11-01 (#100 at 00:05 UTC, #101
 6. **Plans and the backlog** use the hook as a precedent (`BACKLOG-DETAIL.md:2883`, `:2908`, `:2931`; `upstream-resync-2026-09-plan.md`, 8 mentions). Prose only.
 7. **The history already carries the trailer:** 2,005 of the 2,006 commits since the S176 fix (`8c35872`) have one; the one that does not is the merge of upstream PR #82 (`64f23bf6`). Nothing needs rewriting either way.
 
-**Until he decides**, the fork's hook is live, so the commits of every session keep the trailer; that is the status quo, not a position on #101.
+**Until the operator decides**, the fork's hook is live, so the commits of every session keep the trailer; that is the status quo, not a position on #101.
 
-**Options (none started; each outward act is his go-ahead).**
+**Options (none started; each outward act needs the operator's go-ahead).**
 (a) *Wait.* Upstream decides first; the fork takes the removal at its next resync, as its own plan-mode decision, because removing a gate is a loosening. Costs nothing now.
 (b) *Take it on the fork now*, in a plan-mode session: the hook, the section, the gate, the `why` text, and the adjudication of Learning #67. The `SAFEGUARDS.md` hunk is a distributed file, so it also joins the fork's held upstream-facing hunks listed in BL-46's index row. I see no gain over (a): it would only make the fork differ from main before main has decided.
 (c) *Tell the maintainer the fork-side facts above* (items 1 to 7) as a comment on #101. Outward; I do not propose it.
@@ -72,14 +72,14 @@ Both issues were opened by the maintainer on 2026-11-01 (#100 at 00:05 UTC, #101
 *"Holds" means the cited text or code is where the issue says and says what it says. I ran none of the proposals and reproduced no behaviour except the file-mode count in s1.*
 
 **Where #100 meets the open pull requests** (#98, #99 and #96 each have 0 comments and 0 reviews at the time of reading; #95 is an issue with one comment, mine):
-- **#98.** Finding 4 says "We chose transient" and that this "makes #98's commit 1 unnecessary for projects that follow it". #98's own body says that if the file is transient, "Commit 1 would not merge". That is the nearest thing to an answer on #98, and it is in an issue, not on the pull request. **It is his to see and decide; I answer nothing.**
+- **#98.** Finding 4 says "We chose transient" and that this "makes #98's commit 1 unnecessary for projects that follow it". #98's own body says that if the file is transient, "Commit 1 would not merge". That is the nearest thing to an answer on #98, and it is in an issue, not on the pull request. **It is the operator's to see and decide; I answer nothing.**
 - **#99.** Finding 2 names (d) as a related route, so the issue shows the maintainer has read #99's description.
 - **#96.** Finding 5 names it, and notes its re-fire after a close-out is keyed on a later commit, which an untracked-ledger adopter never makes (finding 6).
 - **#95.** Finding 4's last line says #95 covers the seed tripping its own budget.
 
 ## What this record does not do
 
-- It does not reply on #100 or #101, comment on #95 to #99, push a branch, or open anything. Each is his go-ahead.
+- It does not reply on #100 or #101, comment on #95 to #99, push a branch, or open anything. Each needs the operator's go-ahead.
 - It does not remove or loosen any gate and does not touch a distributed file. Every proposal above is a candidate, and a prototype was built for none of them, so **no proposal is shown to work**.
 - It does not check the adopter project's own facts (see above).
 
