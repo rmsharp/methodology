@@ -285,6 +285,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [BL-130] S412 claim (in progress) -- piece 1 of the #100 fixes plan: the trimmer keeps a file's mode and group (finding S1), built on a scratch clone of `upstream/main`; fork only
+
+Claimed at the operator's S412 Phase 0 picker, 'Yes (Recommended)' to trimming `CHANGELOG.md` first and '#100 piece 1 (Recommended)' as the deliverable (the other options were the route for #95 (D8), #98 against #100 finding 4, and the adopter ledger repairs). `CHANGELOG: pending` -- this entry says (in progress); Phase 3F records the rest. Phase 0 found: 0 undocumented commits, 0 merges, S411's receipt `complete`, its gate citation (24/24, results `aaf5767c1279`, manifest `94dff02bae74`) equal to `.quality-gates-results.json`, `check-ledger` and `check-handoff` exit 0, the #99 read-back script 0 failed, `upstream/main` still `d50ce290`, #99 and #98 OPEN/CLEAN and #96 OPEN/CONFLICTING each 0 comments and 0 reviews, #101, #100 and #97 at 0 comments and #95 and #93 at 1 each (nothing new from the maintainer), 3 receipts (no `HANDOFFS.md` trim due), dashboard 72/100. The trim ran first, as its own commit `8ffbc1eb` before this claim, at a required Yes/No: the trimmer refused on its growth-rate check (SRF RED) and I used `--force` as S411's handoff directed; the shard holds S391 to S403 and S404's claim and first work entry (read from its headings), and its proof exits 0 before and after the commit. **Correction to that commit's subject:** it says the pointer block 'is folded in its own commit'; a `CHANGELOG.md` trim has no fold (only `HANDOFFS.md` has an archive index to fold into; the earlier trims `2eb43868` and `cee05064` have no fold commit either), so none follows. I did not amend it: the shard's proof is pinned to that commit. S411's handoff names the plan's approval as a step to take; it was already done (`91a42c8d`).
+
 ### 2026-11-02 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-30.md` (90 record(s), 202,666 B → 97,811 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.

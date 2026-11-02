@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S412
+date: 2026-11-02
+status: pending
+active_task: **Piece 1 of `docs/planning/issue100-fixes-plan.md` (finding S1 of the maintainer's upstream issue #100): the trimmer (`methodology_trim.py` `atomic_write`) keeps an existing file's mode and group instead of returning it at 0600; built on a scratch clone of `upstream/main`, tests written first and shown red.** A fork-only build; nothing sent to `KJ5HST/methodology`. Chosen by the operator at the S412 Phase 0 picker, '#100 piece 1 (Recommended)'; he also answered Yes to trimming `CHANGELOG.md` first (commit `8ffbc1eb`).
+```
+
+```handoff
 session: S411
 date: 2026-11-02
 status: complete
