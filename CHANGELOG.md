@@ -285,6 +285,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-02 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-01.md` (1 record(s), 54,762 B → 43,118 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-11-01 → 2026-11-01) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-01.md`](docs/archive/HANDOFFS-through-2026-11-01.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-01.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-01.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,762 B → 43,118 B (−21.3%).
+
 ### 2026-11-02 · [ad hoc] S413 push record -- fork `main` fast-forwarded `5ed08d08..512c75ab` (6 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at the operator's 'Yes, push main (Recommended)' at the S413 close-out picker. Guarded: `origin` is `rmsharp/methodology` (the fork; `upstream` is `KJ5HST/methodology` and was not touched), `5ed08d08` was an ancestor of local `main` (`git merge-base --is-ancestor`), and only `main` was pushed, as `main:main`, never `--all` or `--mirror`. Read back: `git ls-remote origin refs/heads/main` and local `main` both `512c75ab`, `git rev-list --count origin/main..main` 0, and `git ls-remote origin` lists no `issue100-batch-a`. The six commits are the `HANDOFFS.md` trim `557fe787`, its fold `68df9c8a`, the claim `b49a7e26`, the evidence `0f243f67`, the work `a7da2787` and the close-out `512c75ab`. The local branch `issue100-batch-a` (`5563a7c8`) was not pushed. This entry's own commit goes to `origin` under the standing grant for a CHANGELOG-only push record.
