@@ -285,6 +285,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-03 · [ad hoc] S415 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (3 lines and the blank after it) became the row `| 1 | 2026-11-02 → 2026-11-02 | HANDOFFS-through-2026-11-02.md | v1.8.1 |`, inserted under the index table's last row (the `-11-01` row), not at the file's end. Own commit, as the index's rule says (fork Learning #58). It follows the trim `375eb114` (four records to three: the shard's `session:` line reads S411, and the live file keeps S414, S413 and S412; 54,672 B to 42,979 B; its proof `bash docs/archive/HANDOFFS-through-2026-11-02.md.verify.sh` read OK before the trim commit and after it). Taken at the operator's required Yes/No 'Yes (Recommended)' at the S415 Phase 0 picker, before the claim. The trimmer printed `FRONTMATTER_FIELD_ABSENT` ('retained receipt count') in the dry run and the write, as at S413 and S414; I did not act on it. Local only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-11-03 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-02.md` (1 record(s), 54,672 B → 42,979 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
