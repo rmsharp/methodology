@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S415
+date: 2026-11-03
+status: pending
+active_task: **Piece 2 of `docs/planning/issue100-fixes-plan.md` (finding F1 of the maintainer's upstream issue #100): warn when a checkout is behind its remote's newest release, in `bin/status` (by default) and in `starter-kit/context_budget.py` (behind a `--remote` flag), with a hard timeout, no prompt, "not checked" when it cannot tell, and never in `--precommit` (decision D3 taken as the plan recommends). Built on a scratch clone of `upstream/main`, tests first and shown red, as the fourth commit on the LOCAL branch `issue100-batch-a`.** A fork-only build; nothing sent to `KJ5HST/methodology`. Chosen by the operator at the S415 Phase 0 picker, 'Piece 2, D3 as recommended (Recommended)'; the operator also answered Yes to trimming `HANDOFFS.md` first (trim `375eb114`, fold `eb61853b`) and Yes to pushing S414's six commits to the fork `origin`.
+```
+
+```handoff
 session: S414
 date: 2026-11-02
 status: complete
