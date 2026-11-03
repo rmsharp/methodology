@@ -1,0 +1,37 @@
+# Piece 2 (S415): mutation round on the final tip 7adb0bd9 (scratch clone of upstream/main + the 4 commits of issue100-batch-a).
+# Each mutant breaks ONE guard in context_budget.py or bin/status; the four new test classes run; a mutant is CAUGHT when at least one test fails.
+# The script is piece2-mutants.py: python3 piece2-mutants.py <tree> <out-file> [name-prefix]. Each file is restored in a finally; hashes are compared at the end.
+# M22 was first 'caught' in 0.1 s with no test named: the edit left an empty block and the file did not parse. Fixed, and a test that reads the --json key added, then re-run (it is caught by two tests below).
+# M28 was added after the change to protocol v0 (the M26/M27 lines print after it because the script lists it before them).
+
+CAUGHT   M01 kill the child only, wait on the pipes with a bound  [ 28.6s]  test_a_remote_that_never_answers_returns_within_the_timeout_and_leaves_nothing_running; test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is
+CAUGHT   M02 kill the child only and wait on the pipes without a bound (subprocess.run's behaviour)  [ 28.9s]  test_a_remote_that_never_answers_returns_within_the_timeout_and_leaves_nothing_running; test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is
+CAUGHT   M03 no session of its own for the call  [ 29.0s]  test_a_remote_that_never_answers_returns_within_the_timeout_and_leaves_nothing_running; test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is
+CAUGHT   M04 GIT_TERMINAL_PROMPT not set  [ 22.9s]  test_the_default_run_makes_no_remote_call_and_a_stale_checkout_is_a_warn_with_the_flag
+CAUGHT   M05 ssh BatchMode never added  [ 22.7s]  test_ssh_is_asked_never_to_prompt_and_the_users_own_ssh_command_is_kept
+CAUGHT   M06 a configured core.sshCommand is ignored  [ 22.9s]  test_ssh_is_asked_never_to_prompt_and_the_users_own_ssh_command_is_kept
+CAUGHT   M07 the environment's GIT_SSH_COMMAND is ignored  [ 11.6s]  test_a_remote_that_never_answers_returns_within_the_timeout_and_leaves_nothing_running; test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is
+CAUGHT   M08 a GIT_SSH wrapper is overridden  [ 22.8s]  test_ssh_is_asked_never_to_prompt_and_the_users_own_ssh_command_is_kept
+CAUGHT   M09 releases ordered as text  [ 22.3s]  test_releases_are_ordered_as_integers_of_any_depth; test_the_newest_release_is_chosen_by_integers_not_by_text
+CAUGHT   M10 a pre-release tag counts as a release  [ 22.3s]  test_a_checkout_that_cannot_be_compared_says_why_and_is_not_told_it_is_behind; test_a_release_tag_reads_as_its_integers_and_nothing_else_does; test_tags_that_ar
+CAUGHT   M11 one remote call per synced file, not per checkout  [ 31.9s]  test_a_current_checkout_prints_nothing_and_changes_nothing; test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is_the_runs_own; test_json_sta
+CAUGHT   M12 --precommit asks the remote  [ 32.1s]  test_a_current_checkout_prints_nothing_and_changes_nothing; test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is_the_runs_own; test_precommi
+CAUGHT   M13 a stale checkout is a breach  [ 22.4s]  test_json_stays_json_and_carries_the_stale_row; test_the_default_run_makes_no_remote_call_and_a_stale_checkout_is_a_warn_with_the_flag
+CAUGHT   M14 a checkout that could not be checked becomes a warn row  [ 22.5s]  test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is_the_runs_own
+CAUGHT   M15 a checkout ahead of its remote is called behind  [ 22.6s]  test_a_current_checkout_and_one_ahead_of_its_remote_are_told_nothing
+CAUGHT   M16 a timeout is reported as an ordinary failure  [ 22.5s]  test_a_remote_that_never_answers_returns_within_the_timeout_and_leaves_nothing_running
+CAUGHT   M17 git describe failing is silent  [ 21.7s]  test_a_checkout_that_cannot_be_compared_says_why_and_is_not_told_it_is_behind
+CAUGHT   M18 an origin with no release tags crashes  [ 22.0s]  test_a_checkout_that_cannot_be_compared_says_why_and_is_not_told_it_is_behind
+CAUGHT   M19 a nearest tag that is not a release crashes  [ 22.2s]  test_a_checkout_that_cannot_be_compared_says_why_and_is_not_told_it_is_behind
+CAUGHT   M20 a missing synced checkout is asked anyway  [ 22.6s]  test_a_synced_checkout_that_is_not_there_is_named_and_asks_nothing
+CAUGHT   M21 --remote with nothing synced says nothing  [ 22.5s]  test_the_flag_with_nothing_synced_says_so_and_asks_nothing
+CAUGHT   M22 --json loses the not-checked list  [ 22.2s]  test_json_stays_json_and_carries_the_stale_row; test_the_flag_with_nothing_synced_says_so_and_asks_nothing
+CAUGHT   M23 bin/status prints before the table  [ 22.9s]  test_a_stale_checkout_is_named_after_the_table_and_exit_stays_zero
+CAUGHT   M24 bin/status also asks in --source=github  [ 22.9s]  test_the_github_source_has_just_cloned_so_it_asks_no_remote
+CAUGHT   M25 bin/status lets a load failure crash  [ 22.7s]  test_a_tool_that_cannot_be_loaded_is_not_checked_not_a_crash
+CAUGHT   M28 the call uses git's default protocol again  [ 23.1s]  test_the_default_run_makes_no_remote_call_and_a_stale_checkout_is_a_warn_with_the_flag
+CAUGHT   M26 bin/status leaves bytecode in the checkout  [ 22.8s]  test_a_stale_checkout_is_named_after_the_table_and_exit_stays_zero
+CAUGHT   M27 bin/status never prints why it could not check  [ 22.8s]  test_a_remote_that_never_answers_stops_neither_tool_and_the_exit_code_is_the_runs_own
+
+28 of 28 mutants caught
+tree restored: yes, every hash equal
