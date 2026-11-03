@@ -285,6 +285,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-03 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-02.md` (1 record(s), 54,672 B → 42,979 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-11-02 → 2026-11-02) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-02.md`](docs/archive/HANDOFFS-through-2026-11-02.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-02.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-02.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,672 B → 42,979 B (−21.4%).
+
 ### 2026-11-02 · [BL-130] S414 close-out -- piece 4 of the #100 fixes plan (a runner sentence: a new task after STOP is a new session, paid for by a cut) is built on the local branch issue100-batch-a, the third commit on upstream/main; HANDOFFS.md trimmed 54,762 B to 43,118 B; the fork's gates pass 24 of 24
 
 Close-out of S414: the `HANDOFFS.md` receipt is `complete`, with its six requirements and the predecessor score. **3A:** S413 scored 9 (its commands, arithmetic, resume recipe and candidate list all held when run; missing: that a fold row goes under the index table, and which cut pays for piece 4; one figure, `CHANGELOG.md` 'about 111 KB', was 113,674 B). **3B:** self 8 (wrong: a misplaced first fold append, caught and reverted before commit; two small outputs written to `/tmp`; two stretches of tool calls with no text to the operator; expectation E5 missed). **3C:** no row appended to `docs/FORK_LEARNINGS.md`, so D3's duty does not fire; rows considered: 35 and 45, neither says to check who quotes a candidate cut before choosing it; the lesson is in the plan's register. **3E:** `quality_ratchet.py --run` on `55f226ea293e` with a clean tree: 24/24 pass, 0 fail, 0 unmeasured, results `aaf5767c1279`, manifest `94dff02bae74` (both equal S413's), 21:38:58 to 22:21:48 UTC. That is 42 min 50 s against the usual 26: the machine's load average was about 300 because 36 orphaned `zsh` shells from a timing test in another project (`model-project-constructor`) were spinning; they are not this repository's and were not touched. Local only; nothing pushed and nothing sent to `KJ5HST/methodology`.
