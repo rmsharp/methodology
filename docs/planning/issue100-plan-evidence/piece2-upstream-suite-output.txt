@@ -1,0 +1,7 @@
+# Piece 2 (S415): upstream's own 'bash bin/tests.sh' on a FRESH clone (git clone --no-local) of the final tip 7adb0bd9, clean tree, run alone, 2026-11-03 ~22:03-22:06 UTC.
+# It also ran on the earlier tip a40098cb (before the protocol-v0 change and four added tests): 261 passed, 0 failed.
+  PASS: dashboard scoring unit tests green
+  PASS: ledger trimmer unit tests green
+  PASS: context budget gate unit tests green
+  PASS: quality ratchet unit tests green
+== Summary: 261 passed, 0 failed ==
