@@ -1,0 +1,47 @@
+# Piece 2 (S415): the first run of the new tests against the UNEDITED tool, before any implementation.
+# Command: python3 -m unittest -v tools.test_context_budget.TestReleaseOrdering .TestReleaseLag .TestRemoteFlag .TestStatusReleaseLag
+# on a scratch clone of upstream/main d50ce290 + pieces 1, 5 and 4, with only tools/test_context_budget.py changed.
+# Names are as of this first run: two tests were later renamed and the two slow ones merged into one.
+# 20 tests ran: 18 failed or errored, 2 passed. One line per failing block below: the test, then the reason it failed.
+
+ERROR test_a_release_tag_reads_as_its_integers_and_nothing_else_does
+        AttributeError: module 'context_budget' has no attribute 'release_key'
+ERROR test_the_newest_release_is_chosen_by_integers_not_by_text
+        AttributeError: module 'context_budget' has no attribute 'newest_release'
+ERROR test_a_checkout_one_release_behind_is_told_so
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_a_checkout_that_cannot_be_compared_says_why_and_is_not_told_it_is_behind
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_a_current_checkout_and_one_ahead_of_its_remote_are_told_nothing
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_a_remote_that_never_answers_returns_within_the_timeout_and_leaves_nothing_running
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_releases_are_ordered_as_integers_of_any_depth
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_ssh_is_asked_never_to_prompt_and_the_users_own_ssh_command_is_kept
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_tags_that_are_not_releases_are_not_newer
+        AttributeError: module 'context_budget' has no attribute 'release_lag'
+ERROR test_json_stays_json_and_carries_the_stale_row
+        json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+FAIL  test_a_current_checkout_prints_nothing_and_changes_nothing
+        AssertionError: Tuples differ: (3, 0) != (0, 1)
+FAIL  test_a_remote_that_never_answers_is_not_checked_and_the_exit_code_is_the_runs_own
+        AssertionError: 'remote not checked' not found in "unknown argument: --remote context_budget.py v1.3.1 — size budgets for session-resident documents Usage: python3 context_budget.py [command] [options] Commands: (default) Measure every budg
+FAIL  test_precommit_never_asks_a_remote_even_when_told_to
+        AssertionError: 0 != 1 : control: --remote on --status does call
+FAIL  test_the_default_run_makes_no_remote_call_and_a_stale_checkout_is_a_warn_with_the_flag
+        AssertionError: 'checkout at v1.0, newest release v1.1 (behind: git pull)' not found in "unknown argument: --remote context_budget.py v1.3.1 — size budgets for session-resident documents Usage: python3 context_budget.py [command] [options] 
+FAIL  test_the_flag_with_nothing_synced_says_so_and_is_documented
+        AssertionError: 'remote not checked: no synced file is declared' not found in "unknown argument: --remote context_budget.py v1.3.1 — size budgets for session-resident documents Usage: python3 context_budget.py [command] [options] Commands: 
+FAIL  test_a_remote_that_never_answers_does_not_stop_the_table
+        AssertionError: 'remote not checked: ' not found in 'source: local (/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpgbq1rrp7/checkout)\nProject  File                                                                         Dispos
+FAIL  test_a_stale_checkout_is_named_after_the_table_and_exit_stays_zero
+        AssertionError: 'project  docs/methodology/workstreams/TEM[61 chars]sing' != 'warning: checkout at v1.0, newest release[20 chars]ull)'
+FAIL  test_a_tool_that_cannot_be_loaded_is_not_checked_not_a_crash
+        AssertionError: 'remote not checked: ' not found in 'source: local (/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp741knoxn/checkout)\nProject  File                                                                         Dispos
+
+# The two tests that PASS on the unedited tool are controls that must stay green after the change:
+#   TestStatusReleaseLag.test_a_current_checkout_prints_no_warning_and_no_not_checked_line
+#   TestStatusReleaseLag.test_the_github_source_has_just_cloned_so_it_asks_no_remote
+# Tests that errored on one `release_key` subTest count once here (10 subTests, one reason).

@@ -1,0 +1,22 @@
+# Piece 2 (S415): the manual read-only run against the PUBLIC repository (part of the plan's DONE), and the merged-tree checks.
+# Commands were run by hand from a scratch directory; this file records them and what they printed.
+
+## Smoke run, 2026-11-03, against https://github.com/KJ5HST/methodology.git (read-only: one `ls-remote` per run)
+git clone https://github.com/KJ5HST/methodology.git pub && cd pub && git checkout --detach v4.1
+cp -R <scratch clone of upstream/main + the 4 commits>/bin/. bin/ ; cp -R <same>/starter-kit/. starter-kit/   # HEAD stays at v4.1
+python3 bin/status --source=local ../emptyproj      -> last line: "warning: checkout at v4.1, newest release v4.2 (behind: git pull)"
+                                                       exit 0, 5.5 s in all, no starter-kit/__pycache__ left behind
+(cd ../proj && python3 ../pub/starter-kit/context_budget.py --status --remote)
+                                                    -> headline WARN, row "(pub checkout) synced canonical warn",
+                                                       finding "...: checkout at v4.1, newest release v4.2 (behind: git pull)"; exit 1, 4.5 s
+FIRST attempts (with the 5 s limit and git's default protocol): `bin/status` could not run at all, because v4.1 has no
+bin/_manifest_reader.py (so the overlay above copies the whole of bin/ and starter-kit/, not two files), and
+`context_budget.py --status --remote` printed "remote not checked: ... origin did not answer within 5 s (timed out)" after
+5.1 s. That timeout, against a remote that was answering, is what led to piece2-latency-probe-output.txt and to the change
+to protocol v0 and a 10 s limit. The two results above are from the second attempt, with the final code.
+
+## Merged-tree checks: the piece's tip merged (git merge, no conflicts) with each pull request head, then the whole
+## context_budget suite (python3 -m unittest tools.test_context_budget) on the merged tree
+#99 (47637be2) merged: Ran 183 tests, OK (skipped=2)      # 168 on the piece's tip + #99's own 15
+#98 (65990cda) merged: Ran 168 tests, OK (skipped=2)
+#96 not merged: it conflicts with main on CHANGELOG.md:1 already (the merge=union gap), with or without the piece.
