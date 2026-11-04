@@ -285,6 +285,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-02-2.md` (1 record(s), 54,587 B → 42,784 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-11-02 → 2026-11-02) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-02-2.md`](docs/archive/HANDOFFS-through-2026-11-02-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-02-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-02-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,587 B → 42,784 B (−21.6%).
+
 ### 2026-11-03 · [ad hoc] S415 close-out push record -- fork `main` fast-forwarded `652acdd9..3a427903` (8 commits); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at the operator's 'Yes, push main (Recommended)' at the S415 close-out picker, whose question named the eight commits. Guarded: `origin` is `rmsharp/methodology` (the fork; `upstream` is `KJ5HST/methodology` and was not touched), `652acdd9` (re-fetched first) was an ancestor of local `main` (`git merge-base --is-ancestor`), and only `main` was pushed, as `main:refs/heads/main`, never `--all` or `--mirror`. Read back after a fresh fetch: `origin/main` and local `main` both `3a427903`, `git rev-list --count origin/main..main` 0, and `git ls-remote --heads origin issue100-batch-a` lists nothing. The eight commits are the `HANDOFFS.md` trim `375eb114`, its fold `eb61853b`, the first push record `5ec577e2`, the claim `37c091ba`, the two evidence commits `bc1071c0` and `5ba43b21`, the work `e62f9058` and the close-out `3a427903`. The local branch `issue100-batch-a` (`7adb0bd9`, four commits on `upstream/main`) was not pushed. This entry's own commit goes to `origin` under the standing grant for a CHANGELOG-only push record.
