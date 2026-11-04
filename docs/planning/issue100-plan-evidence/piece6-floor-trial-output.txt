@@ -1,0 +1,31 @@
+composed c93f1feb; budget-suite floor -> 177, trimmer-suite floor -> 256
+== variant raise-both (991a9ab8): files changed vs composed: .quality-gates.json 
+#99 head 47637be2
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=1 regions=2 [ .quality-gates.json:2 ]
+#98 head 65990cda
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=1 regions=1 [ .quality-gates.json:1 ]
+#96 head ad5c980f
+   (a) upstream/main + head : exit=1 regions=1 [ CHANGELOG.md:1 ]
+   (b) piece        + head : exit=1 regions=1 [ CHANGELOG.md:1 ]
+== variant raise-budget-only (3e1ac2a8): files changed vs composed: .quality-gates.json 
+#99 head 47637be2
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=1 regions=1 [ .quality-gates.json:1 ]
+#98 head 65990cda
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=0 regions=0
+#96 head ad5c980f
+   (a) upstream/main + head : exit=1 regions=1 [ CHANGELOG.md:1 ]
+   (b) piece        + head : exit=1 regions=1 [ CHANGELOG.md:1 ]
+== variant raise-trimmer-only (e7be7145): files changed vs composed: .quality-gates.json 
+#99 head 47637be2
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=1 regions=1 [ .quality-gates.json:1 ]
+#98 head 65990cda
+   (a) upstream/main + head : exit=0 regions=0
+   (b) piece        + head : exit=1 regions=1 [ .quality-gates.json:1 ]
+#96 head ad5c980f
+   (a) upstream/main + head : exit=1 regions=1 [ CHANGELOG.md:1 ]
+   (b) piece        + head : exit=1 regions=1 [ CHANGELOG.md:1 ]

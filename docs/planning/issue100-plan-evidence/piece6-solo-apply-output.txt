@@ -1,0 +1,4 @@
+64e1ce00 fix(trim): a rewritten file keeps its mode and group; a new file's mode  -> merge exit 0
+a6935e63 fix(trim): name a ledger kept out of git as the cause, not a bare refus  -> merge exit 1
+12431de1 docs(runner): a new task after STOP is a new session; a restated senten  -> merge exit 0
+c93f1feb feat(status): warn when the methodology checkout is behind its remote's  -> merge exit 0
