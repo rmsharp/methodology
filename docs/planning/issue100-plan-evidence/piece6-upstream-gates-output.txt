@@ -1,0 +1,28 @@
+# Piece 6 (S416): upstream's own gates (its .quality-gates.json, 12 gates) run on a clean clone of the composed branch.
+# Tree: a clone of this repository with refs/heads/issue100-batch-a (tip c93f1feb) checked out, on upstream/main d50ce290; 0 changes before and after.
+# Command: PYTHONDONTWRITEBYTECODE=1 python3 starter-kit/quality_ratchet.py --run   (started 2026-11-04T21:47:22Z, about 4 min 30 s, exit 0)
+# These are upstream's gates and its tree's own results/manifest hashes, not this fork's.
+
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  12/12 pass · 0 fail · 0 unmeasured · results 78a9bbfccfbd · manifest 06181a10ec42
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 261         261  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 229         229  pass
+  context-budget-unit-tests             >= 148         177  pass
+  trimmer-unit-tests                    >= 227         256  pass
+  ratchet-unit-tests                     >= 45          45  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 78a9bbfccfbd · manifest 06181a10ec42
+
+
+# Then, on the same tree: python3 starter-kit/context_budget.py --status (exit 0)
+#   context budget  OK   resident 51,487 B ~ 17,572 tok;  SESSION_RUNNER.md 52,828 B ok;  SAFEGUARDS.md 16,965 B ok;  no starter-kit/__pycache__ left

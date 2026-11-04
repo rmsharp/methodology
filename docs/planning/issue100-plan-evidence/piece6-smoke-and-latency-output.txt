@@ -1,0 +1,28 @@
+# Piece 6 (S416): the manual read-only run of the FINAL code against the PUBLIC repository (Phase 3E), and the latency probe
+# re-run. Commands were run by hand from a scratch directory; this file records them and what they printed (2026-11-04).
+
+## Setup: a clone of https://github.com/KJ5HST/methodology.git at v4.1 (HEAD 1e018d1), with bin/ and starter-kit/ of the
+## composed branch (c93f1feb) copied over it, HEAD left at v4.1. An empty project directory, and a project made by
+## `pub/bin/sync proj --mode=commit --source=local`. The checkout was also reached through a symlink named `methodology`.
+
+python3 pub/bin/status --source=local emptyproj
+   last line: "warning: checkout at v4.1, newest release v4.2 (behind: git pull)"      exit 0, stderr empty, 3.3 s once
+METHODOLOGY_REMOTE_CHECK=0 python3 pub/bin/status --source=local emptyproj
+   no warning line, no "not checked" line, table printed                              exit 0, 2.0 s once
+five runs each, whole run of bin/status:   check on: 2.48 2.51 2.96 2.66 2.48 s     check off: 1.79 2.18 1.69 2.04 1.99 s
+(cd proj && python3 ../methodology/starter-kit/context_budget.py --status --remote)
+   row "(methodology checkout)  synced  canonical  warn", finding "...: checkout at v4.1, newest release v4.2 (behind: git pull)"
+   exit 2 (the fresh sync reads OVER on its own seed notes file: a separate, existing matter)      1.1 s
+(cd proj && python3 ../methodology/starter-kit/context_budget.py --status)
+   no mention of a release; 0.1 s
+no starter-kit/__pycache__ left in the checkout after any of these.
+
+## Latency probe, piece2-latency-probe.py, 8 runs each, one network read per run, same machine as 2026-11-03
+default (protocol v2)    n=8  min 0.3  median 0.5  max 3.4   all: 3.4 0.6 0.4 0.4 0.5 0.3 1.7 0.5
+protocol v0              n=8  min 0.3  median 1.0  max 3.3   all: 1.5 1.5 1.1 0.9 0.3 0.5 3.3 0.5
+(2026-11-03, piece2-latency-probe-output.txt: v2 5.6 to 8.3 s, v0 3.3 to 3.7 s.) The two afternoons disagree about which protocol
+is faster, so the code comment (context_budget.py, RELEASE LAG) now says the limit is a bound, not a typical time, and gives both.
+
+## Budget suite run time, same machine, serially: upstream/main 148 tests in 12.2 s; the composed branch 177 tests in 55.8 s.
+## Profile of the five new classes (29 tests, 48.0 s when run alone): 12.6 s one test that waits out the 10 s limit with both
+## tools, 6.7 s the METHODOLOGY_REMOTE_CHECK test (three runs of bin/status), then bin/status process starts of 2 to 3 s each.
