@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S417
+date: 2026-11-04
+status: pending
+active_task: **Review the drafted Batch A pull request with the operator (his pick at the S417 Phase 0 picker, 'Review Batch A PR draft (Recommended)'): present `docs/planning/issue100-batch-a-pr-draft.md` (the `PR TEXT` block) and its four open questions (whether and when to open it relative to #99, #98 and #96; the `Co-Authored-By` trailers against upstream issue #101; the suite's +44 s; piece 3 left out), after re-checking that the branch `issue100-batch-a` is still `c93f1feb` on `upstream/main` `d50ce290`; record his answers; STOP before opening, pushing or sending anything to `KJ5HST/methodology`.** Phase 0 steps before the claim, at the operator's picker: trim of `HANDOFFS.md` (`ab94dec0`, fold `f6710e18`) and a guarded push of S416's seven commits to the fork `origin/main` (`cfb4b22b..fa9300e8`, record `4bf148b9`).
+```
+
+```handoff
 session: S416
 date: 2026-11-04
 status: complete
