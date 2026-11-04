@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S416
+date: 2026-11-04
+status: pending
+active_task: **Piece 6 of `docs/planning/issue100-fixes-plan.md` (compose Batch A), with D1 taken as (Y) at the S416 Phase 0 picker, conditional on clean merge trials: assemble the four BUILT pieces (1, 2, 4, 5: `4aea4eda`, `5563a7c8`, `9f3bf724`, `7adb0bd9`) as one branch on a fresh copy of `upstream/main` (`d50ce290`), run upstream's own suite and gates on that tree (not the fork's), run the three `git merge-tree` trials against #99, #98 and #96, draft one adopter-impact paragraph and the PR text in recognized terms ("Refs #100", no session numbers, `BL-` codes or coined names), and STOP before opening anything. Piece 3 (F2) is NOT in it: it waits on #95 (D8).** A fork-only build; nothing sent to `KJ5HST/methodology`. Chosen by the operator at the S416 Phase 0 picker, 'Compose Batch A (Recommended)'; the operator also answered Yes to trimming `HANDOFFS.md` first (trim `efca02ac`, fold `799b57c5`).
+```
+
+```handoff
 session: S415
 date: 2026-11-03
 status: complete
