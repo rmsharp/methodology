@@ -285,6 +285,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-02-3.md` (1 record(s), 53,471 B → 41,788 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-11-02 → 2026-11-02) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-02-3.md`](docs/archive/HANDOFFS-through-2026-11-02-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-02-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-02-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 53,471 B → 41,788 B (−21.8%).
+
 ### 2026-11-04 · [BL-130] S416 close-out -- piece 6 of the #100 fixes plan: Batch A is composed on the local branch issue100-batch-a (tip c93f1feb), proved on a clean clone, changed by a cold review, pull request text drafted; HANDOFFS.md trimmed 54,587 B to 42,784 B; the fork's gates pass 24 of 24
 
 The S416 receipt in `HANDOFFS.md` is `complete` (self-score 8; S415's handoff scored 8: everything checked held, but it said the new tests add about 25 s where they add 44 s, never said `bin/tests.sh` calls `bin/status` 18 times, and its fresh-clone proof ran on a clone whose origin was a local path). The claim entry above ('S416 claim (in progress)') is closed by this one. **Gates:** the fork's own on `HEAD` `9ee73c03` with a clean tree, 24/24 pass, 0 fail, 0 unmeasured, results `aaf5767c1279`, manifest `94dff02bae74` (equal to S414's and S415's), about 28 minutes, launched detached; upstream's own 12 on a clean clone of the composed branch, 12/12. **3C:** no row was appended to `docs/FORK_LEARNINGS.md`, so the retirement rule's duty (D3) does not fire; rows considered: 92 (it states the fresh-clone miss), 54 and 30; the lessons this session found are in the plan's register and in the memory notes, not in a row. **Nothing is pushed or opened:** this session's commits (trim `efca02ac`, fold `799b57c5`, claim `a6d1e442`, two evidence `f7d1465d` and `94ed1ae2`, work `9ee73c03`, this close-out) are LOCAL; fork `origin/main` is still `cfb4b22b`. The branches `issue100-batch-a` and `issue100-batch-a-before-s416` are not pushed. Opening the pull request, pushing anything, and any comment on #98, #99, #100 or #101 are the operator's go-ahead, each time. Local only; nothing sent to `KJ5HST/methodology`.
