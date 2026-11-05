@@ -1,0 +1,68 @@
+# d2-evidence: fork HEAD 5d3fc796, upstream/main d50ce290
+
+# 1. the notes files as they are today, and how each has behaved. A record is a '### What Session N Did' heading
+#    (the runner's 1B/3D form); 0 records means the file uses another grammar, so its shape is UNKNOWN here.
+#    A snapshot cannot tell 'transient by design' from 'just trimmed', so [notes-series] gives the record count
+#    at each of the file's last 15 commits (oldest first): holding at 3 or fewer is transient behaviour (the
+#    claim adds this session's record, the close-out replaces it), a climb of 3 or more is accumulation, a drop
+#    of 3 or more between neighbours is a trim or an archive ('cut'); no heading of the runner form throughout
+#    means the file is unreadable by this count ('other-grammar').
+[notes-seed-ceiling] starter-kit/context-budget.json caps SESSION_NOTES.md at 120000 B
+[notes-adopter] airqino: methodology/SESSION_NOTES.md bytes=33277 lines=391 records=2 1-or-2-records-now tracked over_seed_ceiling=no
+[notes-series] airqino: 3 2 3 2 3 2 3 2 3 2 3 2 3 2 2 | min=2 max=3 last=2 n=15 kind=holds-at-3-or-fewer
+[notes-adopter] chat_verification: methodology/SESSION_NOTES.md bytes=80574 lines=1112 records=9 3-or-more-records-now tracked over_seed_ceiling=no
+[notes-series] chat_verification: 2 3 3 4 4 4 5 5 6 6 7 8 8 9 9 | min=2 max=9 last=9 n=15 kind=climb
+[notes-adopter] church_growth: methodology/SESSION_NOTES.md bytes=141083 lines=1777 records=15 3-or-more-records-now tracked over_seed_ceiling=OVER
+[notes-series] church_growth: 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 | min=8 max=15 last=15 n=15 kind=climb
+[notes-adopter] colossians_1_15_20: methodology/SESSION_NOTES.md bytes=6335 lines=88 records=1 1-or-2-records-now tracked over_seed_ceiling=no
+[notes-series] colossians_1_15_20: 0 1 1 1 1 1 2 1 1 2 1 2 1 | min=0 max=2 last=1 n=13 kind=holds-at-3-or-fewer
+[notes-adopter] data_quality_assurance: SESSION_NOTES.md bytes=18234 lines=117 records=6 3-or-more-records-now tracked over_seed_ceiling=no
+[notes-series] data_quality_assurance: 1 1 2 2 2 2 3 2 3 3 4 4 5 5 6 | min=1 max=6 last=6 n=15 kind=climb
+[notes-adopter] feedback-loop-comparison: methodology/SESSION_NOTES.md bytes=42748 lines=334 records=0 other-grammar tracked over_seed_ceiling=no
+[notes-series] feedback-loop-comparison: 0 0 0 0 0 0 0 0 | min=0 max=0 last=0 n=8 kind=other-grammar
+[notes-adopter] model_project_constructor: SESSION_NOTES.md bytes=108096 lines=457 records=8 3-or-more-records-now tracked over_seed_ceiling=no
+[notes-series] model_project_constructor: 12 13 13 13 14 14 15 15 16 16 17 17 18 8 8 | min=8 max=18 last=8 n=15 kind=cut
+[notes-adopter] mts-system: SESSION_NOTES.md bytes=13036 lines=36 records=0 other-grammar tracked over_seed_ceiling=no
+[notes-series] mts-system: 0 0 1 2 3 4 4 0 0 1 0 1 0 1 0 | min=0 max=4 last=0 n=15 kind=cut
+[notes-adopter] nprcgenekeepr: methodology/SESSION_NOTES.md bytes=56038 lines=404 records=2 1-or-2-records-now tracked over_seed_ceiling=no
+[notes-series] nprcgenekeepr: 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 | min=1 max=2 last=2 n=15 kind=holds-at-3-or-fewer
+[notes-adopter] Philippians: SESSION_NOTES.md bytes=29551 lines=208 records=2 1-or-2-records-now tracked over_seed_ceiling=no
+[notes-series] Philippians: 1 2 1 2 1 2 1 2 2 3 2 3 2 3 2 | min=1 max=3 last=2 n=15 kind=holds-at-3-or-fewer
+[notes-adopter] vscode_quarto_ext: methodology/SESSION_NOTES.md bytes=52106 lines=369 records=24 3-or-more-records-now tracked over_seed_ceiling=no
+[notes-series] vscode_quarto_ext: 20 20 20 21 21 21 22 22 22 23 23 23 24 24 24 | min=20 max=24 last=24 n=15 kind=climb
+[notes-adopter] wsfct: SESSION_NOTES.md bytes=468083 lines=1385 records=29 3-or-more-records-now tracked over_seed_ceiling=OVER
+[notes-series] wsfct: 40 41 42 43 20 21 22 23 24 25 26 27 28 29 29 | min=20 max=43 last=29 n=15 kind=cut
+[notes-total] adopters=12 with_notes_file=12 1_or_2_records_now=4 3_or_more_now=6 other_grammar=2 over_seed_ceiling=2 untracked=0
+[notes-behaviour] over the last 15 commits of each file (renames followed): holds_at_3_or_fewer=4 climbing=4 cut_at_least_once=3 flat_above_3=0 other_grammar_throughout=1 (these five add to the adopters read)
+
+# 2. what upstream/main says: every place that calls the file transient or says it accumulates
+#    (the issue cites v4.2 f34769f; these are the lines on upstream/main, so a cited line that moved shows here)
+[text-upstream] FRAMEWORK_APPARATUS.md:552:`SESSION_NOTES.md` is the **transient handoff** — *"what's next, what traps?"* — overwritten
+[text-upstream] ITERATIVE_METHODOLOGY.md:172:2. Open a `HANDOFFS.md` close-out receipt stub — a durable receipt block with `status: pending` — and commit it with the claim; unlike th
+[text-upstream] ITERATIVE_METHODOLOGY.md:295:7. **Write handoff notes for the next session.** (See below.) You will be judged on these — the next session will score your handoff just a
+[text-upstream] ITERATIVE_METHODOLOGY.md:400:- **Session notes are rewritten, not merged.** `SESSION_NOTES.md` is branch-local transient state — overwritten every session, by its seed'
+[text-upstream] starter-kit/HANDOFFS.md:6:transient `SESSION_NOTES.md` (overwritten every session) or the spoken report (which leaves no file
+[text-upstream] starter-kit/HANDOFFS.md:169:- **`SESSION_NOTES.md`** — the *transient scratchpad*: rich working notes, overwritten every session.
+[text-upstream] starter-kit/SESSION_NOTES.md:5:**This file is transient — it is overwritten every session** (*"what's next, what traps?"*). The cumulative, append-only record of *what 
+[text-upstream] starter-kit/SESSION_NOTES.md:27:*Session history accumulates below this line. Newest session at the top.*
+[text-upstream] starter-kit/SESSION_RUNNER.md:262:Complete this session's ` ```handoff ` block in `HANDOFFS.md` (opened as a `status: pending` stub in 1B): set `status: complete` and fil
+[text-upstream] starter-kit/SESSION_RUNNER.md:333:| 27 | **Unrecorded action** | Complete an action and commit it, then close out without recording it in the authoritative ledger (`CHANG
+# the steps that add (1B stub, 3A evaluation 'under a heading', 3D 'Update SESSION_NOTES.md') on upstream/main:
+[text-steps] starter-kit/SESSION_RUNNER.md:82:**Immediately after receiving a task — before any technical work — write a stub to `SESSION_NOTES.md`:**
+[text-steps] starter-kit/SESSION_RUNNER.md:239:Update `SESSION_NOTES.md`. **You will be judged on this.** The next session will score your handoff in their Phase 3A, just as you score
+# the seed's own context-budget note on UPDATE read as ADD:
+[text-budget] starter-kit/context-budget.json:46:          "why": "Phase 3D says UPDATE the active task. Sessions read that as ADD one; three had accumulated on the project this came from, at lines 7, 10005 and 102
+
+# 3. #98 without its first commit: its second (3df5b0cd) and third (65990cda) commits replayed onto upstream/main
+#    (#98 = 39825279 -> 3df5b0cd -> 65990cda; the third's parent is the second). --merge-base is each commit's own parent.
+[drop-commit] 39825279 feat(trim): SESSION_NOTES.md joins the ledger table (issue #93; 1.9.0) | files: .quality-gates.json CHANGELOG.md FRAMEWORK_APPARATUS.md README.md starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+[drop-commit] 3df5b0cd fix(trim): two messages and three exit-3 statements say what is true (issue #93; 1.9.1) | files: .quality-gates.json CHANGELOG.md FRAMEWORK_APPARATUS.md starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+[drop-commit] 65990cda feat(trim): FRONTIER_FRONT_MATTER_UNCOMMITTED warns of an uncommitted front-matter edit (i | files: .quality-gates.json CHANGELOG.md FRAMEWORK_APPARATUS.md starter-kit/methodology_trim.py tools/test_methodology_trim.py 
+[drop-trial] 39825279 onto upstream/main: clean
+[drop-trial] 3df5b0cd onto upstream/main: CONFLICTS (file:regions) .quality-gates.json:1 CHANGELOG.md:1 starter-kit/methodology_trim.py:1
+[drop-trial] 65990cda onto upstream/main: CONFLICTS (file:regions) .quality-gates.json:1 CHANGELOG.md:1 starter-kit/methodology_trim.py:1 tools/test_methodology_trim.py:1
+# the third commit carries the second's changes in its own diff only if replayed with the second as base;
+# its parent-relative diff above (65990cda^ = 3df5b0cd) is what a cherry-pick of it alone sees:
+[drop-note] a conflict in a trial above is against upstream/main as it is today (d50ce290); #98 itself is MERGEABLE/CLEAN
+[drop-version] methodology_trim.py TRIM_VERSION: upstream/main 1.8.2; 39825279 1.9.0; 3df5b0cd 1.9.1; 65990cda 1.10.0
+[drop-floor] trimmer-unit-tests threshold (.quality-gates.json): upstream/main 227; 39825279 245; 3df5b0cd 250; 65990cda 270
