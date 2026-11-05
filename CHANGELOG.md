@@ -285,6 +285,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-05 · [ad hoc] S420 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (3 lines and the blank after it) became the row `| 2 | 2026-11-03 → 2026-11-04 | HANDOFFS-through-2026-11-04.md | v1.8.1 |`, inserted under the index table's last row (the `HANDOFFS-through-2026-11-02-4.md` row). Own commit, as the index's rule says (fork Learning #58). It follows the trim `5ab4935c` (five records to three: the shard holds S416 and S415, and the live file keeps S419, S418 and S417; 61,048 B to 38,297 B; its proof `bash docs/archive/HANDOFFS-through-2026-11-04.md.verify.sh` read OK after the trim commit and is re-run after this one). Done at the operator's S420 Phase 0 picker answer 'Yes, trim now (Recommended)', before the session claim.
+
 ### 2026-11-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-04.md` (2 record(s), 61,048 B → 38,297 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
