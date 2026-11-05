@@ -1,6 +1,7 @@
 # The one question to the maintainer for D2 (drafted S421, 2026-11-05)
 
-**Status: DRAFT. NOT SENT.** The operator is shown the text before anything else. Posting it is his
+**Status: DRAFT. NOT SENT.** Revised once at S421, at the operator's request after he saw the first text:
+one sentence now states his preference for (a), transient. The operator is shown the text before anything else. Posting it is his
 go-ahead, asked in the session that posts. Nothing has been commented, pushed or edited on
 `KJ5HST/methodology`. Only the text between the two `PR TEXT` markers is meant for the maintainer;
 everything else in this file is for this repository.
@@ -38,6 +39,7 @@ session that builds it.
 | the seed's last line reads "Session history accumulates below this line." | `starter-kit/SESSION_NOTES.md:27` on `upstream/main` `d50ce290` |
 | the places that call it transient or overwritten: seed header, failure mode 27, the 3D receipt paragraph, `ITERATIVE_METHODOLOGY.md`, `FRAMEWORK_APPARATUS.md`, the `HANDOFFS.md` seed | #100 finding 4's own list; each still on `upstream/main` (`starter-kit/SESSION_NOTES.md:5`, `SESSION_RUNNER.md:333` and `:262`, `ITERATIVE_METHODOLOGY.md:400`, `FRAMEWORK_APPARATUS.md:552`, `starter-kit/HANDOFFS.md:6` and `:169`) |
 | #98 has three numbered open questions | #98 body, "Three questions this pull request leaves open" |
+| the preference is (a), transient | the operator, at the S421 picker that showed him the first text: 'change the wording a bit by indicating that I prefer transient use.' Phrased without a first-person pronoun so the scan still exits 0; posted under his own name it reads as his |
 | (c) is a third answer | not in either thread; it is the option [D2](issue100-fixes-plan.md) listed as (c): transient going forward and the trimmer entry kept |
 
 **Left out on purpose:** the adopter counts in [`d2-evidence-output.txt`](issue100-plan-evidence/d2-evidence-output.txt)
@@ -51,7 +53,7 @@ as one sentence if the operator wants them.
 
 Finding 4 records the adopter project's answer: transient, with step 3D replacing the previous session's section and `HANDOFFS.md` holding the durable copy. It proposes that the framework's answer be written as a 3D step with the seed's footer agreeing ("write it as a 3D step and make the seed's footer agree"). The answer also decides #98's first commit, which adds `SESSION_NOTES.md` to the trimmer's ledger table, so one reply settles both.
 
-Which answer should the framework's text give?
+Which answer should the framework's text give? The preference is (a), transient.
 
 - **(a) Transient.** Step 3D says to replace the previous session's section, keeping the ACTIVE TASK and the new handoff, and the seed's last line ("Session history accumulates below this line.") is reworded to agree. #98's first commit is withdrawn, its questions 1 to 3 fall away, and its other two commits are rebased on `main` and re-tested.
 - **(b) It accumulates.** #98 stays as it is, with its questions 1 to 3 still to answer, and the places that call the file transient or "overwritten" are corrected instead: the seed's header, failure mode 27, the 3D receipt paragraph, `ITERATIVE_METHODOLOGY.md`, `FRAMEWORK_APPARATUS.md` and the `HANDOFFS.md` seed.
