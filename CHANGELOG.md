@@ -285,6 +285,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-04 · [ad hoc] S418 fold -- the trim's pointer block leaves `HANDOFFS.md` and one row joins `docs/HANDOFFS_ARCHIVE_INDEX.md`
+
+The block (3 lines and the blank after it) became the row `| 1 | 2026-11-02 → 2026-11-02 | HANDOFFS-through-2026-11-02-4.md | v1.8.1 |`, inserted under the index table's last row (the `HANDOFFS-through-2026-11-02-3.md` row). Own commit, as the index's rule says (fork Learning #58). It follows the trim `23c80807` (four records to three: the shard's `session:` line reads S414, and the live file keeps S417, S416 and S415; 52,835 B to 41,289 B; its proof `bash docs/archive/HANDOFFS-through-2026-11-02-4.md.verify.sh` read OK before the trim commit and is re-run after this one). The shard is named `-4` because `HANDOFFS-through-2026-11-02.md`, `-2` and `-3` already exist: the trimmer printed `SHARD_NAME_DISAMBIGUATED`. Taken at the operator's required Yes/No 'Yes, trim now (Recommended)' at the S418 Phase 0 picker, before the claim; the written rule trims only above four receipts and four stood, so this trim is earlier than the rule requires, as S417's receipt advised (its reason: 413 B of room for a worst-case 12,288 B receipt). The trimmer printed `FRONTMATTER_FIELD_ABSENT` ('retained receipt count') in the dry run and the write, as at S413 to S417; I did not act on it. Local only; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-11-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-02-4.md` (1 record(s), 52,835 B → 41,289 B)
 
 **Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
