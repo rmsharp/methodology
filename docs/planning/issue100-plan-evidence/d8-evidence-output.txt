@@ -1,0 +1,35 @@
+# d8-evidence: fork HEAD f8274b6d, upstream/main d50ce290, tool context_budget.py v1.4.1
+
+# 1. the shipping budget tool (the fork's) read on each adopter's files as they are today
+[survey-adopter] airqino exit=2 over_files=1 fence_missing=1 over_only_for_fence=1 over=CLAUDE.md
+[survey-adopter] chat_verification exit=2 over_files=1 fence_missing=0 over_only_for_fence=0 over=SESSION_NOTES.md
+[survey-adopter] church_growth exit=2 over_files=2 fence_missing=1 over_only_for_fence=0 over=CLAUDE.md,SESSION_NOTES.md
+[survey-adopter] colossians_1_15_20 exit=1 over_files=0 fence_missing=0 over_only_for_fence=0 over=-
+[survey-adopter] data_quality_assurance exit=2 over_files=1 fence_missing=0 over_only_for_fence=0 over=SESSION_NOTES.md
+[survey-adopter] feedback-loop-comparison exit=2 over_files=2 fence_missing=1 over_only_for_fence=0 over=CLAUDE.md,SESSION_NOTES.md
+[survey-adopter] model_project_constructor exit=2 over_files=3 fence_missing=1 over_only_for_fence=0 over=CLAUDE.md,SESSION_NOTES.md,(resident_total)
+[survey-adopter] mts-system exit=2 over_files=3 fence_missing=0 over_only_for_fence=0 over=PROJECT_LEARNINGS.md,CHANGELOG.md,HANDOFFS.md
+[survey-adopter] nprcgenekeepr exit=1 over_files=0 fence_missing=0 over_only_for_fence=0 over=-
+[survey-adopter] Philippians exit=1 over_files=0 fence_missing=0 over_only_for_fence=0 over=-
+[survey-adopter] vscode_quarto_ext exit=2 over_files=3 fence_missing=0 over_only_for_fence=0 over=HANDOFFS.md,BACKLOG.md,PROJECT_LEARNINGS.md
+[survey-adopter] wsfct exit=2 over_files=1 fence_missing=0 over_only_for_fence=0 over=SESSION_NOTES.md
+[survey-total] adopters=12 exit0=0 exit1=3 exit2=9 fence_missing=4 over_only_for_fence=1
+
+# 2. the fork's two #95 commits (cadb4780 the tool, 19a4ecb8 the seeds and Test 35) replayed onto each head
+#    base = the fork's tree before them, so this is an UPPER BOUND on conflicts; CHANGELOG.md is the fork's own ledger
+[replay-files] CHANGELOG.md bin/tests.sh starter-kit/CLAUDE_TEMPLATE.md starter-kit/SESSION_NOTES.md starter-kit/context-budget.json starter-kit/context_budget.py tools/test_context_budget.py 
+[replay-head] #102 c93f1feb VERSION VERSION="1.3.1"
+[replay-head] #99 47637be2 VERSION VERSION="1.4.0"
+[replay-head] #98 65990cda VERSION VERSION="1.3.1"
+[replay-head] #96 ad5c980f VERSION VERSION="1.3.1"
+[replay-trial] upstream/main d50ce290 exit=1 regions per file: CHANGELOG.md:1 starter-kit/context_budget.py:1
+[replay-region] upstream/main d50ce290 starter-kit/context_budget.py first line of the target side: VERSION = "1.3.1"
+[replay-trial] #102 c93f1feb exit=1 regions per file: CHANGELOG.md:1 starter-kit/context_budget.py:1
+[replay-region] #102 c93f1feb starter-kit/context_budget.py first line of the target side: VERSION = "1.3.1"
+[replay-trial] #99 47637be2 exit=1 regions per file: CHANGELOG.md:1 starter-kit/context_budget.py:1
+[replay-region] #99 47637be2 starter-kit/context_budget.py first line of the target side: VERSION = "1.4.0"   # 1.4.0: the config and its history file
+[replay-trial] #98 65990cda exit=1 regions per file: CHANGELOG.md:1 starter-kit/context_budget.py:1
+[replay-region] #98 65990cda starter-kit/context_budget.py first line of the target side: VERSION = "1.3.1"
+[replay-trial] #96 ad5c980f exit=1 regions per file: CHANGELOG.md:1 starter-kit/context_budget.py:1
+[replay-region] #96 ad5c980f starter-kit/context_budget.py first line of the target side: VERSION = "1.3.1"
+[replay-note] the one non-ledger region is the VERSION line of starter-kit/context_budget.py (upstream 1.3.1, #99 1.4.0, the fork 1.4.1)
