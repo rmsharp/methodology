@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S420
+date: 2026-11-05
+status: pending
+active_task: **Decide D2 of `docs/planning/issue100-fixes-plan.md` (row at line 120): does the adopter's 'we chose transient' in upstream issue #100 finding 4 settle PR #98's 'Underneath' question, and does #98's first commit stand? (The operator's pick at the S420 Phase 0 picker, 'D2: #98's first commit (Recommended)'.)** Read-only analysis of #100 finding 4, #98's body and the seed, the options put to him at one picker, his pick recorded in the plan; piece 11 (the F4 fix) is not built. Nothing is sent to `KJ5HST/methodology`; any comment, push or edit on #98 or #100 is his go-ahead. Before the claim: `HANDOFFS.md` trimmed (`5ab4935c`, fold `6a48eb80`) and the fork push of four commits approved at the same picker.
+```
+
+```handoff
 session: S419
 date: 2026-11-05
 status: complete
