@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S421
+date: 2026-11-05
+status: pending
+active_task: **Draft the one question to the maintainer for D2 of `docs/planning/issue100-fixes-plan.md` (decided (b) at S420: he is asked first; piece 11 waits for his reply).** The operator's pick at the S421 Phase 0 picker, '1'. The text is kept in `docs/planning/issue100-plan-evidence/`, written from a full read of upstream issue #100 finding 4, PR #98's body and the maintainer's two comments on #94, run through `fork-word-scan.sh`, every term defined, and SHOWN to the operator first. Nothing is posted, commented or edited on `KJ5HST/methodology`: a post is his go-ahead. The push of the six local commits to the fork was asked and not answered, so it is not done.
+```
+
+```handoff
 session: S420
 date: 2026-11-05
 status: complete
