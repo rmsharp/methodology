@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S418
+date: 2026-11-04
+status: pending
+active_task: **Open the Batch A pull request against `KJ5HST/methodology` (the operator's pick at the S418 Phase 0 picker, 'Open Batch A PR (Recommended)'; he decided at S417 to open it in this session): the four commits on the local branch `issue100-batch-a` (tip `c93f1feb` on `upstream/main` `d50ce290`), which fix upstream issue #100. Every outward step is his go-ahead, shown first and read back before the next: (1) `bash docs/planning/issue100-plan-evidence/fork-word-scan.sh` must exit 0; (2) show him the `PR TEXT` block of `docs/planning/issue100-batch-a-pr-draft.md` and the exact commands; (3) push the branch to the fork and read it back (`git ls-remote origin refs/heads/issue100-batch-a` must show `c93f1feb`); (4) `gh pr create` against `KJ5HST/methodology`; (5) read the created PR back with `gh api` (title, body, head sha, mergeable). No comment on #100 unasked.** Phase 0 steps before this claim, at his picker (three 'Yes'/'Recommended' answers): trim of `HANDOFFS.md` (`23c80807`, fold `6f826ff0`; S414 to `docs/archive/HANDOFFS-through-2026-11-02-4.md`, 52,835 B to 41,289 B) and a guarded push of S417's eight commits to fork `origin/main` (`fa9300e8..bbbf603e`, record `c3dfe645`).
+```
+
+```handoff
 session: S417
 date: 2026-11-04
 status: complete
