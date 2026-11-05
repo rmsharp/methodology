@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S422
+date: 2026-11-05
+status: pending
+active_task: **Fix `starter-kit/close_out_report.py` so it reads the shipped `HANDOFFS.md` seed the way `bin/check-handoff` does (IN PROGRESS).** The operator's task: address the findings in the adopter project `claude_work`'s report `docs/upstream/close_out_report-receipt-parsing.md`. Two defects, both checked against this tree: (1) the flat regex `_FENCE` (`close_out_report.py:71`) reads the seed's 4-backtick Format example as the newest receipt, so the CLI always refuses and the Stop hook always allows; (2) `live_facts()` (`:135-137`) refuses a Session 1 receipt with no `predecessor_score`, which `bin/check-handoff:631-632` already exempts. Plan: tests first (CLI and hook on the real seed plus one receipt; a Session-1-only ledger; a parity test against `check-handoff`), then the fence-aware scanner and the Session 1 exemption in the tool; the seed's wording stays. Fork only: the tool is PR #96's content and is not in `upstream/main`. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S421
 date: 2026-11-05
 status: complete
