@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S419
+date: 2026-11-05
+status: pending
+active_task: **Decide D8, the route for upstream issue #95 and so for piece 3 of the #100 fixes plan (the operator's pick at the S419 Phase 0 picker, 'D8: decide the #95 route (Recommended)').** The decision is recorded in `docs/planning/issue100-fixes-plan.md` (the D8 row at line 126 and the piece 3 text near line 87): options (a) piece 3 waits until #95 is settled upstream, (b) the fork's #95 fix rides a pull request, (c) the step's wording tolerates a stock `OVER`, each shown to him with its consequence before he picks. Nothing is sent to `KJ5HST/methodology`; the only outward act is the fork push of six local commits he approved (by sha, fork `origin` only).
+```
+
+```handoff
 session: S418
 date: 2026-11-04
 status: complete
