@@ -285,6 +285,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-04-2.md` (2 record(s), 60,651 B → 38,713 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-04 → 2026-11-04) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-04-2.md`](docs/archive/HANDOFFS-through-2026-11-04-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-04-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-04-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 60,651 B → 38,713 B (−36.2%).
+
 ### 2026-11-05 · [BL-130] S421 close-out -- the one question to the maintainer for D2 is drafted and shows the operator's preference for transient; the fork's gates pass 24 of 24; S420's six commits pushed to the fork; nothing sent to `KJ5HST/methodology`
 
 Close-out of S421: the `HANDOFFS.md` receipt is `complete`, with its six requirements and the predecessor score. **3A:** S420 scored 9 (its commands, every baseline number, ledger sizes, the 'local, count should read 6' check and all its key_files line numbers held when run; missing: the `fork-word-scan.sh` argument shape and its first-person rule, and the 12-versus-13 notes-file mismatch with #98). **3B:** self 8 (wrong: one stretch with no text to the operator before the harness reminded me, the fifth session to record it; a markdown bold slip in the BACKLOG rider caught before commit; the `git rev-parse --short` one-revision trap and the zsh `=` trap hit again). **3C:** no row appended to `docs/FORK_LEARNINGS.md`, so D3's duty does not fire; rows considered: 18, 76 and 81, none says what the session learned, which is specific to one scan's pattern and sits in the receipt's gotcha 2. **3D:** the receipt (11,446 B of the 12,288 B budget) leaves `HANDOFFS.md` at FIVE receipts, so the written rule's trim (above four) fires at S422's Phase 0. **3E:** `quality_ratchet.py --run` on `fe04fcb2cd58` with a clean tree: 24/24 pass, 0 fail, 0 unmeasured, results `aaf5767c1279`, manifest `94dff02bae74` (both equal S414's to S420's), 22:32:24 to 23:00:06 UTC, launched detached with a done-file. **Ledger state for S422:** `CHANGELOG.md` was 198,075 B before this entry, past the 196,608 B trigger, so its trim also fires; each trim is its own action after the Phase 0 report, his Yes/No first. **Local, not pushed:** the claim `12678af0`, work `98fb81ce`, revision `b6f25d65`, push record `fe04fcb2` and this close-out. Nothing was commented, pushed or edited on `KJ5HST/methodology`; the drafted question is unposted and posting it is the operator's go-ahead.
