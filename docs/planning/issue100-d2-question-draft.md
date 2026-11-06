@@ -1,18 +1,27 @@
-# The one question to the maintainer for D2 (drafted S421, 2026-11-05)
+# The one question to the maintainer for D2 (drafted S421, 2026-11-05; posted S425, 2026-11-06)
 
-**Status: DRAFT. NOT SENT.** Revised once at S421, at the operator's request after he saw the first text:
-one sentence now states his preference for (a), transient. The operator is shown the text before anything else. Posting it is his
-go-ahead, asked in the session that posts. Nothing has been commented, pushed or edited on
-`KJ5HST/methodology`. Only the text between the two `PR TEXT` markers is meant for the maintainer;
-everything else in this file is for this repository.
+**Status: POSTED 2026-11-06 (S425), as a comment on upstream issue #100 under finding 4, from the operator's
+account `rmsharp`:** <https://github.com/KJ5HST/methodology/issues/100#issuecomment-6694667676> (comment id
+6694667676, created 2026-11-06T20:24:46Z). His go-ahead was his S425 Phase 0 picker answer 'Post the D2 question
+on #100 (Recommended)', whose option text said choosing it was his go-ahead to post under his name. The text posted
+is the block between the two `PR TEXT` markers, 1,644 B and 271 words, unchanged since S421's one revision (he
+asked for his preference for (a), transient, to be stated). Before the post it was extracted to a file, scanned
+(`fork-word-scan.sh upstream/main <this file>` exit 0; no `@` in it), and #100 was re-read: open, 0 comments, the
+quoted sentence still in finding 4; #98 was open at `65990cda` with 0 comments. It was posted with
+`gh api -X POST repos/KJ5HST/methodology/issues/100/comments -F body=@<file>` and read back with
+`gh api repos/KJ5HST/methodology/issues/comments/6694667676`: 1,644 B, identical byte for byte. Nothing was
+commented, pushed or edited on #98. **No reply yet.** A reply under that comment or on #98 is the trigger
+[the plan](issue100-fixes-plan.md) names for building piece 11; it is SHOWN to the operator, never answered
+unasked. Only the text between the two `PR TEXT` markers was meant for the maintainer; everything else in this
+file is for this repository.
 
 **Re-checked at S424 (2026-11-05), text unchanged.** Against `upstream/main` `d50ce290`, #98 at `65990cda`
 (0 comments, last updated 2026-10-26) and #100 (0 comments, last updated 2026-11-01), as they stand: every row of
 the table below holds (the seven line citations resolve on `upstream/main`: `starter-kit/SESSION_NOTES.md:5`
 and `:27`, `starter-kit/SESSION_RUNNER.md:262` and `:333`, `ITERATIVE_METHODOLOGY.md:400`,
 `FRAMEWORK_APPARATUS.md:552`, `starter-kit/HANDOFFS.md:6` and `:169`); the scan exits 0 with no hit in the PR TEXT
-block. The operator was shown the text inline and chose 'Final as shown'. Posting is still his go-ahead, asked in
-the session that posts; the venue is chosen then. Two things the re-check found, neither changing the text:
+block. The operator was shown the text inline and chose 'Final as shown'. Posting was his go-ahead, asked in
+the session that posted (S425); the venue was chosen then (#100). Two things the re-check found, neither changing the text:
 #100's author is `KJ5HST`, so finding 4's 'We chose transient' is the maintainer's own, about his adopter project;
 and #100 cites `FRAMEWORK_APPARATUS.md:535` where the line is now 552 (the text names the file, not the line).
 
@@ -26,7 +35,7 @@ answers, because #98's "Underneath" section already asked him two and got no rep
 
 **Where to post it (the operator's call at post time).** Recommended: a comment on #100, under finding 4,
 because it is his own sentence there ("whichever answer upstream takes") that leaves the framework's answer
-open, and the text names #98, which GitHub then shows on #98's timeline. The other place is a comment on #98
+open, and the text names #98 (observed at S425: #98's timeline already carried a cross-reference from #100, dated 2026-11-01, and the post added no new event there). The other place is a comment on #98
 (its "Underneath" section is the first time the question was asked). The text reads the same in either
 thread. A reply on either is the trigger the plan names for building piece 11.
 
