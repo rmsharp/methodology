@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S425
+date: 2026-11-06
+status: pending
+active_task: **Post the final D2 question to the maintainer as a comment on upstream issue #100, under finding 4 (IN PROGRESS).** D2 is the open question of whether `SESSION_NOTES.md` is a scratchpad that each session replaces or a log that accumulates; the text is the block between the `BEGIN PR TEXT` and `END PR TEXT` markers of `docs/planning/issue100-d2-question-draft.md` (1,644 B), which S424 re-checked against upstream and the operator approved as 'Final as shown'. The operator picked this at the S425 Phase 0 picker ('Post the D2 question on #100 (Recommended)'), whose text said choosing it IS his go-ahead to post under his name. Plan: confirm #100 is still at 0 comments, extract the block to a scratchpad file, scan it, post, read the comment back with `gh api` and compare it to the file byte for byte, record its URL. Nothing has been posted at the time of this claim.
+```
+
+```handoff
 session: S424
 date: 2026-11-05
 status: complete
