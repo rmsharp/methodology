@@ -6,6 +6,16 @@ go-ahead, asked in the session that posts. Nothing has been commented, pushed or
 `KJ5HST/methodology`. Only the text between the two `PR TEXT` markers is meant for the maintainer;
 everything else in this file is for this repository.
 
+**Re-checked at S424 (2026-11-05), text unchanged.** Against `upstream/main` `d50ce290`, #98 at `65990cda`
+(0 comments, last updated 2026-10-26) and #100 (0 comments, last updated 2026-11-01), as they stand: every row of
+the table below holds (the seven line citations resolve on `upstream/main`: `starter-kit/SESSION_NOTES.md:5`
+and `:27`, `starter-kit/SESSION_RUNNER.md:262` and `:333`, `ITERATIVE_METHODOLOGY.md:400`,
+`FRAMEWORK_APPARATUS.md:552`, `starter-kit/HANDOFFS.md:6` and `:169`); the scan exits 0 with no hit in the PR TEXT
+block. The operator was shown the text inline and chose 'Final as shown'. Posting is still his go-ahead, asked in
+the session that posts; the venue is chosen then. Two things the re-check found, neither changing the text:
+#100's author is `KJ5HST`, so finding 4's 'We chose transient' is the maintainer's own, about his adopter project;
+and #100 cites `FRAMEWORK_APPARATUS.md:535` where the line is now 552 (the text names the file, not the line).
+
 ## What this is
 
 [D2](issue100-fixes-plan.md) (the row at line 120) was decided (b) at S420: the maintainer's "We chose
