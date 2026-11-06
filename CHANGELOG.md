@@ -289,6 +289,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-05-2.md` (2 record(s), 61,551 B → 38,410 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-05 → 2026-11-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-05-2.md`](docs/archive/HANDOFFS-through-2026-11-05-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-05-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-05-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,551 B → 38,410 B (−37.6%).
+
 ### 2026-11-06 · [ad hoc] S425 push record -- fork `main` fast-forwarded `5bfcb55a..ed745336` (3 commits: the claim, the work and the close-out), by full sha; fork `origin` only, nothing else sent to `KJ5HST/methodology`
 
 Pushed at the operator's S425 answer 'Yes, push main (Recommended)': `git push origin ed7453360c8bafcfa48da9325cae3af35c5fef00:refs/heads/main` to `https://github.com/rmsharp/methodology.git` (the fork; `upstream` is `https://github.com/KJ5HST/methodology.git` and was not pushed to), exit 0, output `5bfcb55a..ed745336`. **Guards printed immediately before the push:** clean tree (0 changed files); `origin/main` equal to the expected `5bfcb55a44b1eff90c9a0d781a0db76848f780f5` after a fetch; 3 ahead and 0 behind; `git merge-base --is-ancestor origin/main main` yes (a fast-forward); the sha pushed equal to `HEAD`. **Read back:** `git ls-remote origin refs/heads/main` returned `ed7453360c8bafcfa48da9325cae3af35c5fef00`, equal to local `HEAD`; after a fetch `git rev-list --count origin/main..main` read 0; `git ls-remote upstream refs/heads/main` still read `d50ce290d9218dc91d9a36069b4d936868964298`; #100 read 1 comment, open. This entry's own commit is a CHANGELOG-only push record, pushed to the fork under the standing grant for push records.
