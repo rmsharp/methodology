@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S423
+date: 2026-11-05
+status: pending
+active_task: **Bring `docs/planning/BACKLOG.md` back under the 56,750 B one-read budget (IN PROGRESS).** Found at S423's Phase 0: the dashboard now reports one HIGH risk it did not at S422, because the file is 57,324 B (574 B over); S422's own commit `29bac609` took it from 56,360 B by adding a rider to BL-79's index row. The operator picked this at the Phase 0 picker (the recommended option) and declined the fork push (the 7 local commits stay local). Plan: move rider text verbatim from the longest index rows to the end of the owning item's body in `BACKLOG-DETAIL.md`, only for items raised after the S99 split (its proof C2 pins the earlier bodies, C5 pins the routing block), leave each row a short pointer, lose no text, then run the three backlog proofs from the repository root, `bin/check-backlog-anchors`, `bin/check-links` and `bin/check-ledger`. Fork only; nothing sent to `KJ5HST/methodology`. No backlog row owns this, so it is `[ad hoc]`. A size gate for `BACKLOG.md` is NOT part of this deliverable; it is raised in the handoff for his call.
+```
+
+```handoff
 session: S422
 date: 2026-11-05
 status: complete
