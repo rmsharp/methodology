@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S424
+date: 2026-11-05
+status: pending
+active_task: **Re-check the drafted D2 question to the maintainer against upstream and show the operator its final text (IN PROGRESS).** D2 is the open question of whether `SESSION_NOTES.md` is a scratchpad that each session replaces or a log that accumulates; the draft is `docs/planning/issue100-d2-question-draft.md` (drafted S421, never sent), and the maintainer's answer decides whether upstream pull request #98's first commit stays and what the later wording fix says. The operator picked this at the S424 Phase 0 picker (the recommended option), after answering 'Yes, trim' to the HANDOFFS.md trim, which ran before this claim (trim `24bfeff1`, fold `41718101`, five receipts to three). Plan: re-run each row of the draft's claims-against-sources table against `upstream/main` and the #98 and #100 text as they stand now, run the fork-word scan on the PR TEXT block, show the operator the final text inline, and stop. Posting it is a separate go-ahead, asked in the session that posts; nothing is commented, pushed or edited on `KJ5HST/methodology`. He also answered 'Yes, push main' for the fork push (to `origin/main` only, by full sha, after close-out). No backlog row owns this deliverable beyond BL-130, which the plan belongs to.
+```
+
+```handoff
 session: S423
 date: 2026-11-05
 status: complete
