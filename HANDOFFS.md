@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S427
+date: 2026-11-06
+status: pending
+active_task: **Bring three out-of-date status sentences in two fork-only planning files up to date (IN PROGRESS).** (1) `docs/planning/upstream-pr-composition-plan.md` line 4 still says 'PR5 is next' and 'Nothing is sent', written before #99 was opened (2026-10-30). (2) `docs/planning/issue100-fixes-plan.md` line 99 (the 'Built S416' block) still says 'Nothing is opened, pushed or sent', but Batch A is open as #102 (since S418). (3) The same file's line 131 says 'None was built' about the proposals. Each sentence is re-derived from live `gh` reads, `git log` and the ledger, not from the previous draft. `BACKLOG-DETAIL.md:4339` is left alone (byte-pinned by its proof; its own decision). Fork only; nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S426
 date: 2026-11-06
 status: complete
