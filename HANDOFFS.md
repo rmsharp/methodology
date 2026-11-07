@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S429
+date: 2026-11-06
+status: pending
+active_task: **Add a `backlog-size` quality gate to `.quality-gates.json` that fails when `docs/planning/BACKLOG.md` (the open to-do list, 52,478 B at the start of S429) grows past 54,000 B (IN PROGRESS).** Today the one-read budget of 56,750 B is held by nothing that fails: only the dashboard flags an overage, and it was breached once (57,324 B at S423's Phase 0). The gate follows the BL-106 precedent (commit `1ed1d2c1`): `wc -c < docs/planning/BACKLOG.md` with a digits-only extract, direction `max`, a `why` text. It is a new gate, so a tightening that `quality_ratchet.py --precommit` accepts. Verified in a fixture repository as BL-106 did (exactly the ceiling passes, one byte over fails with exit 2, a missing file reads unmeasured), then in this tree. No file under `docs/planning/` is edited except what the backlog proofs require. Nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S428
 date: 2026-11-06
 status: complete
