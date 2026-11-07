@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S430
+date: 2026-11-07
+status: pending
+active_task: **Write ONE routing recommendation for how the `close_out_report.py` 1.2.1 fix reaches upstream (IN PROGRESS).** The fix covers two defects an adopter found (`claude_work`, S422): the tool's flat fence pattern reads the seed's four-backtick Format example as the newest receipt, and it refuses a Session 1 receipt for lacking `predecessor_score`. Upstream pull request #96 (`ad5c980f`, v1.1.0) ships both; the fork carries the fix (tool 1.2.1) and nothing is upstream. The three routes are his: into #96, into #99, or filed upstream as an issue. The deliverable is one document under `docs/planning/` that gives each route's concrete cost and conflict, measured from the branches and the fork's tool, a recommendation, and the exact outward text for the recommended route, SHOWN to him and sent nowhere. Nothing is sent to `KJ5HST/methodology`; a comment, push, issue or edit there is his separate go-ahead. Before the claim, at his picker answer 'Yes, trim now (Recommended)', `HANDOFFS.md` was trimmed (`b32c4b66`) and its pointer block folded (`d606c72b`).
+```
+
+```handoff
 session: S429
 date: 2026-11-06
 status: complete
