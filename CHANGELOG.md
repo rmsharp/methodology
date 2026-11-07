@@ -289,6 +289,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-05-3.md` (2 record(s), 58,875 B → 38,859 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-05 → 2026-11-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-05-3.md`](docs/archive/HANDOFFS-through-2026-11-05-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-05-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-05-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 58,875 B → 38,859 B (−34.0%).
+
 ### 2026-11-06 · [ad hoc] S427 push record -- fork `main` fast-forwarded `64db5165..33f5cb54` (3 commits: the claim, the work and the close-out), by full sha; fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at the operator's S427 answer 'Yes, push main (Recommended)': `git push origin 33f5cb54e4ea86ad459040dbfb604ff8e508415c:refs/heads/main` to `https://github.com/rmsharp/methodology.git` (the fork; `upstream` is `https://github.com/KJ5HST/methodology.git`). Guards printed before the push: `origin` names the fork and not `KJ5HST`; `origin` `main` was `64db51659aeefb6ef590d5f9f848b56fd253c51f` (S426's push record) and is an ancestor of `HEAD`, so the push is a fast-forward; the three commits are `21fcd93c3cfc27450d1657684f6d5ef5f89b302f` (claim), `8319c64432b352835737e352c20ff4f72890ad4c` (work) and `33f5cb54e4ea86ad459040dbfb604ff8e508415c` (close-out). Read back: `git ls-remote origin refs/heads/main` equals `33f5cb54e4ea86ad459040dbfb604ff8e508415c`. `upstream/main` is unchanged at `d50ce290` (`git ls-remote upstream refs/heads/main`). **This entry's own commit stays local until the next push** (what the operator was told at the picker), so S428's Phase 0 reads local `main` ONE commit ahead of `origin/main`, not three.
