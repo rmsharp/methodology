@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S428
+date: 2026-11-06
+status: pending
+active_task: **Bring the last stale line of `docs/planning/issue100-fixes-plan.md` up to date (IN PROGRESS).** Line 3, the status paragraph, ends 'Size: about 72 KB (71,732 B at the start of S426, before this edit)', but the file is 72,888 B, and a stray closing `**` follows 'the backlog rows.' with no opening bold to match. The size is re-derived from `wc -c`, not from the old figure. `docs/planning/BACKLOG-DETAIL.md:4339` is left alone (byte-pinned by its proof; its own decision). Fork-only; nothing is sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S427
 date: 2026-11-06
 status: complete
