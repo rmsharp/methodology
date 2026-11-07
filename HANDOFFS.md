@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S431
+date: 2026-11-07
+status: pending
+active_task: **Build the R1 commit (IN PROGRESS):** port the `close_out_report.py` 1.2.1 fix (the fork's `29bac609`) onto the local branch `feat/close-out-report-tool` (pull request #96's head `ad5c980f`) by hand, per `docs/planning/close-out-report-fix-routing.md` section 6 step 1: the tool at version 1.1.1 without the layout resolver, the tests adapted, the `close-out-report-unit-tests` gate floor 68 to 89, one changelog entry, the two adopter-naming lines reworded. Verify the unit suite on the branch and on its merge into `upstream/main`, then `bin/tests.sh` and the gate run on both, and scan the added lines for fork words. SHOW it to the operator. Nothing is pushed and nothing is sent to `KJ5HST/methodology`: the push to the fork's branch (step 2) and the comment on #96 (step 3) are each his separate go-ahead.
+```
+
+```handoff
 session: S430
 date: 2026-11-07
 status: complete
