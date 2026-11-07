@@ -1,6 +1,7 @@
 # How the `close_out_report.py` fix reaches upstream — a routing recommendation
 
-**Status:** recommendation for the operator's decision (2026-11-07). **Nothing here has been sent to
+**Status:** recommendation (2026-11-07); **the operator chose R1 at the close-out picker the same day**
+(section 8). **Nothing here has been sent to
 `KJ5HST/methodology`**; every outward step below needs his own go-ahead, each time, and each text is shown
 to him first. All figures were measured on 2026-11-07 in scratch worktrees (they vanish; the commands are
 given so a later session can re-measure).
@@ -150,5 +151,8 @@ close-out-report-unit-tests rises 68 to 89.
 
 ## 8. Decisions for the operator
 
-1. **Route:** R1 (recommended), R0, or something else. (R2 is not workable; R3 is dominated.)
-2. If R1: do you want the comment as drafted, shorter, or none (the commit alone)?
+1. **Route: decided, R1** (2026-11-07, at the close-out picker, with both drafts in section 7 shown to
+   him first). R0 and R3 were offered and not chosen; R2 is not workable. This records the route only:
+   building the commit (section 6, step 1), pushing it, and posting the comment are each a later step
+   needing his separate go-ahead.
+2. **Still open:** the comment as drafted, shorter, or none (the commit alone). Ask when step 3 is reached.
