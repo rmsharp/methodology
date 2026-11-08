@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S433
+date: 2026-11-08
+status: pending
+active_task: **Draft the comment for pull request #96 (IN PROGRESS):** step 3 of `docs/planning/close-out-report-fix-routing.md` section 6. Re-measure the figures the draft leaves in brackets (unit suite and shell suite on #96's head `b4af3293` and on a merge into `upstream/main` `d50ce290`) and re-derive every claim in the section 7 text against the code now on that head, then SHOW him the exact final text. DONE is the text shown inline with each figure measured this session; NOTHING is posted: posting is a separate go-ahead, and section 8 item 2 (the comment as drafted, shorter, or none) is still his. Chosen by the operator at the S433 Phase 0 picker, answer 'Draft the #96 comment (Recommended)'.
+```
+
+```handoff
 session: S432
 date: 2026-11-07
 status: complete
