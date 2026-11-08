@@ -106,7 +106,7 @@ receive a larger #96.
    reads the pushed sha; the PR's head equals it.
 3. **Comment** on #96 with the text below, read back byte for byte.
 
-## 7. Outward text (drafts; numbers to be re-measured at step 1)
+## 7. Outward text (drafts; the comment's figures re-measured 2026-11-08, nothing posted)
 
 **Commit message.**
 
@@ -140,14 +140,28 @@ close-out-report-unit-tests rises 68 to 89.
 >
 > 1. The seed wraps its Format example in a four-backtick fence; `_FENCE` is one flat regex, so the example
 >    counts as the newest receipt. `python3 starter-kit/close_out_report.py` refuses
->    (`newest receipt (S<N>) is <pending | complete>`) however complete the real newest receipt is, and
->    `--hook` allows every Stop without saying so. `bin/check-handoff` reads the same file correctly.
-> 2. Session 1 has no `predecessor_score` (the seed says to omit it) and the tool refuses it.
+>    (`refused: newest receipt (S<N>) is <pending | complete>, not complete: write the close-out receipt first`,
+>    exit 2) however complete the real newest receipt is, and `--hook` allows every Stop without saying so.
+>    `bin/check-handoff` reads the same file correctly.
+> 2. Session 1 has no `predecessor_score` (the seed says to omit it) and the tool refuses it
+>    (`refused: newest receipt has no numeric predecessor_score`).
 >
-> The commit: `starter-kit/close_out_report.py` +56 −16, `tools/test_close_out_report.py` +233 −8
-> (21 tests, 68 → 89), the gate floor 68 → 89. [Re-measured figures: unit suite and shell suite results
-> on this branch and on a merge into `main`.] To reproduce before the commit, put the seed with one complete
-> receipt below its Format section in a scratch git repository and run the tool with `--cwd` on it.
+> The commit: `starter-kit/close_out_report.py` +56 −16 (1.1.0 → 1.1.1), `tools/test_close_out_report.py`
+> +233 −8 (the suite goes from 68 to 89 tests), the `close-out-report-unit-tests` gate floor 68 → 89.
+> Measured on the new head `b4af3293` and on a merge of it into `main` (`d50ce290`), which is clean:
+> `python3 tools/test_close_out_report.py` 89 tests, OK; `bash bin/tests.sh` 262 passed, 0 failed;
+> `python3 starter-kit/quality_ratchet.py --run` 13/13 gates pass.
+>
+> To reproduce on `ad5c980f`: in a scratch git repository, save `starter-kit/HANDOFFS.md` as `HANDOFFS.md`,
+> add one complete receipt below its Format section, commit, and from that directory run
+> `python3 <path>/close_out_report.py --deliverable D --outcome done --well W --badly B --predecessor P --next N`.
+> It reads `./HANDOFFS.md` (`--ledger`; `--cwd` only names the repository whose HEAD the report cites).
+> At `ad5c980f` it prints the refusal above; at `b4af3293` it prints the report.
+
+*Measured 2026-11-08, serially, in scratch trees (gone): unit suite 89 tests OK on `b4af3293` and on its
+merge into `d50ce290` (68 on `ad5c980f`; 21 new test ids, 0 removed); `bin/tests.sh` 262 passed, 0 failed on
+both; gates 13/13 on both (branch results `571d09d34c3d`, manifest `e6210da5d324`; merge `51c1b61c0c41`,
+`8aac22368a80`); the three symptoms of section 2 re-run against the pushed 1.1.1 tool, not the fork's 1.2.1.*
 
 ## 8. Decisions for the operator
 
