@@ -289,6 +289,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-07 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-06-2.md` (2 record(s), 62,671 B → 41,850 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-06 → 2026-11-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-06-2.md`](docs/archive/HANDOFFS-through-2026-11-06-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-06-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-06-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 62,671 B → 41,850 B (−33.2%).
+
 ### 2026-11-07 · [ad hoc] S431 push record -- fork `main` fast-forwarded `70a98cd6..c7c77427` (3 commits: S430's push record, the S431 claim and close-out); fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at the operator's S431 close-out picker, answer 'Yes, push to the fork (Recommended)'. Guards printed before the push: `origin` is `https://github.com/rmsharp/methodology.git` (the fork) and `upstream` is `https://github.com/KJ5HST/methodology.git`, not pushed to; `origin` fetched; `origin/main` `70a98cd64250c413a8e6d00c0359123289ac8092` an ancestor of `main` `c7c77427d8b4da91c115bfc9f9f74856ad7a472a` (a fast-forward); the range held exactly three commits (`84692e645d5547f270da6adfb88cd1dff3c3038a`, `247e26a21df24c086bbd4cdc37245cf99e241279`, `c7c77427d8b4da91c115bfc9f9f74856ad7a472a`), 0 behind, 0 merges; 0 uncommitted files. Pushed by full sha. Read back: `git ls-remote origin refs/heads/main` reads `c7c77427d8b4da91c115bfc9f9f74856ad7a472a`. The fork's `feat/close-out-report-tool` still reads `ad5c980f` (the R1 commit `b4af3293` was not pushed, and pull request #96 is unchanged). Nothing was sent to `KJ5HST/methodology`. This record is its own local commit, as S430's was.
