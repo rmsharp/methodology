@@ -169,4 +169,6 @@ both; gates 13/13 on both (branch results `571d09d34c3d`, manifest `e6210da5d324
    him first). R0 and R3 were offered and not chosen; R2 is not workable. This records the route only:
    building the commit (section 6, step 1), pushing it, and posting the comment are each a later step
    needing his separate go-ahead.
-2. **Still open:** the comment as drafted, shorter, or none (the commit alone). Ask when step 3 is reached.
+2. **Decided** (2026-11-09, at the close-out picker, with the text shown to him in full first): the comment
+   **as drafted** (section 7). Posting it is still his separate go-ahead and its own session; at publish time
+   re-check `b4af3293` and `d50ce290`, which the text names.
