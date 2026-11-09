@@ -170,5 +170,8 @@ both; gates 13/13 on both (branch results `571d09d34c3d`, manifest `e6210da5d324
    building the commit (section 6, step 1), pushing it, and posting the comment are each a later step
    needing his separate go-ahead.
 2. **Decided** (2026-11-09, at the close-out picker, with the text shown to him in full first): the comment
-   **as drafted** (section 7). Posting it is still his separate go-ahead and its own session; at publish time
-   re-check `b4af3293` and `d50ce290`, which the text names.
+   **as drafted** (section 7). **Posted** 2026-11-09 (S434), at his separate go-ahead ('post it as drafted',
+   given after the text was shown to him inline): comment 6745597446 on #96
+   (`https://github.com/KJ5HST/methodology/pull/96#issuecomment-6745597446`), read back from the API equal to
+   the text byte for byte (1,821 B). `b4af3293` and `d50ce290`, which the text names, were re-checked live
+   immediately before and had not moved. Step 3 of section 6 is done; a reply on #96 is his to read first.
