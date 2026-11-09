@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S436
+date: 2026-11-09
+status: pending
+active_task: **Check two stale status lines and correct only what can be re-derived (IN PROGRESS):** `docs/planning/BACKLOG-DETAIL.md:4339` (BL-101's 'Next action: P18', whose adopter survey is dated S298 and S300) and `docs/planning/issue100-fixes-plan.md:3` (its status line, as of S426's Phase 0). The operator picked it from the S436 picker ('Check two stale status lines (Recommended)'), after his Yes to the `HANDOFFS.md` trim (trim `45f03087`, fold `16b5b5fd`, done before this claim). Local to the fork: nothing is sent to `KJ5HST/methodology`. DONE is each of the two lines either shown still true against the repository and left alone, or corrected from the repository's real state; the three backlog proofs and `bin/check-backlog-anchors` green from the repo root; `backlog-size` still under its 54,000 B ceiling.
+```
+
+```handoff
 session: S435
 date: 2026-11-09
 status: complete
