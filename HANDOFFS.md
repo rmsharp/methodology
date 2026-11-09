@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S435
+date: 2026-11-09
+status: pending
+active_task: **Correct the stale last sentence of BL-79's row in `docs/planning/BACKLOG.md` (IN PROGRESS):** the row (line 148) still ends by calling adding the fix to #96 'his call; nothing was sent', though the R1 commit is built, pushed to the fork's branch (#96's head `b4af3293`) and commented on (comment 6745597446). The operator picked it from the S435 picker ('Fix BL-79's stale row (Recommended)'). Local to the fork: nothing is sent to `KJ5HST/methodology`. DONE is the row's text matching the repository's real state, the three backlog proofs and `bin/check-backlog-anchors` green from the repo root, and `backlog-size` still under its 54,000 B ceiling.
+```
+
+```handoff
 session: S434
 date: 2026-11-09
 status: complete
