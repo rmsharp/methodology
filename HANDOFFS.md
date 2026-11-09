@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S434
+date: 2026-11-09
+status: pending
+active_task: **Post the drafted comment on upstream pull request #96 (IN PROGRESS):** the text is the `>` lines of `docs/planning/close-out-report-fix-routing.md` section 7 (lines 137 to 159, 1,822 B once the `> ` prefix is stripped), posted as drafted at the operator's go-ahead ('post it as drafted', S434, after the text was shown to him inline). Before posting, re-check that #96's head is still `b4af3293` and `upstream/main` still `d50ce290` (fork Learning #61); if either moved, STOP and re-measure instead of posting. DONE is the comment read back byte for byte equal to the file. The two ledger trims owed from S433 were done first at his Yes and Yes (HANDOFFS.md `d56c7b47` and its fold `b19ffdcf`; CHANGELOG.md `a1476283`). Chosen by the operator at the S434 Phase 0.
+```
+
+```handoff
 session: S433
 date: 2026-11-08
 status: complete
