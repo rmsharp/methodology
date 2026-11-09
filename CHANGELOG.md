@@ -289,6 +289,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-07.md` (2 record(s), 65,053 B → 41,695 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-06 → 2026-11-07) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-07.md`](docs/archive/HANDOFFS-through-2026-11-07.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-07.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-07.md.verify.sh)
+rather than trusting a digest printed here. Live file 65,053 B → 41,695 B (−35.9%).
+
 ### 2026-11-09 · [ad hoc] S433 push record -- fork `main` fast-forwarded `b920b60b..e7e06044` (4 commits: S432's push record and the S433 claim, work and close-out), by full sha; fork `origin` only, nothing sent to `KJ5HST/methodology`; and his decision on the #96 comment, 'as drafted'
 
 Pushed at the operator's S433 close-out picker, answer 'Yes, push to the fork (Recommended)'. Guards printed before the push: `origin` fetched; remote `https://github.com/rmsharp/methodology.git` (the fork, not `KJ5HST`); 4 ahead and 0 behind; `b920b60b577ce6899056b700819671ee340c8f4a` an ancestor of `e7e0604429ad84857b99a95fbab33887c0a77a87` (fast-forward, no force); the live remote `main` (`git ls-remote`) equal to the tracking ref; clean tree. Command `git push origin e7e0604429ad84857b99a95fbab33887c0a77a87:refs/heads/main` printed `b920b60b..e7e06044`; read back: `git ls-remote origin refs/heads/main` reads the same sha, and `upstream` `main` is still `d50ce290`. **The same picker's other answer:** the comment on #96 is 'As drafted (Recommended)' (the 1,822 B text of section 7 of `docs/planning/close-out-report-fix-routing.md`, shown to him in full first), which settles section 8 item 2 (edited in this commit); posting remains his separate go-ahead and its own session. This push-record commit is kept local, so `git rev-list --count origin/main..main` reads 1 at the next Phase 0.
