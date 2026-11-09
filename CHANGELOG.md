@@ -293,6 +293,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-07-2.md` (2 record(s), 63,387 B → 40,794 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-07 → 2026-11-07) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-07-2.md`](docs/archive/HANDOFFS-through-2026-11-07-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-07-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-07-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,387 B → 40,794 B (−35.6%).
+
 ### 2026-11-09 · [ad hoc] S435 push record -- fork `main` fast-forwarded `64b568a0..e349b137` (4 commits: S434's push record, and S435's claim, work and close-out); fork `origin` only, nothing sent to KJ5HST/methodology
 
 Pushed at the operator's S435 close-out picker, answer 'Yes, push (Recommended)'. Guards printed before the push: `origin` is `https://github.com/rmsharp/methodology.git`; the live remote `main` (`git ls-remote`) and the tracking ref both `64b568a08dcd8875774fc65c4d51e1505e938929`; that sha an ancestor of `HEAD` `e349b1371542c3b20e14e619e9f281befc13cf7d` (a fast-forward, no force); 4 ahead and 0 behind; clean tree. Command `git push origin e349b1371542c3b20e14e619e9f281befc13cf7d:refs/heads/main` printed `64b568a0..e349b137`; read back with `git ls-remote origin refs/heads/main`, equal to `HEAD` by full sha. This entry's own commit is kept local, as S434's was, so `git rev-list --count origin/main..main` reads 1 at the next Phase 0. No pull request, issue or comment on `KJ5HST/methodology` was touched.
