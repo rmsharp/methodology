@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S438
+date: 2026-11-10
+status: pending
+active_task: **Housekeeping session (IN PROGRESS): the owed `HANDOFFS.md` trim, then a verified close-out. No new work was invented.** At Phase 0 the file held FIVE receipts at 63,909 B of its 65,536 B ceiling (1,627 B left; a receipt runs about 12 KB), and the keep-three rule trims above four, so no session could close out without it. The operator answered a two-question picker 'Yes, trim first (Recommended)' and 'Trim and close (Recommended)'; the other deliverable offered, piece 7 of `docs/planning/issue100-fixes-plan.md` (the re-measure), waits on #99 being merged or closed and was not picked. **The trim and the fold were done BEFORE this claim, at his Yes (the S436 order):** trim `7253b3df` (S434 and S433 to `docs/archive/HANDOFFS-through-2026-11-09.md`, 63,909 B to 41,120 B, proof OK) and fold `dbac64fd` (the pointer block out, one row into `docs/HANDOFFS_ARCHIVE_INDEX.md`, proof OK again). DONE is: the shard proof OK from the final tree; `check-handoff`, `check-ledger` and `check-links` exit 0; the fork's gate run on a clean tree reading 25 of 25; this receipt `complete` with the predecessor's score and the push question put to him; nothing sent to `KJ5HST/methodology`. Local to the fork.
+```
+
+```handoff
 session: S437
 date: 2026-11-10
 status: complete
