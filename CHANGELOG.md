@@ -293,6 +293,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-09.md` (2 record(s), 63,909 B → 41,120 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-08 → 2026-11-09) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-09.md`](docs/archive/HANDOFFS-through-2026-11-09.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-09.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-09.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,909 B → 41,120 B (−35.7%).
+
 ### 2026-11-10 · [ad hoc] S437 push record -- fork `main` fast-forwarded `8b0491d6..cd0cf847` (4 commits: S436's push record and the S437 claim, work and close-out), by full sha; fork `origin` only, nothing sent to `KJ5HST/methodology`
 
 Pushed at the operator's S437 close-out picker, answer 'Yes, push (Recommended)'. Guards printed before the push, in the same command as the push: `origin` is `https://github.com/rmsharp/methodology.git` (the fork) and `upstream` is `https://github.com/KJ5HST/methodology.git`, not pushed to; `origin` fetched; the tracking ref `origin/main` still `8b0491d6e48390ff8cd74aebf535acbfb452efb0`, as at Phase 0; that sha an ancestor of `cd0cf847f72efb7c5816292323f62dd035ca807d` (a fast-forward, no force); 4 commits to send; the tree clean after the close-out commit (0 lines of `git status --short`). The four, by full sha: `20445272e74b987b1aa16557dfc22cd2e739d0ec`, `fd46eaac7cb14aa7e78c62815e338f314fdc047a`, `cd97766aa3b706759e21ab5d43439038d0973355`, `cd0cf847f72efb7c5816292323f62dd035ca807d`. Command `git push origin main:main` printed `8b0491d6..cd0cf847`; read back: `git ls-remote origin refs/heads/main` reads `cd0cf847f72efb7c5816292323f62dd035ca807d`, equal to local `HEAD` at the push, `main..origin/main` and `origin/main..main` both 0 after it, and `upstream` `main` is still `d50ce290d9218dc91d9a36069b4d936868964298`. This push-record commit is kept local, so `git rev-list --count origin/main..main` reads 1 at the next Phase 0.
