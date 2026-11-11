@@ -4694,3 +4694,16 @@ Smaller: the trimmer writes ledgers and shards at mode 0600 (`methodology_trim.p
 **Done when** each of the six and the mode point is either carried by a pull request the operator authorised, or recorded as declined or answered by the maintainer.
 
 ---
+
+<a id="bl-131"></a>
+**BL-131 — `bin/sync --layout new` seeds the two config files with legacy-layout paths.** Found S439 (2026-11-11) from an adopter project's own backlog item (`gaius/BACKLOG.md:29`, its BL-3), then reproduced and widened the same session: the item names two values, migration rewrites **four** (three budget rows, `SESSION_NOTES.md`, `SESSION_RUNNER.md` and `SAFEGUARDS.md`, and the gates' `results_file`), and the two it missed are the drift check on the synced runner.
+
+**Decided:** fix (a), by the operator 2026-11-11: sync writes the paths `bin/migrate-layout` writes, which makes migration the oracle. **Plan:** [`sync-seed-paths-plan.md`](sync-seed-paths-plan.md) (DRAFT, awaiting approval; nothing built); its evidence is in `sync-seed-paths-evidence/`.
+
+**Open for the operator:** D1 where the shared rewrite code lives (recommended: a new `bin/_seed_paths.py`, moved without edits, two sessions; the fallback is `bin/sync` loading `bin/migrate-layout`, one session); D2 a seed that cannot be rewritten (recommended: refuse before any write); D3 the two projects that have it today, `gaius` (two `synced` rows) and `pedkindraw` (four values, synced 2026-11-10, a live session in it), which a fix to sync does not repair because a seed is never overwritten.
+
+**Where it travels:** every file the fix touches is in the diff of the open pull request #99, so it goes upstream stacked on #99 or after it, and that is his go-ahead.
+
+**Done when** a fresh `--layout new` project's two configs equal the shipped seeds with those four values replaced and nothing else, the tools run from its root measure the three rows and write the results under `methodology/`, `reproduce.sh` shows no differing line at [E4], and each of the two projects is corrected or declined.
+
+---
