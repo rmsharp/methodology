@@ -1,0 +1,49 @@
+== Part 1: a fresh project started with bin/sync --layout new ==
+sync --layout new exit: 0
+[E1] the values the two seeded configs carry
+  budget row     CLAUDE.md
+  budget row     SESSION_NOTES.md
+  budget row     LEARNINGS.md
+  synced row     SESSION_RUNNER.md
+  synced row     SAFEGUARDS.md
+  results_file   .quality-gates-results.json
+[E2] context_budget.py --status, run from the project root: the three rows that name a moved file
+  SESSION_NOTES.md                             —           —  unmeasured (file does not exist)
+  SESSION_RUNNER.md                       synced   canonical  unmeasured
+  SAFEGUARDS.md                           synced   canonical  unmeasured
+  exit code of the tool: 1
+[E3] quality_ratchet.py --run, run from the project root: where the results file lands
+  exit code of the tool: 0
+  results at the project root:     yes
+  results under methodology/:      no
+
+== Part 2: the oracle: a project started in the legacy layout, then moved by bin/migrate-layout ==
+sync --layout legacy exit: 0
+migrate-layout --apply exit: 0
+[E4] migrated configs against a fresh --layout new sync (< migrated, > fresh sync; no line = identical)
+  .context-budget.json
+    <       "path": "methodology/SESSION_NOTES.md",
+    >       "path": "SESSION_NOTES.md",
+    <       "path": "methodology/SESSION_RUNNER.md",
+    >       "path": "SESSION_RUNNER.md",
+    <       "path": "methodology/SAFEGUARDS.md",
+    >       "path": "SAFEGUARDS.md",
+  .quality-gates.json
+    <   "results_file": "methodology/.quality-gates-results.json",
+    >   "results_file": ".quality-gates-results.json",
+[E5] what migration changes in each canonical seed (< the seed as shipped, > migrated)
+  .context-budget.json
+    <       "path": "SESSION_NOTES.md",
+    >       "path": "methodology/SESSION_NOTES.md",
+    <       "path": "SESSION_RUNNER.md",
+    >       "path": "methodology/SESSION_RUNNER.md",
+    <       "path": "SAFEGUARDS.md",
+    >       "path": "methodology/SAFEGUARDS.md",
+  .quality-gates.json
+    <   "results_file": ".quality-gates-results.json",
+    >   "results_file": "methodology/.quality-gates-results.json",
+[E6] the same project, after migration: the three rows are measured
+  methodology/SESSION_NOTES.md           1,113 B   120,000 B  ok
+  methodology/SESSION_RUNNER.md           synced   canonical  ok
+  methodology/SAFEGUARDS.md               synced   canonical  ok
+  exit code of the tool: 0
