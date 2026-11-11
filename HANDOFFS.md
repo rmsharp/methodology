@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S439
+date: 2026-11-11
+status: pending
+active_task: **Planning session (IN PROGRESS): a design for making `bin/sync --layout new` seed `.context-budget.json` and `.quality-gates.json` with the paths `bin/migrate-layout` produces (option (a)), written to `docs/planning/`. The plan is the deliverable; nothing is built.** The operator's steps: 'go' with no task; a prose Phase 0 report; he declined the picker and asked for the adopter project `gaius`'s `BACKLOG.md` item BL-3 to be read; then 'use (a) to design a deliverable'. The defect was reproduced in an empty scratch project before this claim.
+```
+
+```handoff
 session: S438
 date: 2026-11-10
 status: complete
