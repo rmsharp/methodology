@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S440
+date: 2026-11-12
+status: pending
+active_task: **BL-131 P2 (IN PROGRESS): move the shared seed-path code (`rewrite_json`, `token_pattern`, `token_rewriter`, `Unsafe`, `GENERATED`, `CONFIG_FILES` and the directory name) out of `bin/migrate-layout` into a new `bin/_seed_paths.py`, a verbatim refactor with no test file edited, per `docs/planning/sync-seed-paths-plan.md` section 6. The fix itself (P3) is a later session; nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; at the deliverable picker he chose 'Approve BL-131, build P2', which approves the draft plan with D1 as recommended (the new file `bin/_seed_paths.py`), D2 as recommended (refuse a seed that cannot be rewritten) and D3 as recommended (`gaius` and `pedkindraw` are not touched from here); then 'Yes, trim' at the trim picker. The trim (`ff5871d7`) and its fold (`981f12e7`) are done before this claim.
+```
+
+```handoff
 session: S439
 date: 2026-11-11
 status: complete
