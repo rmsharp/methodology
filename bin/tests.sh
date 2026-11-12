@@ -3683,7 +3683,7 @@ mh_fixture() {  # build the fixture in a fresh $M; Test 46 serves the same repo 
     M="$(mktemp -d)"
     git -C "$M" init -q -b main
     mkdir -p "$M/bin"
-    cp "$BIN/sync" "$BIN/status" "$BIN/_manifest.py" "$BIN/_manifest_reader.py" "$M/bin/"
+    cp "$BIN/sync" "$BIN/status" "$BIN/_manifest.py" "$BIN/_manifest_reader.py" "$BIN/_seed_paths.py" "$M/bin/"  # sync imports _seed_paths (BL-131 P3)
     python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; print('\n'.join(s for s, _d, _x in _manifest.DISTRIBUTION))" \
         | while read -r src; do mkdir -p "$M/$(dirname "$src")"; cp "$METHODOLOGY/$src" "$M/$src"; done
     printf 'v1\n' > "$M/$F"; git -C "$M" add -A; mh_git 1 commit -qm c1

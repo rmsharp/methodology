@@ -12,7 +12,9 @@ that reads it as data. Later layers add bin/sync, bin/status and bin/check-links
 command in a scratch project. Every rule is observed failing as well as passing (Learning #12).
 """
 import importlib.util
+import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -643,6 +645,204 @@ class TestSyncFromGithubReadsTheTable(Scratch):
                 self.assertIn("starter-kit/ROADMAP.md", r.out)
                 self.assertNotIn("Traceback", r.out)
                 self.assertEqual(files_of(d), before)
+
+
+BUDGET, GATES = ".context-budget.json", ".quality-gates.json"
+BUDGET_SEED, GATES_SEED = "starter-kit/context-budget.json", "starter-kit/quality-gates.json"
+# The four values migration changes in the two seeds, as bin/migrate-layout's own suite types them
+# (tools/test_migrate_layout.py, TestTheRewriteOfTheConfigs): the oracle the fix is held to, written here as literal text so
+# that it does not depend on the code under test.
+REPLACEMENTS = {
+    BUDGET: (('"path": "SESSION_NOTES.md"', '"path": "methodology/SESSION_NOTES.md"'),
+             ('"path": "SESSION_RUNNER.md"', '"path": "methodology/SESSION_RUNNER.md"'),
+             ('"path": "SAFEGUARDS.md"', '"path": "methodology/SAFEGUARDS.md"')),
+    GATES: (('"results_file": ".quality-gates-results.json"', '"results_file": "methodology/.quality-gates-results.json"'),),
+}
+SEEDS = {BUDGET: BUDGET_SEED, GATES: GATES_SEED}
+
+
+def seed_text(name):
+    return (REPO / SEEDS[name]).read_text(encoding="utf-8")
+
+
+def migrated_text(name):
+    """The seed with migration's replacements applied, each to the one place the seed has it (a seed that gains a second
+    place, or loses one, breaks this loudly: it is a decision, not a silent pass)."""
+    text = seed_text(name)
+    for old, new in REPLACEMENTS[name]:
+        assert text.count(old) == 1, "the shipped seed %s no longer has %s exactly once" % (SEEDS[name], old)
+        text = text.replace(old, new)
+    return text
+
+
+def path_values(config):
+    """(key, value) for every string in a parsed config that is not prose (a key starting with an underscore) and is not
+    `canonical`, the path to the sibling checkout: the two things bin/_seed_paths.rewrite_json leaves alone."""
+    if isinstance(config, dict):
+        for key, value in config.items():
+            if key.startswith("_") or key == "canonical":
+                continue
+            if isinstance(value, str):
+                yield key, value
+            else:
+                yield from path_values(value)
+    elif isinstance(config, list):
+        for item in config:
+            yield from path_values(item)
+
+
+PATH_LOOKING = re.compile(r"\.(?:md|json|jsonl|py|html|txt|sh)$")
+# The files a project owns that sync does not provide: a row that names one is right at the root.
+OWN_FILES = {"CLAUDE.md", "LEARNINGS.md"}
+
+
+def unaccounted(config):
+    """The path-looking values of a parsed config that are neither where the new layout keeps the file (under
+    methodology/) nor on the short list of the project's own files: each is a value the fix did not decide about."""
+    return [(key, value) for key, value in path_values(config)
+            if PATH_LOOKING.search(value) and not value.startswith("methodology/") and value not in OWN_FILES]
+
+
+class TestSyncSeedsTheConfigsWithTheNewLayoutsPaths(Scratch):
+    """BL-131 P3 (docs/planning/sync-seed-paths-plan.md section 6). `bin/sync --layout new` copied the two config seeds
+    unchanged, so four of their values named a place the file is not in: three budget rows (read `unmeasured`, so the
+    notes' size ceiling and the drift check on the runner and safeguards never ran) and `results_file` (the ratchet wrote
+    its results outside methodology/). The seed is now written with the paths bin/migrate-layout writes, by the same
+    function (bin/_seed_paths.py), at the moment it is created, in the new layout only."""
+
+    source = TestSyncFromGithubReadsTheTable.source   # the same local bare-repository fixture, not a second copy of it
+
+    def config(self, d, name):
+        return (d / "methodology" / name).read_text(encoding="utf-8")
+
+    def fresh_new(self, *args, **kwargs):
+        d = self.project()
+        r = run_sync(d, "--layout", "new", *args, **kwargs)
+        self.assertEqual(r.returncode, 0, r.out)
+        return d
+
+    def test_t1_the_three_budget_rows_follow_and_nothing_else_in_it_does(self):
+        d = self.project("new")
+        budget = json.loads(self.config(d, BUDGET))
+        seed = json.loads(seed_text(BUDGET))
+        self.assertEqual([f["path"] for f in budget["files"]], ["CLAUDE.md", "methodology/SESSION_NOTES.md", "LEARNINGS.md"])
+        self.assertEqual([s["path"] for s in budget["synced"]], ["methodology/SESSION_RUNNER.md", "methodology/SAFEGUARDS.md"])
+        self.assertEqual([s["canonical"] for s in budget["synced"]], [s["canonical"] for s in seed["synced"]])
+        for key in [k for k in seed if k.startswith("_")]:
+            self.assertEqual(budget[key], seed[key], "the prose under %r was rewritten" % key)
+
+    def test_t2_the_results_file_names_the_place_the_tools_write_it(self):
+        d = self.project("new")
+        self.assertEqual(json.loads(self.config(d, GATES))["results_file"], "methodology/.quality-gates-results.json")
+
+    def test_t3_only_those_values_differ_from_the_shipped_seeds(self):
+        d = self.project("new")
+        for name in (BUDGET, GATES):
+            with self.subTest(name):
+                text = self.config(d, name)
+                for old, new in REPLACEMENTS[name]:
+                    text = text.replace(new, old)
+                self.assertEqual(text, seed_text(name))
+
+    def test_t4_each_config_equals_what_migration_makes_of_the_seed(self):
+        d = self.project("new")
+        for name in (BUDGET, GATES):
+            with self.subTest(name):
+                self.assertEqual(self.config(d, name), migrated_text(name))
+
+    def test_t5_a_notes_file_at_the_root_keeps_its_row_and_the_other_rows_still_follow(self):
+        d = self.project()
+        (d / "SESSION_NOTES.md").write_text("the project's own notes\n", encoding="utf-8")
+        r = run_sync(d, "--layout", "new")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertFalse((d / "methodology" / "SESSION_NOTES.md").exists(), "a blank seed was created beside the project's own")
+        budget = json.loads(self.config(d, BUDGET))
+        self.assertEqual([f["path"] for f in budget["files"]], ["CLAUDE.md", "SESSION_NOTES.md", "LEARNINGS.md"])
+        self.assertEqual([s["path"] for s in budget["synced"]], ["methodology/SESSION_RUNNER.md", "methodology/SAFEGUARDS.md"])
+        self.assertEqual(json.loads(self.config(d, GATES))["results_file"], "methodology/.quality-gates-results.json")
+
+    def test_t6_the_legacy_layout_is_byte_identical_to_the_shipped_seeds(self):
+        legacy_synced_twice = self.project("legacy")
+        self.assertEqual(run_sync(legacy_synced_twice).returncode, 0)   # auto on a legacy project keeps it legacy
+        empty_legacy, empty_auto = self.project(), self.project()
+        self.assertEqual(run_sync(empty_legacy, "--layout", "legacy").returncode, 0)
+        self.assertEqual(run_sync(empty_auto).returncode, 0)            # auto on an empty project is the legacy default
+        for label, d in (("legacy twice", legacy_synced_twice), ("--layout legacy", empty_legacy), ("auto", empty_auto)):
+            for name in (BUDGET, GATES):
+                with self.subTest(label=label, name=name):
+                    self.assertEqual((d / name).read_text(encoding="utf-8"), seed_text(name))
+                    self.assertFalse((d / "methodology").exists())
+
+    def test_t7_end_to_end_the_tools_measure_the_rows_and_write_the_results_under_methodology(self):
+        # An adopter has the sibling checkout the `canonical` paths name (../methodology/starter-kit/...): give the project one.
+        os.symlink(REPO, self.root / "methodology")
+        d = self.fresh_new()
+        (d / "CLAUDE.md").write_text("<!-- budget:protected -->\n" + "A throwaway project; it states its purpose here.\n" * 20
+                                     + "<!-- /budget:protected -->\n", encoding="utf-8")
+        (d / "LEARNINGS.md").write_text("# Learnings\n", encoding="utf-8")
+
+        def run_tool(*argv):
+            r = subprocess.run([sys.executable, "-B", *argv], capture_output=True, text=True, cwd=str(d))
+            r.out = r.stdout + r.stderr
+            return r
+        status = run_tool("methodology/context_budget.py", "--status")
+        self.assertEqual(status.returncode, 0, status.out)
+        self.assertNotIn("unmeasured", status.out)
+        for row in ("methodology/SESSION_NOTES.md", "methodology/SESSION_RUNNER.md", "methodology/SAFEGUARDS.md"):
+            self.assertIn(row, status.out)
+        ratchet = run_tool("methodology/quality_ratchet.py", "--run")
+        self.assertEqual(ratchet.returncode, 0, ratchet.out)
+        self.assertTrue((d / "methodology" / ".quality-gates-results.json").is_file())
+        self.assertFalse((d / ".quality-gates-results.json").exists(), "the results landed at the project root")
+
+    def test_t8_an_existing_config_is_never_rewritten_with_or_without_force(self):
+        d = self.project("new")
+        for name in (BUDGET, GATES):
+            (d / "methodology" / name).write_text("mine, not even JSON\n", encoding="utf-8")
+        for extra in ((), ("--force",)):
+            with self.subTest(extra=extra):
+                r = run_sync(d, *extra)
+                self.assertEqual(r.returncode, 0, r.out)
+                for name in (BUDGET, GATES):
+                    self.assertEqual(self.config(d, name), "mine, not even JSON\n")
+
+    def test_t8_a_seed_that_cannot_be_rewritten_refuses_the_run_before_any_write_and_names_it(self):
+        broken = {"not JSON": "this is not json {\n",
+                  "a path-bearing key inside a prose key": '{"_x": {"path": "SESSION_NOTES.md"}, "files": [{"path": "SESSION_NOTES.md"}]}\n'}
+        for why, text in broken.items():
+            for extra in ((), ("--dry-run",)):
+                with self.subTest(why=why, extra=extra):
+                    src = self.source()
+                    (src / BUDGET_SEED).write_text(text, encoding="utf-8")
+                    git(src, "commit", "-qam", "break a seed")
+                    d = self.project()
+                    r = run_sync(d, "--source=github", "--layout", "new", *extra, source=src)
+                    self.assertEqual(r.returncode, 2, r.out)
+                    self.assertIn(BUDGET_SEED, r.out)
+                    self.assertNotIn("Traceback", r.out)
+                    self.assertNotIn("  files:", r.out)
+                    self.assertEqual(files_of(d), set(), "the run wrote files before it refused")
+
+    def test_t9_every_path_looking_value_is_rewritten_or_on_the_short_list_of_the_projects_own_files(self):
+        d = self.project("new")
+        for name in (BUDGET, GATES):
+            with self.subTest(name):
+                self.assertEqual(unaccounted(json.loads(self.config(d, name))), [])
+
+    def test_t9_the_guard_itself_fails_on_a_value_nobody_decided_about(self):
+        # Kill control: a seed that gained a path-bearing value (here, in a file the layout moves) is reported.
+        self.assertEqual(unaccounted({"files": [{"path": "SESSION_NOTES.md"}]}), [("path", "SESSION_NOTES.md")])
+        self.assertEqual(unaccounted({"files": [{"path": "methodology/SESSION_NOTES.md"}, {"path": "CLAUDE.md"}],
+                                      "synced": [{"path": "methodology/SAFEGUARDS.md", "canonical": "../methodology/x.md"}],
+                                      "_": "see SAFEGUARDS.md"}), [])
+
+    def test_t10_the_seeds_that_arrive_from_a_clone_are_rewritten_the_same(self):
+        d = self.project()
+        r = run_sync(d, "--source=github", "--layout", "new", source=self.source())
+        self.assertEqual(r.returncode, 0, r.out)
+        for name in (BUDGET, GATES):
+            with self.subTest(name):
+                self.assertEqual(self.config(d, name), migrated_text(name))
 
 
 class TestStatusNamesAndReadsTheLayout(Scratch):
