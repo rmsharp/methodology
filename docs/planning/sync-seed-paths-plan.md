@@ -1,6 +1,6 @@
 # Plan: make `bin/sync --layout new` seed the two config files with the paths `bin/migrate-layout` produces
 
-**Status: DRAFT, for the operator's approval (written 2026-11-11). Nothing is built, no ref moved, nothing sent to `KJ5HST/methodology`.**
+**Status: APPROVED by the operator 2026-11-12 with D1 to D3 as recommended. P2 is built (S440, `1c5ceba9`); P3, the fix, is not started. No ref moved, nothing sent to `KJ5HST/methodology`.** Written 2026-11-11 as a DRAFT; the sections below are as written, except that the citations into `bin/migrate-layout` now name where the code moved to, and the count of names moved reads seven.
 A planning session's deliverable is the plan; each *piece* below is a later session of its own. The decisions the operator owes are in section 8. Backlog row: BL-131.
 
 **Origin.** The adopter project `gaius` logged it as its BL-3 (`gaius/BACKLOG.md:29`, "Upstream" section). The operator asked for it to be read as a possible issue, then chose fix (a): sync writes the paths migration would have written.
@@ -49,9 +49,9 @@ Into an empty project, `bin/sync --layout new` puts every file under `methodolog
 
 How it works:
 
-1. **Which seeds.** The two whose legacy name is in the migration's `CONFIG_FILES` (`bin/migrate-layout:91`). Only when the layout is `new` and the seed is about to be written (the target is absent).
-2. **The mapping** (legacy path to where this run puts it). For each distributed row (`bin/sync:449` already walks them: `dest = legacy_dest if layout == "legacy" else NEW_LAYOUT[src]`), `legacy_dest -> dest`, **except a row whose seed is "present at root"** (a project's own file beside the new tree, the case `seed_file` calls `beside`, `bin/sync:337-341`): its row keeps the root path, because that is where the file really is. Plus the generated names (migration's `GENERATED`, `bin/migrate-layout:78-79`) as `methodology/<name>`: that is what gives `results_file` its new value.
-3. **The rewrite** is migration's `rewrite_json` (`bin/migrate-layout:323-366`). It changes only a value that is exactly a mapped path, leaves every key beginning with `_` (the prose) and `canonical` (the path to the sibling checkout) alone, keeps every other byte, and re-parses the result against the structure the rule predicts, refusing when it does not match (`Unsafe`).
+1. **Which seeds.** The two whose legacy name is in the migration's `CONFIG_FILES` (`bin/_seed_paths.py:24`, moved there by P2). Only when the layout is `new` and the seed is about to be written (the target is absent).
+2. **The mapping** (legacy path to where this run puts it). For each distributed row (`bin/sync:449` already walks them: `dest = legacy_dest if layout == "legacy" else NEW_LAYOUT[src]`), `legacy_dest -> dest`, **except a row whose seed is "present at root"** (a project's own file beside the new tree, the case `seed_file` calls `beside`, `bin/sync:337-341`): its row keeps the root path, because that is where the file really is. Plus the generated names (migration's `GENERATED`, `bin/_seed_paths.py:21-22`) as `methodology/<name>`: that is what gives `results_file` its new value.
+3. **The rewrite** is migration's `rewrite_json` (`bin/_seed_paths.py:50-99`; the draft's range 323-366 in `bin/migrate-layout` stopped six lines short of the function's end). It changes only a value that is exactly a mapped path, leaves every key beginning with `_` (the prose) and `canonical` (the path to the sibling checkout) alone, keeps every other byte, and re-parses the result against the structure the rule predicts, refusing when it does not match (`Unsafe`).
 
 Interface contract of the new step:
 
@@ -92,7 +92,7 @@ DONE: this document, the evidence directory, one backlog row, committed with the
 
 ### P2: move the shared code (only if D1 is approved; if not, skip to P3)
 
-**DONE looks like:** `bin/_seed_paths.py` exists and holds the six names in section 3; `bin/migrate-layout` imports them and no longer defines them; **no test file is edited**.
+**DONE looks like:** `bin/_seed_paths.py` exists and holds the seven names in section 3 (the six identifiers and the directory name, `NEW_DIR`); `bin/migrate-layout` imports them and no longer defines them; **no test file is edited**.
 **Verification, repo root, serially:**
 - `git diff --color-moved=dimmed-zebra` shows the block moved with no changed line except the imports.
 - `python3 tools/test_migrate_layout.py` passes with the count unchanged (`migrate-layout-unit-tests` min 280, `.quality-gates.json`). **It takes about 14 minutes** (280 tests, 840 s measured on 2026-11-11); run it alone, before the full run, as the cheapest check that reads the moved code.
@@ -129,7 +129,7 @@ DONE: this document, the evidence directory, one backlog row, committed with the
 - `python3 tools/test_migrate_layout.py`, `python3 bin/check-layout-literals` (0 sites; `bin/sync` must not name a methodology file as a literal, which is why the mapping comes from the manifest), `bin/check-links`, `check-ledger`, then the full `bash bin/tests.sh > <file>` and `quality_ratchet.py --run`: 25 of 25.
 - `bash docs/planning/sync-seed-paths-evidence/reproduce.sh`: [E4] shows **no differing line** and [E2] reads the rows as measured.
 
-**Files:** `bin/sync`, `tools/test_sync_layouts.py`, `.quality-gates.json`, `CHANGELOG.md`: four, under the five-file cap.
+**Files:** `bin/sync`, `tools/test_sync_layouts.py`, `bin/tests.sh`, `.quality-gates.json`, `CHANGELOG.md`: five, at the cap. `bin/tests.sh` was missing from the draft's list; S440 derived it: its fixture `mh_fixture` copies `bin/sync`, `bin/status`, `bin/_manifest.py` and `bin/_manifest_reader.py` into a scratch `bin/` (`:3686`) and six tests run that copy of `sync` (`:3712`, `:3730`, `:4315`, `:4382`, `:4424`, `:5380`), so once `bin/sync` imports `bin/_seed_paths.py` that `cp` line must name it or each of them fails at import. The fixtures near `:4390` (`$H`) also carry a copy of `bin/sync`; read them in the same change.
 **Surface:** this repository; throwaway projects built by the real `bin/sync` and the real tools run from their root. **Cannot enforce:** that the network clone behaves the same (the suite uses a local bare repository, as it already does); that a project synced before this fix is repaired (it is not, section 2).
 **STOP** after the commit and the close-out. Nothing is pushed or proposed upstream in the same session.
 
@@ -142,7 +142,7 @@ DONE: this document, the evidence directory, one backlog row, committed with the
 | Place | Impact | Action |
 |---|---|---|
 | `bin/sync` | one step added before the seed write; one pre-write refusal | P3 |
-| `bin/migrate-layout` | six names move to a new module; no behaviour change | P2 (if D1) |
+| `bin/migrate-layout` | seven names move to a new module; no behaviour change | P2 (if D1) |
 | `bin/_seed_paths.py` | new, canonical-only | P2 |
 | `tools/test_sync_layouts.py` | ten tests added | P3 |
 | `.quality-gates.json` | `sync-layout-unit-tests` raised; no other gate loosened | P3 |
