@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S441
+date: 2026-11-12
+status: pending
+active_task: **BL-131 P3 (IN PROGRESS): make `bin/sync --layout new` rewrite the four path values in the two config seeds it creates (`.context-budget.json`: the notes, runner and safeguards rows; `.quality-gates.json`: `results_file`), with the `rewrite_json` that now lives in `bin/_seed_paths.py`, per `docs/planning/sync-seed-paths-plan.md` section 6. Tests T1 to T10 go in `tools/test_sync_layouts.py` and are run red first on the unfixed `bin/sync`. Five files, at the cap; nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; at the picker 'BL-131 P3, the fix (Recommended)'.
+```
+
+```handoff
 session: S440
 date: 2026-11-12
 status: complete
