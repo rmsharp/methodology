@@ -4707,3 +4707,14 @@ Smaller: the trimmer writes ledgers and shards at mode 0600 (`methodology_trim.p
 **Done when** a fresh `--layout new` project's two configs equal the shipped seeds with those four values replaced and nothing else, the tools run from its root measure the three rows and write the results under `methodology/`, `reproduce.sh` shows no differing line at [E4], and each of the two projects is corrected or declined. **Since S441 the first three hold; the last is his.**
 
 ---
+
+<a id="bl-132"></a>
+**BL-132 — Upstream pull request #102 does not state its purpose clearly.** The operator, at S441's close-out (2026-11-12), verbatim: "https://github.com/KJ5HST/methodology/pull/102 is not clearly written. I failed to catch this prior to publication. The purpose for the PR is not clearly stated. Work on this next session." Nothing more is known about what he found unclear, so the first step is to read the pull request as a cold reader (or ask him), not to assume.
+
+**What is known, read-only on 2026-11-12:** [#102](https://github.com/KJ5HST/methodology/pull/102), branch `issue100-batch-a`, head `c93f1feb45ec423d631b465b0235ec939ee5e339`, OPEN, MERGEABLE and CLEAN, opened 2026-11-05, 0 comments, 0 reviews, 8 files, +1,359 -16. Its title is one sentence of about 200 characters naming three separate changes (the trimmer keeps file modes and names a ledger kept out of git; `bin/status` warns when the checkout is behind its remote; the runner says a new task after STOP is a new session). The body (5,835 characters) opens 'Refs #100, not "Fixes": findings 2, 3 and 4, the hook recipe in finding 5 and the `bin/sync` / `bin/status` seed warnings in finding 6 are not here', then a table of four commits. It is Batch A of [`issue100-fixes-plan.md`](issue100-fixes-plan.md) (the pieces that touch no line an open pull request touches); upstream issue #100 carries the findings.
+
+**Constraints, from this repository's own practice:** reading is free. Any edit to the title or body is an outward action and needs his go-ahead each time, with the exact draft shown to him inline first; use `gh api -X PATCH` and read it back byte for byte, not `gh pr edit`. The text uses terms a maintainer already knows: no session numbers, backlog ids or coined names. The branch head stays at `c93f1feb`: a push to it moves what he reviews, and the question posted on #100 (D2) is still unanswered, with Batch B and #98's first commit waiting on it.
+
+**Done when** he has approved a title and body that say, in their first lines, what the pull request is for and why it is one pull request, and (his go-ahead) they are on #102 and read back identical; or he declines. **Order:** S442 trims `HANDOFFS.md` first, as its receipt says, then this is the deliverable his message names for the session.
+
+---
