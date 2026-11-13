@@ -1,0 +1,7 @@
+run: 2026-11-13T23:11:18Z to 2026-11-13T23:21:33Z = 615 s, exit 0
+stdout: 770 lines, 59382 bytes; stderr: 0 bytes
+  PASS: lines 702, FAIL: lines 0, SKIP: lines 0, '== Test' headers 63
+longest line: 181 bytes
+first line: == Test 1: commit mode + local source (baseline) ==
+last line:  == Summary: 702 passed, 0 failed, 0 skipped ==
+the failure-marker grep a person would run on a kept file: grep -c '^  FAIL: ' -> 0 on this green run

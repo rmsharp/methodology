@@ -1,0 +1,13 @@
+git: git version 2.56.0
+1. the directory exists and holds one file, no .gitignore of its own yet:
+   git status --porcelain -> [?? .quality-gates-output/|]
+2. the same directory after it writes its own .gitignore containing *:
+   git status --porcelain -> []
+   git check-ignore -v on the file -> .quality-gates-output/.gitignore:1:*	.quality-gates-output/out.txt
+   git status --ignored --porcelain -> [!! .quality-gates-output/|]
+3. a real change beside it is still reported:
+   git status --porcelain -> [ M tracked.txt|]
+4. git add -A stages nothing from the directory:
+   staged -> [tracked.txt|]
+5. a project with committed results, as the seed allows (the results file itself is tracked):
+   tracked results file + ignored directory: status -> [A  .quality-gates-results.json|M  tracked.txt|]
