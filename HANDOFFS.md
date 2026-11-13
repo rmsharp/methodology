@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S442
+date: 2026-11-13
+status: pending
+active_task: **BL-132 (IN PROGRESS): read upstream pull request #102 as a cold reader, find what it fails to say about its purpose, and draft a clearer title and body, shown to the operator inline. The deliverable is the draft (a file under `docs/planning/` and the text in the report); nothing on #102 is edited without his separate go-ahead, and its branch stays at `c93f1feb`.** The operator's steps: 'go' with no task; a prose Phase 0 report; at the picker 'Yes, trim first (Recommended)' (done before this claim: trim `672af060`, fold `3f6ccf86`) and 'BL-132: PR #102's purpose (Recommended)'.
+```
+
+```handoff
 session: S441
 date: 2026-11-12
 status: complete
