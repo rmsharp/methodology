@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S443
+date: 2026-11-13
+status: pending
+active_task: **BL-131 project step for `gaius` (IN PROGRESS): correct the two `synced` rows of its `methodology/.context-budget.json` (`path` `SESSION_RUNNER.md` and `SAFEGUARDS.md` to the `methodology/` paths); one commit in `gaius` with its own ledger entry. `pedkindraw` is not touched; nothing is pushed; nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; the first picker 'BL-101 P18 (Recommended)'; a check showed no adopter free for P18; a second picker declined; a list of adopters; a question about `correspondence` (not stale); then 'gaius is ready for your work'.
+```
+
+```handoff
 session: S442
 date: 2026-11-13
 status: complete
