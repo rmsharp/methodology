@@ -4717,4 +4717,6 @@ Smaller: the trimmer writes ledgers and shards at mode 0600 (`methodology_trim.p
 
 **Done when** he has approved a title and body that say, in their first lines, what the pull request is for and why it is one pull request, and (his go-ahead) they are on #102 and read back identical; or he declines. **Order:** S442 trims `HANDOFFS.md` first, as its receipt says, then this is the deliverable his message names for the session.
 
+**State at S442 (2026-11-13):** the cold read is done and a draft is on record in `pr102-clearer-text/` ([`record.md`](pr102-clearer-text/record.md): the readers' findings, each checked before use, and which figures were re-measured; `title.txt` and `body.md`, version 2, are the postable text). Nothing on #102 was touched; its head is still `c93f1feb`. **Next is his:** read the draft and approve, change or decline it. Then, only on his go-ahead each time, post it with `gh api -X PATCH` and read it back byte for byte, re-deriving the figures first if time has passed (fork Learning #61). Or he may order a third cold read of version 2 (about 80 thousand tokens). The 'Done when' above is met by the draft; it is not met until he approves and the text is on #102.
+
 ---
