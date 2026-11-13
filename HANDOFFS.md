@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S445
+date: 2026-11-13
+status: pending
+active_task: **A PLAN for `quality_ratchet.py --run` keeping a failing gate's output (IN PROGRESS; BL-92 shape (c), also BL-103 option (c)): one plan document in `docs/planning/`, no code, no tool or gate changed; its implementation is a separate session after his approval. Nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; the picker 'BL-92 (c) plan: keep a failing gate's output (Recommended)'. No trim was owed.
+```
+
+```handoff
 session: S444
 date: 2026-11-13
 status: complete
