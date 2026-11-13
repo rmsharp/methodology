@@ -293,6 +293,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-13 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-10.md` (2 record(s), 63,755 B → 40,983 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-10 → 2026-11-10) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-10.md`](docs/archive/HANDOFFS-through-2026-11-10.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-10.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-10.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,755 B → 40,983 B (−35.7%).
+
 ### 2026-11-12 · [ad hoc] S441 backlog -- BL-132 opened: upstream pull request #102 does not state its purpose clearly (the operator's report); the work is the next session's, nothing was done to the pull request
 
 Relayed by the operator after the close-out, while the push record was being written: "https://github.com/KJ5HST/methodology/pull/102 is not clearly written. I failed to catch this prior to publication. The purpose for the PR is not clearly stated. Work on this next session." Per the practice that a relayed report becomes a backlog item written from what is known, and 'next session' schedules the work and does not start it: `docs/planning/BACKLOG.md` gains one row, BL-132 (`BACKLOG.md` 53,603 B to 53,888 B of its 54,000 B gate: **112 B left, so the next row will not fit without a cut or an operator-approved raise**; the backlog proofs, anchors, `check-links`, `check-ledger`, `check-handoff` and the ratchet's `--precommit` exit 0), and `BACKLOG-DETAIL.md` its section (`#bl-132`): his words verbatim; what a read-only look at #102 showed (branch `issue100-batch-a`, head `c93f1feb`, OPEN, CLEAN, 0 comments, 0 reviews, 8 files, +1,359 -16; a title of about 200 characters naming three changes; a body of 5,835 characters opening 'Refs #100, not "Fixes"...' and a four-commit table); and the constraints: any edit to the pull request is his go-ahead each time with the draft shown first, `gh api -X PATCH` read back, no session numbers or backlog ids in the text, the branch head not moved. **Not done, on purpose:** no judgment of what is unclear, no draft text, no `gh` write of any kind, no push: the receipt of S441 is in pushed history and is not edited, so its `next_steps` do not name this item; this row and the ledger do, and S442's Phase 0 reads the backlog. **Order for S442:** trim `HANDOFFS.md` first (five receipts), then this is the deliverable his message names. `origin/main..main` reads 2 at S442's Phase 0 (this commit and the push record).
