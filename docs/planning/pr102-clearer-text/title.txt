@@ -1,0 +1,1 @@
+Warn when a methodology checkout is behind its newest release, and three smaller fixes (refs #100)
