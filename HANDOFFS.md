@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S444
+date: 2026-11-13
+status: pending
+active_task: **BL-131 project step for `pedkindraw` (IN PROGRESS): correct four path values in its `methodology/` configs to the new-layout paths: `.context-budget.json` (the notes row `SESSION_NOTES.md`, the two `synced` rows `SESSION_RUNNER.md` and `SAFEGUARDS.md`) and `.quality-gates.json` (`results_file`), the plan's [E5] values; one commit in `pedkindraw` with its own ledger entry, not pushed. Nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; the picker 'Yes, trim first' and 'pedkindraw'. The owed trim is done before this claim: `ce73fbd1`, fold `f03daa1c`.
+```
+
+```handoff
 session: S443
 date: 2026-11-13
 status: complete
