@@ -1,0 +1,1 @@
+Refs #100: the trimmer keeps file modes and names a ledger kept out of git; bin/status warns when the checkout is behind its remote; the runner says a new task after STOP is a new session
