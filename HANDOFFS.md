@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S448
+date: 2026-11-14
+status: pending
+active_task: **BL-134 (a) (IN PROGRESS): measure how often the 14 pipelines in `bin/tests.sh` that feed an early-exiting `grep` from a command or a chain fail falsely (the SIGPIPE-under-`pipefail` mechanism BL-133 diagnosed), using the existing `docs/planning/bl133-diagnosis-evidence/pipeline-loop.sh` harness; record the rate and what each line is worth to the operator's choice between (b) convert and (c) leave. `bin/tests.sh` is NOT changed. Local to the fork; nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; one picker, answered 'BL-134 (a): measure the 14 (Recommended)' and 'Yes, trim first (Recommended)' (the trim `1e3f737b` and its fold `df7ba5a1` came before this claim).
+```
+
+```handoff
 session: S447
 date: 2026-11-14
 status: complete
