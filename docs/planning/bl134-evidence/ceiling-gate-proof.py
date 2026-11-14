@@ -12,11 +12,12 @@ What it checks, in order (exit 0 only when every expectation reads as stated; 1 
     never pass: the digits-only extract matches nothing).
  2. The reason the number is 16,384: the pipeline at bin/tests.sh:5533, `tr -s '\\n ' '  ' < seed`, run into
     a reader that is ALREADY WAITING (piece-reader.py; a reader that starts with its producer read 0 of 600 on
-    a known positive at S448). A seed at the ceiling reaches the reader in ONE read; a seed well over it
-    (18,000 B) reaches it in TWO, which is the positive control: the instrument can see a split here. Between
-    the ceiling and about 16,900 B a split can be hidden when the second write lands before the reader's
-    read (a 16,385 B stream read as one piece 10 of 10 at S448; a 16,910 B stream split 4 of 10), so the
-    edge is not placed from what a reader sees there, but from the sizes at which it always splits.
+    a known positive at S448). A seed at the ceiling reaches the reader in ONE read; a seed of 32,768 B reaches
+    it in TWO, which is the positive control: the instrument can see a split. Just over the edge a split can be
+    HIDDEN when the second write lands before the reader's read (a 16,385 B stream read as one piece 10 of 10
+    at S448; 18,000 B split 10 of 10 on two runs and 8 of 10 on a third, S449), so the control sits where the
+    second write cannot land first: a 16 KiB pipe is full after the first write. The edge itself is `tr`'s
+    16,384 B write size, read from the large sizes (32,768 B: [16384, rest]; 65,536 B: four 16,384 B reads).
 
 Usage: python3 ceiling-gate-proof.py [REPO_ROOT]     (default: the repository this file sits in; about 20 s)
 Python 3 standard library only. Writes only inside a temporary directory it removes.
@@ -103,7 +104,7 @@ try:
 
     print("== 2. why 16,384: `tr -s` into a waiting reader (%d runs each; the piece sizes are the reads)" % RUNS)
     for label, size, want_n in (("the ceiling, %d B" % CEILING, CEILING, 1),
-                                ("18,000 B (the positive control)", 18000, 2)):
+                                ("32,768 B (the positive control)", 32768, 2)):
         p = os.path.join(tmp, "tr-%d.in" % size)
         open(p, "wb").write(grown(seed, size))
         seen = pieces(p)

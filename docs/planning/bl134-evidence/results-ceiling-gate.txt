@@ -1,0 +1,14 @@
+== 0. the gate is declared
+  ok     direction is 'max' (a ceiling): 'max'
+  ok     threshold is 16384: 16384
+  ok     the command reads starter-kit/HANDOFFS.md: 'wc -c < starter-kit/HANDOFFS.md'
+== 1. the ratchet's own measure_gate on scratch trees
+  ok     the real seed (13723 B)            -> pass       measured 13723.0 (wanted pass)
+  ok     grown to the ceiling, 16384 B      -> pass       measured 16384.0 (wanted pass)
+  ok     one byte over, 16385 B             -> fail       measured 16385.0 (wanted fail)
+  ok     20,000 B                           -> fail       measured 20000.0 (wanted fail)
+  ok     absent                             -> unmeasured measured None note: extract matched nothing (exit 1) (wanted unmeasured)
+== 2. why 16,384: `tr -s` into a waiting reader (10 runs each; the piece sizes are the reads)
+  ok     the ceiling, 16384 B               [16294]x10 (wanted 1 read in every run)
+  ok     32,768 B (the positive control)    [16384,16294]x10 (wanted 2 reads in every run)
+== result: every expectation held
