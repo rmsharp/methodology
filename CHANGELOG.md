@@ -297,6 +297,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-14 · [BL-134] S448 evidence 2 of 4 -- the three drivers (`run-amp.sh`, `run-pieces.sh`, `run-storm.sh`) and `results-check.txt`: all 14 fixtures read clean and the stream into each final grep -q is 49 to 13,633 B; nothing sent to KJ5HST/methodology
+
+Added to `docs/planning/bl134-evidence/`: the drivers that ran the harness (the amplified pass bracketed by the positive control, the pieces pass with bash `echo` as the contrast, the storm round bracketed by BL-133's stored `storm.sh`) and `results-check.txt`, one run of each site at `629f5054e995` with every stage's status: all 14 read all-zero, and the stream that feeds each final `grep -q` is 49 to 61 B at the five surface sites, 123 to 557 B at the four status chains, 180 B at `:4725`, 1,663 B at `:3377`, 2,214 B at `:431` and `:432` (one line of BOOTSTRAP.md) and 13,633 B at `:5533` (`tr -s` of the HANDOFFS.md seed, whose file is 13,723 B). Local to the fork; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-11-14 · [BL-134] S448 evidence 1 of 4 -- the harness: `bl134-measure.sh` replays each of the 14 pipelines (same producer, same consumer, a fixture built as the suite builds it, every stage's status kept) with `piece-reader.py`, `storm.sh` and `thresholds.sh`; no change to bin/tests.sh; nothing sent to KJ5HST/methodology
 
 Added to `docs/planning/bl134-evidence/` (new): `bl134-measure.sh` (modes `list`, `check`, `loop`, `amp`, `pieces` and `control`; it lifts `surface_check`, `mutate`, the `s34_*` helpers and `two_block_ledger` out of `bin/tests.sh` by name, so a replay follows the suite), `piece-reader.py` (the size of each read a waiting reader gets), `storm.sh` (16 copies of one site at once) and `thresholds.sh` (the payload size at which each producer type starts to write in more than one piece). Run in every mode at `629f5054e995`; the results are in the next three entries. Local to the fork; nothing sent to `KJ5HST/methodology`.

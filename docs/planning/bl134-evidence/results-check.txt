@@ -1,0 +1,15 @@
+check, 2026-11-14 15:39:11, at HEAD 629f5054e995: one run of each site, every stage's status, and the stream that feeds the final grep -q
+s259    statuses [0 0 0]  stream into the final grep -q: 123 B, 1 lines
+s388    statuses [0 0 0 0]  stream into the final grep -q: 129 B, 1 lines
+s397    statuses [0 0 0]  stream into the final grep -q: 557 B, 1 lines
+s411    statuses [0 0 0 0]  stream into the final grep -q: 129 B, 1 lines
+s431    statuses [0 0]  stream into the final grep -q: 2214 B, 1 lines
+s432    statuses [0 0]  stream into the final grep -q: 2214 B, 1 lines
+s2318   statuses [0 0]  stream into the final grep -q: 59 B, 2 lines
+s2326   statuses [0 0]  stream into the final grep -q: 58 B, 2 lines
+s2335   statuses [0 0]  stream into the final grep -q: 49 B, 2 lines
+s2343   statuses [0 0]  stream into the final grep -q: 55 B, 2 lines
+s2351   statuses [0 0]  stream into the final grep -q: 61 B, 3 lines
+s3377   statuses [0 0]  stream into the final grep -q: 1663 B, 26 lines
+s4725   statuses [0 0]  stream into the final grep -q: 180 B, 1 lines
+s5533   statuses [0 0]  stream into the final grep -q: 13633 B, 0 lines
