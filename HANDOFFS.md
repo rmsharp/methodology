@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S449
+date: 2026-11-14
+status: pending
+active_task: **BL-134 (IN PROGRESS): leave the 13 pipelines in `bin/tests.sh` that S448 measured as never failing (option c), and put a size ceiling on the one near its limit: `tr -s ... < "$STARTER/HANDOFFS.md" | grep -qF` at `bin/tests.sh:5533` writes 13,633 B in one piece against this Mac's 16,384 B single-write limit, and nothing caps `starter-kit/HANDOFFS.md` (13,723 B). One new gate in `.quality-gates.json`, shown red on a scratch copy before it is declared; `bin/tests.sh` is NOT changed; BL-134 closed with the choice recorded. Local to the fork; nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; one picker, answered 'BL-134: leave the 13, cap the one near its limit (Recommended)'.
+```
+
+```handoff
 session: S448
 date: 2026-11-14
 status: complete
