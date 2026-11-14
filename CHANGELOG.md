@@ -293,6 +293,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-13.md` (2 record(s), 65,078 B → 42,978 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-12 → 2026-11-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-13.md`](docs/archive/HANDOFFS-through-2026-11-13.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-13.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-13.md.verify.sh)
+rather than trusting a digest printed here. Live file 65,078 B → 42,978 B (−34.0%).
+
 ### 2026-11-14 · [ad hoc] S445 push -- local `main` pushed to the fork's `origin` at his Yes, 16 commits, fast-forward `7f26213d..4ba29620`, read back by full sha
 
 At the S445 close-out picker he answered 'Yes, push to the fork (Recommended)'. Checked first: `origin` is `https://github.com/rmsharp/methodology.git` (the fork), the tree was clean, `HEAD` was `4ba29620ce62259b78fa8d9e8a5adc904a54ca1e`, and `origin/main` `7f26213d` was its ancestor (a fast-forward). After `git push origin main`, `git ls-remote origin refs/heads/main` read `4ba29620ce62259b78fa8d9e8a5adc904a54ca1e`, equal to local `HEAD`; `git rev-list --count origin/main..main` read 0. `upstream/main` is unchanged at `d50ce290`: nothing was sent to KJ5HST/methodology. This record is the one commit after the push and is kept local, so local `main` is one ahead of `origin/main`.
