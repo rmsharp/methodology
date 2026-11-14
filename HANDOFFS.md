@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S447
+date: 2026-11-14
+status: pending
+active_task: **BL-133 FIX (a) (IN PROGRESS): replace every `echo "$VAR" | grep -q PATTERN` line in `bin/tests.sh` (about 65 today; re-derive) with a here-string, behind a scanner that reads RED on today's tree first, then GREEN after the conversion, with no passing assertion lost (702 / 0). Local to the fork; nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; one picker, answered 'BL-133 fix (a): all 65 lines + scanner (Recommended)'.
+```
+
+```handoff
 session: S446
 date: 2026-11-14
 status: complete
