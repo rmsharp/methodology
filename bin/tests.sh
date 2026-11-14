@@ -4131,7 +4131,7 @@ print(m.group(1).replace(",", "") if m else "NONE")
     rm -f "$M44F"
 fi
 
-echo "== Test 45: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) =="
+echo "== Test 45: no early-exiting consumer decides a fail arm and none reads an echo or printf, so a flake cannot misread a pipeline (BL-97, BL-133, RED-first) =="
 # `:5` sets `pipefail`. A consumer that exits at its first match (`grep -q`, `grep -m`, `head`,
 # `sed q`) can leave its producer with bytes still to write; the producer takes SIGPIPE and the
 # MATCHED pipeline is scored FAILED. Measured at 1.5 KB: `echo "$(cat f)" | grep -q PAT` failed
@@ -4152,6 +4152,20 @@ echo "== Test 45: no early-exiting consumer decides a fail arm, so a flake canno
 # by a here-string, because the middle stage can still be signalled: its consumer must stop
 # exiting early (`grep Y >/dev/null`). Not covered, and none exists today (measured): a NEGATED
 # pipeline (`! ... | grep -q P && pass || fail`), whose flake also reads as a pass.
+#
+# Rule C (BL-133): the ARM is not the only thing that matters. On `&& pass || fail` the flake
+# is a loud false red, and a gate run that reads one costs 25 to 46 minutes to repeat. BL-133
+# measured the cause on `echo "$OUT" | grep -q PAT` under `pipefail`: `grep -q` quits at its
+# first match, the kernel hands a reader that is already waiting a large write in PIECES, and
+# `echo` is killed (SIGPIPE, status 141) while it still has bytes to write; one line of 2,186
+# bytes is split as well as many, and the rate is ambient (0.003% to 2.3% of pipelines in one
+# hour, by machine load). So Rule C flags every early-exiting consumer whose IMMEDIATE producer
+# is `echo` or `printf`, whatever arm it guards, and the cure is the here-string the converted
+# sites already use (`grep -q PAT <<< "$VAR"`: the shell writes the text before `grep` runs, so
+# there is nothing to kill). Not covered, by decision: a producer that is a COMMAND (its cure
+# is to capture its output first, which changes its exit status's meaning) and a longer chain
+# (`echo "$A" | grep X | grep -q Y`: the middle stage is the one signalled); the fixtures below
+# state both as unflagged on purpose.
 #
 # The scanner reads whole logical lines (backslash continuations joined), skips comments and
 # heredoc bodies (so its own fixtures and this very source are not scanned), and ignores a
@@ -4221,78 +4235,123 @@ for k, (n, s) in enumerate(logical):
     for m in re.finditer(r'&&\s*fail\b', s):
         if mask[m.start()] and early_before(s, mask, m.start()):
             found.append((n, "and-fail")); break
-for n, why in found: print("BL97-SITE %d %s" % (n, why))
-print("BL97-TOTAL %d" % len(found))
+# Rule C (BL-133). Walk back from an early-exiting consumer's pipe to the previous top-level
+# separator; the text between is its immediate producer. An `echo` or `printf` there (past any
+# `if`, `while`, `then` or `!`) is a site, in any arm. A producer further back is not: in
+# `echo "$A" | grep X | grep -q Y` the producer of `grep -q` is `grep X`.
+def text_pipe(s, mask):
+    for m in EARLY.finditer(s):
+        if not mask[m.start()]: continue
+        i = m.start() - 1
+        while i >= 0 and not (mask[i] and s[i] in '|;&({'): i -= 1
+        stage = s[i + 1:m.start()].strip()
+        while True:
+            t = re.sub(r'^(?:then|do|else|if|elif|while|until|!)\s+', '', stage)
+            if t == stage: break
+            stage = t
+        if re.match(r'(?:echo|printf)\b', stage): return True
+    return False
+flagged = dict(found)
+for n, s in logical:
+    if s.strip().startswith("#"): continue
+    if text_pipe(s, outside(s)): flagged.setdefault(n, "text-pipe")
+for n in sorted(flagged): print("FLAKE-SITE %d %s" % (n, flagged[n]))
+print("FLAKE-TOTAL %d" % len(flagged))
 PY45
 
 # (1) the live suite: the derived population must be EMPTY.
 SITES45="$(python3 "$SCAN45" "$BIN/tests.sh")"
-TOTAL45="$(grep -oE 'BL97-TOTAL [0-9]+' <<< "$SITES45" | awk '{print $2}')"
-[ "$TOTAL45" = "0" ] && pass "no early-exiting consumer decides a fail arm in bin/tests.sh" \
-    || fail "BL-97 site(s) present: $SITES45"
+TOTAL45="$(grep -oE 'FLAKE-TOTAL [0-9]+' <<< "$SITES45" | awk '{print $2}')"
+[ "$TOTAL45" = "0" ] && pass "no early-exiting consumer decides a fail arm or reads an echo or printf in bin/tests.sh" \
+    || fail "flake site(s) present in bin/tests.sh (BL-97 arm, BL-133 echo or printf): $SITES45"
 
 # (2) THE SCANNER, PROVEN TO FIRE AND TO HOLD ITS FIRE. A detector no input can trip is a comment,
 # and one that trips on everything is noise. Each fixture line that must be flagged ends in the
-# marker HIDDEN; the scanner must name exactly those lines, the visible forms, the converted
-# forms, a capture, a quoted pipe and a comment all passing unflagged.
+# marker FLAGGED; the scanner must name exactly those lines. Passing unflagged: the converted
+# forms, a capture, a quoted pipe and a comment, and the two forms Rule C leaves out on purpose
+# (a command producer, a longer chain).
 FIX45="$(mktemp)"
 cat > "$FIX45" <<'FIX45'
-echo "$A" | grep -q "x" && fail "m" || pass "m"                    # HIDDEN
-printf '%s\n' "$A" | grep -qiE 'x|y' && fail "m" || pass "m"       # HIDDEN
-"$B" "$P" | grep "a" | grep -v '^n' | grep -q "b" && fail "m"      # HIDDEN
-echo "$A" | head -1 | grep -qx "x" && fail "m" || pass "m"          # HIDDEN
-echo "$A" | sed '/x/q' >/dev/null && fail "m" || pass "m"           # HIDDEN
-if echo "$A" | grep -q "x"; then fail "m"; else pass "m"; fi        # HIDDEN
-if "$B" --file "$F" 2>&1 | grep -q 'S13'; then                      # HIDDEN
+echo "$A" | grep -q "x" && fail "m" || pass "m"                    # FLAGGED
+printf '%s\n' "$A" | grep -qiE 'x|y' && fail "m" || pass "m"       # FLAGGED
+"$B" "$P" | grep "a" | grep -v '^n' | grep -q "b" && fail "m"      # FLAGGED
+echo "$A" | head -1 | grep -qx "x" && fail "m" || pass "m"          # FLAGGED
+echo "$A" | sed '/x/q' >/dev/null && fail "m" || pass "m"           # FLAGGED
+if echo "$A" | grep -q "x"; then fail "m"; else pass "m"; fi        # FLAGGED
+if "$B" --file "$F" 2>&1 | grep -q 'S13'; then                      # FLAGGED
     fail "m"
 else
     pass "m"
 fi
+echo "$A" | grep -q "x" && pass "m" || fail "m"                     # FLAGGED
+if echo "$A" | grep -q "x"; then pass "m"; else fail "m"; fi        # FLAGGED
+if ! echo "$A" | grep -q "x"; then pass "m"; else fail "m"; fi      # FLAGGED
+while echo "$A" | grep -q "x"; do A="${A#?}"; done                  # FLAGGED
+[ "$RC" = "1" ] && printf '%s\n' "$A" | grep -qxF "x" && pass "m"   # FLAGGED
+echo "$(fn)" | grep -q "x" && pass "m" || fail "m"                  # FLAGGED
 grep -q "x" <<< "$A" && fail "m" || pass "m"
 OUTC="$("$B" --file "$F" 2>&1)"; grep -q "x" <<< "$OUTC" && fail "m" || pass "m"
 echo "$A" | grep "x" >/dev/null && fail "m" || pass "m"
-echo "$A" | grep -q "x" && pass "m" || fail "m"
-if echo "$A" | grep -q "x"; then pass "m"; else fail "m"; fi
+grep -q "x" <<< "$A" && pass "m" || fail "m"
+if grep -q "x" <<< "$A"; then pass "m"; else fail "m"; fi
 if grep -q "x" <<< "$A"; then fail "m"; else pass "m"; fi
 [ "$(echo "$A" | head -1)" = "x" ] && fail "m" || pass "m"
+echo "$A" | grep "x" | grep -q "y" && pass "m" || fail "m"
+"$B" --file "$F" 2>&1 | grep -q "x" && pass "m" || fail "m"
 echo "grep -q x | grep -q y && fail" >/dev/null
 # echo "$A" | grep -q "x" && fail "m" || pass "m"
 FIX45
-EXP45="$(grep -n 'HIDDEN$' "$FIX45" | cut -d: -f1 | tr '\n' ' ')"
-GOT45="$(python3 "$SCAN45" "$FIX45" | grep -oE 'BL97-SITE [0-9]+' | awk '{print $2}' | tr '\n' ' ')"
+EXP45="$(grep -n 'FLAGGED$' "$FIX45" | cut -d: -f1 | tr '\n' ' ')"
+GOT45="$(python3 "$SCAN45" "$FIX45" | grep -oE 'FLAKE-SITE [0-9]+' | awk '{print $2}' | tr '\n' ' ')"
 [ -n "$EXP45" ] && [ "$GOT45" = "$EXP45" ] \
-    && pass "the scanner flags exactly the marked hidden-form lines ($EXP45)" \
+    && pass "the scanner flags exactly the marked lines ($EXP45)" \
     || fail "scanner fixture: expected lines '$EXP45', got '$GOT45'"
 
-# (3) THE SAME ON THE REAL FILE. Revert one converted site on a COPY -- never the live file -- and
-# the scanner must name that line and no other. The reverting script lives in a heredoc so that
-# its replacement text is not itself a line of this file the scanner reads.
+# (3) THE SAME ON THE REAL FILE. Revert two converted sites on a COPY -- never the live file --
+# one on a `&& fail` arm (Rule A) and one on a `&& pass` arm (Rule C alone), and the scanner must
+# name those two lines and no other. The reverting script lives in a heredoc so that its
+# replacement text is not itself a line of this file the scanner reads.
 M45="$(mktemp)"
-LINE45="$(python3 - "$BIN/tests.sh" "$M45" <<'PYM45'
+LINES45="$(python3 - "$BIN/tests.sh" "$M45" <<'PYM45'
 import re, sys
 src, dst = sys.argv[1], sys.argv[2]
 lines = open(src, encoding="utf-8").read().split("\n")
-pat = re.compile(r'^(?P<ind>\s*)grep (?P<fl>-[A-Za-z]+) (?P<pat>"[^"]*"|\'[^\']*\') <<< "(?P<var>\$[A-Za-z_][A-Za-z0-9_]*)"(?P<tail> && fail .*)$')
-hit = "NONE"
+head = r'^(?P<ind>\s*)grep (?P<fl>-[A-Za-z]+) (?P<pat>"[^"]*"|\'[^\']*\') <<< "(?P<var>\$[A-Za-z_][A-Za-z0-9_]*)"'
+heredoc = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
+live, end = [], None  # the lines outside every heredoc body: a fixture's lines are not the real file's
 for i, ln in enumerate(lines):
-    m = pat.match(ln)
-    if m:
-        lines[i] = '%secho "%s" | grep %s %s%s' % (m["ind"], m["var"], m["fl"], m["pat"], m["tail"])
-        hit = str(i + 1)
-        break
+    if end is not None:
+        if ln.strip() == end: end = None
+        continue
+    live.append(i)
+    h = heredoc.search(ln)
+    if h: end = h.group(2)
+hits = []
+for arm in (r'(?P<tail> && fail .*)$', r'(?P<tail> && pass .*)$'):
+    pat = re.compile(head + arm)
+    hit = "NONE"
+    for i in live:
+        ln = lines[i]
+        m = pat.match(ln)
+        if m:
+            lines[i] = '%secho "%s" | grep %s %s%s' % (m["ind"], m["var"], m["fl"], m["pat"], m["tail"])
+            hit = i + 1
+            break
+    hits.append(hit)
 open(dst, "w", encoding="utf-8").write("\n".join(lines))
-print(hit)
+print(" ".join(str(h) for h in hits))
 PYM45
 )"
-if [ "$LINE45" != "NONE" ] && [ -n "$LINE45" ]; then
+if [ -n "$LINES45" ] && ! grep -q NONE <<< "$LINES45"; then
+    WANT45="$(tr ' ' '\n' <<< "$LINES45" | sort -n | tr '\n' ' ')"
     MUT45="$(python3 "$SCAN45" "$M45")"
-    MUTTOTAL45="$(grep -oE 'BL97-TOTAL [0-9]+' <<< "$MUT45" | awk '{print $2}')"
-    MUTLINE45="$(grep -oE 'BL97-SITE [0-9]+' <<< "$MUT45" | awk '{print $2}' | tr '\n' ' ')"
-    [ "$MUTTOTAL45" = "1" ] && [ "$MUTLINE45" = "$LINE45 " ] \
-        && pass "the scanner fires on a reverted site in the real file, and names it ($LINE45)" \
-        || fail "scanner control: expected 1 site at line $LINE45, got: $MUT45"
+    MUTTOTAL45="$(grep -oE 'FLAKE-TOTAL [0-9]+' <<< "$MUT45" | awk '{print $2}')"
+    MUTLINE45="$(grep -oE 'FLAKE-SITE [0-9]+' <<< "$MUT45" | awk '{print $2}' | tr '\n' ' ')"
+    [ "$MUTTOTAL45" = "2" ] && [ "$MUTLINE45" = "$WANT45" ] \
+        && pass "the scanner fires on a reverted site on each kind of arm in the real file, and names both ($WANT45)" \
+        || fail "scanner control: expected 2 sites at lines '$WANT45', got: $MUT45"
 else
-    fail "scanner control mutation DID NOT APPLY -- no converted \`grep -q PAT <<< \"\$VAR\" && fail\` site left to revert"
+    fail "scanner control mutation DID NOT APPLY -- no converted \`grep -q PAT <<< \"\$VAR\"\` site left to revert on a \`&& fail\` arm and a \`&& pass\` arm ($LINES45)"
 fi
 rm -f "$SCAN45" "$FIX45" "$M45"
 

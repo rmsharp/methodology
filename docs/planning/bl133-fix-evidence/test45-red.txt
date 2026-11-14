@@ -1,0 +1,79 @@
+# Test 45 alone, on bin/tests.sh at the checkpoint commit's parent plus the widened scanner (RED-first), 2026-11-14, S447.
+# Produced by: bash docs/planning/bl133-fix-evidence/run-test45.sh   (exit 1 is the expected RED)
+# Expected: (1) FAIL listing the live flagged lines, (2) PASS, (3) FAIL 'DID NOT APPLY' (no converted && pass site exists yet).
+
+== Test 45: no early-exiting consumer decides a fail arm and none reads an echo or printf, so a flake cannot misread a pipeline (BL-97, BL-133, RED-first) ==
+  FAIL: flake site(s) present in bin/tests.sh (BL-97 arm, BL-133 echo or printf): FLAKE-SITE 65 text-pipe
+FLAKE-SITE 66 text-pipe
+FLAKE-SITE 76 text-pipe
+FLAKE-SITE 82 text-pipe
+FLAKE-SITE 89 text-pipe
+FLAKE-SITE 93 text-pipe
+FLAKE-SITE 100 text-pipe
+FLAKE-SITE 105 text-pipe
+FLAKE-SITE 115 text-pipe
+FLAKE-SITE 116 text-pipe
+FLAKE-SITE 117 text-pipe
+FLAKE-SITE 228 text-pipe
+FLAKE-SITE 229 text-pipe
+FLAKE-SITE 230 text-pipe
+FLAKE-SITE 238 text-pipe
+FLAKE-SITE 247 text-pipe
+FLAKE-SITE 248 text-pipe
+FLAKE-SITE 372 text-pipe
+FLAKE-SITE 377 text-pipe
+FLAKE-SITE 378 text-pipe
+FLAKE-SITE 381 text-pipe
+FLAKE-SITE 403 text-pipe
+FLAKE-SITE 406 text-pipe
+FLAKE-SITE 413 text-pipe
+FLAKE-SITE 414 text-pipe
+FLAKE-SITE 423 text-pipe
+FLAKE-SITE 427 text-pipe
+FLAKE-SITE 688 text-pipe
+FLAKE-SITE 1555 text-pipe
+FLAKE-SITE 1556 text-pipe
+FLAKE-SITE 1626 text-pipe
+FLAKE-SITE 1628 text-pipe
+FLAKE-SITE 1629 text-pipe
+FLAKE-SITE 1637 text-pipe
+FLAKE-SITE 1710 text-pipe
+FLAKE-SITE 1726 text-pipe
+FLAKE-SITE 1733 text-pipe
+FLAKE-SITE 1744 text-pipe
+FLAKE-SITE 1751 text-pipe
+FLAKE-SITE 1864 text-pipe
+FLAKE-SITE 2310 text-pipe
+FLAKE-SITE 2427 text-pipe
+FLAKE-SITE 2430 text-pipe
+FLAKE-SITE 2439 text-pipe
+FLAKE-SITE 2447 text-pipe
+FLAKE-SITE 2452 text-pipe
+FLAKE-SITE 2473 text-pipe
+FLAKE-SITE 2489 text-pipe
+FLAKE-SITE 2504 text-pipe
+FLAKE-SITE 2519 text-pipe
+FLAKE-SITE 2538 text-pipe
+FLAKE-SITE 2552 text-pipe
+FLAKE-SITE 2694 text-pipe
+FLAKE-SITE 2697 text-pipe
+FLAKE-SITE 2706 text-pipe
+FLAKE-SITE 2715 text-pipe
+FLAKE-SITE 2721 text-pipe
+FLAKE-SITE 2731 text-pipe
+FLAKE-SITE 2750 text-pipe
+FLAKE-SITE 2766 text-pipe
+FLAKE-SITE 2776 text-pipe
+FLAKE-SITE 2987 text-pipe
+FLAKE-SITE 3321 text-pipe
+FLAKE-SITE 3330 text-pipe
+FLAKE-SITE 3340 text-pipe
+FLAKE-SITE 3343 text-pipe
+FLAKE-SITE 4405 text-pipe
+FLAKE-SITE 4407 text-pipe
+FLAKE-SITE 4425 text-pipe
+FLAKE-SITE 4430 text-pipe
+FLAKE-TOTAL 70
+  PASS: the scanner flags exactly the marked lines (1 2 3 4 5 6 7 12 13 14 15 16 17 )
+  FAIL: scanner control mutation DID NOT APPLY -- no converted `grep -q PAT <<< "$VAR"` site left to revert on a `&& fail` arm and a `&& pass` arm (353 NONE)
+== Summary: 1 passed, 2 failed, 0 skipped ==
