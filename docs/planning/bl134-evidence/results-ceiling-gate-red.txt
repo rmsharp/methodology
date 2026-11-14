@@ -1,0 +1,3 @@
+== 0. the gate is declared
+  RED    no gate named 'seed-handoffs-size' is declared; gates whose command reads starter-kit/HANDOFFS.md: none
+         so nothing caps the seed that bin/tests.sh:5533 feeds to `tr`. Declare the gate, then re-run.
