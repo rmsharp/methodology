@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S446
+date: 2026-11-14
+status: pending
+active_task: **DIAGNOSE BL-133 (IN PROGRESS): why `bin/tests.sh` Test 40 (5) (`bin/tests.sh:3345`, 'population line hides the unreadable file') reads red inside `quality_ratchet.py --run` (701 passed / 1 failed) and green standalone (702 / 0) in the same clean clone. Reproduce first, then find the cause, then record it; a fix only if small and tested. Nothing is sent to `KJ5HST/methodology`.** The operator's steps: 'go' with no task; a prose Phase 0 report; one picker, answered 'Diagnose BL-133 (Recommended)', 'Yes, trim HANDOFFS.md' and 'Yes, trim CHANGELOG.md'.
+```
+
+```handoff
 session: S445
 date: 2026-11-13
 status: complete
