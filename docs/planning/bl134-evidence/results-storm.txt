@@ -1,0 +1,31 @@
+start 2026-11-14 15:30:11  load 15.73, 9.80, 10.57
+== control before: BL-133's storm.sh, echo "$OUT" | grep -q, 16 x 1000
+N=1000  5c-pattern (byte ~650) fails=27   5b-pattern (byte ~416) fails=39   statuses: b[141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] [141 0] b[141 0] [141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 
+TOTAL pipelines per pattern=16000  5c fails=460  5b fails=538
+load: 79.87, 24.98, 16.00
+== the 14 sites, the exact pipeline, 16 copies each
+TOTAL site=s259 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s397 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s411 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s431 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s432 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s4725 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s5533 mode=loop copies=16 pipelines=6400 sigpipe=0
+TOTAL site=s2318 mode=loop copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s2326 mode=loop copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s2335 mode=loop copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s2343 mode=loop copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s2351 mode=loop copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s3377 mode=loop copies=16 pipelines=960 sigpipe=0
+TOTAL site=s388 mode=loop copies=16 pipelines=96 sigpipe=0
+== the amplified waiting reader (quits after one byte), 16 copies each, the sites with the most bytes
+TOTAL site=s5533 mode=amp copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s431 mode=amp copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s432 mode=amp copies=16 pipelines=2400 sigpipe=0
+TOTAL site=s3377 mode=amp copies=16 pipelines=960 sigpipe=0
+TOTAL site=s397 mode=amp copies=16 pipelines=2400 sigpipe=0
+== control after
+N=1000  5c-pattern (byte ~650) fails=20   5b-pattern (byte ~416) fails=36   statuses: b[141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] [141 0] b[141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] b[1
+TOTAL pipelines per pattern=16000  5c fails=405  5b fails=506
+load: 65.45, 79.47, 51.72
+end   2026-11-14 15:38:29  load 65.45, 79.47, 51.72
