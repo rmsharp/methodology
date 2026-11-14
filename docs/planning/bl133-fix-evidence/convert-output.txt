@@ -1,0 +1,146 @@
+# The converter's write run on bin/tests.sh at e5751964 (S447, 2026-11-14): python3 docs/planning/bl133-fix-evidence/convert-text-pipes.py bin/tests.sh --write
+# Every changed line is shown before (-) and after (+); the last lines are the two self-checks.
+   65  - echo "$OUTPUT" | grep -q "WARNING" && pass "ignore mode warns on tracked files" || fail "ignore mode silent on tracked files"
+       + grep -q "WARNING" <<< "$OUTPUT" && pass "ignore mode warns on tracked files" || fail "ignore mode silent on tracked files"
+   66  - echo "$OUTPUT" | grep -q "git -C .* rm --cached" && pass "warning includes rm --cached command" || fail "warning missing rm command"
+       + grep -q "git -C .* rm --cached" <<< "$OUTPUT" && pass "warning includes rm --cached command" || fail "warning missing rm command"
+   76  - echo "$OUTPUT" | grep -q "mode:    ignore" && pass "auto-detected ignore mode" || fail "mode auto-detect wrong: $OUTPUT"
+       + grep -q "mode:    ignore" <<< "$OUTPUT" && pass "auto-detected ignore mode" || fail "mode auto-detect wrong: $OUTPUT"
+   82  - echo "$OUTPUT" | grep -q "source:  local" && pass "auto-detected local source" || fail "source auto-detect wrong"
+       + grep -q "source:  local" <<< "$OUTPUT" && pass "auto-detected local source" || fail "source auto-detect wrong"
+   89  - echo "$OUT" | grep -q "current" && pass "status: current" || fail "status: current missing"
+       + grep -q "current" <<< "$OUT" && pass "status: current" || fail "status: current missing"
+   93  - echo "$OUT" | grep -q "locally modified" && pass "status: locally modified" || fail "status: locally modified missing"
+       + grep -q "locally modified" <<< "$OUT" && pass "status: locally modified" || fail "status: locally modified missing"
+  100  - echo "$OUT" | grep -Eq "[0-9]+ version" && pass "status: N versions behind detected" || fail "status: N-behind not detected"
+       + grep -Eq "[0-9]+ version" <<< "$OUT" && pass "status: N versions behind detected" || fail "status: N-behind not detected"
+  105  - echo "$OUT" | grep -q "missing" && pass "status: missing" || fail "status: missing not detected"
+       + grep -q "missing" <<< "$OUT" && pass "status: missing" || fail "status: missing not detected"
+  115  - echo "$OUTPUT" | grep -q "ERROR" && pass "sync prints ERROR on local drift" || fail "no ERROR printed"
+       + grep -q "ERROR" <<< "$OUTPUT" && pass "sync prints ERROR on local drift" || fail "no ERROR printed"
+  116  - echo "$OUTPUT" | grep -q -- "--force" && pass "ERROR mentions --force" || fail "ERROR missing --force hint"
+       + grep -q -- "--force" <<< "$OUTPUT" && pass "ERROR mentions --force" || fail "ERROR missing --force hint"
+  117  - echo "$OUTPUT" | grep -q "local modifications" && pass "a full-history source blames local modifications" || fail "ERROR no longer names local modifications"
+       + grep -q "local modifications" <<< "$OUTPUT" && pass "a full-history source blames local modifications" || fail "ERROR no longer names local modifications"
+  228  - echo "$OUT" | grep -q "Disposition" && pass "status: Disposition column present" || fail "status: no Disposition column"
+       + grep -q "Disposition" <<< "$OUT" && pass "status: Disposition column present" || fail "status: no Disposition column"
+  229  - echo "$OUT" | grep -q "tracked" && pass "status: tracked disposition shown" || fail "status: no tracked rows"
+       + grep -q "tracked" <<< "$OUT" && pass "status: tracked disposition shown" || fail "status: no tracked rows"
+  230  - echo "$OUT" | grep -q "seed" && pass "status: seed disposition shown" || fail "status: no seed rows"
+       + grep -q "seed" <<< "$OUT" && pass "status: seed disposition shown" || fail "status: no seed rows"
+  238  - echo "$OUT" | grep -q "current" && pass "status: fresh tree shows current" || fail "status: fresh tree missing current"
+       + grep -q "current" <<< "$OUT" && pass "status: fresh tree shows current" || fail "status: fresh tree missing current"
+  247  - echo "$SEEDLINE" | grep -q "seed" && pass "status: CHANGELOG shown with seed disposition" || fail "status: CHANGELOG not marked seed"
+       + grep -q "seed" <<< "$SEEDLINE" && pass "status: CHANGELOG shown with seed disposition" || fail "status: CHANGELOG not marked seed"
+  248  - echo "$SEEDLINE" | grep -q "absent" && pass "status: absent seed shown as 'absent'" || fail "status: absent seed not 'absent'"
+       + grep -q "absent" <<< "$SEEDLINE" && pass "status: absent seed shown as 'absent'" || fail "status: absent seed not 'absent'"
+  372  - echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md's "Updating an existing project" paragraph promises it is"
+       + grep -q "stale format" <<< "$ROW" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md's "Updating an existing project" paragraph promises it is"
+  377  - echo "$ROW" | grep -q "seed" && pass "status: stale seed keeps its seed disposition" || fail "status: stale seed lost seed disposition"
+       + grep -q "seed" <<< "$ROW" && pass "status: stale seed keeps its seed disposition" || fail "status: stale seed lost seed disposition"
+  378  - echo "$ROW" | grep -q "stale format" && pass "status: pre-v3.1 seed flagged 'present (stale format)'" || fail "status: stale seed not flagged"
+       + grep -q "stale format" <<< "$ROW" && pass "status: pre-v3.1 seed flagged 'present (stale format)'" || fail "status: stale seed not flagged"
+  381  - echo "$OUT" | grep -q "^note:" && pass "status: emits the migration note beneath the table" || fail "status: no migration note for stale seed"
+       + grep -q "^note:" <<< "$OUT" && pass "status: emits the migration note beneath the table" || fail "status: no migration note for stale seed"
+  403  - echo "$NOTE" | grep -q "for CHANGELOG.md, replace the rules text or old header above the first entry" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
+       + grep -q "for CHANGELOG.md, replace the rules text or old header above the first entry" <<< "$NOTE" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
+  406  - echo "$NOTE" | grep -q "keeping any archive-pointer block and month heading" && pass "status: the CHANGELOG.md route keeps what the trimmer wrote" || fail "status: the CHANGELOG.md route would delete the trimmer's pointer block"
+       + grep -q "keeping any archive-pointer block and month heading" <<< "$NOTE" && pass "status: the CHANGELOG.md route keeps what the trimmer wrote" || fail "status: the CHANGELOG.md route would delete the trimmer's pointer block"
+  413  - echo "$NOTE" | grep -q "1 seed predates the current format (HANDOFFS.md," && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
+       + grep -q "1 seed predates the current format (HANDOFFS.md," <<< "$NOTE" && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
+  414  - echo "$NOTE" | grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
+       + grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" <<< "$NOTE" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
+  423  - echo "$ROW" | grep -q "stale format" && pass "status: a HANDOFFS.md with the old size section but no format marker flagged stale" || fail "status: the pre-handoffs-format-2 seed read current — its heading alone is not a format marker"
+       + grep -q "stale format" <<< "$ROW" && pass "status: a HANDOFFS.md with the old size section but no format marker flagged stale" || fail "status: the pre-handoffs-format-2 seed read current — its heading alone is not a format marker"
+  427  - echo "$NOTE" | grep -q "for CHANGELOG.md, replace" && echo "$NOTE" | grep -q "for HANDOFFS.md, bring across" && pass "status: two stale seeds in one project get both routes" || fail "status: the note lacks a route when both seeds are stale"
+       + grep -q "for CHANGELOG.md, replace" <<< "$NOTE" && grep -q "for HANDOFFS.md, bring across" <<< "$NOTE" && pass "status: two stale seeds in one project get both routes" || fail "status: the note lacks a route when both seeds are stale"
+  688  - echo "$OUT" | grep -qi "never authoritative\|non-authoritative\|corroboration" && pass "corroboration/non-authoritative disclaimer present in output" || fail "no corroboration/non-authoritative disclaimer in output"
+       + grep -qi "never authoritative\|non-authoritative\|corroboration" <<< "$OUT" && pass "corroboration/non-authoritative disclaimer present in output" || fail "no corroboration/non-authoritative disclaimer in output"
+ 1555  - echo "$OUT30" | grep -q "Claude Opus 5" && pass "list-form (\`- **Model:**\`) bullet still parsed" || fail "list-form bullet regressed"
+       + grep -q "Claude Opus 5" <<< "$OUT30" && pass "list-form (\`- **Model:**\`) bullet still parsed" || fail "list-form bullet regressed"
+ 1556  - echo "$OUT30" | grep -q "Claude Sonnet 5" && pass "bare-form (\`**Model:**\`, this repo's live dialect) bullet now parsed" || fail "bare-form bullet NOT parsed -- BL-20 unfixed"
+       + grep -q "Claude Sonnet 5" <<< "$OUT30" && pass "bare-form (\`**Model:**\`, this repo's live dialect) bullet now parsed" || fail "bare-form bullet NOT parsed -- BL-20 unfixed"
+ 1626  - echo "$OUT31" | grep -q '\[BL-9\]\[BL-10\]' && pass "multi-tag \`### \` header (\`[BL-9][BL-10]\`) parsed as its own entry" || fail "multi-tag header still not parsed -- BL-33 unfixed"
+       + grep -q '\[BL-9\]\[BL-10\]' <<< "$OUT31" && pass "multi-tag \`### \` header (\`[BL-9][BL-10]\`) parsed as its own entry" || fail "multi-tag header still not parsed -- BL-33 unfixed"
+ 1628  - echo "$OUT31" | grep -qi "WARNING.*BL-33" && pass "an unparsed \`### \` header is reported as a loud warning, not silently folded" || fail "no loud warning for the unparsed \`### \` header"
+       + grep -qi "WARNING.*BL-33" <<< "$OUT31" && pass "an unparsed \`### \` header is reported as a loud warning, not silently folded" || fail "no loud warning for the unparsed \`### \` header"
+ 1629  - echo "$OUT31" | grep -q "2026-01-03 \[BL-11\] malformed header" && pass "the warning names the exact unparsed line" || fail "warning did not identify the offending line"
+       + grep -q "2026-01-03 \[BL-11\] malformed header" <<< "$OUT31" && pass "the warning names the exact unparsed line" || fail "warning did not identify the offending line"
+ 1637  - echo "$OUT31" | grep -q "Claude Opus 5.1" && pass "the valid entry AFTER the malformed header still parsed (parser not wedged)" || fail "entry after the malformed header failed to parse"
+       + grep -q "Claude Opus 5.1" <<< "$OUT31" && pass "the valid entry AFTER the malformed header still parsed (parser not wedged)" || fail "entry after the malformed header failed to parse"
+ 1710  - if echo "$OUTALL" | grep -q '^check-learnings: OK'; then
+       + if grep -q '^check-learnings: OK' <<< "$OUTALL"; then
+ 1726  - echo "$OUT" | grep -q "has 3 column" \
+       + grep -q "has 3 column" <<< "$OUT" \
+ 1733  - echo "$OUT" | grep -q "duplicate Learning number #12" \
+       + grep -q "duplicate Learning number #12" <<< "$OUT" \
+ 1744  - echo "$OUT" | grep -q "missing #11" \
+       + grep -q "missing #11" <<< "$OUT" \
+ 1751  - echo "$OUT" | grep -q "non-table line inside the Learnings table" \
+       + grep -q "non-table line inside the Learnings table" <<< "$OUT" \
+ 1864  - if echo "$OUT33" | grep -q '^check-learnings: OK'; then
+       + if grep -q '^check-learnings: OK' <<< "$OUT33"; then
+ 2310  - if [ -z "$(echo "$OUT36" | grep -v '^POP ')" ] && echo "$POP36" | grep -qv 'items=0'; then
+       + if [ -z "$(echo "$OUT36" | grep -v '^POP ')" ] && grep -qv 'items=0' <<< "$POP36"; then
+ 2427  - echo "$OUT37" | grep -q '^check-learnings: OK' \
+       + grep -q '^check-learnings: OK' <<< "$OUT37" \
+ 2430  - echo "$OUT37" | grep -qE 'row budget: [1-9][0-9]* row\(s\), 0 over 1,500 B' \
+       + grep -qE 'row budget: [1-9][0-9]* row\(s\), 0 over 1,500 B' <<< "$OUT37" \
+ 2439  - echo "$OUT37" | grep -q "row #$N37 is 1,700 B, over the 1,500 B per-row budget by 200" \
+       + grep -q "row #$N37 is 1,700 B, over the 1,500 B per-row budget by 200" <<< "$OUT37" \
+ 2447  - echo "$(cl37)" | grep -q '^check-learnings: OK' \
+       + grep -q '^check-learnings: OK' <<< "$(cl37)" \
+ 2452  - echo "$(cl37)" | grep -q "row #$N37 is 1,501 B" \
+       + grep -q "row #$N37 is 1,501 B" <<< "$(cl37)" \
+ 2473  - echo "$OUT37" | grep -q "row #$N37 is 1,900 B" \
+       + grep -q "row #$N37 is 1,900 B" <<< "$OUT37" \
+ 2489  - echo "$(cl37)" | grep -q 'row #3 is' \
+       + grep -q 'row #3 is' <<< "$(cl37)" \
+ 2504  - echo "$OUT37" | grep -qE 'row budget: [1-9][0-9]* row\(s\)' \
+       + grep -qE 'row budget: [1-9][0-9]* row\(s\)' <<< "$OUT37" \
+ 2519  - echo "$OUT37" | grep -q 'is 1,900 B' \
+       + grep -q 'is 1,900 B' <<< "$OUT37" \
+ 2538  - echo "$OUT37" | grep -q "row #$N37 is 1,500 B" \
+       + grep -q "row #$N37 is 1,500 B" <<< "$OUT37" \
+ 2552  - echo "$OUT37" | grep -q "row #$N37 is 1,900 B" \
+       + grep -q "row #$N37 is 1,900 B" <<< "$OUT37" \
+ 2694  - echo "$OUT38" | grep -q '^check-handoff: OK' \
+       + grep -q '^check-handoff: OK' <<< "$OUT38" \
+ 2697  - echo "$OUT38" | grep -q 'record budget: 0 unwritten record(s), 0 over' \
+       + grep -q 'record budget: 0 unwritten record(s), 0 over' <<< "$OUT38" \
+ 2706  - echo "$OUT38" | grep -q "record $S38 is 20,000 B, over the 12,288 B per-record budget by 7,712" \
+       + grep -q "record $S38 is 20,000 B, over the 12,288 B per-record budget by 7,712" <<< "$OUT38" \
+ 2715  - echo "$OUT38" | grep -q '^check-handoff: OK' \
+       + grep -q '^check-handoff: OK' <<< "$OUT38" \
+ 2721  - echo "$OUT38" | grep -q "record $S38 is 12,289 B" \
+       + grep -q "record $S38 is 12,289 B" <<< "$OUT38" \
+ 2731  - echo "$OUT38" | grep -q "record $S38 is 20,000 B" \
+       + grep -q "record $S38 is 20,000 B" <<< "$OUT38" \
+ 2750  - echo "$(ch38)" | grep -q 'record budget: 0 unwritten record(s), 0 over' \
+       + grep -q 'record budget: 0 unwritten record(s), 0 over' <<< "$(ch38)" \
+ 2766  - echo "$(ch38)" | grep -q 'per-record budget by' \
+       + grep -q 'per-record budget by' <<< "$(ch38)" \
+ 2776  - echo "$OUT38" | grep -q 'record budget SKIPPED' \
+       + grep -q 'record budget SKIPPED' <<< "$OUT38" \
+ 2987  - echo "$OUT38" | grep -q "record $S38 is 12,288 B" \
+       + grep -q "record $S38 is 12,288 B" <<< "$OUT38" \
+ 3321  - echo "$OUT40_BARE" | grep -q 'across 1 file: live 1 + archived 0' \
+       + grep -q 'across 1 file: live 1 + archived 0' <<< "$OUT40_BARE" \
+ 3330  - echo "$OUT40_TWO" | grep -q 'across 2 files: live 1 + archived 1' \
+       + grep -q 'across 2 files: live 1 + archived 1' <<< "$OUT40_TWO" \
+ 3340  - echo "$OUT40_UNREAD" | grep -q 'UNREADABLE' \
+       + grep -q 'UNREADABLE' <<< "$OUT40_UNREAD" \
+ 3343  - echo "$OUT40_UNREAD" | grep -q '1 file UNREADABLE and excluded' \
+       + grep -q '1 file UNREADABLE and excluded' <<< "$OUT40_UNREAD" \
+ 4405  - printf '%s\n' "$OUT" | grep -qxF "  source:  github ($U)" \
+       + grep -qxF "  source:  github ($U)" <<< "$OUT" \
+ 4407  - printf '%s\n' "$OUT" | grep -q "^  version: .*$SHORT" && ! printf '%s\n' "$OUT" | grep -q '^  version: github:' \
+       + grep -q "^  version: .*$SHORT" <<< "$OUT" && ! grep -q '^  version: github:' <<< "$OUT" \
+ 4425  - printf '%s\n' "$OUT" | grep -qxF "    $GONE" && printf '%s\n' "$OUT" | grep -q "1 of [0-9]* distributed file(s) do not exist in $U" \
+       + grep -qxF "    $GONE" <<< "$OUT" && grep -q "1 of [0-9]* distributed file(s) do not exist in $U" <<< "$OUT" \
+ 4430  - [ "$RC" = "1" ] && printf '%s\n' "$OUT" | grep -qxF "    $GONE" \
+       + [ "$RC" = "1" ] && grep -qxF "    $GONE" <<< "$OUT" \
+converted 70 of 70 flagged lines; refused 0
+self-check 1, the scanner on the result: 0 flagged line(s)
+self-check 2, moved words only: 0 mismatch(es) in 70 changed line(s)
+wrote bin/tests.sh

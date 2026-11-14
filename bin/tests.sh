@@ -62,8 +62,8 @@ OUTPUT="$("$BIN/sync" "$P" --mode=ignore 2>&1)"
 grep -q "^/SESSION_RUNNER.md$" "$P/.gitignore" && pass "gitignore has SESSION_RUNNER" || fail "gitignore missing SESSION_RUNNER"
 grep -q "^/SAFEGUARDS.md$" "$P/.gitignore" && pass "gitignore has SAFEGUARDS" || fail "gitignore missing SAFEGUARDS"
 grep -q "^/methodology_dashboard.py$" "$P/.gitignore" && pass "gitignore has dashboard" || fail "gitignore missing dashboard"
-echo "$OUTPUT" | grep -q "WARNING" && pass "ignore mode warns on tracked files" || fail "ignore mode silent on tracked files"
-echo "$OUTPUT" | grep -q "git -C .* rm --cached" && pass "warning includes rm --cached command" || fail "warning missing rm command"
+grep -q "WARNING" <<< "$OUTPUT" && pass "ignore mode warns on tracked files" || fail "ignore mode silent on tracked files"
+grep -q "git -C .* rm --cached" <<< "$OUTPUT" && pass "warning includes rm --cached command" || fail "warning missing rm command"
 # Idempotent on second run
 "$BIN/sync" "$P" --mode=ignore >/dev/null
 [ "$(grep -c '^/SESSION_RUNNER.md$' "$P/.gitignore")" = "1" ] && pass "idempotent gitignore" || fail "gitignore duplicated"
@@ -73,36 +73,36 @@ echo "== Test 4: auto-detect mode from .gitignore =="
 P="$(mktemp_project)"
 printf "/SESSION_RUNNER.md\n/SAFEGUARDS.md\n/methodology_dashboard.py\n" > "$P/.gitignore"
 OUTPUT="$("$BIN/sync" "$P" 2>&1)"
-echo "$OUTPUT" | grep -q "mode:    ignore" && pass "auto-detected ignore mode" || fail "mode auto-detect wrong: $OUTPUT"
+grep -q "mode:    ignore" <<< "$OUTPUT" && pass "auto-detected ignore mode" || fail "mode auto-detect wrong: $OUTPUT"
 rm -rf "$P"
 
 echo "== Test 5: auto-detect source prefers local sibling =="
 P="$(mktemp_project)"
 OUTPUT="$("$BIN/sync" "$P" --dry-run 2>&1)"
-echo "$OUTPUT" | grep -q "source:  local" && pass "auto-detected local source" || fail "source auto-detect wrong"
+grep -q "source:  local" <<< "$OUTPUT" && pass "auto-detected local source" || fail "source auto-detect wrong"
 rm -rf "$P"
 
 echo "== Test 6: status reports current / modified / N-behind / missing =="
 P="$(mktemp_project)"
 "$BIN/sync" "$P" --mode=commit >/dev/null
 OUT="$("$BIN/status" "$P")"
-echo "$OUT" | grep -q "current" && pass "status: current" || fail "status: current missing"
+grep -q "current" <<< "$OUT" && pass "status: current" || fail "status: current missing"
 
 echo "# local edit" >> "$P/SESSION_RUNNER.md"
 OUT="$("$BIN/status" "$P")"
-echo "$OUT" | grep -q "locally modified" && pass "status: locally modified" || fail "status: locally modified missing"
+grep -q "locally modified" <<< "$OUT" && pass "status: locally modified" || fail "status: locally modified missing"
 
 # Revert to an older blob from methodology history
 OLDER_COMMIT="$(git -C "$METHODOLOGY" log --format=%H -- starter-kit/SESSION_RUNNER.md | sed -n '2p')"
 if [ -n "$OLDER_COMMIT" ]; then
     git -C "$METHODOLOGY" show "$OLDER_COMMIT:starter-kit/SESSION_RUNNER.md" > "$P/SESSION_RUNNER.md"
     OUT="$("$BIN/status" "$P")"
-    echo "$OUT" | grep -Eq "[0-9]+ version" && pass "status: N versions behind detected" || fail "status: N-behind not detected"
+    grep -Eq "[0-9]+ version" <<< "$OUT" && pass "status: N versions behind detected" || fail "status: N-behind not detected"
 fi
 
 rm "$P/SAFEGUARDS.md"
 OUT="$("$BIN/status" "$P")"
-echo "$OUT" | grep -q "missing" && pass "status: missing" || fail "status: missing not detected"
+grep -q "missing" <<< "$OUT" && pass "status: missing" || fail "status: missing not detected"
 rm -rf "$P"
 
 echo "== Test 7: sync refuses to overwrite locally-modified files without --force =="
@@ -112,9 +112,9 @@ echo "# LOCAL CUSTOMIZATION" >> "$P/SESSION_RUNNER.md"
 BEFORE="$(cat "$P/SESSION_RUNNER.md")"
 OUTPUT="$("$BIN/sync" "$P" 2>&1)"; RC=$?
 [ "$RC" != "0" ] && pass "sync exits non-zero when local drift present" || fail "sync exited 0 despite local drift"
-echo "$OUTPUT" | grep -q "ERROR" && pass "sync prints ERROR on local drift" || fail "no ERROR printed"
-echo "$OUTPUT" | grep -q -- "--force" && pass "ERROR mentions --force" || fail "ERROR missing --force hint"
-echo "$OUTPUT" | grep -q "local modifications" && pass "a full-history source blames local modifications" || fail "ERROR no longer names local modifications"
+grep -q "ERROR" <<< "$OUTPUT" && pass "sync prints ERROR on local drift" || fail "no ERROR printed"
+grep -q -- "--force" <<< "$OUTPUT" && pass "ERROR mentions --force" || fail "ERROR missing --force hint"
+grep -q "local modifications" <<< "$OUTPUT" && pass "a full-history source blames local modifications" || fail "ERROR no longer names local modifications"
 [ "$(cat "$P/SESSION_RUNNER.md")" = "$BEFORE" ] && pass "file unchanged when blocked" || fail "file modified despite block"
 
 # --force proceeds
@@ -225,9 +225,9 @@ echo "== Test 15: status emits per-file rows with a disposition column (Phase 4)
 P="$(mktemp_project)"
 "$BIN/sync" "$P" --mode=commit >/dev/null
 OUT="$("$BIN/status" "$P")"
-echo "$OUT" | grep -q "Disposition" && pass "status: Disposition column present" || fail "status: no Disposition column"
-echo "$OUT" | grep -q "tracked" && pass "status: tracked disposition shown" || fail "status: no tracked rows"
-echo "$OUT" | grep -q "seed" && pass "status: seed disposition shown" || fail "status: no seed rows"
+grep -q "Disposition" <<< "$OUT" && pass "status: Disposition column present" || fail "status: no Disposition column"
+grep -q "tracked" <<< "$OUT" && pass "status: tracked disposition shown" || fail "status: no tracked rows"
+grep -q "seed" <<< "$OUT" && pass "status: seed disposition shown" || fail "status: no seed rows"
 # One data row per manifest entry (full Option-B corpus, not a fixed three)
 EXPECTED="$(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; print(len(_manifest.DISTRIBUTION))")"
 # A table row STARTS with the project's name; the `layout: <name>  <kind>` line P6 added before the table names it too,
@@ -235,7 +235,7 @@ EXPECTED="$(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest
 GOT="$(echo "$OUT" | grep -c "^$(basename "$P") ")"
 [ "$GOT" = "$EXPECTED" ] && pass "status: one row per manifest file ($GOT == $EXPECTED)" || fail "status: row count $GOT != manifest $EXPECTED"
 # Freshly-synced tree: every tracked file current, nothing flagged as drift
-echo "$OUT" | grep -q "current" && pass "status: fresh tree shows current" || fail "status: fresh tree missing current"
+grep -q "current" <<< "$OUT" && pass "status: fresh tree shows current" || fail "status: fresh tree missing current"
 if grep -Eq "locally modified|versions? behind" <<< "$OUT"; then fail "status: fresh tree shows spurious drift"; else pass "status: fresh tree shows no drift"; fi
 rm -rf "$P"
 
@@ -244,8 +244,8 @@ P="$(mktemp_project)"
 "$BIN/sync" "$P" >/dev/null
 rm -f "$P/CHANGELOG.md"   # CHANGELOG.md is a SEED file (adopter-owned)
 SEEDLINE="$("$BIN/status" "$P" | grep "CHANGELOG.md")"
-echo "$SEEDLINE" | grep -q "seed" && pass "status: CHANGELOG shown with seed disposition" || fail "status: CHANGELOG not marked seed"
-echo "$SEEDLINE" | grep -q "absent" && pass "status: absent seed shown as 'absent'" || fail "status: absent seed not 'absent'"
+grep -q "seed" <<< "$SEEDLINE" && pass "status: CHANGELOG shown with seed disposition" || fail "status: CHANGELOG not marked seed"
+grep -q "absent" <<< "$SEEDLINE" && pass "status: absent seed shown as 'absent'" || fail "status: absent seed not 'absent'"
 if grep -q "missing" <<< "$SEEDLINE"; then fail "status: absent seed mislabeled as drift (missing)"; else pass "status: absent seed NOT flagged as drift"; fi
 rm -rf "$P"
 
@@ -369,16 +369,16 @@ SEED1="$METHODOLOGY/tools/fixtures/seed-CHANGELOG-ledger-format-1.md"
 grep -q "Authoritative Action Ledger" "$SEED1" && pass "test: the frozen pre-ledger-format-2 seed carries the current title" || fail "test-bug: the frozen seed lacks the title it stands for"
 cp "$SEED1" "$P/CHANGELOG.md"
 ROW="$("$BIN/status" "$P" | grep "CHANGELOG.md" | grep -v '^note:')"
-echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md's "Updating an existing project" paragraph promises it is"
+grep -q "stale format" <<< "$ROW" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md's "Updating an existing project" paragraph promises it is"
 # (c) Replace the seed with a pre-v3.1 (Keep-a-Changelog) shape lacking the ledger-title marker.
 printf '# Changelog\n\nAll notable changes to this project.\n\n## [Unreleased]\n' > "$P/CHANGELOG.md"
 OUT="$("$BIN/status" "$P")"
 ROW="$(echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:')"   # table row only, note excluded
-echo "$ROW" | grep -q "seed" && pass "status: stale seed keeps its seed disposition" || fail "status: stale seed lost seed disposition"
-echo "$ROW" | grep -q "stale format" && pass "status: pre-v3.1 seed flagged 'present (stale format)'" || fail "status: stale seed not flagged"
+grep -q "seed" <<< "$ROW" && pass "status: stale seed keeps its seed disposition" || fail "status: stale seed lost seed disposition"
+grep -q "stale format" <<< "$ROW" && pass "status: pre-v3.1 seed flagged 'present (stale format)'" || fail "status: stale seed not flagged"
 # Advisory only — never reclassified as drift.
 if grep -Eq "missing|locally modified|versions? behind" <<< "$ROW"; then fail "status: stale seed mislabeled as drift"; else pass "status: stale seed NOT treated as drift"; fi
-echo "$OUT" | grep -q "^note:" && pass "status: emits the migration note beneath the table" || fail "status: no migration note for stale seed"
+grep -q "^note:" <<< "$OUT" && pass "status: emits the migration note beneath the table" || fail "status: no migration note for stale seed"
 # (d) A seed without a format marker (SESSION_NOTES.md) is never format-checked → never stale.
 echo "arbitrary adopter content" > "$P/SESSION_NOTES.md"
 grep "SESSION_NOTES.md" <<< "$("$BIN/status" "$P")" | grep -v '^note:' | grep "stale format" >/dev/null && fail "status: markerless seed mis-flagged" || pass "status: markerless seed never flagged stale"
@@ -400,18 +400,18 @@ echo "$MULTI" | grep '^note:' | grep -q "2 seeds predate" && pass "status: note 
 # matter would delete what a trimmer wrote there (a pointer block, a count sentence). The note once gave
 # the replace route for both. P is stale in CHANGELOG.md only (c/e); P2 gets a stale HANDOFFS.md alone.
 NOTE="$("$BIN/status" "$P" | grep '^note:')"
-echo "$NOTE" | grep -q "for CHANGELOG.md, replace the rules text or old header above the first entry" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
+grep -q "for CHANGELOG.md, replace the rules text or old header above the first entry" <<< "$NOTE" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
 # The trimmer writes an archive-pointer block and a month heading above the first entry; a route that
 # replaced everything there would delete them (an adopter's migration hit exactly this).
-echo "$NOTE" | grep -q "keeping any archive-pointer block and month heading" && pass "status: the CHANGELOG.md route keeps what the trimmer wrote" || fail "status: the CHANGELOG.md route would delete the trimmer's pointer block"
+grep -q "keeping any archive-pointer block and month heading" <<< "$NOTE" && pass "status: the CHANGELOG.md route keeps what the trimmer wrote" || fail "status: the CHANGELOG.md route would delete the trimmer's pointer block"
 grep -q "Size, and when to archive" <<< "$NOTE" && fail "status: the note gives HANDOFFS.md's route when only CHANGELOG.md is stale" || pass "status: no HANDOFFS.md route when only CHANGELOG.md is stale"
 cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"   # P2's CHANGELOG.md was stale from (f): current seed again
 printf '# Handoff Receipts\n\nNewest on top; prepend-only.\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
 OUT="$("$BIN/status" "$P2")"
 echo "$OUT" | grep "HANDOFFS.md" | grep -v '^note:' | grep -q "stale format" && pass "status: a HANDOFFS.md without the size section flagged 'present (stale format)'" || fail "status: the stale HANDOFFS.md NOT flagged"
 NOTE="$(echo "$OUT" | grep '^note:')"
-echo "$NOTE" | grep -q "1 seed predates the current format (HANDOFFS.md," && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
-echo "$NOTE" | grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
+grep -q "1 seed predates the current format (HANDOFFS.md," <<< "$NOTE" && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
+grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" <<< "$NOTE" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
 grep -qi "replace" <<< "$NOTE" && fail "status: the note tells a stale HANDOFFS.md to replace its front matter" || pass "status: no replace route for a stale HANDOFFS.md"
 # The HANDOFFS.md seed as shipped before handoffs-format 2 already had the size section's heading, but
 # with the old premise in it (a 65,536 B byte row priced as a "context tax"). Keyed on that heading, it read
@@ -420,11 +420,11 @@ grep -q "handoffs-format: 2" "$STARTER/HANDOFFS.md" && pass "test: the shipped H
 cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"
 printf '# Handoff Receipts\n\n## Size, and when to archive\n\n| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file |\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
 ROW="$("$BIN/status" "$P2" | grep "HANDOFFS.md" | grep -v '^note:')"
-echo "$ROW" | grep -q "stale format" && pass "status: a HANDOFFS.md with the old size section but no format marker flagged stale" || fail "status: the pre-handoffs-format-2 seed read current — its heading alone is not a format marker"
+grep -q "stale format" <<< "$ROW" && pass "status: a HANDOFFS.md with the old size section but no format marker flagged stale" || fail "status: the pre-handoffs-format-2 seed read current — its heading alone is not a format marker"
 # Both stale in one project: both routes, one each.
 cp "$SEED1" "$P2/CHANGELOG.md"
 NOTE="$("$BIN/status" "$P2" | grep '^note:')"
-echo "$NOTE" | grep -q "for CHANGELOG.md, replace" && echo "$NOTE" | grep -q "for HANDOFFS.md, bring across" && pass "status: two stale seeds in one project get both routes" || fail "status: the note lacks a route when both seeds are stale"
+grep -q "for CHANGELOG.md, replace" <<< "$NOTE" && grep -q "for HANDOFFS.md, bring across" <<< "$NOTE" && pass "status: two stale seeds in one project get both routes" || fail "status: the note lacks a route when both seeds are stale"
 # The section the note points to gives the same HANDOFFS.md route, so following the pointer cannot
 # contradict the note (the note cites BOOTSTRAP.md's "Updating an existing project from an earlier
 # methodology version" paragraph).
@@ -685,7 +685,7 @@ fi
 
 grep -q "S41" <<< "$OUT" && fail "entry with no Model bullet was fabricated into the PRIMARY section" || pass "entry without a Model bullet correctly omitted from PRIMARY"
 
-echo "$OUT" | grep -qi "never authoritative\|non-authoritative\|corroboration" && pass "corroboration/non-authoritative disclaimer present in output" || fail "no corroboration/non-authoritative disclaimer in output"
+grep -qi "never authoritative\|non-authoritative\|corroboration" <<< "$OUT" && pass "corroboration/non-authoritative disclaimer present in output" || fail "no corroboration/non-authoritative disclaimer in output"
 
 # Same fixture, but WITHOUT --no-git: exercises the real SOURCE 3 (git trailers)
 # against this repo's actual commit history, since the plan's own completion
@@ -1552,8 +1552,8 @@ EOF
 OUT30="$("$BIN/model-report" --changelog "$CL30" --handoffs "$HO30" --no-git 2>&1)"
 rm -f "$CL30" "$HO30"
 
-echo "$OUT30" | grep -q "Claude Opus 5" && pass "list-form (\`- **Model:**\`) bullet still parsed" || fail "list-form bullet regressed"
-echo "$OUT30" | grep -q "Claude Sonnet 5" && pass "bare-form (\`**Model:**\`, this repo's live dialect) bullet now parsed" || fail "bare-form bullet NOT parsed -- BL-20 unfixed"
+grep -q "Claude Opus 5" <<< "$OUT30" && pass "list-form (\`- **Model:**\`) bullet still parsed" || fail "list-form bullet regressed"
+grep -q "Claude Sonnet 5" <<< "$OUT30" && pass "bare-form (\`**Model:**\`, this repo's live dialect) bullet now parsed" || fail "bare-form bullet NOT parsed -- BL-20 unfixed"
 grep -q "S12" <<< "$OUT30" && fail "control entry with no Model bullet was fabricated into Source 1" || pass "control entry without a Model bullet correctly omitted"
 
 # Real-file proof, not just a synthetic fixture: BL-20's actual population lives in this repo's own
@@ -1623,10 +1623,10 @@ EOF
 OUT31="$("$BIN/model-report" --changelog "$CL31" --handoffs "$HO31" --no-git 2>&1)"
 rm -f "$CL31" "$HO31"
 
-echo "$OUT31" | grep -q '\[BL-9\]\[BL-10\]' && pass "multi-tag \`### \` header (\`[BL-9][BL-10]\`) parsed as its own entry" || fail "multi-tag header still not parsed -- BL-33 unfixed"
+grep -q '\[BL-9\]\[BL-10\]' <<< "$OUT31" && pass "multi-tag \`### \` header (\`[BL-9][BL-10]\`) parsed as its own entry" || fail "multi-tag header still not parsed -- BL-33 unfixed"
 grep -q "Claude Haiku 4.5" <<< "$OUT31" && fail "malformed header's Model bullet was fabricated into some other entry" || pass "malformed header's Model bullet correctly dropped, not fabricated"
-echo "$OUT31" | grep -qi "WARNING.*BL-33" && pass "an unparsed \`### \` header is reported as a loud warning, not silently folded" || fail "no loud warning for the unparsed \`### \` header"
-echo "$OUT31" | grep -q "2026-01-03 \[BL-11\] malformed header" && pass "the warning names the exact unparsed line" || fail "warning did not identify the offending line"
+grep -qi "WARNING.*BL-33" <<< "$OUT31" && pass "an unparsed \`### \` header is reported as a loud warning, not silently folded" || fail "no loud warning for the unparsed \`### \` header"
+grep -q "2026-01-03 \[BL-11\] malformed header" <<< "$OUT31" && pass "the warning names the exact unparsed line" || fail "warning did not identify the offending line"
 OPUS5_LN="$(echo "$OUT31" | grep -n "Claude Opus 5$" | head -1 | cut -d: -f1)"
 SONNET_LN="$(echo "$OUT31" | grep -n "Claude Sonnet 5" | head -1 | cut -d: -f1)"
 if [ -n "$OPUS5_LN" ] && [ -n "$SONNET_LN" ] && [ "$SONNET_LN" -gt "$OPUS5_LN" ]; then
@@ -1634,7 +1634,7 @@ if [ -n "$OPUS5_LN" ] && [ -n "$SONNET_LN" ] && [ "$SONNET_LN" -gt "$OPUS5_LN" ]
 else
     fail "entry before the multi-tag header lost or misattributed its Model value (OPUS5_LN=$OPUS5_LN SONNET_LN=$SONNET_LN)"
 fi
-echo "$OUT31" | grep -q "Claude Opus 5.1" && pass "the valid entry AFTER the malformed header still parsed (parser not wedged)" || fail "entry after the malformed header failed to parse"
+grep -q "Claude Opus 5.1" <<< "$OUT31" && pass "the valid entry AFTER the malformed header still parsed (parser not wedged)" || fail "entry after the malformed header failed to parse"
 
 # Real-file proof: this repo's own ledger carries exactly the multi-tag header BL-33
 # describes (`[BL-14][BL-17]`, CHANGELOG.md:378 at raise time) and no other unparsed `### ` lines --
@@ -1707,7 +1707,7 @@ fi
 
 # The canonical table and the citation sweep together, against the live corpus.
 OUTALL="$("$BIN/check-learnings" 2>&1)"
-if echo "$OUTALL" | grep -q '^check-learnings: OK'; then
+if grep -q '^check-learnings: OK' <<< "$OUTALL"; then
     pass "canonical table + distributed-corpus citations: fully clean"
 else
     fail "canonical table + distributed-corpus citations: expected clean, got: $OUTALL"
@@ -1723,14 +1723,14 @@ fi
 # and anchoring there mutates the wrong set and proves nothing (this happened).
 if mutate "$RUNNER" "$F" 's.replace("| 13 | **A forward-looking", "| 14 | three | columns |\n| 13 | **A forward-looking", 1)'; then
     OUT="$("$BIN/check-learnings" --file "$F" --no-citations 2>&1)"
-    echo "$OUT" | grep -q "has 3 column" \
+    grep -q "has 3 column" <<< "$OUT" \
         && pass "malformed 3-column row caught" || fail "malformed 3-column row not caught: $OUT"
 else fail "3-column mutation was vacuous"; fi
 
 # Renumbering row 13 to a duplicate 12 — the regression CLAUDE.md forbids outright.
 if mutate "$RUNNER" "$F" 's.replace("| 13 | **A forward-looking", "| 12 | **A forward-looking", 1)'; then
     OUT="$("$BIN/check-learnings" --file "$F" --no-citations 2>&1)"
-    echo "$OUT" | grep -q "duplicate Learning number #12" \
+    grep -q "duplicate Learning number #12" <<< "$OUT" \
         && pass "duplicate row number caught" || fail "duplicate row number not caught: $OUT"
 else fail "duplicate-number mutation was vacuous"; fi
 
@@ -1741,14 +1741,14 @@ else fail "duplicate-number mutation was vacuous"; fi
 # second failure mode, and only the RED run exposes it.
 if mutate "$RUNNER" "$F" 're.sub(r"(?m)^\| 11 \| \*\*Heterogeneous.*\n", "", s, count=1)'; then
     OUT="$("$BIN/check-learnings" --file "$F" --no-citations 2>&1)"
-    echo "$OUT" | grep -q "missing #11" \
+    grep -q "missing #11" <<< "$OUT" \
         && pass "deleted row (numbering gap) caught" || fail "deleted row (numbering gap) not caught: $OUT"
 else fail "row-deletion mutation was vacuous"; fi
 
 # A row wrapped onto a second physical line.
 if mutate "$RUNNER" "$F" 's.replace("mechanical, encode it as a test", "mechanical,\nencode it as a test", 1)'; then
     OUT="$("$BIN/check-learnings" --file "$F" --no-citations 2>&1)"
-    echo "$OUT" | grep -q "non-table line inside the Learnings table" \
+    grep -q "non-table line inside the Learnings table" <<< "$OUT" \
         && pass "row split across two physical lines caught" \
         || fail "row split across two physical lines not caught: $OUT"
 else fail "line-wrap mutation was vacuous"; fi
@@ -1861,7 +1861,7 @@ cp "$BAK" "$SAFE"; rm -f "$BAK"
 # Restoration control: the tree must be back to fully clean, or the mutation above
 # poisoned the repo instead of being fully undone.
 OUT33="$("$BIN/check-learnings" 2>&1)"
-if echo "$OUT33" | grep -q '^check-learnings: OK'; then
+if grep -q '^check-learnings: OK' <<< "$OUT33"; then
     pass "corpus restored after the citation mutation (fully clean)"
 else
     fail "citation mutation left the corpus dirty: $OUT33"
@@ -2307,7 +2307,7 @@ F36="$(mktemp)"
 # POP line this control could pass on a file whose headings had been renamed away.
 OUT36="$(surface_check "$RUNNER36")"
 POP36="$(echo "$OUT36" | grep '^POP ')"
-if [ -z "$(echo "$OUT36" | grep -v '^POP ')" ] && echo "$POP36" | grep -qv 'items=0'; then
+if [ -z "$(echo "$OUT36" | grep -v '^POP ')" ] && grep -qv 'items=0' <<< "$POP36"; then
     pass "canonical SESSION_RUNNER: surface requirement present, gate (d) anchor resolves ($POP36)"
 else
     fail "canonical SESSION_RUNNER surface control: expected clean, got: $OUT36"
@@ -2424,10 +2424,10 @@ restore37() { (cd "$FIXREPO" && git checkout -q -- starter-kit/FRAMEWORK_LEARNIN
 # used to assert `0 unfrozen row(s)` to prove HEAD was readable, and there is no HEAD lookup to
 # prove any more.
 OUT37="$(cl37)"
-echo "$OUT37" | grep -q '^check-learnings: OK' \
+grep -q '^check-learnings: OK' <<< "$OUT37" \
     && pass "fixture control: committed baseline is clean" \
     || fail "fixture control: expected clean, got: $OUT37"
-echo "$OUT37" | grep -qE 'row budget: [1-9][0-9]* row\(s\), 0 over 1,500 B' \
+grep -qE 'row budget: [1-9][0-9]* row\(s\), 0 over 1,500 B' <<< "$OUT37" \
     && pass "fixture control: the budget ran over a NON-EMPTY row population" \
     || fail "fixture control: budget population empty or unstated: $OUT37"
 
@@ -2436,7 +2436,7 @@ N37="$(add_row37 1700)"
 [ -n "$N37" ] && pass "fixture control: the appended row got a derived number (#$N37)" \
     || fail "fixture control: add_row37 produced no row number"
 OUT37="$(cl37)"
-echo "$OUT37" | grep -q "row #$N37 is 1,700 B, over the 1,500 B per-row budget by 200" \
+grep -q "row #$N37 is 1,700 B, over the 1,500 B per-row budget by 200" <<< "$OUT37" \
     && pass "new over-budget row caught, with its own number and overage" \
     || fail "new over-budget row not caught: $OUT37"
 restore37
@@ -2444,12 +2444,12 @@ restore37
 # (2) EDGE, not just the predicate: a row EXACTLY at the budget must pass, one byte over must
 # fail. A `>` mutated to `>=` survives any test that only ever uses a row far from the cap.
 N37="$(add_row37 1500)"
-echo "$(cl37)" | grep -q '^check-learnings: OK' \
+grep -q '^check-learnings: OK' <<< "$(cl37)" \
     && pass "edge: a row of exactly 1,500 B is within budget" \
     || fail "edge: exactly-1,500 B row wrongly rejected: $(cl37)"
 restore37
 N37="$(add_row37 1501)"
-echo "$(cl37)" | grep -q "row #$N37 is 1,501 B" \
+grep -q "row #$N37 is 1,501 B" <<< "$(cl37)" \
     && pass "edge: a row of 1,501 B is over budget" \
     || fail "edge: 1,501 B row not caught: $(cl37)"
 restore37
@@ -2470,7 +2470,7 @@ else
     fail "scope control: fixture dirty — row #$N37 was never frozen, so (3) re-tests (1)"
 fi
 OUT37="$(cl37)"
-echo "$OUT37" | grep -q "row #$N37 is 1,900 B" \
+grep -q "row #$N37 is 1,900 B" <<< "$OUT37" \
     && pass "scope: a FROZEN over-budget row IS reported (exempt before S119)" \
     || fail "scope: frozen over-budget row not caught: $OUT37"
 (cd "$FIXREPO" && git reset -q --hard HEAD~1)
@@ -2486,7 +2486,7 @@ new = re.sub(r"(?m)^\| 3 \| ", "| 3 | " + "X" * 1600 + " ", s, count=1)
 assert new != s, "MUTATION VACUOUS: row 3 not found"
 open(p, "w", encoding="utf-8").write(new)
 PY37B
-echo "$(cl37)" | grep -q 'row #3 is' \
+grep -q 'row #3 is' <<< "$(cl37)" \
     && pass "a frozen row grown past the budget is caught" \
     || fail "grown frozen row not caught: $(cl37)"
 restore37
@@ -2501,7 +2501,7 @@ OUT37="$("$BIN/check-learnings" --file "$UNTRACKED37" --no-citations 2>&1)"
 grep -q 'SKIPPED' <<< "$OUT37" \
     && fail "an untracked file was SKIPPED — the budget still depends on git: $OUT37" \
     || pass "no git history needed: an untracked file is not skipped"
-echo "$OUT37" | grep -qE 'row budget: [1-9][0-9]* row\(s\)' \
+grep -qE 'row budget: [1-9][0-9]* row\(s\)' <<< "$OUT37" \
     && pass "untracked file: the budget names a non-empty checked population" \
     || fail "untracked file: budget population empty or unstated: $OUT37"
 python3 - "$UNTRACKED37" <<'PY37D'
@@ -2516,7 +2516,7 @@ open(p, "w", encoding="utf-8").write(s.rstrip("\n") + "\n" + head + "X" * pad + 
 print(num)
 PY37D
 OUT37="$("$BIN/check-learnings" --file "$UNTRACKED37" --no-citations 2>&1)"
-echo "$OUT37" | grep -q 'is 1,900 B' \
+grep -q 'is 1,900 B' <<< "$OUT37" \
     && pass "untracked file: an over-budget row is still CAUGHT (was unreachable before S119)" \
     || fail "untracked file: over-budget row missed: $OUT37"
 rm -f "$UNTRACKED37"
@@ -2535,7 +2535,7 @@ N37="$(add_row37 1500)"   # a row exactly AT the budget: the state that separate
 # M1: the boundary. Kills a `>` silently widened to `>=`.
 if mutate "$BIN/check-learnings" "$M37" 's.replace("if len(raw.encode(\"utf-8\")) > ROW_BUDGET_BYTES", "if len(raw.encode(\"utf-8\")) >= ROW_BUDGET_BYTES", 1)'; then
     OUT37="$(cl37m "$M37")"
-    echo "$OUT37" | grep -q "row #$N37 is 1,500 B" \
+    grep -q "row #$N37 is 1,500 B" <<< "$OUT37" \
         && pass "mutant killed: > widened to >= rejects an at-budget row" \
         || fail "MUTANT SURVIVED: >= at the boundary went undetected: $OUT37"
 else fail "M1 mutation DID NOT APPLY"; fi
@@ -2549,7 +2549,7 @@ restore37
 N37="$(add_row37 1900)"      # the violation
 N37B="$(add_row37 1200)"     # a compliant row appended after it
 OUT37="$(cl37)"
-echo "$OUT37" | grep -q "row #$N37 is 1,900 B" \
+grep -q "row #$N37 is 1,900 B" <<< "$OUT37" \
     && pass "M2 control: unmutated checker sees a violation that is not the last row" \
     || fail "M2 control: fixture wrong, violation not seen unmutated: $OUT37"
 if mutate "$BIN/check-learnings" "$M37" 's.replace("for n, _c, _l, raw in rows", "for n, _c, _l, raw in rows[-1:]", 1)'; then
@@ -2691,10 +2691,10 @@ PY38B
 # (0) FIXTURE-PROVING CONTROL. A green result is worthless if the fixture has no readable HEAD --
 # the SKIP arm is green too. Assert the disposition NAMES a checked population first.
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q '^check-handoff: OK' \
+grep -q '^check-handoff: OK' <<< "$OUT38" \
     && pass "fixture control: committed baseline is clean" \
     || fail "fixture control: expected clean, got: $OUT38"
-echo "$OUT38" | grep -q 'record budget: 0 unwritten record(s), 0 over' \
+grep -q 'record budget: 0 unwritten record(s), 0 over' <<< "$OUT38" \
     && pass "fixture control: HEAD is readable, so the budget REALLY ran (not the skip arm)" \
     || fail "fixture control: budget did not run against HEAD: $OUT38"
 
@@ -2703,7 +2703,7 @@ S38="$(add_record38 20000 field)"
 [ -n "$S38" ] && pass "fixture control: the prepended record got a derived id ($S38)" \
     || fail "fixture control: add_record38 produced no session id"
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q "record $S38 is 20,000 B, over the 12,288 B per-record budget by 7,712" \
+grep -q "record $S38 is 20,000 B, over the 12,288 B per-record budget by 7,712" <<< "$OUT38" \
     && pass "new over-budget record caught, with its own id and overage" \
     || fail "new over-budget record not caught: $OUT38"
 restore38
@@ -2712,13 +2712,13 @@ restore38
 # widened to `>=` survives any test whose records all sit far from the cap.
 S38="$(add_record38 12288 field)"
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q '^check-handoff: OK' \
+grep -q '^check-handoff: OK' <<< "$OUT38" \
     && pass "edge: a record of exactly 12,288 B is within budget" \
     || fail "edge: exactly-12,288 B record wrongly rejected: $OUT38"
 restore38
 S38="$(add_record38 12289 field)"
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q "record $S38 is 12,289 B" \
+grep -q "record $S38 is 12,289 B" <<< "$OUT38" \
     && pass "edge: a record of 12,289 B is over budget" \
     || fail "edge: 12,289 B record not caught: $OUT38"
 restore38
@@ -2728,7 +2728,7 @@ restore38
 # methodology_trim.py moves it as part of the record.
 S38="$(add_record38 20000 prose)"
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q "record $S38 is 20,000 B" \
+grep -q "record $S38 is 20,000 B" <<< "$OUT38" \
     && pass "unit: trailing prose below the closing fence counts toward the record" \
     || fail "unit: trailing prose was not counted: $OUT38"
 restore38
@@ -2747,7 +2747,7 @@ PY38C
 [ "${OVER38:-0}" -ge 1 ] \
     && pass "scope control: the frozen population really does hold $OVER38 record(s) over budget" \
     || fail "scope control: fixture holds no over-budget frozen record, so (4) proves nothing"
-echo "$(ch38)" | grep -q 'record budget: 0 unwritten record(s), 0 over' \
+grep -q 'record budget: 0 unwritten record(s), 0 over' <<< "$(ch38)" \
     && pass "scope: those $OVER38 committed over-budget record(s) are exempt as frozen" \
     || fail "scope: committed records were not exempt: $(ch38)"
 
@@ -2763,7 +2763,7 @@ new = s.replace("\n```\n", "\n```\n" + "X" * 20000 + "\n", 1)
 assert new != s, "MUTATION VACUOUS: no closing fence found"
 open(p, "w", encoding="utf-8").write(new)
 PY38D
-echo "$(ch38)" | grep -q 'per-record budget by' \
+grep -q 'per-record budget by' <<< "$(ch38)" \
     && pass "a COMMITTED record grown past the budget is caught (changed, not merely new)" \
     || fail "grown committed record not caught: $(ch38)"
 restore38
@@ -2773,7 +2773,7 @@ restore38
 UNTRACKED38="$(mktemp)"
 cp "$FIXFILE38" "$UNTRACKED38"
 OUT38="$("$BIN/check-handoff" --file "$UNTRACKED38" --allow-pending 2>&1)"
-echo "$OUT38" | grep -q 'record budget SKIPPED' \
+grep -q 'record budget SKIPPED' <<< "$OUT38" \
     && pass "no frozen counterpart: the skip is STATED" \
     || fail "no frozen counterpart: skip not stated: $OUT38"
 grep -q 'unwritten record(s)' <<< "$OUT38" \
@@ -2984,7 +2984,7 @@ M38="$(mktemp)"
 S38="$(add_record38 12288 field)"
 if mutate "$BIN/check-handoff" "$M38" 's.replace("if size > RECORD_BUDGET_BYTES", "if size >= RECORD_BUDGET_BYTES", 1)'; then
     OUT38="$(ch38m "$M38")"
-    echo "$OUT38" | grep -q "record $S38 is 12,288 B" \
+    grep -q "record $S38 is 12,288 B" <<< "$OUT38" \
         && pass "mutant killed: > widened to >= rejects an at-budget record" \
         || fail "MUTANT SURVIVED: >= at the boundary went undetected: $OUT38"
 else fail "M1 mutation DID NOT APPLY"; fi
@@ -3296,9 +3296,12 @@ for stem40 in CHANGELOG HANDOFFS; do
         # `echo`, and `set -uo pipefail` (:5) scores the MATCHED pipeline as FAILED, so the shards
         # whose names print EARLIEST were counted as unnamed. Measured on this repo's own
         # 97,507-character report, under bash: a match at line 112 of 1,095 reported failure 3/3, a
-        # match at line 1,082 reported 0/3, and the here-string form reported 0/3 at both. It fires
-        # only above the pipe buffer, which is why it appeared when the ledger grew a shard rather
-        # than when the test was written. `-F`: a shard name is a literal, never a pattern.
+        # match at line 1,082 reported 0/3, and the here-string form reported 0/3 at both. The pipe
+        # buffer is not the limit: BL-133 measured the same kill at 2 KB, because the kernel hands a
+        # reader that is already waiting a large write in pieces, at a rate that moved from 0.003%
+        # to 2.3% of pipelines with machine load. A large report makes it likely, which is why it
+        # appeared when the ledger grew a shard rather than when the test was written.
+        # `-F`: a shard name is a literal, never a pattern.
         grep -qF "docs/archive/$(basename "$sh40") (archived)" <<< "$OUT40_DEFAULT" || MISSING40=$((MISSING40+1))
     done
 done
@@ -3318,7 +3321,7 @@ printf '```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n\npros
 OUT40_BARE="$( (cd "$P40" && "$BIN/model-report" --no-git) 2>&1 )"
 RC40=$?
 [ "$RC40" = "0" ] && pass "no docs/archive/: exits 0 rather than crashing" || fail "no docs/archive/: exit $RC40"
-echo "$OUT40_BARE" | grep -q 'across 1 file: live 1 + archived 0' \
+grep -q 'across 1 file: live 1 + archived 0' <<< "$OUT40_BARE" \
     && pass "no docs/archive/: population states live-only explicitly (1 file, archived 0)" \
     || fail "no docs/archive/: population line does not state the live-only read set -- $(echo "$OUT40_BARE" | grep -c 'across')"
 
@@ -3327,7 +3330,7 @@ echo "$OUT40_BARE" | grep -q 'across 1 file: live 1 + archived 0' \
 mkdir -p "$P40/docs/archive"
 printf '# Changelog\n\n### 2025-12-01 · [ad hoc] archived fixture\n\n**Model:** Fixture Model 2\n' > "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
 OUT40_TWO="$( (cd "$P40" && "$BIN/model-report" --no-git) 2>&1 )"
-echo "$OUT40_TWO" | grep -q 'across 2 files: live 1 + archived 1' \
+grep -q 'across 2 files: live 1 + archived 1' <<< "$OUT40_TWO" \
     && pass "a discovered shard in a scratch repo is read and counted (live 1 + archived 1)" \
     || fail "scratch shard not counted: $(echo "$OUT40_TWO" | grep 'across')"
 chmod 000 "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
@@ -3337,10 +3340,10 @@ if [ -r "$P40/docs/archive/CHANGELOG-through-2025-12-01.md" ]; then
     skip "chmod 000 did not make the shard unreadable (running as root?) -- the UNREADABLE path is not exercised"
 else
     OUT40_UNREAD="$( (cd "$P40" && "$BIN/model-report" --no-git) 2>&1 )"
-    echo "$OUT40_UNREAD" | grep -q 'UNREADABLE' \
+    grep -q 'UNREADABLE' <<< "$OUT40_UNREAD" \
         && pass "an unreadable shard is named UNREADABLE, not silently dropped" \
         || fail "unreadable shard vanished silently from the report"
-    echo "$OUT40_UNREAD" | grep -q '1 file UNREADABLE and excluded' \
+    grep -q '1 file UNREADABLE and excluded' <<< "$OUT40_UNREAD" \
         && pass "the population line states the unreadable file rather than deflating silently" \
         || fail "population line hides the unreadable file: $(echo "$OUT40_UNREAD" | grep 'across')"
     chmod 644 "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
@@ -4402,9 +4405,9 @@ gs_sync v2-local 2 v2-local "a real local edit is still refused"
 printf 'v2\n' > "$P/$D"
 OUT="$(TMPDIR="$TMPD" METHODOLOGY_SOURCE_URL="$U" "$BIN/sync" "$P" --source=github --dry-run 2>&1)"; RC=$?
 [ "$RC" = "0" ] && pass "github sync --dry-run: exit 0 on a file that is merely behind" || fail "github sync --dry-run: exit $RC"
-printf '%s\n' "$OUT" | grep -qxF "  source:  github ($U)" \
+grep -qxF "  source:  github ($U)" <<< "$OUT" \
     && pass "github sync names the URL it cloned" || fail "github sync's source line does not name $U"
-printf '%s\n' "$OUT" | grep -q "^  version: .*$SHORT" && ! printf '%s\n' "$OUT" | grep -q '^  version: github:' \
+grep -q "^  version: .*$SHORT" <<< "$OUT" && ! grep -q '^  version: github:' <<< "$OUT" \
     && pass "github sync reports the clone's own version ($SHORT)" || fail "github sync's version line is not the clone's"
 [ "$(cat "$P/$D")" = "v2" ] && pass "github sync --dry-run wrote nothing" || fail "github sync --dry-run wrote $P/$D"
 [ -z "$(ls -A "$TMPD")" ] && pass "every run removed its temporary clone" || fail "a temporary clone was left in $TMPD: $(ls -A "$TMPD")"
@@ -4422,12 +4425,12 @@ U="file://$S"
 P="$(mktemp_project)"
 OUT="$(METHODOLOGY_SOURCE_URL="$U" "$BIN/sync" "$P" --source=github 2>&1)"; RC=$?
 [ "$RC" = "1" ] && pass "github sync: a source missing a distributed file exits 1" || fail "github sync: exit $RC, not 1"
-printf '%s\n' "$OUT" | grep -qxF "    $GONE" && printf '%s\n' "$OUT" | grep -q "1 of [0-9]* distributed file(s) do not exist in $U" \
+grep -qxF "    $GONE" <<< "$OUT" && grep -q "1 of [0-9]* distributed file(s) do not exist in $U" <<< "$OUT" \
     && pass "github sync: the inventory names the missing file and its source" || fail "github sync: no inventory naming $GONE -- got: $OUT"
 [ -z "$(ls -A "$P" | grep -vx .git)" ] && pass "github sync: nothing written before the inventory" \
     || fail "github sync wrote into the project before refusing: $(ls -A "$P" | tr '\n' ' ')"
 OUT="$(METHODOLOGY_SOURCE_URL="$U" "$BIN/status" --source=github "$P" 2>&1)"; RC=$?
-[ "$RC" = "1" ] && printf '%s\n' "$OUT" | grep -qxF "    $GONE" \
+[ "$RC" = "1" ] && grep -qxF "    $GONE" <<< "$OUT" \
     && pass "github status: the same inventory, exit 1" || fail "github status: exit $RC, output: $OUT"
 rm -rf "$M" "$(dirname "$S")" "$P"
 

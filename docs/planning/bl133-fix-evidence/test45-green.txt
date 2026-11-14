@@ -1,0 +1,7 @@
+# Test 45 alone after the conversion (GREEN, 3 of 3): bash docs/planning/bl133-fix-evidence/run-test45.sh
+
+== Test 45: no early-exiting consumer decides a fail arm and none reads an echo or printf, so a flake cannot misread a pipeline (BL-97, BL-133, RED-first) ==
+  PASS: no early-exiting consumer decides a fail arm or reads an echo or printf in bin/tests.sh
+  PASS: the scanner flags exactly the marked lines (1 2 3 4 5 6 7 12 13 14 15 16 17 )
+  PASS: the scanner fires on a reverted site on each kind of arm in the real file, and names both (65 353 )
+== Summary: 3 passed, 0 failed, 0 skipped ==
