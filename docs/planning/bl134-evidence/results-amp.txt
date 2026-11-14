@@ -1,0 +1,20 @@
+start 2026-11-14 15:16:28  load 7.97, 8.20, 12.98
+control SL (2186 B): echo killed (141) 6 of 200
+control ML (2186 B): echo killed (141) 15 of 200
+site=s259 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s388 N=60 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s397 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s411 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s431 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s432 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2318 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2326 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2335 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2343 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2351 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s3377 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s4725 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+site=s5533 N=300 (waiting reader quits after 1 byte) sigpipe=0 statuses: none
+control SL (2186 B): echo killed (141) 6 of 200
+control ML (2186 B): echo killed (141) 9 of 200
+end   2026-11-14 15:24:36  load 12.40, 9.24, 11.14

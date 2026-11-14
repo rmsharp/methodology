@@ -1,0 +1,18 @@
+start 2026-11-14 15:25:33  load 9.42, 8.93, 10.90
+site=s259 N=60 reads seen: [123]x60
+site=s388 N=15 reads seen: [129]x15
+site=s397 N=60 reads seen: [557]x60
+site=s411 N=60 reads seen: [129]x60
+site=s431 N=60 reads seen: [2214]x60
+site=s432 N=60 reads seen: [2214]x60
+site=s2318 N=60 reads seen: [59]x60
+site=s2326 N=60 reads seen: [58]x60
+site=s2335 N=60 reads seen: [49]x60
+site=s2343 N=60 reads seen: [55]x60
+site=s2351 N=60 reads seen: [61]x60
+site=s3377 N=60 reads seen: [1663]x60
+site=s4725 N=60 reads seen: [180]x60
+site=s5533 N=60 reads seen: [13633]x60
+contrast bash echo SL (2186 B) N=60 reads seen: [2187]x3 [2048,139]x57
+contrast bash echo ML (2186 B) N=60 reads seen: [1296,891]x1 [1134,1053]x1 [972,1215]x1 [567,1620]x2 [2187]x3 [1053,1134]x2 [810,1377]x12 [81,2106]x1 [162,2025]x1 [1782,405]x1 [648,1539]x2 [729,1458]x20 [1701,486]x1 [1215,972]x2 [891,1296]x7 [2025,162]x1 [1377,810]x1 [486,1701]x1
+end   2026-11-14 15:28:30  load 8.38, 8.60, 10.38

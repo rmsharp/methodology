@@ -1,0 +1,21 @@
+DISCARDED: this first amplified pass was BLIND and proves nothing. Its reader started together with its producer (it was
+not yet waiting when the first bytes landed), and the positive control run right after it, bash `echo` of 2,186 B and of
+a 27-line variable through the same reader, killed 0 of 600 and 0 of 600 (BL-133's waiting reader killed the same form
+15 and 9 times in 200). An amplifier that cannot kill the known case cannot clear anything. It was replaced by the
+waiting-reader form in results-amp.txt, which kills the control 6 to 15 times in 200. Kept so the mistake is on record.
+Date 2026-11-14, one machine. The raw output follows, unedited.
+
+site=s259 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s388 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s397 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s411 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s431 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s432 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2318 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2326 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2335 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2343 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s2351 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s3377 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s4725 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none
+site=s5533 N=300 (reader quits after 1 byte) sigpipe=0 statuses: none

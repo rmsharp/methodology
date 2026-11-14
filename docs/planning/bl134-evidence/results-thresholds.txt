@@ -1,0 +1,49 @@
+== about 4096 B
+  tr -s (site :5533)                 [4096]x10
+  grep, one line (sites :431/432)    [4096]x10
+  python print (surface_check,      
+     model-report, status)           [4096]x10
+  head -1 (site :4725)               [4096]x10
+  bash echo "$VAR" (the BL-133 form) [4096]x10
+== about 8192 B
+  tr -s (site :5533)                 [8192]x10
+  grep, one line (sites :431/432)    [8192]x10
+  python print (surface_check,      
+     model-report, status)           [8192]x10
+  head -1 (site :4725)               [8192]x10
+  bash echo "$VAR" (the BL-133 form) [6144,2048]x1 [7168,1024]x1 [8192]x8
+== about 8193 B
+  tr -s (site :5533)                 [8193]x10
+  grep, one line (sites :431/432)    [8193]x10
+  python print (surface_check,      
+     model-report, status)           [8193]x10
+  head -1 (site :4725)               [8193]x10
+  bash echo "$VAR" (the BL-133 form) [8192,1]x2 [8193]x8
+== about 16384 B
+  tr -s (site :5533)                 [16384]x10
+  grep, one line (sites :431/432)    [16384]x10
+  python print (surface_check,      
+     model-report, status)           [16384]x10
+  head -1 (site :4725)               [16384]x10
+  bash echo "$VAR" (the BL-133 form) [10240,6144]x1 [16384]x4 [15360,1024]x1 [12288,4096]x1 [11264,5120]x2 [13312,3072]x1
+== about 16385 B
+  tr -s (site :5533)                 [16385]x10
+  grep, one line (sites :431/432)    [16385]x8 [16384,1]x2
+  python print (surface_check,      
+     model-report, status)           [16385]x9 [16384,1]x1
+  head -1 (site :4725)               [16385]x10
+  bash echo "$VAR" (the BL-133 form) [10240,6145]x1 [16385]x4 [15360,1025]x2 [12288,4097]x2 [9216,7169]x1
+== about 32768 B
+  tr -s (site :5533)                 [16384,16384]x10
+  grep, one line (sites :431/432)    [32768]x5 [16384,16384]x5
+  python print (surface_check,      
+     model-report, status)           [32768]x7 [32767,1]x3
+  head -1 (site :4725)               [16384,16384]x10
+  bash echo "$VAR" (the BL-133 form) [9216,23552]x1 [13312,19456]x2 [16384,16384]x2 [31744,1024]x1 [24576,8192]x2 [22528,10240]x2
+== about 65536 B
+  tr -s (site :5533)                 [16384,16384,16384,16384]x10
+  grep, one line (sites :431/432)    [49152,16384]x1 [65536]x9
+  python print (surface_check,      
+     model-report, status)           [65536]x7 [65535,1]x3
+  head -1 (site :4725)               [16384,16384,16384,16384]x3 [16384,49152]x3 [16384,32768,16384]x4
+  bash echo "$VAR" (the BL-133 form) [14336,51200]x1 [15360,50176]x1 [13312,52224]x2 [9216,56320]x1 [23552,41984]x2 [11264,54272]x1 [12288,53248]x1 [25600,39936]x1
