@@ -1,0 +1,24 @@
+# census.py on bin/tests.sh at 2bf598bf (S447): every early-exiting consumer outside quotes, comments and heredocs, by its immediate-producer family.
+# The 14 rows listed are what Rule C does NOT flag (command producers and chains); the 70 converted lines are gone from the census.
+10 command
+3 echo other
+1 chain("$BIN/status")
+TOTAL 14
+== command
+431 :: grep '^\*\*Updating an existing project from an earlier methodology version:\*\*' "$STARTER/BOOTSTRAP.md" | grep -q "Size, and when to archive" && pass "BOOTSTRAP.
+432 :: grep '^\*\*Updating an existing project from an earlier methodology version:\*\*' "$STARTER/BOOTSTRAP.md" | grep -q "keeping any archive-pointer block and month he
+2318 :: surface_check "$F36" | grep -q "MISSING-CHECKLIST-SURFACE"  && pass "deleted checklist SURFACE item caught"  || fail "deleted checklist SURFACE item NOT caught: $
+2326 :: surface_check "$F36" | grep -q "MISSING-CRITERIA-SURFACE"  && pass "deleted Per-Phase surface requirement caught (checklist line left orphaned)"  || fail "deleted
+2335 :: surface_check "$F36" | grep -q "DANGLING-GATE-D"  && pass "renamed gate (d) caught by the Per-Phase citation (coupling, not presence)"  || fail "renamed gate (d) 
+2343 :: surface_check "$F36" | grep -q "MISSING-GATE-D-ANCHOR"  && pass "stripped gate (d) anchor caught"  || fail "stripped gate (d) anchor NOT caught: $(surface_check "
+2351 :: surface_check "$F36" | grep -q "EMPTY-CHECKLIST"  && pass "renamed checklist heading trips the population guard (not a silent green)"  || fail "renamed checklist 
+3377 :: "$BIN/model-report" --changelog "$EMPTY40" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1  | grep -q 'no CHANGELOG.md entries carry a'  && pass "control: a r
+4725 :: [ "$RC" = 1 ] && head -1 <<<"$OUT" | grep -q "^error: the bin/_manifest.py in file://$S34_SRC "  && grep -qF -- "$5" <<<"$OUT" && ! grep -q Traceback <<<"$OUT"  &
+5533 :: [ -n "$Q62" ] && tr -s '\n ' '  ' < "$STARTER/HANDOFFS.md" | grep -qF "$Q62"  && pass "check-handoff: the note's quoted words ('$Q62') are in starter-kit/HANDOFFS
+== printf
+== echo other
+259 :: echo "$OUT" | grep "SESSION_RUNNER.md" | grep -q "locally modified" && pass "status: the stale file is SESSION_RUNNER" || fail "status: wrong file flagged stale"
+397 :: echo "$MULTI" | grep '^note:' | grep -q "2 seeds predate" && pass "status: note count matches flagged rows (2), not deduped file types" || fail "status: note count
+411 :: echo "$OUT" | grep "HANDOFFS.md" | grep -v '^note:' | grep -q "stale format" && pass "status: a HANDOFFS.md without the size section flagged 'present (stale format
+== chain("$BIN/status")
+388 :: "$BIN/status" "$P" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && pass "status: still flags stale after a re-sync" || fail "status: stale fla
