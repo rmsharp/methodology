@@ -1,0 +1,55 @@
+Re-run of every script in this directory, one after another, on 2026-11-14 11:20 local; machine load average at the start: 8.67, 32.42, 27.15.
+bash: GNU bash, version 5.2.37(1)-release (aarch64-apple-darwin24.3.0)    macOS: 27.2    CPUs: 12
+
+== waiting-reader.sh 200
+ML (2186 B, 27 line(s)): echo status 0 x191, 141 (SIGPIPE) x9 of 200
+SL (2186 B, 1 line(s)): echo status 0 x185, 141 (SIGPIPE) x15 of 200
+
+== substitution-form.sh 3000
+payload 1540 B
+subst  N=3000 fails=0 statuses: none
+var    N=3000 fails=0 statuses: none
+here   N=3000 fails=0 statuses: none
+
+== write-pieces.py 400
+lines      300 B substitution: whole 400/400; most common deliveries: [244]x400
+lines      300 B variable    : whole 400/400; most common deliveries: [244]x400
+lines     1000 B substitution: whole 356/400; most common deliveries: [976]x356, [915, 61]x29, [549, 427]x6
+lines     1000 B variable    : whole 356/400; most common deliveries: [976]x356, [915, 61]x30, [549, 427]x4
+lines     2150 B substitution: whole 8/400; most common deliveries: [1037, 1098]x136, [1403, 732]x55, [976, 1159]x50
+lines     2150 B variable    : whole 2/400; most common deliveries: [976, 1159]x111, [1037, 1098]x88, [1403, 732]x51
+lines     5000 B substitution: whole 0/400; most common deliveries: [1037, 3904]x14, [976, 3965]x5, [1403, 3538]x4
+lines     5000 B variable    : whole 0/400; most common deliveries: [1037, 3904]x16, [1708, 3233]x3, [976, 3965]x3
+one line   300 B substitution: whole 400/400; most common deliveries: [301]x400
+one line   300 B variable    : whole 400/400; most common deliveries: [301]x400
+one line  1000 B substitution: whole 400/400; most common deliveries: [1001]x400
+one line  1000 B variable    : whole 400/400; most common deliveries: [1001]x400
+one line  2150 B substitution: whole 364/400; most common deliveries: [2151]x364, [2048, 103]x36
+one line  2150 B variable    : whole 400/400; most common deliveries: [2151]x400
+one line  5000 B substitution: whole 384/400; most common deliveries: [5001]x384, [4096, 905]x16
+one line  5000 B variable    : whole 398/400; most common deliveries: [5001]x398, [3072, 1929]x1, [4096, 905]x1
+
+== pipeline-loop.sh 4000 (no extra load)
+payload 2150 B, 32 lines
+N=4000  5c-pattern (byte ~650) fails=0   5b-pattern (byte ~416) fails=0   statuses:none
+
+== storm.sh 2000 (16 copies at once = 32,000 pipelines per pattern)
+N=2000  5c-pattern (byte ~650) fails=50   5b-pattern (byte ~416) fails=51   statuses: [141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] [141 0] b[141
+N=2000  5c-pattern (byte ~650) fails=42   5b-pattern (byte ~416) fails=44   statuses: b[141 0] b[141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0] b[141 0] b[141 0] b[141 0] b[141 0] [141 0] b[14
+N=2000  5c-pattern (byte ~650) fails=38   5b-pattern (byte ~416) fails=44   statuses: [141 0] b[141 0] b[141 0] b[141 0] b[141 0] [141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] b[141 
+N=2000  5c-pattern (byte ~650) fails=57   5b-pattern (byte ~416) fails=35   statuses: [141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] [141 0] [141 0] b
+N=2000  5c-pattern (byte ~650) fails=47   5b-pattern (byte ~416) fails=50   statuses: [141 0] [141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0] b[141 0]
+N=2000  5c-pattern (byte ~650) fails=48   5b-pattern (byte ~416) fails=47   statuses: [141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] [141 0] [141 0] 
+N=2000  5c-pattern (byte ~650) fails=54   5b-pattern (byte ~416) fails=41   statuses: [141 0] [141 0] [141 0] [141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] b
+N=2000  5c-pattern (byte ~650) fails=51   5b-pattern (byte ~416) fails=44   statuses: [141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] [141 0] b[141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] [141 
+N=2000  5c-pattern (byte ~650) fails=46   5b-pattern (byte ~416) fails=47   statuses: [141 0] b[141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] [141 0] 
+N=2000  5c-pattern (byte ~650) fails=53   5b-pattern (byte ~416) fails=46   statuses: [141 0] b[141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0
+N=2000  5c-pattern (byte ~650) fails=46   5b-pattern (byte ~416) fails=64   statuses: [141 0] [141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 
+N=2000  5c-pattern (byte ~650) fails=44   5b-pattern (byte ~416) fails=37   statuses: b[141 0] [141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] [141 0] b[141 0] [141 0
+N=2000  5c-pattern (byte ~650) fails=49   5b-pattern (byte ~416) fails=50   statuses: b[141 0] b[141 0] [141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] [141 0] b[141 0] [141 0] b[141 0] [141 0] b[141 0] [141 0] b[141 0]
+N=2000  5c-pattern (byte ~650) fails=40   5b-pattern (byte ~416) fails=49   statuses: b[141 0] [141 0] b[141 0] [141 0] [141 0] [141 0] b[141 0] [141 0] [141 0] b[141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0
+N=2000  5c-pattern (byte ~650) fails=48   5b-pattern (byte ~416) fails=61   statuses: [141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] b[141 0] [141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] [141 0] b[141 0
+N=2000  5c-pattern (byte ~650) fails=36   5b-pattern (byte ~416) fails=40   statuses: [141 0] [141 0] [141 0] [141 0] b[141 0] [141 0] b[141 0] b[141 0] b[141 0] [141 0] [141 0] [141 0] b[141 0] b[141 0] b[141 0] b[141 0
+TOTAL pipelines per pattern=32000  5c fails=749  5b fails=750
+load: 41.78, 29.21, 26.30
+FINISHED

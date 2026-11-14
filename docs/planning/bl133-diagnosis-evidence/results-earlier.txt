@@ -1,0 +1,58 @@
+S446 measurements made BEFORE the scripts in this directory existed, from scratch copies of the same loops (scratch
+`exact5c.sh` = `pipeline-loop.sh` with an absolute path to `bin/model-report`; scratch `bl97.sh` = `substitution-form.sh`
+with a file in the working directory; scratch `gate1.py` = `gate-launcher.py`). The lines below are copied from each
+run's own output; nothing is reworded. Date 2026-11-14, local time, one machine (12 CPUs, 14 logged-in users, other
+sessions' work running throughout), bash 5.2.37 from `env bash` (the suite's own `#!/usr/bin/env bash`).
+The companion file results-rerun.txt is the one run of every stored script, in order, at 11:20.
+
+== A. The ratchet's own launch of the whole suite: gate-launcher.py (calls quality_ratchet.run_gate_command)
+Scratch clone of 023f24bf (a clean tree, core.hooksPath set), detached with nohup, two runs in a row:
+run 1 rc=0 timed_out=False secs=581 load=(32.5625, 30.93212890625, 19.60302734375) summary=['== Summary: 702 passed, 0 failed, 0 skipped ==']
+run 2 rc=0 timed_out=False secs=619 load=(45.10009765625, 48.48828125, 31.0859375) summary=['== Summary: 702 passed, 0 failed, 0 skipped ==']
+(run 2 overlapped the fork storm in D below, at its peak.)
+
+== B. Test 40 alone (lines 3192-3664 of bin/tests.sh plus the suite's helper definitions; scratch extract), launched
+   the ratchet's way (a shell, pipes for stdout and stderr, start_new_session), 12 runs, load average 7 to 17:
+style DONE runs=12 target_fail_runs=0 secs=218          (target = the FAIL line 'population line hides')
+
+== C. Test 40 (5)'s two pipelines, looped, no storm (statuses "echo grep"; "0 0" = pass); 2,150 B, 32 lines:
+idle-ish, load about 12 ............. N=4000: 5c fails=0, 5b fails=0
+48 CPU spinners, load average to 101  N=4000: 5c fails=0, 5b fails=0   (a spinner is not this load: a new short process is
+                                                                       scheduled ahead of it)
+shell heap +100 MB ................... N=4000: 5c fails=0, 5b fails=0
+nice -n 19 ........................... N=4000: 5c fails=0, 5b fails=0
+taskpolicy -b ........................ N=4000: 5c fails=0, 5b fails=0
+(the 3-line 2,088 B payload of the first sketch, 3,000 idle and 6,000 under 36 spinners: 0 failures)
+
+== D. The same loops, 16 copies at once (a fork storm), launched from the tool's own foreground shell:
+16 x 1500 = 24,000 pipelines per pattern, load average 64 at the end: 5c fails=0, 5b fails=2, both statuses [141 0]
+16 x 4000 = 64,000 pipelines per pattern, load average 162 at the end: 5c fails=0, 5b fails=1, status [141 0]
+(together: 88,000 per pattern, 3 failures, every one 141 0, none on the 5c pattern)
+
+== E. Later storms, the same stored storm.sh:
+11:20-11:23, inside the run of every script (results-rerun.txt): 32,000 per pattern, 5c fails=749, 5b fails=750 (2.3%
+  each), EVERY status [141 0]; load average 41.78 at the end
+11:23, foreground, storm.sh 500:  8,000 per pattern, 5c fails=0, 5b fails=0
+11:24, nohup, storm.sh 500:       8,000 per pattern, 5c fails=1, 5b fails=0
+11:24, foreground, storm.sh 2000: 32,000 per pattern, 5c fails=1, 5b fails=0
+The script, the payload, the number of copies and the launch were the same in the 2.3% run and the 1-in-32,000 run
+four minutes later. The rate moved by a factor of about 700 with the machine's state; what in that state moved it is
+not identified.
+
+== F. BL-97's own shape (1,540 B, the match on line 2; scratch bl97.sh), 3,000 per form, before the storms:
+subst (echo "$(cat f)" | grep -q)   fails=5, status [141 0] each
+var   (echo "$OUT" | grep -q)       fails=0
+here  (grep -q <<<"$OUT")           fails=0
+(the stored substitution-form.sh at 11:20 read 0, 0, 0: the same ambient variation)
+
+== G. How a reader sees echo's output (reader reads as soon as data is there; 1,500 per cell; payload of 61-byte lines):
+  300 B: whole 1497/1500 (substitution), 1493/1500 (variable)      1000 B: 1142 and 1323      2150 B: 21 and 30
+  5000 B: 0 and 0. The pieces come out as multiples of 61 (line boundaries), e.g. [771, 770] for BL-97's payload.
+  A 2,150-byte payload with NO newline, read after a pause: one chunk [2151].
+  RETRACTED the same hour: a first waiting-reader run of 30 per case killed echo 1 time of 30 for the multi-line text and 0 of 30 for one line, which I took to mean
+  "only multi-line text is split". The stored run of 200 per case (results-rerun.txt) reads ML 9, SL 15: a single line is
+  split too (pieces [2048, 103] at 2,150 B and [4096, 905] at 5,000 B), so the exposure is a write bigger than the
+  reader's first read, not the newlines.
+
+== H. A pipe's capacity does not shrink when many pipes exist (the idea that a small buffer causes the split):
+fresh pipe made after 1, 101, 501, 1001, 2001, 3001, 4001, 5001 and 6000 held pipes: 65,536 B each time.

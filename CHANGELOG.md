@@ -297,6 +297,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-14 · [BL-133] S446 work 2 of 3 -- the rest of the diagnosis evidence: two scripts and two results files; no tool, test or gate changed; nothing sent to KJ5HST/methodology
+
+Added to `docs/planning/bl133-diagnosis-evidence/`: `write-pieces.py` (how a reader sees `echo`'s output, whole or in pieces, for 61-byte lines and for one line, at four sizes), `gate-launcher.py` (runs `bash bin/tests.sh` through the clone's own `quality_ratchet.run_gate_command`, N times), `results-rerun.txt` (one run of every script, in order, at 11:20: it holds the storm that read 749 and 750 failures in 32,000 pipelines, every status `141 0`) and `results-earlier.txt` (the measurements made before the scripts existed, from scratch copies, copied verbatim: the two whole-suite runs through the launcher at 702 / 0, Test 40 alone 12 of 12, the quiet storms at 3 failures in 88,000, and the retraction of the multi-line-only reading). The two rates differ by about 700-fold for the same script; the files say so and the next commit records what it means.
+
 ### 2026-11-14 · [BL-133] S446 work 1 of 3 -- four evidence scripts for the diagnosis; no tool, test or gate changed; nothing sent to KJ5HST/methodology
 
 New directory `docs/planning/bl133-diagnosis-evidence/`, first four files: `pipeline-loop.sh` (Test 40 (5)'s two `echo "$OUT" | grep -q` pipelines, looped, keeping the exit status of each stage; the payload is the real fixture's 2,150 B `model-report` output), `storm.sh` (16 copies of it at once, the fork-storm load parallel suites make), `substitution-form.sh` (BL-97's measured shape: a 1,540 B payload, three forms) and `waiting-reader.sh` (a reader that is already waiting and quits after its first byte, to see whether `echo` writes in more than one piece). Each parses (`bash -n`) and each ran from the repo root; their outputs are the next commit's. Works 2 and 3 follow.
