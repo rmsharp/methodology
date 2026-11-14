@@ -297,6 +297,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-13-2.md` (2 record(s), 64,346 B → 40,654 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-13 → 2026-11-13) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-13-2.md`](docs/archive/HANDOFFS-through-2026-11-13-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-13-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-13-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 64,346 B → 40,654 B (−36.8%).
+
 ### 2026-11-14 · [ad hoc] S447 push -- local `main` pushed to the fork's `origin` at the operator's Yes, 7 commits, fast-forward `20f99a47..3807f0e6`, read back by full sha; nothing sent to KJ5HST/methodology
 
 The operator answered the close-out picker 'Yes, push to the fork (Recommended)'. `git push origin main` (to `https://github.com/rmsharp/methodology.git`) moved `origin/main` from `20f99a47cd2e8893f9cd8236691bed10d78d99e6` to `3807f0e6484ed03ad6cefa97e11023271de6a21c`, a fast-forward (checked with `merge-base --is-ancestor` first); `git ls-remote origin refs/heads/main` read back the same full sha and `origin/main..main` read 0. The seven are S446's push record and S447's claim, two work commits, evidence, backlog and close-out. This record is kept local, as S446's was: it makes `main` one ahead of `origin/main`.
