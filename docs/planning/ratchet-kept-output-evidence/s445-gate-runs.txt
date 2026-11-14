@@ -1,0 +1,97 @@
+S445 gate runs on commit 617d081c0324 (the work commit: documents only), in a scratch clone, and what they showed.
+
+Evidence [E4] for docs/planning/ratchet-kept-output-plan.md, section 1 ('A sixth').
+The tables and lines below are copied from the runs' own output files; nothing is reworded.
+
+== Run 1: `python3 starter-kit/quality_ratchet.py --run` (tool 1.5.1, keeps no output), 2026-11-13 23:37:59Z to 2026-11-14 00:09:44Z = 31 min 45 s, exit 2
+quality gates — run  23/25 pass · 2 fail · 0 unmeasured · results fbd18e86f25c · manifest 36d7ab25ab98
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 702         701  fail
+  tests-sh-failed                         <= 0           1  fail
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 174         174  pass
+  trimmer-unit-tests                    >= 222         222  pass
+  close-out-report-unit-tests           >= 103         103  pass
+  ratchet-unit-tests                    >= 123         123  pass
+  layout-unit-tests                      >= 75          75  pass
+  checker-layout-unit-tests              >= 18          18  pass
+  sync-layout-unit-tests                >= 101         101  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  migrate-layout-unit-tests-fail          <= 0           0  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+  backlog-completed-proof                 <= 0           0  pass
+  backlog-detail-proof                    <= 0           0  pass
+  backlog-anchors                         <= 0           0  pass
+  plan-size-directory-move            <= 60000       59977  pass
+  plan-size-pr-composition            <= 30000       29996  pass
+  backlog-size                        <= 54000       53005  pass
+  cite in the receipt: quality_ratchet: 23/25 pass · 2 fail · 0 unmeasured · results fbd18e86f25c · manifest 36d7ab25ab98
+
+== Standalone: `bash bin/tests.sh > out 2> err` in the SAME clone right after run 1, exit 0
+== Summary: 702 passed, 0 failed, 0 skipped ==
+
+== Run 2: the same `--run` through observe-run.py (this directory), 2026-11-14 00:22:19Z to 01:08:46Z = 46 min 27 s, exit 2; the machine's load average read 5 to 141 during it, from other sessions' work
+quality gates — run  23/25 pass · 2 fail · 0 unmeasured · results fbd18e86f25c · manifest 36d7ab25ab98
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 702         701  fail
+  tests-sh-failed                         <= 0           1  fail
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 174         174  pass
+  trimmer-unit-tests                    >= 222         222  pass
+  close-out-report-unit-tests           >= 103         103  pass
+  ratchet-unit-tests                    >= 123         123  pass
+  layout-unit-tests                      >= 75          75  pass
+  checker-layout-unit-tests              >= 18          18  pass
+  sync-layout-unit-tests                >= 101         101  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  migrate-layout-unit-tests-fail          <= 0           0  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+  backlog-completed-proof                 <= 0           0  pass
+  backlog-detail-proof                    <= 0           0  pass
+  backlog-anchors                         <= 0           0  pass
+  plan-size-directory-move            <= 60000       59977  pass
+  plan-size-pr-composition            <= 30000       29996  pass
+  backlog-size                        <= 54000       53005  pass
+  cite in the receipt: quality_ratchet: 23/25 pass · 2 fail · 0 unmeasured · results fbd18e86f25c · manifest 36d7ab25ab98
+
+== What run 2 kept of gate 1's command (`bash bin/tests.sh`): the header, the failing line with the 6 lines before it, and the summary line
+command: bash bin/tests.sh
+exit: 1  timed_out: False  seconds: 1278
+stdout: 59584 bytes, stderr: 0 bytes
+   ...
+  PASS: Source 2 also reads the archives (50 > 0 matched lines)
+  PASS: every archive shard on disk (both ledgers) is named in the report, and none that is not (0 missing, 0 extra)
+  PASS: no docs/archive/: exits 0 rather than crashing
+  PASS: no docs/archive/: population states live-only explicitly (1 file, archived 0)
+  PASS: a discovered shard in a scratch repo is read and counted (live 1 + archived 1)
+  PASS: an unreadable shard is named UNREADABLE, not silently dropped
+  FAIL: population line hides the unreadable file: (1 entries carry a **Model:** bullet across 1 file: live 1 + archived 0; 1 file UNREADABLE and excluded)
+   ...
+== Summary: 701 passed, 1 failed, 0 skipped ==
+
+== Where that assertion is: bin/tests.sh, Test 40 (5), lines 3330-3345. It chmods a fixture shard to 000, runs bin/model-report on the fixture project, and asserts
+   echo "$OUT40_UNREAD" | grep -q '1 file UNREADABLE and excluded'      (the suite runs with `set -uo pipefail`, bin/tests.sh:5)
+   The failure message re-reads the same variable and prints a line that CONTAINS that string, so the grep failed on text that was there.
+
+== The replica: repro-snippet.sh is that assertion alone (same fixture, same pipeline, same pipefail). repro-drive.py ran it 40 times in each of two launch modes:
+   plain (subprocess.run) and ratchet-style (a shell, pipes for stdout and stderr, start_new_session=True), at a load average of about 5.
+   plain 40 of 40 rc=0; ratchet-style 40 of 40 rc=0; the captured model-report output is 2,150 bytes (under one stdio buffer).
+
+== What this shows and does not show
+- Shows: inside the tool's run the suite read 701 passed / 1 failed in two of two full runs on this commit; the same assertion failed in the run that kept its output; the suite alone read 702 / 0 in two of two standalone runs (once on this commit's clone, once on the claim commit a8f84d5a).
+- Shows: a recording wrapper around run_gate_command attributes a red the tool cannot, on the real suite (a prototype of the plan's keeper).
+- Does not show the cause. The assertion alone does not fail in either launch mode, so the cause needs the suite's own context.
+- Does not show whether this session's documents matter: the S444 run at 212a11d8 read 25/25, and the standalone runs read 702 / 0.
+- Does not show that run 1's red was the same assertion: run 1 kept no output. Both runs read 701 and 1 and the same results hash, fbd18e86f25c.
