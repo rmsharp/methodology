@@ -297,6 +297,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-15 · [ad hoc] S452 receipt figures -- the close-out receipt's `HANDOFFS.md` size was 20 B off and its push count is one short; nothing sent to KJ5HST/methodology
+
+The S452 close-out commit `71655815` committed a receipt that said `HANDOFFS.md` was 53,077 B with 12,459 B left; the file measured 53,097 B with 12,439 B left (an edit to the receipt after that figure was written added 20 B). Its push count, 12, is 13 with this commit. An attempt to correct the committed entry in place was refused by the ledger hook, rightly (a committed entry is never edited); this entry, and the receipt's three figures, are the correction. At this commit: `HANDOFFS.md` 53,111 B of 65,536 B (12,425 B left), `CHANGELOG.md` 185,739 B of 196,608 B (10,869 B left). Nothing else changed.
+
 ### 2026-11-15 · [BL-103] S452 close-out -- option (c) is DONE on the fork: `quality_ratchet.py` 1.7.0 names the unmeasured gates; the 26 gates read 26/26 on `b32fda08`; `HANDOFFS.md` was trimmed to 3 receipts first at his Yes; nothing sent to KJ5HST/methodology
 
 The receipt is in `HANDOFFS.md` (S452, complete, self 8, predecessor 9). The session's other commits: the trim `e024d65d` and its fold `47c2087b`, the claim `f0414428`, tests RED `e33ebeba`, code `1e84df48`, the mutation round `dcc5129b`, the floor `b32fda08` (`ratchet-unit-tests` 190 to 207), the smoke `f5365486`, the gate-run evidence `113aa4d5` and the record `1b40ea99`. This commit adds `docs/planning/bl103-evidence/repair4-name-census.py` (the derivation of the count '67 names, 0 outside the lint's shape', fork Learning #81) and one sentence in the record that cites it. No row appended to `docs/FORK_LEARNINGS.md`, so D3's retirement duty does not fire (rows considered: #16, #81, #94, #50). The gates, from the scratch clone: 26/26, results `45bb9454357f`, manifest `597970e9ef98`; the gitignored `.quality-gates-results.json` here is a copy of that run's. Nothing was sent to `KJ5HST/methodology`; `origin/main..main` reads 12 with this commit (pushing is his Yes/No).
