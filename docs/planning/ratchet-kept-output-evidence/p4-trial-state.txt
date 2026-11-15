@@ -1,0 +1,220 @@
+P4 merge trial -- verbatim outputs (S453, 2026-11-15). <W> is the scratch directory outside the repository.
+Commands are in p4-trial.sh's header; the record that reads this file is p4-merge-trial.md.
+Machine: Darwin arm64, Python 3.10.12, git 2.56.0.
+
+================ 1. merge, patch and resolve -- the whole change (base 0df0bae8^, ours 47637be2, theirs b32fda08); re-run with the final p4-trial.sh
+##### merge (theirs b32fda08 = 1.7.0)
+base   b01f0fe9  ours 47637be2  theirs b32fda08
+  merge   starter-kit/quality_ratchet.py  conflicts=1  lines: ours 927 base 927 theirs 1184 merged 1190  sha256 6bef2f3d4f82
+      marker 87:<<<<<<< ours
+      marker 97:>>>>>>> theirs
+  merge   tools/test_quality_ratchet.py  conflicts=0  lines: ours 1344 base 1344 theirs 2306 merged 2306  sha256 ec13af4ec3ff
+  merge   starter-kit/quality-gates.json  conflicts=0  lines: ours 17 base 17 theirs 17 merged 17  sha256 92f9e612dbe2
+  total conflicts: 1
+  merged tool VERSION: VERSION = "1.7.0"   (ours: VERSION = "1.5.0", theirs: VERSION = "1.7.0")
+  positive control (a changed VERSION line in <ours>): conflicts=2  the instrument sees a conflict: ok
+  negative control (nothing changes): conflicts=0, result equal to <ours>
+
+##### patch
+  patch: 19 hunks, 81435 B, applied with git apply --3way at 47637be2
+    Applied patch to 'starter-kit/quality-gates.json' cleanly.
+    Applied patch to 'starter-kit/quality_ratchet.py' with conflicts.
+    Applied patch to 'tools/test_quality_ratchet.py' cleanly.
+    U starter-kit/quality_ratchet.py
+  apply exit: 1
+  conflicted in the clone, so the two outputs carry different marker styles; compared after `resolve`   starter-kit/quality_ratchet.py
+  patch result == merge result   tools/test_quality_ratchet.py
+  patch result == merge result   starter-kit/quality-gates.json
+  unmerged paths in the clone: 1
+
+##### resolve
+    starter-kit_quality_ratchet.py.from-merge: 1 conflict block(s) resolved, 1185 lines
+    starter-kit_quality_ratchet.py.from-patch: 1 conflict block(s) resolved, 1185 lines
+  resolved: merge == patch (byte-identical)   starter-kit/quality_ratchet.py   sha256 07f1bfd20e87
+    tools_test_quality_ratchet.py.from-merge: 0 conflict block(s) resolved, 2307 lines
+    tools_test_quality_ratchet.py.from-patch: 0 conflict block(s) resolved, 2307 lines
+  resolved: merge == patch (byte-identical)   tools/test_quality_ratchet.py   sha256 ec13af4ec3ff
+    starter-kit_quality-gates.json.from-merge: 0 conflict block(s) resolved, 18 lines
+    starter-kit_quality-gates.json.from-patch: 0 conflict block(s) resolved, 18 lines
+  resolved: merge == patch (byte-identical)   starter-kit/quality-gates.json   sha256 92f9e612dbe2
+-- the files the unit and gate runs used, against this re-run's resolved files (sha256, first 12):
+   starter-kit/quality_ratchet.py  re-run 07f1bfd20e87  tested 07f1bfd20e87  same
+   tools/test_quality_ratchet.py  re-run ec13af4ec3ff  tested ec13af4ec3ff  same
+   starter-kit/quality-gates.json  re-run 92f9e612dbe2  tested 92f9e612dbe2  same
+
+================ 2. compose -- the whole change (from the first pass; the unit and gate runs read this tree)
+##### compose
+  composed: 3 modified file(s), tool VERSION = "1.7.0"
+     3 files changed, 1226 insertions(+), 7 deletions(-)
+  control:  0 modified file(s), tool VERSION = "1.5.0"
+  composed: quality_ratchet.py compiles
+  control: quality_ratchet.py compiles
+
+
+================ 3. census -- the whole change (the added lines, and the control: all of ours)
+  starter-kit/quality_ratchet.py
+    added lines 263; lines with any code 1
+    by code (added lines):  backlog id=1  session number=0  fork=0  plan path=0  operator=0  learning=0
+    control, the whole file at <ours>:  backlog id=0  session number=0  fork=0  plan path=0  operator=0  learning=0
+    ADDED  L761: gates in (BL-103 option (c)). The gates in the order the snapshot lists them, each name whole; "" when
+  tools/test_quality_ratchet.py
+    added lines 962; lines with any code 4
+    by code (added lines):  backlog id=1  session number=2  fork=0  plan path=1  operator=1  learning=0
+    control, the whole file at <ours>:  backlog id=0  session number=0  fork=2  plan path=0  operator=0  learning=1
+    ADDED  L1337: # === 1.6.0: a gate that did not pass keeps its output (docs/planning/ratchet-kept-output-plan.md, P2) ===
+    ADDED  L1517: # The whole point of the design (3.1): S384 and S430 were red once and green after. A cleanup on
+    ADDED  L2065: # === 1.7.0: the unmeasured gates are named (BL-103 option (c)) ===
+    ADDED  L2066: # Written first, against the plan the operator approved at the S452 Phase 4 picker, and read red on 1.6.0
+    OURS   L8: Every gate is observed FAILING as well as passing (Learning #12): a ratchet whose
+    OURS   L252: # non-interactive shell has SIGINT ignored, ignored signals survive fork and exec, and Python installs no
+    OURS   L480: pid, fd = pty.fork()
+  starter-kit/quality-gates.json
+    added lines 1; lines with any code 0
+    by code (added lines):  backlog id=0  session number=0  fork=0  plan path=0  operator=0  learning=0
+    control, the whole file at <ours>:  backlog id=0  session number=0  fork=0  plan path=0  operator=0  learning=0
+
+================ 4. unit suite and selftest, serial: composed, then control, then the 1.6.0-only tree
+-- composed (load average: 8.15, 10.23, 20.29 at start; 92 s): unit rc=1, selftest rc=0
+ERROR: test_the_lint_accepts_the_pasted_pair_and_refuses_the_citation_without_the_clause (__main__.TestTheUnmeasuredGatesAreNamed)
+Ran 207 tests in 92.014s
+FAILED (errors=1)
+selftest: OK — 33 checks observed failing and passing
+-- control (load average: 9.31, 10.04, 19.10 at start; 67 s): unit rc=0, selftest rc=0
+Ran 120 tests in 67.200s
+OK
+selftest: OK — 30 checks observed failing and passing
+-- the error, in full (composed):
+ERROR: test_the_lint_accepts_the_pasted_pair_and_refuses_the_citation_without_the_clause (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<W>/composed/methodology/tools/test_quality_ratchet.py", line 2190, in test_the_lint_accepts_the_pasted_pair_and_refuses_the_citation_without_the_clause
+    (why,) = lint.validate_gate_citation(bare, 3)
+ValueError: not enough values to unpack (expected 1, got 0)
+
+----------------------------------------------------------------------
+Ran 207 tests in 92.014s
+-- 1.6.0-only (composed):
+Ran 190 tests in 82.475s
+OK
+selftest: OK — 32 checks observed failing and passing
+
+================ 5. lint -- the dependency of the one failing test
+  lint sizes: base(5cb11a6c^) 1026 lines, <ours> 537 lines, 5cb11a6c 1043 lines; the commit itself:  1 file changed, 23 insertions(+), 6 deletions(-)
+  names rule in the lint, by ref: <ours> 0 hit(s); 5cb11a6c 2 hit(s)
+  v1 (lint = <ours> + 5cb11a6c on blobs): conflicts=0
+  v1, the one test:  OK 
+  v1, the whole 1.7.0 class:  Ran 17 tests in 8.885s OK 
+  v2, the one test:  OK 
+  v2, the whole 1.7.0 class:  Ran 17 tests in 8.893s OK 
+
+================ 6. quality_ratchet.py --run on the composed tree (#99's 18 gates; started 2026-11-15T21:43:11Z, ended 2026-11-15T22:03:09Z, exit 2; load average: 10.80, 10.07, 17.66 at start)
+  quality gates — run  16/18 pass · 2 fail · 0 unmeasured · results e349b0deaf1a · manifest 72583325c300
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 302         301  fail
+  tests-sh-failed                         <= 0           1  fail
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 265         265  pass
+  ratchet-unit-tests                    >= 120         207  pass
+  layout-unit-tests                      >= 76          76  pass
+  checker-layout-unit-tests              >= 11          11  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  migrate-layout-unit-tests-fail          <= 0           0  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+  cite in the receipt: quality_ratchet: 16/18 pass · 2 fail · 0 unmeasured · results e349b0deaf1a · manifest 72583325c300
+  kept output on disk: 1 file(s) in 1 gate folder(s) under <W>/composed/methodology/.quality-gates-output; newest 20261115T214311Z-47637be2.txt (tests-sh-passed)
+  kept: tests-sh-passed  <W>/composed/methodology/.quality-gates-output/tests-sh-passed/20261115T214311Z-47637be2.txt
+  kept: tests-sh-failed  <W>/composed/methodology/.quality-gates-output/tests-sh-passed/20261115T214311Z-47637be2.txt
+-- the kept suite output 20261115T214311Z-47637be2.txt (23847 B): its FAIL lines and summary
+87:  FAIL: quality ratchet unit tests failed
+351:== Summary: 301 passed, 1 failed, 0 skipped ==
+
+================ 7. the 1.6.0-only change (theirs f1020217): merge, patch, resolve (re-run), compose (first pass), census
+##### merge (theirs f1020217 = the last 1.6.0 commit)
+base   b01f0fe9  ours 47637be2  theirs f1020217
+  merge   starter-kit/quality_ratchet.py  conflicts=1  lines: ours 927 base 927 theirs 1156 merged 1162  sha256 01ae0360f785
+      marker 77:<<<<<<< ours
+      marker 87:>>>>>>> theirs
+  merge   tools/test_quality_ratchet.py  conflicts=0  lines: ours 1344 base 1344 theirs 2157 merged 2157  sha256 be3b747bd949
+  merge   starter-kit/quality-gates.json  conflicts=0  lines: ours 17 base 17 theirs 17 merged 17  sha256 92f9e612dbe2
+  total conflicts: 1
+  merged tool VERSION: VERSION = "1.6.0"   (ours: VERSION = "1.5.0", theirs: VERSION = "1.6.0")
+  positive control (a changed VERSION line in <ours>): conflicts=2  the instrument sees a conflict: ok
+  negative control (nothing changes): conflicts=0, result equal to <ours>
+
+##### patch
+  patch: 17 hunks, 68999 B, applied with git apply --3way at 47637be2
+    Applied patch to 'starter-kit/quality-gates.json' cleanly.
+    Applied patch to 'starter-kit/quality_ratchet.py' with conflicts.
+    Applied patch to 'tools/test_quality_ratchet.py' cleanly.
+    U starter-kit/quality_ratchet.py
+  apply exit: 1
+  conflicted in the clone, so the two outputs carry different marker styles; compared after `resolve`   starter-kit/quality_ratchet.py
+  patch result == merge result   tools/test_quality_ratchet.py
+  patch result == merge result   starter-kit/quality-gates.json
+  unmerged paths in the clone: 1
+
+##### resolve
+    starter-kit_quality_ratchet.py.from-merge: 1 conflict block(s) resolved, 1157 lines
+    starter-kit_quality_ratchet.py.from-patch: 1 conflict block(s) resolved, 1157 lines
+  resolved: merge == patch (byte-identical)   starter-kit/quality_ratchet.py   sha256 ba394e44118c
+    tools_test_quality_ratchet.py.from-merge: 0 conflict block(s) resolved, 2158 lines
+    tools_test_quality_ratchet.py.from-patch: 0 conflict block(s) resolved, 2158 lines
+  resolved: merge == patch (byte-identical)   tools/test_quality_ratchet.py   sha256 be3b747bd949
+    starter-kit_quality-gates.json.from-merge: 0 conflict block(s) resolved, 18 lines
+    starter-kit_quality-gates.json.from-patch: 0 conflict block(s) resolved, 18 lines
+  resolved: merge == patch (byte-identical)   starter-kit/quality-gates.json   sha256 92f9e612dbe2
+-- the files the unit and gate runs used, against this re-run's resolved files (sha256, first 12):
+   starter-kit/quality_ratchet.py  re-run ba394e44118c  tested ba394e44118c  same
+   tools/test_quality_ratchet.py  re-run be3b747bd949  tested be3b747bd949  same
+   starter-kit/quality-gates.json  re-run 92f9e612dbe2  tested 92f9e612dbe2  same
+##### compose
+  composed: 3 modified file(s), tool VERSION = "1.6.0"
+     3 files changed, 1048 insertions(+), 6 deletions(-)
+  control:  0 modified file(s), tool VERSION = "1.5.0"
+  composed: quality_ratchet.py compiles
+  control: quality_ratchet.py compiles
+  starter-kit/quality_ratchet.py
+    added lines 234; lines with any code 0
+    by code (added lines):  backlog id=0  session number=0  fork=0  plan path=0  operator=0  learning=0
+  tools/test_quality_ratchet.py
+    added lines 813; lines with any code 2
+    by code (added lines):  backlog id=0  session number=1  fork=0  plan path=1  operator=0  learning=0
+    ADDED  L1336: # === 1.6.0: a gate that did not pass keeps its output (docs/planning/ratchet-kept-output-plan.md, P2) ===
+    ADDED  L1516: # The whole point of the design (3.1): S384 and S430 were red once and green after. A cleanup on
+    OURS   L8: Every gate is observed FAILING as well as passing (Learning #12): a ratchet whose
+    OURS   L252: # non-interactive shell has SIGINT ignored, ignored signals survive fork and exec, and Python installs no
+    OURS   L480: pid, fd = pty.fork()
+  starter-kit/quality-gates.json
+    added lines 1; lines with any code 0
+    by code (added lines):  backlog id=0  session number=0  fork=0  plan path=0  operator=0  learning=0
+
+================ 8. quality_ratchet.py --run on the 1.6.0-only tree (started 2026-11-15T22:05:46Z, ended 2026-11-15T22:37:23Z, exit 0; load average: 8.13, 12.14, 17.99 at start)
+  quality gates — run  18/18 pass · 0 fail · 0 unmeasured · results e2f466fc1cf6 · manifest 72583325c300
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 302         302  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 163         163  pass
+  trimmer-unit-tests                    >= 265         265  pass
+  ratchet-unit-tests                    >= 120         190  pass
+  layout-unit-tests                      >= 76          76  pass
+  checker-layout-unit-tests              >= 11          11  pass
+  sync-layout-unit-tests                 >= 82          82  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  migrate-layout-unit-tests-fail          <= 0           0  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+  cite in the receipt: quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results e2f466fc1cf6 · manifest 72583325c300
