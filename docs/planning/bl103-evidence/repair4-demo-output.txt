@@ -1,0 +1,16 @@
+# repair 4 (BL-103 option (c)), S452: what a person sees, quality_ratchet.py 1.7.0, colour stripped.
+# A throwaway project: fast-ok (passes), slow-suite (sleep 30, timeout_seconds 1), declared-only (no command).
+
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  1/3 pass · 0 fail · 2 unmeasured · results 1f029460a376 · manifest 0d91a133a709
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  fast-ok                                 <= 0           0  pass
+  slow-suite                              <= 0           —  unmeasured  timeout (1 s)
+  declared-only                           >= 1           —  unmeasured  declared, no command
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 1/3 pass · 0 fail · 2 unmeasured · results 1f029460a376 · manifest 0d91a133a709
+  and name them:       unmeasured: slow-suite, declared-only
+
+exit 

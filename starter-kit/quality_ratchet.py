@@ -54,6 +54,16 @@ Do not commit it, and copy it out before deleting a scratch clone. Keeping is be
 write is one warning on stderr and never changes a status, the results file or the exit code. `--run` and
 `--status` print where the output is, from the directory itself.
 
+WHAT IT NAMES
+-------------
+A run that reads unmeasured gates is not a clean one, and a receipt that cites it must say which gates
+(`bin/check-handoff` refuses a citation that reads U unmeasured unless the receipt names at least U). So
+after the citable summary line, `--run` and `--status` print one more line, `and name them:` and then
+`unmeasured: <gate>, <gate>`: the unmeasured gates in the manifest's order, each name whole, in the form
+that lint reads, so the receipt is written by pasting the two lines. The clause is plain text (no colour
+inside it) and is printed only when a gate is unmeasured; `--json` does not carry it, each gate's status is
+already there. Names are printed as declared: the lint reads letters, digits, `_`, `.` and `-` in a name.
+
 Python 3 stdlib only, cross-platform. Conventions follow context_budget.py.
 """
 import hashlib
@@ -67,7 +77,7 @@ import tempfile
 import time
 from datetime import datetime, timezone
 
-VERSION = "1.6.0"
+VERSION = "1.7.0"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
@@ -746,6 +756,14 @@ def summary_line(snap):
             f"{s['unmeasured']} unmeasured · results {snap['results']} · manifest {snap['manifest']}")
 
 
+def unmeasured_clause(snap):
+    """`unmeasured: <gate>, <gate>`: the form `bin/check-handoff` reads a receipt's naming of the unmeasured
+    gates in (BL-103 option (c)). The gates in the order the snapshot lists them, each name whole; "" when
+    no gate is unmeasured."""
+    names = [r["name"] for r in snap["gates"] if r["status"] == "unmeasured"]
+    return "unmeasured: " + ", ".join(names) if names else ""
+
+
 def render(snap, title):
     print(f"\n{D}{'─' * 74}{R}")
     colour = GRN if snap["summary"]["fail"] == 0 and snap["summary"]["unmeasured"] == 0 else (
@@ -760,7 +778,11 @@ def render(snap, title):
         note = f"  {D}{r['note']}{R}" if r.get("note") else ""
         print(f"  {r['name'][:30]:<30}{rule:>14}{meas:>12}  {col}{r['status']}{R}{note}")
     print(f"{D}{'─' * 74}{R}")
-    print(f"  {D}cite in the receipt:{R} {summary_line(snap)}\n")
+    print(f"  {D}cite in the receipt:{R} {summary_line(snap)}")
+    clause = unmeasured_clause(snap)
+    if clause:
+        print(f"  {D}and name them:{R}       {clause}")   # plain after the label: it is pasted, not read
+    print()
 
 
 def results_path(root, cfg):
@@ -972,6 +994,10 @@ def selftest():
         rc, out, _ = run([py, TOOL, "--run"], cwd=d)
         check("a gate with no command is UNMEASURED (exit 1), never pass",
               rc == WARN and "1 unmeasured" in out)
+        # the run names it, in the form the receipt lint reads, after the citable line (1.7.0)
+        check("the unmeasured gates are named in the clause the lint reads",
+              re.search(r"and name them:\s+unmeasured: declared-only\s*$", re.sub(r"\033\[[0-9;]*m", "", out), re.M)
+              is not None)
         # a command that outlives its budget measured nothing: unmeasured against a ceiling AND a floor
         # (it used to read fail at 127, and pass against a floor at or under 127)
         def sleeper(n):
@@ -1094,6 +1120,8 @@ def print_usage():
     print("Commands:")
     print("  --run          Run every declared gate, write the results file, print the table")
     print("                 and a citable summary line. Exit 2 on any fail, 1 on unmeasured.")
+    print("                 A run with unmeasured gates also prints `unmeasured: <gate>, <gate>`, the")
+    print("                 clause a receipt names them in (--status prints it too; --json does not).")
     print("  --status       Report the last run without running anything.")
     print(f"  --precommit    What the hook runs: refuse a staged {CONFIG_NAME} whose")
     print("                 thresholds are looser than HEAD's. Tightening/adding always pass.")
