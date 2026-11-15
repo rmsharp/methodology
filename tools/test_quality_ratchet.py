@@ -8,9 +8,13 @@ bin/sync distributes), so what is tested is what ships.
 Every gate is observed FAILING as well as passing (Learning #12): a ratchet whose
 refusal was never seen to fire is a suggestion with a hook attached.
 """
+import contextlib
+import hashlib
 import importlib.util
+import io
 import json
 import os
+import re
 import shlex
 import signal
 import subprocess
@@ -19,6 +23,7 @@ import tempfile
 import threading
 import time
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -1328,7 +1333,633 @@ class TestTheHookFromASymlinkedPath(_Repo):
         self.assertEqual(self._install_via(os.path.join(self.d, "quality_ratchet.py")), [self.LOOP])
 
 
+# === 1.6.0: a gate that did not pass keeps its output (docs/planning/ratchet-kept-output-plan.md, P2) ===
+# Written first, against the plan's sections 3 and 5, and read red on 1.5.1 before the tool changed.
+# Every test below builds its own throwaway tree; none runs a gate against this repository.
+
+KEEP = ".quality-gates-output"   # plan 3.2: the directory beside the results file
+STAMPED = re.compile(r"^\d{8}T\d{6}Z-[0-9a-z]+(-\d+)?\.txt$")   # plan 3.2: one file per run
+ANSI = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def at(minutes=0):
+    """The instant a run starts, for a test that fixes the clock: 2026-11-14 12:00:00 UTC plus `minutes`."""
+    return datetime(2026, 11, 14, 12, 0, 0, tzinfo=timezone.utc) + timedelta(minutes=minutes)
+
+
+def stamp(minutes=0):
+    return at(minutes).strftime("%Y%m%dT%H%M%SZ")
+
+
+class _Clock:
+    """Stands in for the module's `datetime` class: now() is one fixed instant, so a test can give two
+    runs the same start time, or ordered ones, without sleeping."""
+
+    def __init__(self, instant):
+        self.instant = instant
+
+    def now(self, tz=None):
+        return self.instant
+
+
+def _exit_cmd(text="boom", code=3, err=""):
+    """A command that prints `text` to stdout and `err` to stderr and exits `code`: as an exit-code gate
+    against a ceiling of 0 it reads `fail`."""
+    return f'"{PY}" -c "import sys; print({text!r}); sys.stderr.write({err!r}); sys.exit({code})"'
+
+
+def _flag_cmd(flag, text="no flag yet"):
+    """Exits 1 until the file `flag` exists and then 0: a gate that reads fail once and pass after."""
+    return f'"{PY}" -c "import os, sys; print({text!r}); sys.exit(0 if os.path.exists({flag!r}) else 1)"'
+
+
+def _emit_cmd(out_bytes, err_bytes=0, wide=False):
+    """A command that prints exactly this many bytes of 'x' (or, wide, of two-byte characters)."""
+    ch = "chr(233)" if wide else "'x'"
+    pre = "PYTHONIOENCODING=utf-8 " if wide and os.name == "posix" else ""
+    return (f'{pre}"{PY}" -c "import sys; sys.stdout.write({ch} * {out_bytes // (2 if wide else 1)}); '
+            f'sys.stderr.write(\'x\' * {err_bytes}); sys.exit(3)"')
+
+
+class _KeptCase(unittest.TestCase):
+    def setUp(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        self.d = os.path.realpath(td.name)
+        subprocess.run(["git", "init", "-q", self.d], check=True)
+
+    def run_it(self, *gates, when=None, results_file=None, **extra):
+        """do_run through the module, quiet. Returns (exit code, stdout, stderr), colour stripped."""
+        cfg = manifest(*gates)
+        if results_file:
+            cfg["results_file"] = results_file
+        out, err = io.StringIO(), io.StringIO()
+        clock = mock.patch.object(qr, "datetime", _Clock(when)) if when else contextlib.nullcontext()
+        with clock, contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            rc = qr.do_run(self.d, cfg, **extra)
+        return rc, ANSI.sub("", out.getvalue()), ANSI.sub("", err.getvalue())
+
+    def status(self, *gates):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            qr.do_status(self.d, manifest(*gates))
+        return ANSI.sub("", out.getvalue())
+
+    def results(self):
+        with open(os.path.join(self.d, qr.DEFAULT_RESULTS)) as f:
+            return json.load(f)
+
+    def folder(self, name):
+        return os.path.join(self.d, KEEP, name)
+
+    def files(self, name):
+        return sorted(f for f in os.listdir(self.folder(name)) if STAMPED.match(f))
+
+    def read(self, name, fname):
+        with open(os.path.join(self.folder(name), fname), encoding="utf-8") as f:
+            return f.read()
+
+    def tree(self):
+        """Every file under the keeper's directory and its bytes: what a later run must leave alone."""
+        found = {}
+        for base, _dirs, names in os.walk(os.path.join(self.d, KEEP)):
+            for n in names:
+                p = os.path.join(base, n)
+                with open(p, "rb") as f:
+                    found[os.path.relpath(p, self.d)] = f.read()
+        return found
+
+
+class TestAGateThatDidNotPassKeepsItsOutput(_KeptCase):
+    """Plan 3.1, 3.2 and 3.3: what is saved, when, where and in what form."""
+
+    def test_a_failing_gate_keeps_what_it_printed_in_a_file_named_by_start_and_commit(self):
+        rc, _, _ = self.run_it(gate("suite", "max", 0, command=_exit_cmd("two things broke", 3, "stderr too")),
+                               when=at(0))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertEqual(self.files("suite"), [f"{stamp(0)}-nohead.txt"])
+        text = self.read("suite", self.files("suite")[0])
+        self.assertIn("two things broke", text)
+        self.assertIn("stderr too", text)
+
+    def test_the_file_name_carries_the_short_commit_when_there_is_one(self):
+        _git(self.d, "config", "user.email", "t@t"); _git(self.d, "config", "user.name", "t")
+        _git(self.d, "commit", "-q", "--allow-empty", "-m", "c")
+        short = _git(self.d, "rev-parse", "--short", "HEAD").stdout.strip()
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertEqual(self.files("suite"), [f"{stamp(0)}-{short}.txt"])
+
+    def test_the_file_has_exactly_the_form_the_plan_gives(self):
+        cmd = f'"{PY}" -c "import sys; print(\'7 passed, 2 failed\'); sys.stderr.write(\'warn\')"'
+        self.run_it(gate("passed", "min", 8, command=cmd, extract=r"(\d+) passed"),
+                    gate("failed", "max", 1, command=cmd, extract=r", (\d+) failed"), when=at(0))
+        want = ("quality-ratchet kept output\n"
+                "gates: passed, failed\n"
+                f"command: {cmd}\n"
+                "exit: 0   budget: 600 s\n"
+                "commit: nohead   started: 2026-11-14T12:00:00Z\n"
+                "stdout: 19 bytes, kept 19\n"
+                "stderr: 4 bytes, kept 4\n"
+                "=== stdout ===\n"
+                "7 passed, 2 failed\n"
+                "=== stderr ===\n"
+                "warn\n")
+        self.assertEqual(self.read("passed", self.files("passed")[0]), want)
+
+    def test_a_command_of_several_lines_keeps_the_header_one_line_per_field(self):
+        cmd = f'"{PY}" -c "pass"\n"{PY}" -c "import sys; print(\'last\'); sys.exit(3)"'
+        self.run_it(gate("multi", "max", 0, command=cmd), when=at(0))
+        lines = self.read("multi", self.files("multi")[0]).split("\n")
+        self.assertEqual(lines.index("=== stdout ==="), 7, lines[:10])
+        self.assertTrue(lines[2].startswith("command: ") and "\\n" in lines[2], lines[2])
+
+    def test_an_unmeasured_gate_whose_command_ran_keeps_its_output_too(self):
+        cmd = f'"{PY}" -c "import sys; print(\'no digits here\'); sys.exit(7)"'
+        rc, _, _ = self.run_it(gate("nomatch", "min", 1, command=cmd, extract=r"(\d+)"), when=at(0))
+        self.assertEqual(rc, qr.WARN)
+        text = self.read("nomatch", self.files("nomatch")[0])
+        self.assertIn("exit: 7", text)
+        self.assertIn("no digits here", text)
+
+    def test_a_gate_with_no_command_keeps_nothing(self):
+        rc, _, _ = self.run_it(gate("declared", "min", 1), when=at(0))
+        self.assertEqual(rc, qr.WARN)
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
+
+    def test_a_command_that_outlived_its_budget_keeps_nothing(self):
+        rc, _, _ = self.run_it(gate("slow", "max", 0, command=slow(3, "'late'"), timeout_seconds=0.5), when=at(0))
+        self.assertEqual(rc, qr.WARN)
+        self.assertEqual(self.results()["gates"][0]["note"], "timeout (0.5 s)")
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
+        self.assertNotIn("kept", self.results())
+
+    def test_a_run_in_which_every_gate_passes_writes_nothing_at_all(self):
+        rc, out, _ = self.run_it(gate("ok", "max", 0, command=f'"{PY}" -c "pass"'), when=at(0))
+        self.assertEqual(rc, qr.CLEAN)
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
+        self.assertNotIn("kept", out)
+
+    def test_a_green_run_after_a_red_one_deletes_nothing_and_adds_nothing(self):
+        # The whole point of the design (3.1): S384 and S430 were red once and green after. A cleanup on
+        # green would erase the evidence the way the results file does.
+        flag = os.path.join(self.d, "flag")
+        g = gate("suite", "max", 0, command=_flag_cmd(flag))
+        self.assertEqual(self.run_it(g, when=at(0))[0], qr.REFUSED)
+        before = self.tree()
+        self.assertTrue(before)
+        open(flag, "w").close()
+        self.assertEqual(self.run_it(g, when=at(1))[0], qr.CLEAN)
+        self.assertEqual(self.tree(), before)
+
+    def test_two_gates_over_one_command_share_one_file_in_the_first_gates_folder(self):
+        cmd = f'"{PY}" -c "print(\'7 passed, 2 failed\')"'
+        self.run_it(gate("passed", "min", 8, command=cmd, extract=r"(\d+) passed"),
+                    gate("failed", "max", 1, command=cmd, extract=r", (\d+) failed"), when=at(0))
+        self.assertEqual(len(self.files("passed")), 1)
+        self.assertFalse(os.path.exists(self.folder("failed")))
+        kept = self.results()["kept"]
+        self.assertEqual(set(kept), {"passed", "failed"})
+        self.assertEqual(kept["passed"], kept["failed"])
+
+    def test_a_shared_command_is_kept_when_only_the_second_gate_fails(self):
+        cmd = f'"{PY}" -c "print(\'7 passed, 2 failed\')"'
+        self.run_it(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed"),
+                    gate("failed", "max", 1, command=cmd, extract=r", (\d+) failed"), when=at(0))
+        self.assertEqual(len(self.files("passed")), 1)   # the folder is the FIRST gate over the command
+        self.assertEqual(list(self.results()["kept"]), ["failed"])
+        self.assertIn("gates: passed, failed\n", self.read("passed", self.files("passed")[0]))
+
+    def test_the_kept_map_names_only_the_gates_kept_in_this_run(self):
+        flag = os.path.join(self.d, "flag")
+        first = gate("first", "max", 0, command=_flag_cmd(flag))
+        second = gate("second", "max", 0, command=_exit_cmd("always"))
+        self.run_it(first, second, when=at(0))
+        self.assertEqual(set(self.results()["kept"]), {"first", "second"})
+        open(flag, "w").close()
+        self.run_it(first, second, when=at(1))
+        self.assertEqual(set(self.results()["kept"]), {"second"})
+
+    def test_kept_paths_are_relative_to_the_results_file_with_forward_slashes(self):
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        rel = self.results()["kept"]["suite"]
+        self.assertEqual(rel, f"{KEEP}/suite/{stamp(0)}-nohead.txt")
+        self.assertTrue(os.path.isfile(os.path.join(self.d, *rel.split("/"))))
+
+    def test_a_run_that_kept_nothing_has_no_kept_key(self):
+        self.run_it(gate("ok", "max", 0, command=f'"{PY}" -c "pass"'), when=at(0))
+        self.assertNotIn("kept", self.results())
+
+    def test_the_results_hash_and_the_gate_records_are_what_1_5_1_wrote(self):
+        # The `results` hash is what a receipt cites, and the dashboards read `gates`. The literal below was
+        # produced by the UNMODIFIED 1.5.1 tool over this manifest (a pass, a fail, an unmeasured gate whose
+        # command ran, a gate with no command); through do_run, with the keeper on, 1.6.0 must equal it.
+        gates = [gate("ok", "min", 3, command=f'"{PY}" -c "print(3)"', extract=r"(\d+)"),
+                 gate("bad", "max", 0, command=f'"{PY}" -c "import sys; print(\'x\'); sys.exit(3)"'),
+                 gate("nomatch", "min", 1, command=f'"{PY}" -c "import sys; print(\'none\'); sys.exit(7)"',
+                      extract=r"(\d+)"),
+                 gate("declared", "min", 1)]
+        self.run_it(*gates, when=at(0))
+        snap = self.results()
+        self.assertEqual(snap["results"], "418ad3de2bbd")
+        self.assertEqual(snap["summary"], {"pass": 1, "fail": 1, "unmeasured": 2})
+        for r in snap["gates"]:
+            self.assertEqual(sorted(r), ["direction", "measured", "name", "note", "status", "threshold"])
+
+    def test_the_gates_that_did_not_pass_and_whose_command_ran_are_the_ones_kept(self):
+        # the same manifest as above: `bad` failed, `nomatch` is unmeasured with an exit code; `ok` passed and
+        # `declared` has no command
+        gates = [gate("ok", "min", 3, command=f'"{PY}" -c "print(3)"', extract=r"(\d+)"),
+                 gate("bad", "max", 0, command=f'"{PY}" -c "import sys; print(\'x\'); sys.exit(3)"'),
+                 gate("nomatch", "min", 1, command=f'"{PY}" -c "import sys; print(\'none\'); sys.exit(7)"',
+                      extract=r"(\d+)"),
+                 gate("declared", "min", 1)]
+        self.run_it(*gates, when=at(0))
+        self.assertEqual(set(self.results()["kept"]), {"bad", "nomatch"})
+
+    def test_exit_codes_do_not_change_when_output_is_kept(self):
+        self.assertEqual(self.run_it(gate("f", "max", 0, command=_exit_cmd()))[0], qr.REFUSED)
+        self.assertEqual(self.run_it(gate("u", "min", 1, command=_exit_cmd(), extract=r"(\d+)"))[0], qr.WARN)
+
+
+class TestWhereTheOutputGoesAndHowLongItStays(_KeptCase):
+    """Plan 3.2 (where, names) and 3.4 (how long)."""
+
+    def test_the_directory_sits_beside_the_results_file_in_the_legacy_layout(self):
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertTrue(os.path.isdir(os.path.join(self.d, KEEP)))
+        self.assertTrue(os.path.isfile(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+
+    def test_the_directory_sits_beside_the_results_file_in_the_new_layout(self):
+        _put(self.d, NEW_CONFIG, manifest())
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertTrue(os.path.isfile(os.path.join(self.d, "methodology", qr.DEFAULT_RESULTS)))
+        self.assertTrue(os.path.isdir(os.path.join(self.d, "methodology", KEEP)))
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)), "nothing at the root")
+
+    def test_an_explicit_results_file_decides_where_the_directory_goes(self):
+        os.makedirs(os.path.join(self.d, "out"))
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0), results_file="out/r.json")
+        self.assertTrue(os.path.isdir(os.path.join(self.d, "out", KEEP)))
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
+        rel = json.load(open(os.path.join(self.d, "out", "r.json")))["kept"]["suite"]
+        self.assertEqual(rel, f"{KEEP}/suite/{stamp(0)}-nohead.txt")   # relative to the results file's directory
+
+    def test_the_directory_is_invisible_to_git_and_the_projects_gitignore_is_not_touched(self):
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertEqual(open(os.path.join(self.d, KEEP, ".gitignore")).read(), "*\n")
+        listing = _git(self.d, "status", "--porcelain", "--untracked-files=all").stdout
+        self.assertNotIn(KEEP, listing)
+        self.assertFalse(os.path.exists(os.path.join(self.d, ".gitignore")))
+
+    def test_the_gitignore_is_written_again_on_every_write(self):
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        self.run_it(g, when=at(0))
+        os.remove(os.path.join(self.d, KEEP, ".gitignore"))
+        self.run_it(g, when=at(1))
+        self.assertEqual(open(os.path.join(self.d, KEEP, ".gitignore")).read(), "*\n")
+
+    def test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes(self):
+        # config_defects accepts any non-empty string as a gate name, so these must not escape the
+        # directory or collide (one folder on APFS for 'Tests' and 'tests').
+        plain = ["suite", "tests-sh-passed", "a.b_c", "0lead"]
+        odd = ["a/b", "..", ".hidden", "Tests", "has space", "x" * 300, "café", "back\\slash", "a:b*c"]
+        for name in plain + odd:
+            with self.subTest(name=name[:20]):
+                self.setUp()
+                self.run_it(gate(name, "max", 0, command=_exit_cmd()), when=at(0))
+                rel = self.results()["kept"][name]
+                parts = rel.split("/")
+                self.assertEqual((len(parts), parts[0]), (3, KEEP), rel)
+                folder = parts[1]
+                self.assertRegex(folder, r"^[a-z0-9_][a-z0-9._-]*$")
+                self.assertLessEqual(len(folder), 64)
+                self.assertTrue(os.path.isfile(os.path.join(self.d, *parts)))
+                self.assertLessEqual(set(os.listdir(self.d)), {".git", KEEP, qr.DEFAULT_RESULTS})
+                if name in plain:
+                    self.assertEqual(folder, name)
+                else:
+                    self.assertTrue(folder.endswith("-" + hashlib.sha256(name.encode()).hexdigest()[:6]), folder)
+
+    def test_two_names_that_differ_only_in_case_get_two_folders(self):
+        self.run_it(gate("tests", "max", 0, command=_exit_cmd("lower")),
+                    gate("Tests", "max", 0, command=_exit_cmd("upper")), when=at(0))
+        kept = self.results()["kept"]
+        self.assertNotEqual(kept["tests"], kept["Tests"])
+        self.assertEqual(len([e for e in os.listdir(os.path.join(self.d, KEEP)) if e != ".gitignore"]), 2)
+
+    def test_the_newest_five_files_per_gate_are_kept_and_the_rest_removed(self):
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        for n in range(8):
+            self.run_it(g, when=at(n))
+        self.assertEqual(self.files("suite"), [f"{stamp(n)}-nohead.txt" for n in range(3, 8)])
+
+    def test_retention_is_per_gate_so_a_gate_that_never_measures_cannot_evict_the_suites_red(self):
+        flag = os.path.join(self.d, "flag")
+        suite = gate("suite", "max", 0, command=_flag_cmd(flag))
+        broken = gate("broken", "min", 1, command=_exit_cmd("no number", 0), extract=r"(\d+)")
+        self.run_it(suite, broken, when=at(0))     # the suite is red once
+        open(flag, "w").close()
+        for n in range(1, 8):                       # then seven runs in which only `broken` is not passing
+            self.run_it(suite, broken, when=at(n))
+        self.assertEqual(self.files("suite"), [f"{stamp(0)}-nohead.txt"])
+        self.assertEqual(len(self.files("broken")), 5)
+
+    def test_two_runs_with_one_start_and_commit_do_not_overwrite_each_other(self):
+        g = gate("suite", "max", 0, command=_exit_cmd("first"))
+        self.run_it(g, when=at(0))
+        first = self.read("suite", f"{stamp(0)}-nohead.txt")
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd("second")), when=at(0))
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd("third")), when=at(0))
+        self.assertEqual(self.files("suite"),
+                         [f"{stamp(0)}-nohead-2.txt", f"{stamp(0)}-nohead-3.txt", f"{stamp(0)}-nohead.txt"])
+        self.assertEqual(self.read("suite", f"{stamp(0)}-nohead.txt"), first)
+        self.assertIn("second", self.read("suite", f"{stamp(0)}-nohead-2.txt"))
+
+    def test_a_future_dated_stray_file_cannot_make_the_file_just_written_the_oldest(self):
+        os.makedirs(self.folder("suite"))
+        for i in range(1, 7):
+            open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+        self.run_it(gate("suite", "max", 0, command=_exit_cmd("new")), when=at(0))
+        self.assertEqual(self.files("suite"),
+                         sorted([f"{stamp(0)}-nohead.txt"] + [f"2999010{i}T000000Z-abcdef0.txt" for i in range(3, 7)]))
+
+    @unittest.skipUnless(os.name == "posix", "symlinks: POSIX only")
+    def test_pruning_never_follows_a_link_and_never_removes_a_name_of_another_form(self):
+        os.makedirs(self.folder("suite"))
+        outside = os.path.join(self.d, "outside.txt")
+        open(outside, "w").write("precious\n")
+        link = os.path.join(self.folder("suite"), "20200101T000000Z-aaaaaaa.txt")
+        os.symlink(outside, link)
+        stray = os.path.join(self.folder("suite"), "notes.txt")
+        open(stray, "w").write("mine\n")
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        for n in range(7):
+            self.run_it(g, when=at(n))
+        self.assertTrue(os.path.islink(link))
+        self.assertEqual(open(outside).read(), "precious\n")
+        self.assertEqual(open(stray).read(), "mine\n")
+        regular = [f for f in self.files("suite") if not os.path.islink(os.path.join(self.folder("suite"), f))]
+        self.assertEqual(len(regular), 5)
+
+    @unittest.skipUnless(os.name == "posix", "symlinks: POSIX only")
+    def test_a_link_where_a_directory_should_be_is_not_written_through(self):
+        outside = os.path.join(self.d, "elsewhere")
+        os.makedirs(outside)
+        os.symlink(outside, os.path.join(self.d, KEEP))
+        rc, _, err = self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertEqual(os.listdir(outside), [], "a link is never written through")
+        self.assertEqual(err.count("could not keep"), 1, err)
+
+
+class TestKeepingNeverChangesTheRun(_KeptCase):
+    """Plan 3.6: a failure to keep is one warning on stderr and nothing else."""
+
+    def _unkept(self, *gates):
+        """What the same run says with nothing kept: the exit code and the results hash."""
+        snap = qr.run_gates(self.d, manifest(*gates))
+        return snap["results"]
+
+    @unittest.skipUnless(os.name == "posix" and (not hasattr(os, "geteuid") or os.geteuid() != 0),
+                         "permissions: POSIX, not root")
+    def test_an_unwritable_directory_is_one_warning_and_the_run_is_otherwise_the_same(self):
+        os.mkdir(os.path.join(self.d, KEEP)); os.chmod(os.path.join(self.d, KEEP), 0o500)
+        self.addCleanup(os.chmod, os.path.join(self.d, KEEP), 0o700)
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        rc, _, err = self.run_it(g, when=at(0))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertEqual(self.results()["results"], self._unkept(g))
+        self.assertNotIn("kept", self.results())
+        self.assertEqual(err.count("could not keep"), 1, err)
+
+    def test_a_keeper_that_fails_with_something_other_than_an_oserror_is_a_warning_too(self):
+        # an encoding error, say: it must not escape as a traceback with exit 1 where exit 2 was owed
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        with mock.patch("os.mkdir", side_effect=ValueError("boom")):
+            rc, _, err = self.run_it(g, when=at(0))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertIn("could not keep", err)
+        self.assertIn("boom", err)
+        self.assertEqual(self.results()["results"], self._unkept(g))
+
+    def test_however_many_gates_fail_to_keep_the_run_warns_once(self):
+        gates = [gate(f"g{i}", "max", 0, command=_exit_cmd(str(i))) for i in range(3)]
+        with mock.patch("os.mkdir", side_effect=ValueError("boom")):
+            _, _, err = self.run_it(*gates, when=at(0))
+        self.assertEqual(err.count("could not keep"), 1, err)
+
+    def test_a_file_where_the_directory_should_be_is_a_warning_and_stays_untouched(self):
+        open(os.path.join(self.d, KEEP), "w").write("mine\n")
+        rc, _, err = self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertEqual(open(os.path.join(self.d, KEEP)).read(), "mine\n")
+        self.assertEqual(err.count("could not keep"), 1, err)
+
+    def test_a_results_folder_that_does_not_exist_fails_as_it_does_today_and_makes_nothing(self):
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(FileNotFoundError):
+                qr.do_run(self.d, dict(manifest(gate("suite", "max", 0, command=_exit_cmd())),
+                                       results_file="nowhere/r.json"))
+        self.assertFalse(os.path.exists(os.path.join(self.d, "nowhere")))
+
+    def test_a_run_cut_short_keeps_what_its_finished_gates_had_saved(self):
+        real, calls = qr.measure_gate, []
+
+        def cut_short(root, g, timeout, memo=None, budget=None):
+            calls.append(g["name"])
+            if len(calls) == 2:
+                raise SystemExit(143)
+            return real(root, g, timeout, memo, budget)
+        cfg = manifest(gate("first", "max", 0, command=_exit_cmd("kept me")),
+                       gate("second", "max", 0, command=_exit_cmd("never run")))
+        with mock.patch.object(qr, "measure_gate", cut_short), contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                qr.do_run(self.d, cfg)
+        self.assertEqual(len(self.files("first")), 1)
+        self.assertIn("kept me", self.read("first", self.files("first")[0]))
+        self.assertFalse(os.path.exists(self.folder("second")))
+
+
+class TestWhatIsKeptOfALongStream(_KeptCase):
+    """Plan 3.3 and D2: each stream is kept whole up to a cap, then cut in the middle."""
+
+    def test_the_numbers_are_the_operators(self):
+        self.assertEqual(qr.KEEP_HEAD, 64 * 1024)
+        self.assertEqual(qr.KEEP_TAIL, 192 * 1024)
+        self.assertEqual(qr.KEEP_FILES, 5)
+
+    def test_the_whole_suite_sized_output_is_kept_whole(self):
+        # E2: one real run of bin/tests.sh printed 59,382 bytes. The cap sits far above it.
+        self.run_it(gate("suite", "max", 0, command=_emit_cmd(59382)), when=at(0))
+        text = self.read("suite", self.files("suite")[0])
+        self.assertIn("stdout: 59382 bytes, kept 59382\n", text)
+        self.assertIn("x" * 59382, text)
+        self.assertNotIn("omitted", text)
+
+    def test_a_stream_over_the_cap_is_cut_in_the_middle_and_says_how_much_went(self):
+        cmd = (f'"{PY}" -c "import sys; sys.stdout.write(\'a\' * 10 + \'b\' * 100 + \'c\' * 20); sys.exit(3)"')
+        with mock.patch.object(qr, "KEEP_HEAD", 10), mock.patch.object(qr, "KEEP_TAIL", 20):
+            self.run_it(gate("suite", "max", 0, command=cmd), when=at(0))
+        text = self.read("suite", self.files("suite")[0])
+        self.assertIn("stdout: 130 bytes, kept 30\n", text)
+        self.assertIn("=== stdout ===\n" + "a" * 10 + "\n... [100 bytes omitted] ...\n" + "c" * 20 + "\n", text)
+
+    def test_a_cut_never_leaves_half_a_character(self):
+        # 80 bytes of two-byte characters; a head of 11 and a tail of 21 both split one
+        with mock.patch.object(qr, "KEEP_HEAD", 11), mock.patch.object(qr, "KEEP_TAIL", 21):
+            self.run_it(gate("suite", "max", 0, command=_emit_cmd(80, wide=True)), when=at(0))
+        text = self.read("suite", self.files("suite")[0])      # strict UTF-8: a split character would raise
+        self.assertNotIn("�", text)
+        self.assertIn("stdout: 80 bytes, kept 30\n", text)
+        self.assertIn("[50 bytes omitted]", text)
+
+    def test_a_long_stream_is_cut_at_the_real_caps(self):
+        self.run_it(gate("suite", "max", 0, command=_emit_cmd(300000)), when=at(0))
+        text = self.read("suite", self.files("suite")[0])
+        self.assertIn("stdout: 300000 bytes, kept 262144\n", text)
+        self.assertIn(f"[{300000 - 262144} bytes omitted]", text)
+
+    def test_a_file_is_bounded_by_its_two_caps_plus_a_header(self):
+        self.run_it(gate("suite", "max", 0, command=_emit_cmd(300000, 300000)), when=at(0))
+        size = os.path.getsize(os.path.join(self.folder("suite"), self.files("suite")[0]))
+        self.assertLessEqual(size, 2 * (64 * 1024 + 192 * 1024) + 2048)
+        self.assertIn("stderr: 300000 bytes, kept 262144\n", self.read("suite", self.files("suite")[0]))
+
+
+class TestWhatThePersonSees(_KeptCase):
+    """Plan 3.5: a line after the table, from the directory itself, in --run and in --status."""
+
+    def _on_disk(self, n_files, n_folders, newest, gate_name):
+        return (f"kept output on disk: {n_files} file(s) in {n_folders} gate folder(s) under "
+                f"{os.path.join(self.d, KEEP)}; newest {newest} ({gate_name})")
+
+    def test_run_prints_the_on_disk_line_and_one_line_for_each_gate_kept(self):
+        _, out, _ = self.run_it(gate("suite", "max", 0, command=_exit_cmd()), when=at(0))
+        self.assertIn(self._on_disk(1, 1, f"{stamp(0)}-nohead.txt", "suite"), out)
+        mine = [ln for ln in out.splitlines() if ln.strip().startswith("kept:")]
+        self.assertEqual(len(mine), 1, out)
+        self.assertIn("suite", mine[0])
+        self.assertIn(os.path.join(self.d, KEEP, "suite", f"{stamp(0)}-nohead.txt"), mine[0])
+
+    def test_run_prints_nothing_about_kept_output_when_there_is_none(self):
+        _, out, _ = self.run_it(gate("ok", "max", 0, command=f'"{PY}" -c "pass"'), when=at(0))
+        self.assertNotIn("kept", out)
+
+    def test_status_after_a_later_green_run_still_points_at_the_red_runs_file(self):
+        flag = os.path.join(self.d, "flag")
+        g = gate("suite", "max", 0, command=_flag_cmd(flag))
+        self.run_it(g, when=at(0))
+        before = self.tree()
+        open(flag, "w").close()
+        self.run_it(g, when=at(1))
+        self.assertNotIn("kept", self.results(), "a green snapshot carries no kept key")
+        out = self.status(g)
+        self.assertIn(self._on_disk(1, 1, f"{stamp(0)}-nohead.txt", "suite"), out)
+        self.assertEqual(self.tree(), before)
+
+    def test_status_prints_a_line_for_each_stored_gate_whose_file_still_exists(self):
+        a, b = gate("a", "max", 0, command=_exit_cmd("aa")), gate("b", "max", 0, command=_exit_cmd("bb"))
+        self.run_it(a, b, when=at(0))
+        lines = [ln for ln in self.status(a, b).splitlines() if ln.strip().startswith("kept:")]
+        self.assertEqual(len(lines), 2, lines)
+        os.remove(os.path.join(self.folder("b"), f"{stamp(0)}-nohead.txt"))
+        lines = [ln for ln in self.status(a, b).splitlines() if ln.strip().startswith("kept:")]
+        self.assertEqual(len(lines), 1, lines)
+        self.assertIn(os.path.join(self.d, KEEP, "a"), lines[0])
+
+    def test_status_with_a_stored_kept_that_means_nothing_here_does_not_crash(self):
+        g = gate("ok", "max", 0, command=f'"{PY}" -c "pass"')
+        self.run_it(g, when=at(0))
+        snap = self.results()
+        for junk in (5, [1, 2], {"ok": 7}, {"ok": "../../etc/passwd"}, None):
+            with self.subTest(junk=junk):
+                snap["kept"] = junk
+                with open(os.path.join(self.d, qr.DEFAULT_RESULTS), "w") as f:
+                    json.dump(snap, f)
+                out = self.status(g)
+                self.assertIn("1/1 pass", out)
+                self.assertNotIn("passwd", out, "a stored path that leaves the directory is never followed")
+
+    def _cli(self, *args):
+        return subprocess.run([PY, str(STARTER), *args], cwd=self.d, capture_output=True, text=True)
+
+    def test_the_command_line_run_prints_the_lines_and_exits_as_before(self):
+        json.dump(manifest(gate("suite", "max", 0, command=_exit_cmd("on the CLI"))),
+                  open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+        p = self._cli("--run")
+        out = ANSI.sub("", p.stdout)
+        self.assertEqual(p.returncode, qr.REFUSED, out + p.stderr)
+        self.assertIn("kept output on disk: 1 file(s) in 1 gate folder(s) under ", out)
+        self.assertEqual(self._cli("--status").returncode, qr.REFUSED)
+        self.assertIn("kept output on disk: 1 file(s)", ANSI.sub("", self._cli("--status").stdout))
+
+    def test_under_json_stdout_is_still_one_document_and_carries_kept(self):
+        json.dump(manifest(gate("suite", "max", 0, command=_exit_cmd())),
+                  open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+        p = self._cli("--run", "--json")
+        self.assertEqual(p.returncode, qr.REFUSED, p.stderr)
+        doc = json.loads(p.stdout)                      # a caller that parses stdout still can
+        self.assertEqual(list(doc["kept"]), ["suite"])
+        self.assertEqual(self._cli("--status", "--json").returncode, qr.REFUSED)
+        self.assertEqual(list(json.loads(self._cli("--status", "--json").stdout)["kept"]), ["suite"])
+
+    def test_a_warning_under_json_goes_to_stderr_and_stdout_still_parses(self):
+        json.dump(manifest(gate("suite", "max", 0, command=_exit_cmd())),
+                  open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+        open(os.path.join(self.d, KEEP), "w").write("a file where the directory goes\n")
+        p = self._cli("--run", "--json")
+        self.assertEqual(p.returncode, qr.REFUSED)
+        json.loads(p.stdout)
+        self.assertIn("could not keep", p.stderr)
+
+
+class TestRunGatesHandsEachResultToTheKeeper(_KeptCase):
+    """Plan 3.7: run_gates(root, cfg, timeout, keep=None); keep(result, raw) after each gate."""
+
+    def test_keep_is_called_after_each_gate_with_its_result_and_the_commands_raw_output(self):
+        record = []
+        seen, calls = os.path.join(self.d, "seen.txt"), os.path.join(self.d, "calls.txt")
+
+        def keep(res, raw):
+            record.append((res["name"], res["status"], raw))
+            open(calls, "a").write(res["name"])
+        cmd_a = _exit_cmd("aaa", 3)
+        cmd_b = f'"{PY}" -c "import os; open({seen!r}, \'w\').write(str(os.path.exists({calls!r})))"'
+        snap = qr.run_gates(self.d, manifest(gate("a", "max", 0, command=cmd_a),
+                                              gate("b", "max", 0, command=cmd_b),
+                                              gate("c", "max", 5, command=cmd_a),
+                                              gate("d", "min", 1)), keep=keep)
+        self.assertEqual([r[0] for r in record], ["a", "b", "c", "d"])
+        self.assertEqual([r[1] for r in record], ["fail", "pass", "pass", "unmeasured"])
+        self.assertEqual(record[0][2], (3, "aaa\n", "", False, 600))
+        self.assertEqual(record[2][2], record[0][2], "a shared command hands the same run to both gates")
+        self.assertIsNone(record[3][2], "a gate with no command has no raw output")
+        self.assertEqual(open(seen).read(), "True", "gate a was handed over before gate b's command started")
+        self.assertNotIn("kept", snap, "the keeper's map is do_run's to attach, not run_gates'")
+
+    def test_without_keep_run_gates_returns_what_it_always_did_and_writes_nothing(self):
+        cfg = manifest(gate("suite", "max", 0, command=_exit_cmd()))
+        snap = qr.run_gates(self.d, cfg)
+        self.assertEqual(snap["summary"], {"pass": 0, "fail": 1, "unmeasured": 0})
+        self.assertEqual(sorted(snap), ["gates", "head", "manifest", "ran_at", "results", "summary", "version"])
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
+
+
 class TestToolInvariants(unittest.TestCase):
+    def test_the_version_is_1_6_0(self):
+        self.assertEqual(qr.VERSION, "1.6.0")
+
+    def test_help_and_the_module_docstring_say_what_is_kept_where_and_that_it_is_not_for_git(self):
+        p = subprocess.run([PY, str(STARTER), "--help"], capture_output=True, text=True)
+        for where, text in (("--help", p.stdout), ("docstring", qr.__doc__)):
+            with self.subTest(where=where):
+                self.assertIn(KEEP, text)
+                self.assertIn("do not commit", text.lower())
+
+    def test_selftest_observes_a_failing_gate_keeping_its_output_and_a_green_run_leaving_it(self):
+        p = subprocess.run([PY, str(STARTER), "--selftest"], capture_output=True, text=True)
+        for label in ("a failing gate keeps its output", "a later passing run leaves it"):
+            self.assertRegex(p.stdout, r"PASS\x1b\[0m  " + label, p.stdout)
+
     def test_no_force_escape_hatch(self):
         src = STARTER.read_text(encoding="utf-8")
         self.assertNotIn('"--force" in args and', src)

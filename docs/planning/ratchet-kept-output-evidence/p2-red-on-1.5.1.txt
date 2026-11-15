@@ -1,0 +1,120 @@
+P2 (ratchet-kept-output-plan.md section 6): the new tests, read on the UNMODIFIED 1.5.1 tool
+
+Tool: starter-kit/quality_ratchet.py VERSION 1.5.1, no change to it in the working tree.
+Tests: tools/test_quality_ratchet.py as committed with this file; the six new classes and three new
+methods of TestToolInvariants: 55 tests. Command: python3 tools/test_quality_ratchet.py -v <the classes>.
+Result: 45 read RED for the right reason (the behaviour is absent); 10 hold on both versions, as the plan
+expects (a passing run keeps nothing, a timeout keeps nothing, a gate with no command keeps nothing, exit
+codes, the results hash literal, a missing results folder fails as today, run_gates without keep).
+
+== HOLD ON BOTH (10) ==
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_command_that_outlived_its_budget_keeps_nothing
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_gate_with_no_command_keeps_nothing
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_run_in_which_every_gate_passes_writes_nothing_at_all
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_run_that_kept_nothing_has_no_kept_key
+  TestAGateThatDidNotPassKeepsItsOutput.test_exit_codes_do_not_change_when_output_is_kept
+  TestAGateThatDidNotPassKeepsItsOutput.test_the_results_hash_and_the_gate_records_are_what_1_5_1_wrote
+  TestKeepingNeverChangesTheRun.test_a_results_folder_that_does_not_exist_fails_as_it_does_today_and_makes_nothing
+  TestWhatThePersonSees.test_run_prints_nothing_about_kept_output_when_there_is_none
+  TestWhatThePersonSees.test_status_with_a_stored_kept_that_means_nothing_here_does_not_crash
+  TestRunGatesHandsEachResultToTheKeeper.test_without_keep_run_gates_returns_what_it_always_did_and_writes_nothing
+
+== RED on 1.5.1 (45), with the first line of each failure ==
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_command_of_several_lines_keeps_the_header_one_line_per_field
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/multi'
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_failing_gate_keeps_what_it_printed_in_a_file_named_by_start_and_commit
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_green_run_after_a_red_one_deletes_nothing_and_adds_nothing
+      AssertionError: {} is not true
+  TestAGateThatDidNotPassKeepsItsOutput.test_a_shared_command_is_kept_when_only_the_second_gate_fails
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/passed'
+  TestAGateThatDidNotPassKeepsItsOutput.test_an_unmeasured_gate_whose_command_ran_keeps_its_output_too
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/nomatch'
+  TestAGateThatDidNotPassKeepsItsOutput.test_kept_paths_are_relative_to_the_results_file_with_forward_slashes
+      KeyError: 'kept'
+  TestAGateThatDidNotPassKeepsItsOutput.test_the_file_has_exactly_the_form_the_plan_gives
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/passed'
+  TestAGateThatDidNotPassKeepsItsOutput.test_the_file_name_carries_the_short_commit_when_there_is_one
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestAGateThatDidNotPassKeepsItsOutput.test_the_gates_that_did_not_pass_and_whose_command_ran_are_the_ones_kept
+      KeyError: 'kept'
+  TestAGateThatDidNotPassKeepsItsOutput.test_the_kept_map_names_only_the_gates_kept_in_this_run
+      KeyError: 'kept'
+  TestAGateThatDidNotPassKeepsItsOutput.test_two_gates_over_one_command_share_one_file_in_the_first_gates_folder
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/passed'
+  TestWhereTheOutputGoesAndHowLongItStays.test_a_future_dated_stray_file_cannot_make_the_file_just_written_the_oldest
+      AssertionError: Lists differ: ['29990101T000000Z-abcdef0.txt', '29990102T0[143 chars]txt'] != ['20261114T120000Z-nohead.txt', '29990103T00[110 chars]t
+  TestWhereTheOutputGoesAndHowLongItStays.test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes
+      KeyError: 'kept'
+  TestWhereTheOutputGoesAndHowLongItStays.test_a_link_where_a_directory_should_be_is_not_written_through
+      AssertionError: 0 != 1 : 
+  TestWhereTheOutputGoesAndHowLongItStays.test_an_explicit_results_file_decides_where_the_directory_goes
+      AssertionError: False is not true
+  TestWhereTheOutputGoesAndHowLongItStays.test_pruning_never_follows_a_link_and_never_removes_a_name_of_another_form
+      AssertionError: 0 != 5
+  TestWhereTheOutputGoesAndHowLongItStays.test_retention_is_per_gate_so_a_gate_that_never_measures_cannot_evict_the_suites_red
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestWhereTheOutputGoesAndHowLongItStays.test_the_directory_is_invisible_to_git_and_the_projects_gitignore_is_not_touched
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/.gitignore'
+  TestWhereTheOutputGoesAndHowLongItStays.test_the_directory_sits_beside_the_results_file_in_the_legacy_layout
+      AssertionError: False is not true
+  TestWhereTheOutputGoesAndHowLongItStays.test_the_directory_sits_beside_the_results_file_in_the_new_layout
+      AssertionError: False is not true
+  TestWhereTheOutputGoesAndHowLongItStays.test_the_gitignore_is_written_again_on_every_write
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/.gitignore'
+  TestWhereTheOutputGoesAndHowLongItStays.test_the_newest_five_files_per_gate_are_kept_and_the_rest_removed
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestWhereTheOutputGoesAndHowLongItStays.test_two_names_that_differ_only_in_case_get_two_folders
+      KeyError: 'kept'
+  TestWhereTheOutputGoesAndHowLongItStays.test_two_runs_with_one_start_and_commit_do_not_overwrite_each_other
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite/20261114T120000Z-nohead.txt'
+  TestKeepingNeverChangesTheRun.test_a_file_where_the_directory_should_be_is_a_warning_and_stays_untouched
+      AssertionError: 0 != 1 : 
+  TestKeepingNeverChangesTheRun.test_a_keeper_that_fails_with_something_other_than_an_oserror_is_a_warning_too
+      AssertionError: 'could not keep' not found in ''
+  TestKeepingNeverChangesTheRun.test_a_run_cut_short_keeps_what_its_finished_gates_had_saved
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/first'
+  TestKeepingNeverChangesTheRun.test_an_unwritable_directory_is_one_warning_and_the_run_is_otherwise_the_same
+      AssertionError: 0 != 1 : 
+  TestKeepingNeverChangesTheRun.test_however_many_gates_fail_to_keep_the_run_warns_once
+      AssertionError: 0 != 1 : 
+  TestWhatIsKeptOfALongStream.test_a_cut_never_leaves_half_a_character
+      AttributeError: <module 'quality_ratchet' from '/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py'> does not have the attribute 'K
+  TestWhatIsKeptOfALongStream.test_a_file_is_bounded_by_its_two_caps_plus_a_header
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestWhatIsKeptOfALongStream.test_a_long_stream_is_cut_at_the_real_caps
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestWhatIsKeptOfALongStream.test_a_stream_over_the_cap_is_cut_in_the_middle_and_says_how_much_went
+      AttributeError: <module 'quality_ratchet' from '/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py'> does not have the attribute 'K
+  TestWhatIsKeptOfALongStream.test_the_numbers_are_the_operators
+      AttributeError: module 'quality_ratchet' has no attribute 'KEEP_HEAD'
+  TestWhatIsKeptOfALongStream.test_the_whole_suite_sized_output_is_kept_whole
+      FileNotFoundError: [Errno 2] No such file or directory: '<tmp>/.quality-gates-output/suite'
+  TestWhatThePersonSees.test_a_warning_under_json_goes_to_stderr_and_stdout_still_parses
+      AssertionError: 'could not keep' not found in ''
+  TestWhatThePersonSees.test_run_prints_the_on_disk_line_and_one_line_for_each_gate_kept
+      AssertionError: 'kept output on disk: 1 file(s) in 1 gate folder(s) under <tmp>/.quality-gates-output; newest 20261114T120000Z-nohead.txt (suite)' not
+  TestWhatThePersonSees.test_status_after_a_later_green_run_still_points_at_the_red_runs_file
+      AssertionError: 'kept output on disk: 1 file(s) in 1 gate folder(s) under <tmp>/.quality-gates-output; newest 20261114T120000Z-nohead.txt (suite)' not
+  TestWhatThePersonSees.test_status_prints_a_line_for_each_stored_gate_whose_file_still_exists
+      AssertionError: 0 != 2 : []
+  TestWhatThePersonSees.test_the_command_line_run_prints_the_lines_and_exits_as_before
+      AssertionError: 'kept output on disk: 1 file(s) in 1 gate folder(s) under ' not found in '\n──────────────────────────────────────────────────────────
+  TestWhatThePersonSees.test_under_json_stdout_is_still_one_document_and_carries_kept
+      KeyError: 'kept'
+  TestRunGatesHandsEachResultToTheKeeper.test_keep_is_called_after_each_gate_with_its_result_and_the_commands_raw_output
+      TypeError: run_gates() got an unexpected keyword argument 'keep'
+  TestToolInvariants.test_the_version_is_1_6_0
+      AssertionError: '1.5.1' != '1.6.0'
+  TestToolInvariants.test_help_and_the_module_docstring_say_what_is_kept_where_and_that_it_is_not_for_git
+      AssertionError: '.quality-gates-output' not found in "quality_ratchet.py v1.5.1 — declared quality thresholds that only tighten\n\nUsage: python3 qual
+  TestToolInvariants.test_selftest_observes_a_failing_gate_keeping_its_output_and_a_green_run_leaving_it
+      AssertionError: Regex didn't match: 'PASS\\x1b\\[0m  a failing gate keeps its output' not found in "  \x1b[32mPASS\x1b[0m  lowering a floor is refused
+
+== A finding outside this deliverable: four older tests are load-sensitive ==
+TestARealTerminalStopsTheCommand.test_ctrl_c_typed_at_the_terminal_stops_the_child and the three tests of
+TestASignalToTheToolStopsTheCommand (BL-107's 'the gate command's child is still running 5 s after the tool
+stopped') failed in a full run of the file here (load average 293). Control, nothing of this session's in the
+tree: a clean clone of a34cd3c4 (S450's claim), three runs of those two classes in a row at load 415: one
+passed (9 tests OK) and two failed (2 failures of 9 each). So they are a pre-existing flake that follows the
+machine's load, not a defect of the new tests or of 1.5.1. Not diagnosed here; raised, not acted on.
