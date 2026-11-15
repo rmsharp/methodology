@@ -297,6 +297,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-11-14.md` (2 record(s), 63,943 B → 42,434 B)
+
+**Written by:** `methodology_trim.py` v1.8.1 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-11-13 → 2026-11-14) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-11-14.md`](docs/archive/HANDOFFS-through-2026-11-14.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-11-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-11-14.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,943 B → 42,434 B (−33.6%).
+
 ### 2026-11-14 · [ad hoc] S449 push -- local `main` pushed to the fork's `origin` at the operator's Yes, 7 commits, fast-forward `1cb65e8e..7390a48b`, read back by full sha; nothing sent to KJ5HST/methodology
 
 Asked at the close-out, after the receipt (the receipt does not hold the answer). The seven commits: S448's push record `babfbf90`, the claim `5aeccbde`, the two evidence commits `2d10cfda` and `6a09eb44`, the work commit `991e0fb4`, the backlog commit `a5914086` and the close-out `7390a48b`. `git fetch origin` then read `origin/main` as `7390a48b83cbf8d2a10adf6e6ded129fe3cdbe27`, equal to local `main`. The fork is `rmsharp/methodology`; `upstream` (`KJ5HST/methodology`) was not touched and its `main` is still `d50ce290`. This record is the one commit kept local, so `origin/main..main` reads 1 after it.
