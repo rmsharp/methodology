@@ -1,0 +1,33 @@
+p3-check run1: clone <work>/methodology
+  ok   the run finished (a done-file exists)  ['2\n']
+  ok   the results file lists 26 gates
+  ok   the results file was written by tool 1.6.0  [1.6.0]
+  ok   the run wrote nothing to stderr (no keeper warning)
+  ok   exit code 2 (a gate failed)  ['2\n']
+  ok   tests-sh-failed reads fail with 1  [fail 1.0]
+  ok   tests-sh-passed reads pass at its floor, 702  [pass 702.0]
+  ok   the summary reads 25 pass, 1 fail, 0 unmeasured  [{"fail": 1, "pass": 25, "unmeasured": 0}]
+  ok   the 24 gates that are not the suite all pass with the directory present
+  ok   `kept` names exactly one gate, tests-sh-failed  [{"tests-sh-failed": ".quality-gates-output/tests-sh-passed/20261115T144432Z-a11a5d33.txt"}]
+  ok   its path is .quality-gates-output/tests-sh-passed/<UTC start>-<commit>.txt  [.quality-gates-output/tests-sh-passed/20261115T144432Z-a11a5d33.txt]
+  ok   the file name carries the clone's HEAD  [a11a5d33 vs a11a5d33]
+  ok   that file exists
+  ok   the header's first line
+  ok   the header names both gates over the shared command
+  ok   the header names the shared command
+  ok   the suite's exit status 1 and its 3600 s budget
+  ok   stdout was kept whole (bytes equal bytes kept)  [59523 / 59523]
+  ok   stdout is within 5% of 59,382 bytes  [59523 bytes, +0.24%]
+  ok   stderr 0 bytes
+  ok   the injected failure line is in the kept file exactly once
+  ok   it is the only FAIL line in the kept file
+  ok   the suite's own summary line
+  ok   one stdout and one stderr section
+  ok   .quality-gates-output/.gitignore holds `*`
+  ok   the directory holds one kept file in one gate folder, tests-sh-passed  [[('tests-sh-passed', '20261115T144432Z-a11a5d33.txt')]]
+  ok   `--run` printed the 'kept output on disk' line
+  ok   `--run` printed one 'kept:' line for tests-sh-failed with its absolute path
+  ok   `--status` prints the 'kept output on disk' line
+  ok   `--status` prints the stored 'kept:' line
+  ok   git status --porcelain is only the injected edit  [' M bin/tests.sh\n']
+p3-check run1: all expectations hold

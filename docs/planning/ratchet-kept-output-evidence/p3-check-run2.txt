@@ -1,0 +1,22 @@
+p3-check run2: clone <work>/methodology
+  ok   the run finished (a done-file exists)  ['0\n']
+  ok   the results file lists 26 gates
+  ok   the results file was written by tool 1.6.0  [1.6.0]
+  ok   the run wrote nothing to stderr (no keeper warning)
+  ok   run 1's results file was saved for comparison
+  ok   exit code 0  ['0\n']
+  ok   the summary reads 26 pass, 0 fail, 0 unmeasured  [{"fail": 0, "pass": 26, "unmeasured": 0}]
+  ok   tests-sh-passed 702 and tests-sh-failed 0  [702.0 / 0.0]
+  ok   the results file has no `kept` key
+  ok   run 1's kept file is still there  [.quality-gates-output/tests-sh-passed/20261115T144432Z-a11a5d33.txt]
+  ok   and it is byte-identical (sha256 equal)  [27322b4f207a]
+  ok   its size and modification time are unchanged  [59778 1794754654255597835]
+  ok   the directory still holds that one kept file and nothing new  [[('tests-sh-passed', '20261115T144432Z-a11a5d33.txt')]]
+  ok   .quality-gates-output/.gitignore still holds `*`
+  ok   `--run` printed the 'kept output on disk' line
+  ok   `--run` printed no 'kept:' line (nothing was kept in this run)
+  ok   `--status` still prints the 'kept output on disk' line
+  ok   `--status` prints no 'kept:' line (the results file names none)
+  ok   git status --porcelain is empty (the injection is gone)  ['']
+  ok   the 24 other gates read the same in both runs (status and value)  [{}]
+p3-check run2: all expectations hold
