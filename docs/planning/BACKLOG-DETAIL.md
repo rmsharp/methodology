@@ -3984,6 +3984,12 @@ and its own go-ahead — and the wrapper method that captured it here works with
 a separate wrapper file named in the gate's `command`, never a wrapper *over* `bin/tests.sh`, which contaminates
 the suite's self-referential tests and produced three spurious failures when tried).
 
+**Closed, S451 (2026-11-15).** Shapes (a) and (b) were done at S357. Shape (c) was priced and decided in
+[`ratchet-kept-output-plan.md`](ratchet-kept-output-plan.md) (S445; the operator took D1 to D5 as recommended at S450),
+built as `quality_ratchet.py` 1.6.0 (S450), and shown on the real suite at S451 (the plan's P3, evidence in
+`ratchet-kept-output-evidence/p3-*`): a red run keeps the suite's whole output (59,523 B, the failing line named), and a
+later green run leaves that file untouched. What it does not show is a real flake being diagnosed; that waits for one.
+
 <a id="bl-93"></a>
 
 **BL-93 — The `Open:` list at `BACKLOG.md:8` omits five open items. Raised 2026-09-29 (S234), while
