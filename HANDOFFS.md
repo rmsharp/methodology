@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S452
+date: 2026-11-15
+status: pending
+active_task: **BL-103 (c) (IN PROGRESS): `quality_ratchet.py --run` names the unmeasured gates** (a gate that outlives its budget is counted as `unmeasured` but the run does not say which; the print would use `bin/check-handoff`'s form, `unmeasured: <gate>, <gate>`), built as ratchet 1.7.0 on fork `main` (decision D3 of `docs/planning/ratchet-kept-output-plan.md`: separate from 1.6.0). No plan for it exists yet: the plan is presented to the operator for approval before any code, then red-first tests, a mutation round, and the 26-gate run. Local to the fork; nothing sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S451
 date: 2026-11-15
 status: complete
