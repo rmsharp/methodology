@@ -297,6 +297,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.1.
 
 ## 2026-11
 
+### 2026-11-15 · [ad hoc] S452 push -- local `main` pushed to the fork's `origin` at the operator's Yes, 13 commits, fast-forward `4a754574..69f50573`, read back by full sha; nothing sent to KJ5HST/methodology
+
+Asked at the close-out, after the receipt (the receipt does not hold the answer). The thirteen commits: S451's push record `1f91e3f7`, the trim `e024d65d`, the fold `47c2087b`, the claim `f0414428`, tests RED `e33ebeba`, code `1e84df48`, the mutation round `dcc5129b`, the floor `b32fda08`, the smoke `f5365486`, the gate-run evidence `113aa4d5`, the record `1b40ea99`, the close-out `71655815` and the figures commit `69f50573`. `git fetch origin` then read `origin/main` as `69f505732e730527ead12c038ec3866c182c0ba9`, equal to local `main`, and `git ls-remote origin refs/heads/main` agreed. The fork is `rmsharp/methodology`; `upstream` (`KJ5HST/methodology`) was not touched and its `main` is still `d50ce290`. This record is the one commit kept local, so `origin/main..main` reads 1 after it.
+
 ### 2026-11-15 · [ad hoc] S452 receipt figures -- the close-out receipt's `HANDOFFS.md` size was 20 B off and its push count is one short; nothing sent to KJ5HST/methodology
 
 The S452 close-out commit `71655815` committed a receipt that said `HANDOFFS.md` was 53,077 B with 12,459 B left; the file measured 53,097 B with 12,439 B left (an edit to the receipt after that figure was written added 20 B). Its push count, 12, is 13 with this commit. An attempt to correct the committed entry in place was refused by the ledger hook, rightly (a committed entry is never edited); this entry, and the receipt's three figures, are the correction. At this commit: `HANDOFFS.md` 53,111 B of 65,536 B (12,425 B left), `CHANGELOG.md` 185,739 B of 196,608 B (10,869 B left). Nothing else changed.
