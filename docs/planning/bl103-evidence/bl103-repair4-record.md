@@ -62,7 +62,7 @@ The four older load-sensitive BL-107 tests did not fail in the three full unit r
 
 Not verified: Windows, a terminal without ANSI, GitHub CI, an adopter's own copy (an adopter has no `bin/check-handoff`, so there the
 clause is a convenience, not a gate), a manifest whose gate name the lint cannot read. Not done, by decision: sanitizing such a name.
-`config_defects` accepts any non-empty name and the lint reads `[A-Za-z0-9][A-Za-z0-9_.-]*`; no name in 18 manifests falls outside it.
+`config_defects` accepts any non-empty name and the lint reads `[A-Za-z0-9][A-Za-z0-9_.-]*`; no name in 18 manifests (67 names) falls outside it at S452. **That count is a reading with a time on it**: `python3 -I docs/planning/bl103-evidence/repair4-name-census.py` recomputes it.
 **Correction to the plan shown at the Phase 4 picker**, which said such a name "fails closed". Measured on the lint
 (`validate_gate_citation`): the lint reads such a name as its first word, so it counts as one name. A clause of two or more such names
 is refused (it counts fewer than owed: `reads 2 unmeasured gate(s) and the receipt names 1`), but a lone one, or one beside readable
