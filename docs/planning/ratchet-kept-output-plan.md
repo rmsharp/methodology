@@ -58,7 +58,7 @@ All five are the two gates over `bash bin/tests.sh`. None repeated on demand. Th
 - **Diagnosing or fixing the flake.** Different work, and unknowable until an output exists.
 - **Output of passing gates.** Alternative D below.
 - **Output of a timed-out command.** The tool stops the command and discards what it printed (`run_gate_command`, `:157-203`), by decision: nothing a timed-out command printed is a measurement. None of the five reds was a timeout: each read a number (`tests-sh-failed` 1), and a timeout reads none. Keeping partial output would mean streaming to files instead of reading a pipe: a larger change for no recorded case.
-- **`--run` printing the unmeasured gates' names** (BL-103's option (c), the neighbour above): decision D3.
+- **`--run` printing the unmeasured gates' names** (BL-103's option (c), the neighbour above): decision D3, decided separate at S450 and built at S452 as 1.7.0 (BL-103's detail, `bl103-evidence/bl103-repair4-record.md`).
 - **The runner, the dashboard, `bin/check-handoff`, `bin/sync`, `bin/migrate-layout`.** None changes (section 7). No sentence is added to `SESSION_RUNNER.md`, so no cut is owed (the rule that a runner addition is paired with a cut: `issue100-fixes-plan.md:122`).
 - **Any outward act.** Reaching an adopter, or `KJ5HST/methodology`, is a separate go-ahead each time (section 6, P4).
 
