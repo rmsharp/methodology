@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S450
+date: 2026-11-14
+status: pending
+active_task: **P2 (IN PROGRESS): build `starter-kit/quality_ratchet.py` 1.6.0 on fork `main` only, so a gate that did not pass keeps its output** (`docs/planning/ratchet-kept-output-plan.md` section 6, P2: tests written first and red on 1.5.1, the tool, the floor and the seed note, a mutation round). The operator's D1 to D5 are decided as the plan recommends (build it; 256 KiB per stream, newest 5 files per gate; BL-103's name printing separate; P3, the proof on the real suite, its own session; nothing outward now). Local to the fork; nothing is sent to `KJ5HST/methodology`. The operator's steps: 'go' with no task; a prose Phase 0 report; one picker, answered 'Yes: dry run, then trim to 3' and 'P2: build ratchet 1.6.0 with D1-D5 as recommended'.
+```
+
+```handoff
 session: S449
 date: 2026-11-14
 status: complete
