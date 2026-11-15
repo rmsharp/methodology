@@ -1,0 +1,14 @@
+tool exit: 1 (1 = unmeasured)
+cite:   quality_ratchet: 1/3 pass · 0 fail · 2 unmeasured · results 1f029460a376 · manifest 0d91a133a709
+clause: unmeasured: slow-suite, declared-only
+
+== the citation, the clause and a by-hand tail
+check-handoff: OK — newest receipt in with-clause.md is structurally complete; all 0 older receipt(s) name a commit sha.
+exit 0 (expected 0)
+
+== the citation alone
+check-handoff: FAIL — 1 issue(s) in the newest receipt in bare.md:
+  error: the cited gate run reads 2 unmeasured gate(s) and the receipt names 0: repair the gate and re-run, or name each in `runtime_smoke` as `unmeasured: <gate>, … — by hand: <result>`
+exit 1 (expected 1)
+
+SMOKE OK
