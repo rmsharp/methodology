@@ -1,0 +1,84 @@
+P3 controls: the checker read RED before any run, and run 2's check read RED on run 1's end state.
+Each block is the checker's own output, unedited except for the long clone path shortened to <clone>.
+
+===== control-before-run1.txt
+p3-check run1: clone <work>/methodology
+  FAIL the run finished (a done-file exists)  [None]
+  FAIL the results file lists 26 gates
+  FAIL the results file was written by tool 1.6.0  [None]
+  FAIL the run wrote nothing to stderr (no keeper warning)
+  FAIL exit code 2 (a gate failed)  [None]
+  FAIL tests-sh-failed reads fail with 1  [None None]
+  FAIL tests-sh-passed reads pass at its floor, 702  [None None]
+  FAIL the summary reads 25 pass, 1 fail, 0 unmeasured  [{}]
+  FAIL the 24 gates that are not the suite all pass with the directory present
+  FAIL `kept` names exactly one gate, tests-sh-failed  [null]
+  FAIL its path is .quality-gates-output/tests-sh-passed/<UTC start>-<commit>.txt
+  FAIL the file name carries the clone's HEAD  [None vs a11a5d33]
+  FAIL that file exists
+  FAIL the header's first line
+  FAIL the header names both gates over the shared command
+  FAIL the header names the shared command
+  FAIL the suite's exit status 1 and its 3600 s budget
+  FAIL stdout was kept whole (bytes equal bytes kept)  [0 / 0]
+  FAIL stdout is within 5% of 59,382 bytes  [0 bytes, -100.00%]
+  FAIL stderr 0 bytes
+  FAIL the injected failure line is in the kept file exactly once
+  FAIL it is the only FAIL line in the kept file
+  FAIL the suite's own summary line
+  FAIL one stdout and one stderr section
+  FAIL .quality-gates-output/.gitignore holds `*`
+  FAIL the directory holds one kept file in one gate folder, tests-sh-passed  [[]]
+  FAIL `--run` printed the 'kept output on disk' line
+  FAIL `--run` printed one 'kept:' line for tests-sh-failed with its absolute path
+  FAIL `--status` prints the 'kept output on disk' line
+  FAIL `--status` prints the stored 'kept:' line
+  FAIL git status --porcelain is only the injected edit  ['']
+p3-check run1: 31 expectation(s) failed
+
+===== control-before-run2.txt
+p3-check run2: clone <work>/methodology
+  FAIL the run finished (a done-file exists)  [None]
+  FAIL the results file lists 26 gates
+  FAIL the results file was written by tool 1.6.0  [None]
+  FAIL the run wrote nothing to stderr (no keeper warning)
+  FAIL run 1's results file was saved for comparison
+  FAIL exit code 0  [None]
+  FAIL the summary reads 26 pass, 0 fail, 0 unmeasured  [{}]
+  FAIL tests-sh-passed 702 and tests-sh-failed 0  [None / None]
+  FAIL the results file has no `kept` key
+  FAIL run 1's kept file is still there
+  FAIL and it is byte-identical (sha256 equal)
+  FAIL its size and modification time are unchanged
+  FAIL the directory still holds that one kept file and nothing new  [[]]
+  FAIL .quality-gates-output/.gitignore still holds `*`
+  FAIL `--run` printed the 'kept output on disk' line
+  ok   `--run` printed no 'kept:' line (nothing was kept in this run)
+  FAIL `--status` still prints the 'kept output on disk' line
+  ok   `--status` prints no 'kept:' line (the results file names none)
+  ok   git status --porcelain is empty (the injection is gone)  ['']
+p3-check run2: 16 expectation(s) failed
+
+===== control-run2-on-run1-state.txt
+p3-check run2: clone <work>/methodology
+  FAIL the run finished (a done-file exists)  [None]
+  ok   the results file lists 26 gates
+  ok   the results file was written by tool 1.6.0  [1.6.0]
+  FAIL the run wrote nothing to stderr (no keeper warning)
+  ok   run 1's results file was saved for comparison
+  FAIL exit code 0  [None]
+  FAIL the summary reads 26 pass, 0 fail, 0 unmeasured  [{"fail": 1, "pass": 25, "unmeasured": 0}]
+  FAIL tests-sh-passed 702 and tests-sh-failed 0  [702.0 / 1.0]
+  FAIL the results file has no `kept` key
+  ok   run 1's kept file is still there  [.quality-gates-output/tests-sh-passed/20261115T144432Z-a11a5d33.txt]
+  ok   and it is byte-identical (sha256 equal)  [27322b4f207a]
+  ok   its size and modification time are unchanged  [59778 1794754654255597835]
+  ok   the directory still holds that one kept file and nothing new  [[('tests-sh-passed', '20261115T144432Z-a11a5d33.txt')]]
+  ok   .quality-gates-output/.gitignore still holds `*`
+  FAIL `--run` printed the 'kept output on disk' line
+  ok   `--run` printed no 'kept:' line (nothing was kept in this run)
+  ok   `--status` still prints the 'kept output on disk' line
+  FAIL `--status` prints no 'kept:' line (the results file names none)
+  FAIL git status --porcelain is empty (the injection is gone)  [' M bin/tests.sh\n']
+  ok   the 24 other gates read the same in both runs (status and value)  [{}]
+p3-check run2: 9 expectation(s) failed

@@ -1,0 +1,21 @@
+P3 of docs/planning/ratchet-kept-output-plan.md, section 6: what the two runs were and what was kept.
+(S451, 2026-11-15. Scratch clone named `methodology` of a11a5d3336ec515cc680f5543485c00680955d51, branch main, core.hooksPath .githooks,
+ quality_ratchet.py VERSION 1.6.0, 26 gates. The driver is p3-prove.sh; the expectations are p3-check.py.)
+
+run 1  one deliberate line injected after Test 1's header:  fail "kept-output proof: deliberate failure"
+       started 2026-11-15T14:44:32Z, ended 2026-11-15T15:27:06Z (42 min 34 s); load average at start 8.71, 9.35, 7.19
+       exit 2; quality_ratchet: 25/26 pass . 1 fail . 0 unmeasured . results 97a35c6012e5 . manifest 8f6e2002ec67
+       tests-sh-passed 702 (its floor), tests-sh-failed 1; the other 24 gates pass
+       kept: tests-sh-failed -> .quality-gates-output/tests-sh-passed/20261115T144432Z-a11a5d33.txt
+       file: 59,778 B, sha256 27322b4f207aaf5847bc91eb3c9eb0078d2dc28ac37451b03949502d88a004b6; stdout 59,523 B kept whole (+0.24% on 59,382), stderr 0 B
+       git status --porcelain: only " M bin/tests.sh"
+run 2  the injection removed (git checkout -- bin/tests.sh), a second full run, the directory from run 1 present throughout
+       started 2026-11-15T15:27:24Z, ended 2026-11-15T16:14:22Z (46 min 58 s); load average at start 15.29, 12.78, 11.64
+       (another session's R and vitest work took the load to about 167 for a few minutes, at about 09:42 local; the run was not disturbed)
+       exit 0; quality_ratchet: 26/26 pass . 0 fail . 0 unmeasured . results ff00a8d74ae0 . manifest 8f6e2002ec67
+       results ff00a8d74ae0 is the hash S450 cited for a clean run of 91873750216f: the directory's presence changed no gate's value
+       no `kept` key in the results file; the run-1 file byte-identical (same sha256, same size and modification time in nanoseconds)
+       git status --porcelain: empty
+copy-out (plan item 4)  cp -R .quality-gates-output <work>/p3-kept-copy; diff -r: identical; the kept file's sha256 in the copy equals run 1's.
+       The directory holds a .gitignore of '*': a copy placed INSIDE a git working tree is invisible to git. This evidence directory
+       therefore holds the kept file as a plain file, p3-kept-tests-sh-passed-20261115T144432Z-a11a5d33.txt (byte-identical; sha256 above).

@@ -1,0 +1,36 @@
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  26/26 pass · 0 fail · 0 unmeasured · results ff00a8d74ae0 · manifest 8f6e2002ec67
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 702         702  pass
+  tests-sh-failed                         <= 0           0  pass
+  dashboard-unit-tests                  >= 397         397  pass
+  context-budget-unit-tests             >= 174         174  pass
+  trimmer-unit-tests                    >= 222         222  pass
+  close-out-report-unit-tests           >= 103         103  pass
+  ratchet-unit-tests                    >= 190         190  pass
+  layout-unit-tests                      >= 75          75  pass
+  checker-layout-unit-tests              >= 18          18  pass
+  sync-layout-unit-tests                >= 101         101  pass
+  migrate-layout-unit-tests             >= 280         280  pass
+  migrate-layout-unit-tests-fail          <= 0           0  pass
+  layout-literals                         <= 0           0  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           0  pass
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+  backlog-completed-proof                 <= 0           0  pass
+  backlog-detail-proof                    <= 0           0  pass
+  backlog-anchors                         <= 0           0  pass
+  plan-size-directory-move            <= 60000       59977  pass
+  plan-size-pr-composition            <= 30000       29996  pass
+  backlog-size                        <= 54000       53130  pass
+  seed-handoffs-size                  <= 16384       13723  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 26/26 pass · 0 fail · 0 unmeasured · results ff00a8d74ae0 · manifest 8f6e2002ec67
+
+  kept output on disk: 1 file(s) in 1 gate folder(s) under <work>/methodology/.quality-gates-output; newest 20261115T144432Z-a11a5d33.txt (tests-sh-passed)
+
