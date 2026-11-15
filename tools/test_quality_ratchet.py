@@ -10,6 +10,7 @@ refusal was never seen to fire is a suggestion with a hook attached.
 """
 import contextlib
 import hashlib
+import importlib.machinery
 import importlib.util
 import io
 import json
@@ -2061,9 +2062,144 @@ class TestRunGatesHandsEachResultToTheKeeper(_KeptCase):
         self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
 
 
+# === 1.7.0: the unmeasured gates are named (BL-103 option (c)) ===
+# Written first, against the plan the operator approved at the S452 Phase 4 picker, and read red on 1.6.0
+# before the tool changed. When a run reads unmeasured gates, the line after `cite in the receipt:` names them
+# in the form bin/check-handoff reads, `unmeasured: <gate>, <gate>`, so the receipt is written by pasting two
+# lines and not by retyping names. Every test builds its own throwaway tree; none runs a gate against this repository.
+
+NAMES_LABEL = "and name them:"   # what the person sees in front of the clause; the clause itself is plain text
+OK_CMD = f'"{PY}" -c "pass"'      # exit 0: passes a ceiling of 0
+
+
+def _the_lint():
+    """bin/check-handoff loaded from its file (it has no .py suffix): the reader the clause is written for."""
+    loader = importlib.machinery.SourceFileLoader("check_handoff_for_the_ratchet_tests",
+                                                  str(REPO / "bin" / "check-handoff"))
+    spec = importlib.util.spec_from_loader(loader.name, loader)
+    mod = importlib.util.module_from_spec(spec)
+    loader.exec_module(mod)
+    return mod
+
+
+class TestTheUnmeasuredGatesAreNamed(_KeptCase):
+    def clause_lines(self, out):
+        """The text after the label on every line that has one, colour already stripped."""
+        return [ln.split(NAMES_LABEL, 1)[1].strip() for ln in out.splitlines() if NAMES_LABEL in ln]
+
+    def cited(self, out):
+        """The summary line exactly as printed after `cite in the receipt:`."""
+        found = [ln.split("cite in the receipt:", 1)[1].strip() for ln in out.splitlines()
+                 if "cite in the receipt:" in ln]
+        self.assertEqual(len(found), 1, out)
+        return found[0]
+
+    def raw_run(self, *gates):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+            qr.do_run(self.d, manifest(*gates))
+        return out.getvalue()
+
+    def two_unmeasured(self):
+        return (gate("ok", "max", 0, command=OK_CMD), gate("beta", "min", 1), gate("alpha", "min", 1))
+
+    def test_run_names_each_unmeasured_gate_in_the_order_the_manifest_declares_them(self):
+        rc, out, _ = self.run_it(*self.two_unmeasured())
+        self.assertEqual(rc, qr.WARN)
+        self.assertEqual(self.clause_lines(out), ["unmeasured: beta, alpha"])   # not alphabetical
+
+    def test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are(self):
+        bad = gate("bad", "max", 0, command=_exit_cmd())
+        rc, out, _ = self.run_it(self.two_unmeasured()[0], gate("beta", "min", 1), bad, gate("alpha", "min", 1))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertEqual(self.clause_lines(out), ["unmeasured: beta, alpha"])
+
+    def test_the_clause_is_the_line_right_after_the_citation_and_the_citation_is_unchanged(self):
+        _, out, _ = self.run_it(*self.two_unmeasured())
+        lines = out.splitlines()
+        i = next(n for n, ln in enumerate(lines) if "cite in the receipt:" in ln)
+        self.assertIn(NAMES_LABEL, lines[i + 1], out)
+        self.assertEqual(self.cited(out), qr.summary_line(self.results()))
+        self.assertTrue(self.cited(out).startswith("quality_ratchet: 1/3 pass · 0 fail · 2 unmeasured · results "))
+
+    def test_a_name_longer_than_the_table_column_is_named_whole(self):
+        long_name = "a-gate-whose-name-is-longer-than-the-thirty-character-column"
+        _, out, _ = self.run_it(gate(long_name, "min", 1))
+        self.assertEqual(self.clause_lines(out), ["unmeasured: " + long_name])
+
+    def test_nothing_is_named_when_every_gate_passes(self):
+        rc, out, _ = self.run_it(gate("ok", "max", 0, command=OK_CMD))
+        self.assertEqual(rc, qr.CLEAN)
+        self.assertEqual(self.clause_lines(out), [])
+        self.assertNotIn(NAMES_LABEL, out)
+
+    def test_nothing_is_named_when_a_gate_fails_and_none_is_unmeasured(self):
+        rc, out, _ = self.run_it(gate("bad", "max", 0, command=_exit_cmd()))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertEqual(self.clause_lines(out), [])
+
+    def test_the_number_of_names_is_the_number_the_summary_reads(self):
+        for k in (1, 2, 3, 5):
+            with self.subTest(unmeasured=k):
+                gates = [gate("ok", "max", 0, command=OK_CMD)] + [gate(f"g{n}", "min", 1) for n in range(k)]
+                _, out, _ = self.run_it(*gates)
+                self.assertEqual(int(re.search(r"(\d+) unmeasured", self.cited(out)).group(1)), k)
+                (clause,) = self.clause_lines(out)
+                self.assertEqual(clause, "unmeasured: " + ", ".join(f"g{n}" for n in range(k)))
+
+    def test_status_names_them_from_the_stored_results(self):
+        self.run_it(*self.two_unmeasured())
+        self.assertEqual(self.clause_lines(self.status(*self.two_unmeasured())), ["unmeasured: beta, alpha"])
+
+    def test_status_after_a_clean_run_names_nothing(self):
+        g = gate("ok", "max", 0, command=OK_CMD)
+        self.run_it(g)
+        self.assertEqual(self.clause_lines(self.status(g)), [])
+
+    def test_json_output_stays_only_json_and_carries_no_clause(self):
+        _, out, _ = self.run_it(*self.two_unmeasured(), as_json=True)
+        self.assertEqual(json.loads(out)["summary"]["unmeasured"], 2)   # the whole of stdout is one JSON document
+        self.assertNotIn(NAMES_LABEL, out)
+
+    def test_the_clause_itself_has_no_escape_code_so_it_pastes_clean(self):
+        (line,) = [ln for ln in self.raw_run(*self.two_unmeasured()).splitlines() if NAMES_LABEL in ln]
+        self.assertTrue(line.endswith("unmeasured: beta, alpha"), repr(line))
+
+    def test_the_lint_accepts_the_pasted_pair_and_refuses_the_citation_without_the_clause(self):
+        lint = _the_lint()
+        _, out, _ = self.run_it(*self.two_unmeasured())
+        (clause,) = self.clause_lines(out)
+        pasted = {"status": "complete", "what_was_done": "", "runtime_smoke": self.cited(out) + "; " + clause}
+        self.assertEqual(lint.validate_gate_citation(pasted, 3), [])
+        with_tail = dict(pasted, runtime_smoke=pasted["runtime_smoke"] + " \u2014 by hand: 12 and 7")
+        self.assertEqual(lint.validate_gate_citation(with_tail, 3), [])
+        bare = dict(pasted, runtime_smoke=self.cited(out))
+        (why,) = lint.validate_gate_citation(bare, 3)
+        self.assertIn("reads 2 unmeasured gate(s) and the receipt names 0", why)
+
+    def test_a_run_from_the_command_line_names_a_timed_out_gate_and_an_uncommanded_one(self):
+        gates = (gate("slow-one", "max", 0, command=slow(30), timeout_seconds=0.5), gate("declared-only", "min", 1))
+        with open(os.path.join(self.d, qr.CONFIG_NAME), "w") as f:
+            json.dump(manifest(*gates), f)
+        p = subprocess.run([PY, str(STARTER), "--run"], cwd=self.d, capture_output=True, text=True, timeout=120)
+        self.assertEqual(p.returncode, qr.WARN, p.stdout + p.stderr)
+        self.assertEqual(self.clause_lines(ANSI.sub("", p.stdout)), ["unmeasured: slow-one, declared-only"])
+
+    def test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form(self):
+        p = subprocess.run([PY, str(STARTER), "--help"], capture_output=True, text=True)
+        for where, text in (("--help", p.stdout), ("docstring", qr.__doc__)):
+            with self.subTest(where=where):
+                self.assertIn("unmeasured: <gate>", text)
+
+    def test_selftest_observes_the_unmeasured_gates_being_named(self):
+        # An adopter has the selftest and not this suite: it must SEE an unmeasured gate named in the clause.
+        p = subprocess.run([PY, str(STARTER), "--selftest"], capture_output=True, text=True)
+        self.assertRegex(p.stdout, r"PASS\x1b\[0m  the unmeasured gates are named in the clause the lint reads", p.stdout)
+
+
 class TestToolInvariants(unittest.TestCase):
-    def test_the_version_is_1_6_0(self):
-        self.assertEqual(qr.VERSION, "1.6.0")
+    def test_the_version_is_1_7_0(self):
+        self.assertEqual(qr.VERSION, "1.7.0")
 
     def test_help_and_the_module_docstring_say_what_is_kept_where_and_that_it_is_not_for_git(self):
         p = subprocess.run([PY, str(STARTER), "--help"], capture_output=True, text=True)

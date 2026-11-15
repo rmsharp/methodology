@@ -1,0 +1,224 @@
+FFF...FF/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:780: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmdwpqpz2/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:780: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpefpfml44/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+FFEEF.
+======================================================================
+ERROR: test_the_clause_itself_has_no_escape_code_so_it_pastes_clean (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2165, in test_the_clause_itself_has_no_escape_code_so_it_pastes_clean
+    (line,) = [ln for ln in self.raw_run(*self.two_unmeasured()).splitlines() if NAMES_LABEL in ln]
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+ERROR: test_the_lint_accepts_the_pasted_pair_and_refuses_the_citation_without_the_clause (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2171, in test_the_lint_accepts_the_pasted_pair_and_refuses_the_citation_without_the_clause
+    (clause,) = self.clause_lines(out)
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+ERROR: test_the_number_of_names_is_the_number_the_summary_reads (__main__.TestTheUnmeasuredGatesAreNamed) (unmeasured=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2147, in test_the_number_of_names_is_the_number_the_summary_reads
+    (clause,) = self.clause_lines(out)
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+ERROR: test_the_number_of_names_is_the_number_the_summary_reads (__main__.TestTheUnmeasuredGatesAreNamed) (unmeasured=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2147, in test_the_number_of_names_is_the_number_the_summary_reads
+    (clause,) = self.clause_lines(out)
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+ERROR: test_the_number_of_names_is_the_number_the_summary_reads (__main__.TestTheUnmeasuredGatesAreNamed) (unmeasured=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2147, in test_the_number_of_names_is_the_number_the_summary_reads
+    (clause,) = self.clause_lines(out)
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+ERROR: test_the_number_of_names_is_the_number_the_summary_reads (__main__.TestTheUnmeasuredGatesAreNamed) (unmeasured=5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2147, in test_the_number_of_names_is_the_number_the_summary_reads
+    (clause,) = self.clause_lines(out)
+ValueError: not enough values to unpack (expected 1, got 0)
+
+======================================================================
+FAIL: test_a_name_longer_than_the_table_column_is_named_whole (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2128, in test_a_name_longer_than_the_table_column_is_named_whole
+    self.assertEqual(self.clause_lines(out), ["unmeasured: " + long_name])
+AssertionError: Lists differ: [] != ['unmeasured: a-gate-whose-name-is-longer-than-the-thirty-character-column']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'unmeasured: a-gate-whose-name-is-longer-than-the-thirty-character-column'
+
+- []
++ ['unmeasured: a-gate-whose-name-is-longer-than-the-thirty-character-column']
+
+======================================================================
+FAIL: test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2115, in test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+    self.assertEqual(self.clause_lines(out), ["unmeasured: beta, alpha"])
+AssertionError: Lists differ: [] != ['unmeasured: beta, alpha']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'unmeasured: beta, alpha'
+
+- []
++ ['unmeasured: beta, alpha']
+
+======================================================================
+FAIL: test_a_run_from_the_command_line_names_a_timed_out_gate_and_an_uncommanded_one (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2186, in test_a_run_from_the_command_line_names_a_timed_out_gate_and_an_uncommanded_one
+    self.assertEqual(self.clause_lines(ANSI.sub("", p.stdout)), ["unmeasured: slow-one, declared-only"])
+AssertionError: Lists differ: [] != ['unmeasured: slow-one, declared-only']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'unmeasured: slow-one, declared-only'
+
+- []
++ ['unmeasured: slow-one, declared-only']
+
+======================================================================
+FAIL: test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form (__main__.TestTheUnmeasuredGatesAreNamed) (where='--help')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2192, in test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form
+    self.assertIn("unmeasured: <gate>", text)
+AssertionError: 'unmeasured: <gate>' not found in "quality_ratchet.py v1.6.0 — declared quality thresholds that only tighten\n\nUsage: python3 quality_ratchet.py <command> [--json]\n\nCommands:\n  --run          Run every declared gate, write the results file, print the table\n                 and a citable summary line. Exit 2 on any fail, 1 on unmeasured.\n  --status       Report the last run without running anything.\n  --precommit    What the hook runs: refuse a staged .quality-gates.json whose\n                 thresholds are looser than HEAD's. Tightening/adding always pass.\n  install-hook   Install (or explain how to chain) the pre-commit hook. Opt-in.\n  --selftest     Observe every gate FAILING as well as passing.\n  -h, --help     Show this help and exit.\n\nExit: 0 clean · 1 warn/unmeasured · 2 refused/failed · 3 config or usage\n\nA gate that did not pass keeps its command's output under .quality-gates-output/ beside the results\nfile (the newest 5 runs per gate). It is local and ignores itself: do not commit it, and copy it\nout of a scratch clone before deleting the clone. A run in which every gate passes keeps nothing.\n\nThere is deliberately no --force. Loosening a threshold is an edit to\n.quality-gates.json under plan-mode approval, committed with --no-verify — a recorded bypass.\n"
+
+======================================================================
+FAIL: test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form (__main__.TestTheUnmeasuredGatesAreNamed) (where='docstring')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2192, in test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form
+    self.assertIn("unmeasured: <gate>", text)
+AssertionError: 'unmeasured: <gate>' not found in "quality_ratchet.py — declared quality thresholds that bind every actor and only tighten.\n\nWHY THIS EXISTS\n---------------\nThe methodology's quality gates are mostly questions the actor asks itself. A\nself-certified gate does not scale under N agents; it multiplies. The alternative is\nto enforce on the ARTIFACT: a project declares the thresholds it already meets\n(tests pass, coverage >= X, complexity <= Y, a link check exits 0) in one\nmachine-readable file, and a hook refuses any commit that LOOSENS one of them. The\nthreshold starts where the project is and only ever moves toward better. That is\nthe whole mechanism — a ratchet, not a ruler.\n\nWHAT IT DOES NOT DO\n-------------------\nIt ships no linter, coverage runner, or complexity tool: the methodology recommends,\nit does not reimplement. Which command produces each number is the project's choice\n(BOOTSTRAP.md Step 10 lists options per stack). It never edits code, never adjudicates\na review finding, and a gate it cannot run reports UNMEASURED, never pass. A command that\noutlives its budget (600 s, or the gate's own `timeout_seconds`) is one it could not finish:\nUNMEASURED with the note `timeout (N s)`, never an exit code and never a number read out of the\ntimeout message. It is also STOPPED: where the platform has process groups the command runs in a\nsession of its own, and a timeout, an interrupt, a hangup or a SIGTERM kills its whole group, not only\nthe shell (BL-107; on Windows a timed-out command may keep running). It holds THRESHOLDS, not\ncommands: a changed `command`, `extract` or `timeout_seconds` is printed as a warning and left to\nreview — the results file will show the discontinuity.\n\nThere is deliberately no --force. Loosening a threshold is a decision, and the only\nway to take it is to edit .quality-gates.json under plan-mode approval and commit\nwith --no-verify, which the hook prints as a recorded bypass (SAFEGUARDS.md, Blast\nRadius Limits; SESSION_RUNNER.md failure mode #17).\n\nThe comparison is between the staged manifest and the NEWEST PARSEABLE COMMITTED one\nin the branch's history that declares a gate -- not merely HEAD's copy. So removing\nthe manifest (or emptying it) is refused as the loosest loosening, re-adding it lower\nafter a bypassed removal is still a loosening against the version that was removed,\nand a corrupted or emptied HEAD copy is skipped rather than treated as a fresh start. A branch that removed its manifest and left it\nremoved is not locked: with nothing staged and nothing at HEAD there is nothing to\nratchet. What the hook cannot see: merge, rebase and cherry-pick commits, which the\nchained ledger hook skips before the ratchet runs -- a manifest conflict resolved by\nloosening during a merge is caught by the dashboard's read of the manifest's history,\nnot by the hook.\n\nWHAT IT KEEPS\n-------------\nA gate that did not pass (`fail`, or `unmeasured` although its command ran to the end) keeps the output\nof that command, because the results file keeps only a number and the next run erases even that. `--run`\nsaves it right after the gate is measured, under `.quality-gates-output/` beside the results file: one\nfolder per gate, one file per run (`<UTC start>-<short commit>.txt`), the newest 5 per gate, each stream up\nto 256 KiB and cut in the middle past that. A run in which every gate passes writes nothing and deletes\nnothing, so a red run's output outlives the green runs after it. A command that outlived its budget\nmeasured nothing and keeps nothing. The directory is local and ignores itself (a `.gitignore` of `*`).\nDo not commit it, and copy it out before deleting a scratch clone. Keeping is best effort: a failure to\nwrite is one warning on stderr and never changes a status, the results file or the exit code. `--run` and\n`--status` print where the output is, from the directory itself.\n\nPython 3 stdlib only, cross-platform. Conventions follow context_budget.py.\n"
+
+======================================================================
+FAIL: test_run_names_each_unmeasured_gate_in_the_order_the_manifest_declares_them (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2109, in test_run_names_each_unmeasured_gate_in_the_order_the_manifest_declares_them
+    self.assertEqual(self.clause_lines(out), ["unmeasured: beta, alpha"])   # not alphabetical
+AssertionError: Lists differ: [] != ['unmeasured: beta, alpha']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'unmeasured: beta, alpha'
+
+- []
++ ['unmeasured: beta, alpha']
+
+======================================================================
+FAIL: test_selftest_observes_the_unmeasured_gates_being_named (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2197, in test_selftest_observes_the_unmeasured_gates_being_named
+    self.assertRegex(p.stdout, r"PASS\x1b\[0m  the unmeasured gates are named in the clause the lint reads", p.stdout)
+AssertionError: Regex didn't match: 'PASS\\x1b\\[0m  the unmeasured gates are named in the clause the lint reads' not found in "  \x1b[32mPASS\x1b[0m  lowering a floor is refused\n  \x1b[32mPASS\x1b[0m  raising a ceiling is refused\n  \x1b[32mPASS\x1b[0m  removing a gate is refused\n  \x1b[32mPASS\x1b[0m  flipping a direction is refused\n  \x1b[32mPASS\x1b[0m  tightening passes\n  \x1b[32mPASS\x1b[0m  adding a gate passes\n  \x1b[32mPASS\x1b[0m  a changed command warns, not refuses\n  \x1b[32mPASS\x1b[0m  config defects are reported\n  \x1b[32mPASS\x1b[0m  --run exits 0 when every gate passes\n  \x1b[32mPASS\x1b[0m  --run writes the results file\n  \x1b[32mPASS\x1b[0m  --run prints a citable summary line\n  \x1b[32mPASS\x1b[0m  --status reads the last run\n  \x1b[32mPASS\x1b[0m  --run exits 2 on a failed gate\n  \x1b[32mPASS\x1b[0m  a failing gate keeps its output\n  \x1b[32mPASS\x1b[0m  a later passing run leaves it\n  \x1b[32mPASS\x1b[0m  a gate with no command is UNMEASURED (exit 1), never pass\n  \x1b[32mPASS\x1b[0m  a gate that outlives its timeout is UNMEASURED, never fail\n  \x1b[32mPASS\x1b[0m  a floor on an exit code is UNMEASURED on a timeout, never pass\n  \x1b[32mPASS\x1b[0m  a declared timeout_seconds outlasts the default budget\n  \x1b[32mPASS\x1b[0m  a timed-out gate's command is stopped, not left running\n  \x1b[32mPASS\x1b[0m  SIGTERM to the tool stops a gate's command and the tool exits 143\n  \x1b[32mPASS\x1b[0m  the installed hook refuses a loosened threshold\n  \x1b[32mPASS\x1b[0m  --no-verify bypasses it (recorded in history, not exempt)\n  \x1b[32mPASS\x1b[0m  the installed hook passes a tightened threshold\n  \x1b[32mPASS\x1b[0m  removing the manifest is refused as the loosest loosening\n  \x1b[32mPASS\x1b[0m  --no-verify bypasses the removal too (recorded)\n  \x1b[32mPASS\x1b[0m  a branch that removed its manifest is not locked\n  \x1b[32mPASS\x1b[0m  re-adding the manifest lower than the removed one is refused\n  \x1b[32mPASS\x1b[0m  re-adding it at or above the removed thresholds passes\n  \x1b[32mPASS\x1b[0m  a move that loosens a threshold is refused\n  \x1b[32mPASS\x1b[0m  a pure move of the manifest passes\n  \x1b[32mPASS\x1b[0m  a loosening at the new path is refused\n\n\x1b[32mselftest: OK — 32 checks observed failing and passing\x1b[0m\n" :   [32mPASS[0m  lowering a floor is refused
+  [32mPASS[0m  raising a ceiling is refused
+  [32mPASS[0m  removing a gate is refused
+  [32mPASS[0m  flipping a direction is refused
+  [32mPASS[0m  tightening passes
+  [32mPASS[0m  adding a gate passes
+  [32mPASS[0m  a changed command warns, not refuses
+  [32mPASS[0m  config defects are reported
+  [32mPASS[0m  --run exits 0 when every gate passes
+  [32mPASS[0m  --run writes the results file
+  [32mPASS[0m  --run prints a citable summary line
+  [32mPASS[0m  --status reads the last run
+  [32mPASS[0m  --run exits 2 on a failed gate
+  [32mPASS[0m  a failing gate keeps its output
+  [32mPASS[0m  a later passing run leaves it
+  [32mPASS[0m  a gate with no command is UNMEASURED (exit 1), never pass
+  [32mPASS[0m  a gate that outlives its timeout is UNMEASURED, never fail
+  [32mPASS[0m  a floor on an exit code is UNMEASURED on a timeout, never pass
+  [32mPASS[0m  a declared timeout_seconds outlasts the default budget
+  [32mPASS[0m  a timed-out gate's command is stopped, not left running
+  [32mPASS[0m  SIGTERM to the tool stops a gate's command and the tool exits 143
+  [32mPASS[0m  the installed hook refuses a loosened threshold
+  [32mPASS[0m  --no-verify bypasses it (recorded in history, not exempt)
+  [32mPASS[0m  the installed hook passes a tightened threshold
+  [32mPASS[0m  removing the manifest is refused as the loosest loosening
+  [32mPASS[0m  --no-verify bypasses the removal too (recorded)
+  [32mPASS[0m  a branch that removed its manifest is not locked
+  [32mPASS[0m  re-adding the manifest lower than the removed one is refused
+  [32mPASS[0m  re-adding it at or above the removed thresholds passes
+  [32mPASS[0m  a move that loosens a threshold is refused
+  [32mPASS[0m  a pure move of the manifest passes
+  [32mPASS[0m  a loosening at the new path is refused
+
+[32mselftest: OK — 32 checks observed failing and passing[0m
+
+
+======================================================================
+FAIL: test_status_names_them_from_the_stored_results (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2152, in test_status_names_them_from_the_stored_results
+    self.assertEqual(self.clause_lines(self.status(*self.two_unmeasured())), ["unmeasured: beta, alpha"])
+AssertionError: Lists differ: [] != ['unmeasured: beta, alpha']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'unmeasured: beta, alpha'
+
+- []
++ ['unmeasured: beta, alpha']
+
+======================================================================
+FAIL: test_the_clause_is_the_line_right_after_the_citation_and_the_citation_is_unchanged (__main__.TestTheUnmeasuredGatesAreNamed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2121, in test_the_clause_is_the_line_right_after_the_citation_and_the_citation_is_unchanged
+    self.assertIn(NAMES_LABEL, lines[i + 1], out)
+AssertionError: 'and name them:' not found in '' : 
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  1/3 pass · 0 fail · 2 unmeasured · results 2510746e8006 · manifest 4deee3adbe3f
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  ok                                      <= 0           0  pass
+  beta                                    >= 1           —  unmeasured  declared, no command
+  alpha                                   >= 1           —  unmeasured  declared, no command
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 1/3 pass · 0 fail · 2 unmeasured · results 2510746e8006 · manifest 4deee3adbe3f
+
+
+
+======================================================================
+FAIL: test_the_version_is_1_7_0 (__main__.TestToolInvariants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py", line 2202, in test_the_version_is_1_7_0
+    self.assertEqual(qr.VERSION, "1.7.0")
+AssertionError: '1.6.0' != '1.7.0'
+- 1.6.0
+?   ^
++ 1.7.0
+?   ^
+
+
+----------------------------------------------------------------------
+Ran 17 tests in 18.273s
+
+FAILED (failures=10, errors=6)
