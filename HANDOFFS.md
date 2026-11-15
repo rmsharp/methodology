@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S451
+date: 2026-11-15
+status: pending
+active_task: **P3 (IN PROGRESS): show the 1.6.0 keeper on the real suite** (`docs/planning/ratchet-kept-output-plan.md` section 6, P3; closes BL-92). In a scratch clone of `a11a5d33`: one deliberate `fail` line injected into `bin/tests.sh`, a full `quality_ratchet.py --run` that reads `tests-sh-failed` red with the failing output kept, then the injection removed and a second full run that reads 26/26 and keeps nothing new; evidence under `docs/planning/ratchet-kept-output-evidence/`. Local to the fork; nothing is sent to `KJ5HST/methodology`. The operator's steps: 'go' with no task; a prose Phase 0 report; one picker, answered 'P3: prove the keeper on the real suite (Recommended)'.
+```
+
+```handoff
 session: S450
 date: 2026-11-14
 status: complete
