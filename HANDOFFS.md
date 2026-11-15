@@ -59,6 +59,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S453
+date: 2026-11-15
+status: pending
+active_task: **P4 merge trial (IN PROGRESS):** in a scratch clone, apply the ratchet's 1.5.1, 1.6.0 and 1.7.0 changes (`starter-kit/quality_ratchet.py`, `tools/test_quality_ratchet.py`, the seed note) to #99's head `47637be2` (1.5.0) and to `upstream/main` `d50ce290` (1.1.0), record every conflict or its absence, run the tool's unit tests and self-test on each result, and write the record under `docs/planning/ratchet-kept-output-evidence/` for the operator's decision on route (b). Read-only toward the repository; nothing sent to `KJ5HST/methodology`.
+```
+
+```handoff
 session: S452
 date: 2026-11-15
 status: complete
