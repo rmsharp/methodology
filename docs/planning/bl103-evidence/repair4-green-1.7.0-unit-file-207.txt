@@ -1,0 +1,562 @@
+................../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp3et9yaw2/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp8aywv584/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpv3o3no5u/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpyni1ez_o/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0b8ueywg/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpwq3dwyoi/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpc5ku88r5/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp07s4c79l/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpc3fey6c5/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpknyn25n7/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpswvdx4hx/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:343: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1rt3fbip/pid' mode='r' encoding='UTF-8'>
+  self.assertEqual(len(open(self.pidfile).read().split()), 1, "the shared command ran more than once")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:287: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1rt3fbip/pid' mode='r' encoding='UTF-8'>
+  return int(open(self.pidfile).read().split()[0])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........................./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:865: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpy666xsl1/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(), open(os.path.join(td.name, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:874: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxzbfjgql/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("g", "min", 1, command="true")), open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:880: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxzbfjgql/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  hook = open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:882: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxzbfjgql/unrelated.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1779: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpgweg9u2v/.quality-gates-output' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, KEEP), "w").write("mine\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1782: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpgweg9u2v/.quality-gates-output' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(os.path.join(self.d, KEEP)).read(), "mine\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.............................../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp88udv2xl/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp88udv2xl/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp6lwlrz20/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:829: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpehz9xxn9/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(), open(os.path.join(fresh.name, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:832: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpehz9xxn9/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("cov", "min", 50)), open(os.path.join(fresh.name, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpwptmic4e/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:795: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpwptmic4e/unrelated.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpz22t3thu/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpz22t3thu/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpz22t3thu/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmdy1y2g8/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:800: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmdy1y2g8/.quality-gates.json' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, qr.CONFIG_NAME), "w").write("not json")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmdy1y2g8/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmdy1y2g8/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxlx0ll5z/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:758: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp_1iqjkbc/README' mode='w' encoding='UTF-8'>
+  open(os.path.join(fresh.name, "README"), "w").write("x\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:761: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp_1iqjkbc/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("cov", "min", 1)), open(os.path.join(fresh.name, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmptulpamzp/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp076jq1yx/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:727: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp076jq1yx/unrelated.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp076jq1yx/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmi4qwqiw/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp5io20jw2/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp5io20jw2/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp5io20jw2/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp7swptfz6/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpiwjrxr_g/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpiwjrxr_g/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpwdii8ryz/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpwdii8ryz/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphxi_eoj7/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphxi_eoj7/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphxi_eoj7/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphxi_eoj7/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:697: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphxi_eoj7/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2042: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp225b8ihi/calls.txt' mode='a' encoding='UTF-8'>
+  open(calls, "a").write(res["name"])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2054: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp225b8ihi/seen.txt' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(seen).read(), "True", "gate a was handed over before gate b's command started")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpdr0bhmla/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpkqfe7ytc/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpamw6i7x0/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpue0_adrd/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmlotauzt/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:636: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpmlotauzt/runs.txt' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp44ouf1nn/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:670: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp44ouf1nn/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("slow", "max", 0, command=slow(3), timeout_seconds=0.5)),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:676: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp44ouf1nn/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  snap = json.load(open(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp10rbmbbd/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpdr02b11u/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:647: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpdr02b11u/runs.txt' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1h5vwp36/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:556: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1h5vwp36/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  a = json.load(open(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:558: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1h5vwp36/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  b = json.load(open(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp8ruv368k/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:549: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp8ruv368k/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  snap = json.load(open(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp2_1zfkmb/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphln715c_/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmphln715c_/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpcowitlvj/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:544: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpch1bxlji/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(self.cfg, open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:594: ResourceWarning: unclosed file <_io.TextIOWrapper name='/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpch1bxlji/runs.txt' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1306: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpyeyqnnw_/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  hook = open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1306: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp9ufcstql/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  hook = open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1306: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0q5oqf1s/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  hook = open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1218: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp2jp6sxw_/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  return open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1218: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0qgg899q/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  return open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1218: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpv1qd2xr_/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  return open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1218: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp4ll29c3s/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  return open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1218: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpds0x_nl0/.git/hooks/pre-commit' mode='r' encoding='UTF-8'>
+  return open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...................../Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpl8kexapz/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp34i6c271/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2298: ResourceWarning: unclosed file <_io.TextIOWrapper name='/Users/rmsharp/Development/methodology/starter-kit/quality-gates.json' mode='r' encoding='UTF-8'>
+  seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2284: ResourceWarning: unclosed file <_io.TextIOWrapper name='/Users/rmsharp/Development/methodology/starter-kit/quality-gates.json' mode='r' encoding='UTF-8'>
+  seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2288: ResourceWarning: unclosed file <_io.TextIOWrapper name='/Users/rmsharp/Development/methodology/starter-kit/quality-gates.json' mode='r' encoding='UTF-8'>
+  seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2292: ResourceWarning: unclosed file <_io.TextIOWrapper name='/Users/rmsharp/Development/methodology/starter-kit/quality-gates.json' mode='r' encoding='UTF-8'>
+  note = json.load(open(REPO / "starter-kit" / "quality-gates.json"))["_results_file"]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+........./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1990: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp_cqiwxut/elsewhere/suite/20261114T120000Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, "elsewhere", "suite", self.NAME), "w").write("x\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1977: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxnfelp_w/.quality-gates-output/real/20261114T120000Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("real"), self.NAME), "w").write("one\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1981: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxnfelp_w/ext/20261114T120100Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(ext, f"{stamp(n)}-nohead.txt"), "w").write("two\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1981: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxnfelp_w/ext/20261114T120200Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(ext, f"{stamp(n)}-nohead.txt"), "w").write("two\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1952: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp600pjkdj/20261114T120000Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, self.NAME), "w").write("outside\n")      # where ../NAME would lead
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp600pjkdj/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1957: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxbg9r_0w/.quality-gates-output/suite/20261114T120000Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), self.NAME), "w").write("real\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxbg9r_0w/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpxbg9r_0w/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1970: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp17u6kr7p/outside.txt' mode='w' encoding='UTF-8'>
+  open(outside, "w").write("precious\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp17u6kr7p/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1963: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1_mds76i/.quality-gates-output/suite/notes.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), "notes.txt"), "w").write("mine\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp1_mds76i/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2024: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpbinan9rr/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("suite", "max", 0, command=_exit_cmd())),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2026: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpbinan9rr/.quality-gates-output' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.d, KEEP), "w").write("a file where the directory goes\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp8_36k2xa/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpops_1euu/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/starter-kit/quality_ratchet.py:802: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpw_g0ie2w/.quality-gates-results.json' mode='r' encoding='UTF-8'>
+  return json.load(open(p))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2004: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp_g20sx7c/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("suite", "max", 0, command=_exit_cmd("on the CLI"))),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:2014: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmptbkc2fqp/.quality-gates.json' mode='w' encoding='UTF-8'>
+  json.dump(manifest(gate("suite", "max", 0, command=_exit_cmd())),
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1708: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpzf_r_hut/.quality-gates-output/suite/29990101T000000Z-abcdef0.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1708: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpzf_r_hut/.quality-gates-output/suite/29990102T000000Z-abcdef0.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1708: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpzf_r_hut/.quality-gates-output/suite/29990103T000000Z-abcdef0.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1708: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpzf_r_hut/.quality-gates-output/suite/29990104T000000Z-abcdef0.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1708: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpzf_r_hut/.quality-gates-output/suite/29990105T000000Z-abcdef0.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1708: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpzf_r_hut/.quality-gates-output/suite/29990106T000000Z-abcdef0.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), f"2999010{i}T000000Z-abcdef0.txt"), "w").write("old\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1618: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpt_eknfo3/out/r.json' mode='r' encoding='UTF-8'>
+  rel = json.load(open(os.path.join(self.d, "out", "r.json")))["kept"]["suite"]
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1699: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmppjnu41fs/.quality-gates-output/suite/20261114T120000Z-nohead.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), name), "w").write("planted\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1699: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmppjnu41fs/.quality-gates-output/suite/20261114T120000Z-nohead-2.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), name), "w").write("planted\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1699: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmppjnu41fs/.quality-gates-output/suite/20261114T120000Z-nohead-3.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), name), "w").write("planted\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1699: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmppjnu41fs/.quality-gates-output/suite/20261114T120000Z-nohead-4.txt' mode='w' encoding='UTF-8'>
+  open(os.path.join(self.folder("suite"), name), "w").write("planted\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1717: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0c4y72qm/outside.txt' mode='w' encoding='UTF-8'>
+  open(outside, "w").write("precious\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1721: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0c4y72qm/.quality-gates-output/suite/notes.txt' mode='w' encoding='UTF-8'>
+  open(stray, "w").write("mine\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1726: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0c4y72qm/outside.txt' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(outside).read(), "precious\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1727: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp0c4y72qm/.quality-gates-output/suite/notes.txt' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(stray).read(), "mine\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1623: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp92uqm2gl/.quality-gates-output/.gitignore' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(os.path.join(self.d, KEEP, ".gitignore")).read(), "*\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.../Users/rmsharp/Development/methodology/tools/test_quality_ratchet.py:1633: ResourceWarning: unclosed file <_io.TextIOWrapper name='/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmpbhqs9fvo/.quality-gates-output/.gitignore' mode='r' encoding='UTF-8'>
+  self.assertEqual(open(os.path.join(self.d, KEEP, ".gitignore")).read(), "*\n")
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....
+----------------------------------------------------------------------
+Ran 207 tests in 95.299s
+
+OK
+{
+ "gates": [
+  {
+   "direction": "min",
+   "measured": 3.0,
+   "name": "three",
+   "note": "",
+   "status": "fail",
+   "threshold": 4.0
+  }
+ ],
+ "head": null,
+ "kept": {
+  "three": ".quality-gates-output/three/20261115T190624Z-nohead.txt"
+ },
+ "manifest": "a0542994cc36",
+ "ran_at": "2026-11-15T19:06:24+00:00",
+ "results": "c9f57a867339",
+ "summary": {
+  "fail": 1,
+  "pass": 0,
+  "unmeasured": 0
+ },
+ "version": "1.7.0"
+}
+{
+ "gates": [
+  {
+   "direction": "min",
+   "measured": null,
+   "name": "declared",
+   "note": "declared, no command",
+   "status": "unmeasured",
+   "threshold": 1.0
+  }
+ ],
+ "head": null,
+ "manifest": "ccdd84af47a0",
+ "ran_at": "2026-11-15T19:06:24+00:00",
+ "results": "579fae90407d",
+ "summary": {
+  "fail": 0,
+  "pass": 0,
+  "unmeasured": 1
+ },
+ "version": "1.7.0"
+}
+{
+ "gates": [
+  {
+   "direction": "min",
+   "measured": 3.0,
+   "name": "three",
+   "note": "",
+   "status": "pass",
+   "threshold": 3.0
+  },
+  {
+   "direction": "max",
+   "measured": 0.0,
+   "name": "exit",
+   "note": "",
+   "status": "pass",
+   "threshold": 0.0
+  }
+ ],
+ "head": null,
+ "manifest": "d72d11592dcf",
+ "ran_at": "2026-11-15T19:06:29+00:00",
+ "results": "1d7bb0c8508f",
+ "summary": {
+  "fail": 0,
+  "pass": 2,
+  "unmeasured": 0
+ },
+ "version": "1.7.0"
+}
+{
+ "gates": [
+  {
+   "direction": "min",
+   "measured": 3.0,
+   "name": "three",
+   "note": "",
+   "status": "pass",
+   "threshold": 3.0
+  },
+  {
+   "direction": "max",
+   "measured": 0.0,
+   "name": "exit",
+   "note": "",
+   "status": "pass",
+   "threshold": 0.0
+  }
+ ],
+ "head": null,
+ "manifest": "d72d11592dcf",
+ "ran_at": "2026-11-15T19:06:29+00:00",
+ "results": "1d7bb0c8508f",
+ "summary": {
+  "fail": 0,
+  "pass": 2,
+  "unmeasured": 0
+ },
+ "version": "1.7.0"
+}
+{
+ "gates": [
+  {
+   "direction": "min",
+   "measured": 3.0,
+   "name": "three",
+   "note": "",
+   "status": "pass",
+   "threshold": 3.0
+  },
+  {
+   "direction": "max",
+   "measured": 0.0,
+   "name": "exit",
+   "note": "",
+   "status": "pass",
+   "threshold": 0.0
+  }
+ ],
+ "head": null,
+ "manifest": "d72d11592dcf",
+ "ran_at": "2026-11-15T19:06:29+00:00",
+ "results": "1d7bb0c8508f",
+ "summary": {
+  "fail": 0,
+  "pass": 2,
+  "unmeasured": 0
+ },
+ "version": "1.7.0"
+}
+{
+ "gates": [
+  {
+   "direction": "min",
+   "measured": 3.0,
+   "name": "three",
+   "note": "",
+   "status": "pass",
+   "threshold": 3.0
+  },
+  {
+   "direction": "max",
+   "measured": 0.0,
+   "name": "exit",
+   "note": "",
+   "status": "pass",
+   "threshold": 0.0
+  }
+ ],
+ "head": null,
+ "manifest": "d72d11592dcf",
+ "ran_at": "2026-11-15T19:06:29+00:00",
+ "results": "1d7bb0c8508f",
+ "summary": {
+  "fail": 0,
+  "pass": 2,
+  "unmeasured": 0
+ },
+ "version": "1.7.0"
+}
