@@ -2139,6 +2139,12 @@ class TestToolInvariants(unittest.TestCase):
         seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
         self.assertIn("process group", seed["_gate_schema"])
 
+    def test_the_seed_says_where_a_failing_gates_output_is_kept_and_not_to_commit_it(self):
+        note = json.load(open(REPO / "starter-kit" / "quality-gates.json"))["_results_file"]
+        self.assertIn(KEEP, note)
+        self.assertIn("do not commit", note.lower())
+        self.assertIn("copy", note.lower())      # out of a scratch clone, before the clone is deleted
+
     def test_seed_manifest_is_valid_and_empty(self):
         seed = json.load(open(REPO / "starter-kit" / "quality-gates.json"))
         self.assertEqual(seed["gates"], [], "the seed starts empty by decision (plan §8.4)")
