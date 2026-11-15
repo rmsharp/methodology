@@ -1,0 +1,5 @@
+SURVIVED M00 CONTROL: nothing changed (must SURVIVE)  (9 s)
+KILLED   M15 no blank line follows the clause  (1 s)
+           by test_a_run_with_nothing_unmeasured_ends_as_1_6_0_did_and_one_with_it_ends_on_the_clause
+KILLED   M21 the results file carries the clause  (10 s)
+           by test_the_results_file_keeps_exactly_the_keys_it_always_had

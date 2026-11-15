@@ -1,0 +1,58 @@
+done rc 0
+SURVIVED M00 CONTROL: nothing changed (must SURVIVE)  (10 s)
+KILLED   M01 CONTROL: the clause is always empty (must be KILLED)  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M02 only the first unmeasured gate is named  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+KILLED   M03 the names are sorted  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+KILLED   M04 the names are joined with a comma and no space  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+KILLED   M05 the names are joined with ' and '  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+KILLED   M06 a failed gate is named too  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+KILLED   M07 a passed gate is named too  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+KILLED   M08 a name is cut to the table's 30 columns  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M09 the clause has no colon  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M10 the clause starts with a capital  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M11 an empty clause is 'unmeasured: ' and not ''  (1 s)
+           by test_nothing_is_named_when_a_gate_fails_and_none_is_unmeasured
+KILLED   M12 the label is printed even with no clause  (1 s)
+           by test_nothing_is_named_when_a_gate_fails_and_none_is_unmeasured
+KILLED   M13 the clause is printed before the citation  (11 s)
+           by test_the_clause_is_the_line_right_after_the_citation_and_the_citation_is_unchanged
+KILLED   M14 a blank line sits between the citation and the clause  (10 s)
+           by test_the_clause_is_the_line_right_after_the_citation_and_the_citation_is_unchanged
+SURVIVED M15 no blank line follows the clause  (9 s)
+KILLED   M16 the label reads 'names:'  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M17 the clause is coloured  (10 s)
+           by test_the_clause_itself_has_no_escape_code_so_it_pastes_clean
+KILLED   M18 --status does not print the clause  (10 s)
+           by test_status_names_them_from_the_stored_results
+KILLED   M19 --run does not print the clause  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M20 --json carries the clause  (1 s)
+           by test_json_output_stays_only_json_and_carries_no_clause
+SURVIVED M21 the results file carries the clause  (11 s)
+KILLED   M22 the version stays 1.6.0  (11 s)
+           by test_the_version_is_1_7_0
+KILLED   M23 --help does not show the clause  (1 s)
+           by test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form
+KILLED   M24 the docstring does not show the clause  (1 s)
+           by test_help_and_the_module_docstring_say_the_names_are_printed_in_the_lints_form
+KILLED   M25 the selftest does not observe the clause  (10 s)
+           by test_selftest_observes_the_unmeasured_gates_being_named
+KILLED   M30 the notes are named, not the gates  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M31 each name is in backticks  (0 s)
+           by test_a_name_longer_than_the_table_column_is_named_whole
+KILLED   M32 the names are reversed  (0 s)
+           by test_a_pass_and_a_fail_are_not_named_only_the_unmeasured_ones_are
+
+[exited with code 0]

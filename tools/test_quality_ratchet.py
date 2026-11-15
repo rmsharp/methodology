@@ -2122,6 +2122,19 @@ class TestTheUnmeasuredGatesAreNamed(_KeptCase):
         self.assertEqual(self.cited(out), qr.summary_line(self.results()))
         self.assertTrue(self.cited(out).startswith("quality_ratchet: 1/3 pass · 0 fail · 2 unmeasured · results "))
 
+    def test_a_run_with_nothing_unmeasured_ends_as_1_6_0_did_and_one_with_it_ends_on_the_clause(self):
+        # Mutation round 1 (M15) showed no test pinned the blank line after the block: added in round 2.
+        _, clean, _ = self.run_it(gate("ok", "max", 0, command=OK_CMD))
+        self.assertTrue(clean.endswith("cite in the receipt: " + self.cited(clean) + "\n\n"), repr(clean[-160:]))
+        _, named, _ = self.run_it(*self.two_unmeasured())
+        self.assertTrue(named.endswith("cite in the receipt: " + self.cited(named) + "\n"
+                                       "  and name them:       unmeasured: beta, alpha\n\n"), repr(named[-220:]))
+
+    def test_the_results_file_keeps_exactly_the_keys_it_always_had(self):
+        # Mutation round 1 (M21) showed no test pinned the keys of the file a run writes: added in round 2.
+        self.run_it(*self.two_unmeasured())
+        self.assertEqual(sorted(self.results()), ["gates", "head", "manifest", "ran_at", "results", "summary", "version"])
+
     def test_a_name_longer_than_the_table_column_is_named_whole(self):
         long_name = "a-gate-whose-name-is-longer-than-the-thirty-character-column"
         _, out, _ = self.run_it(gate(long_name, "min", 1))
