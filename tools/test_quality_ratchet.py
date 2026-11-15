@@ -1472,6 +1472,20 @@ class TestAGateThatDidNotPassKeepsItsOutput(_KeptCase):
         self.assertEqual(lines.index("=== stdout ==="), 7, lines[:10])
         self.assertTrue(lines[2].startswith("command: ") and "\\n" in lines[2], lines[2])
 
+    def test_the_start_in_the_file_is_the_runs_not_the_moment_the_file_is_written(self):
+        # ran_at is stamped at the END of a run (about 34 minutes after its start on the real suite); the file
+        # is named by the START. This clock reads 12:00 until the first gate's command has run, 12:10 after.
+        marker = os.path.join(self.d, "started.marker")
+
+        class Late:
+            def now(self, tz=None):
+                return at(10) if os.path.exists(marker) else at(0)
+        cmd = f'"{PY}" -c "import sys; open({marker!r}, \'w\').close(); sys.exit(3)"'
+        with mock.patch.object(qr, "datetime", Late()), contextlib.redirect_stdout(io.StringIO()):
+            qr.do_run(self.d, manifest(gate("suite", "max", 0, command=cmd)))
+        self.assertEqual(self.files("suite"), [f"{stamp(0)}-nohead.txt"])
+        self.assertIn("started: 2026-11-14T12:00:00Z\n", self.read("suite", self.files("suite")[0]))
+
     def test_an_unmeasured_gate_whose_command_ran_keeps_its_output_too(self):
         cmd = f'"{PY}" -c "import sys; print(\'no digits here\'); sys.exit(7)"'
         rc, _, _ = self.run_it(gate("nomatch", "min", 1, command=cmd, extract=r"(\d+)"), when=at(0))
@@ -1621,7 +1635,7 @@ class TestWhereTheOutputGoesAndHowLongItStays(_KeptCase):
         # config_defects accepts any non-empty string as a gate name, so these must not escape the
         # directory or collide (one folder on APFS for 'Tests' and 'tests').
         plain = ["suite", "tests-sh-passed", "a.b_c", "0lead"]
-        odd = ["a/b", "..", ".hidden", "Tests", "has space", "x" * 300, "café", "back\\slash", "a:b*c"]
+        odd = ["a/b", "..", ".hidden", "Tests", "has space", "x" * 300, "y" * 65, "-lead", "café", "back\\slash", "a:b*c"]
         for name in plain + odd:
             with self.subTest(name=name[:20]):
                 self.setUp()
@@ -1644,6 +1658,7 @@ class TestWhereTheOutputGoesAndHowLongItStays(_KeptCase):
                     gate("Tests", "max", 0, command=_exit_cmd("upper")), when=at(0))
         kept = self.results()["kept"]
         self.assertNotEqual(kept["tests"], kept["Tests"])
+        self.assertTrue(kept["Tests"].split("/")[1].startswith("tests-"), kept["Tests"])   # lowercased, then the hash
         self.assertEqual(len([e for e in os.listdir(os.path.join(self.d, KEEP)) if e != ".gitignore"]), 2)
 
     def test_the_newest_five_files_per_gate_are_kept_and_the_rest_removed(self):
@@ -1673,6 +1688,18 @@ class TestWhereTheOutputGoesAndHowLongItStays(_KeptCase):
                          [f"{stamp(0)}-nohead-2.txt", f"{stamp(0)}-nohead-3.txt", f"{stamp(0)}-nohead.txt"])
         self.assertEqual(self.read("suite", f"{stamp(0)}-nohead.txt"), first)
         self.assertIn("second", self.read("suite", f"{stamp(0)}-nohead-2.txt"))
+
+    def test_files_of_one_second_are_ordered_by_their_number_when_the_newest_five_are_kept(self):
+        # four files already hold this second (the plain name, -2, -3, -4); two more runs make six, and the
+        # one to go is the oldest of them: the plain name, not the one that happens to sort lowest as text
+        os.makedirs(self.folder("suite"))
+        base = f"{stamp(0)}-nohead"
+        for name in (f"{base}.txt", f"{base}-2.txt", f"{base}-3.txt", f"{base}-4.txt"):
+            open(os.path.join(self.folder("suite"), name), "w").write("planted\n")
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        self.run_it(g, when=at(0))
+        self.run_it(g, when=at(0))
+        self.assertEqual(self.files("suite"), sorted(f"{base}-{n}.txt" for n in range(2, 7)))
 
     def test_a_future_dated_stray_file_cannot_make_the_file_just_written_the_oldest(self):
         os.makedirs(self.folder("suite"))
@@ -1761,6 +1788,23 @@ class TestKeepingNeverChangesTheRun(_KeptCase):
                                        results_file="nowhere/r.json"))
         self.assertFalse(os.path.exists(os.path.join(self.d, "nowhere")))
 
+    def test_a_keeper_that_cannot_be_built_is_a_warning_and_the_run_goes_on(self):
+        real, calls = qr.head_sha, []
+
+        def flaky(root):
+            calls.append(1)
+            if len(calls) == 1:               # the keeper reads the commit first, before any gate
+                raise ValueError("no git here")
+            return real(root)
+        g = gate("suite", "max", 0, command=_exit_cmd())
+        with mock.patch.object(qr, "head_sha", flaky):
+            rc, _, err = self.run_it(g, when=at(0))
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertIn("could not keep the output of this run", err)
+        self.assertIn("no git here", err)
+        self.assertEqual(self.results()["results"], self._unkept(g))
+        self.assertFalse(os.path.exists(os.path.join(self.d, KEEP)))
+
     def test_a_run_cut_short_keeps_what_its_finished_gates_had_saved(self):
         real, calls = qr.measure_gate, []
 
@@ -1817,6 +1861,17 @@ class TestWhatIsKeptOfALongStream(_KeptCase):
         text = self.read("suite", self.files("suite")[0])
         self.assertIn("stdout: 300000 bytes, kept 262144\n", text)
         self.assertIn(f"[{300000 - 262144} bytes omitted]", text)
+
+    def test_a_stream_of_exactly_the_cap_is_kept_whole_and_one_byte_more_is_cut(self):
+        cap = 64 * 1024 + 192 * 1024
+        self.run_it(gate("exact", "max", 0, command=_emit_cmd(cap)), when=at(0))
+        text = self.read("exact", self.files("exact")[0])
+        self.assertIn(f"stdout: {cap} bytes, kept {cap}\n", text)
+        self.assertNotIn("omitted", text)
+        self.run_it(gate("over", "max", 0, command=_emit_cmd(cap + 1)), when=at(0))
+        text = self.read("over", self.files("over")[0])
+        self.assertIn(f"stdout: {cap + 1} bytes, kept {cap}\n", text)
+        self.assertIn("[1 bytes omitted]", text)
 
     def test_a_file_is_bounded_by_its_two_caps_plus_a_header(self):
         self.run_it(gate("suite", "max", 0, command=_emit_cmd(300000, 300000)), when=at(0))
@@ -1878,6 +1933,68 @@ class TestWhatThePersonSees(_KeptCase):
                 out = self.status(g)
                 self.assertIn("1/1 pass", out)
                 self.assertNotIn("passwd", out, "a stored path that leaves the directory is never followed")
+
+    NAME = f"{stamp(0)}-nohead.txt"
+
+    def _stored(self, rel):
+        """--status over a results file whose `kept` names `rel`: the `kept:` lines it prints."""
+        g = gate("ok", "max", 0, command=f'"{PY}" -c "pass"')
+        self.run_it(g, when=at(0))
+        snap = self.results()
+        snap["kept"] = {"ok": rel}
+        with open(os.path.join(self.d, qr.DEFAULT_RESULTS), "w") as f:
+            json.dump(snap, f)
+        return [ln for ln in self.status(g).splitlines() if ln.strip().startswith("kept:")]
+
+    def test_a_stored_path_that_climbs_out_of_the_directory_is_not_printed(self):
+        os.mkdir(os.path.join(self.d, KEEP))
+        open(os.path.join(self.d, self.NAME), "w").write("outside\n")      # where ../NAME would lead
+        self.assertEqual(self._stored(f"{KEEP}/../{self.NAME}"), [])
+
+    def test_a_stored_path_that_does_not_start_with_the_directory_is_not_printed(self):
+        os.makedirs(self.folder("suite"))
+        open(os.path.join(self.folder("suite"), self.NAME), "w").write("real\n")
+        self.assertEqual(self._stored(f"elsewhere/suite/{self.NAME}"), [])
+        self.assertEqual(len(self._stored(f"{KEEP}/suite/{self.NAME}")), 1)   # the same file by its true path
+
+    def test_a_stored_path_that_is_not_a_kept_files_name_is_not_printed(self):
+        os.makedirs(self.folder("suite"))
+        open(os.path.join(self.folder("suite"), "notes.txt"), "w").write("mine\n")
+        self.assertEqual(self._stored(f"{KEEP}/suite/notes.txt"), [])
+
+    @unittest.skipUnless(os.name == "posix", "symlinks: POSIX only")
+    def test_a_stored_path_that_is_a_link_is_not_printed(self):
+        os.makedirs(self.folder("suite"))
+        outside = os.path.join(self.d, "outside.txt")
+        open(outside, "w").write("precious\n")
+        os.symlink(outside, os.path.join(self.folder("suite"), self.NAME))
+        self.assertEqual(self._stored(f"{KEEP}/suite/{self.NAME}"), [])
+
+    @unittest.skipUnless(os.name == "posix", "symlinks: POSIX only")
+    def test_a_gate_folder_that_is_a_link_is_not_counted(self):
+        os.makedirs(self.folder("real"))
+        open(os.path.join(self.folder("real"), self.NAME), "w").write("one\n")
+        ext = os.path.join(self.d, "ext")
+        os.makedirs(ext)
+        for n in (1, 2):
+            open(os.path.join(ext, f"{stamp(n)}-nohead.txt"), "w").write("two\n")
+        os.symlink(ext, self.folder("linked"))
+        g = gate("ok", "max", 0, command=f'"{PY}" -c "pass"')
+        _, out, _ = self.run_it(g, when=at(0))
+        self.assertIn("kept output on disk: 1 file(s) in 1 gate folder(s)", out)
+
+    @unittest.skipUnless(os.name == "posix", "symlinks: POSIX only")
+    def test_a_directory_that_is_a_link_is_not_scanned(self):
+        os.makedirs(os.path.join(self.d, "elsewhere", "suite"))
+        open(os.path.join(self.d, "elsewhere", "suite", self.NAME), "w").write("x\n")
+        os.symlink(os.path.join(self.d, "elsewhere"), os.path.join(self.d, KEEP))
+        _, out, _ = self.run_it(gate("ok", "max", 0, command=f'"{PY}" -c "pass"'), when=at(0))
+        self.assertNotIn("kept output on disk", out)
+
+    def test_the_on_disk_line_names_the_newest_file_across_all_gate_folders(self):
+        self.run_it(gate("b", "max", 0, command=_exit_cmd("old")), when=at(1))
+        _, out, _ = self.run_it(gate("a", "max", 0, command=_exit_cmd("new")), when=at(5))
+        self.assertIn(f"in 2 gate folder(s) under {os.path.join(self.d, KEEP)}; newest {stamp(5)}-nohead.txt (a)", out)
 
     def _cli(self, *args):
         return subprocess.run([PY, str(STARTER), *args], cwd=self.d, capture_output=True, text=True)

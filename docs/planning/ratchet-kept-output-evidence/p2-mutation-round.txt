@@ -1,0 +1,145 @@
+P2 (ratchet-kept-output-plan.md section 6, DONE item 4): a mutation round on the 1.6.0 keeper code
+
+Harness: mutate-p2.py (this directory). 51 mutants, each a one-place rewrite of a scratch copy of
+starter-kit/quality_ratchet.py; the six new test classes then run with -f. Controls first: M00 changes nothing and
+must SURVIVE (the classes pass on the unmutated copy); M01 stops run_gates calling the keeper and must be KILLED.
+Both behaved, in both rounds. The four older load-sensitive classes are not run (they test code this round does not touch).
+
+ROUND 1 (against the 52 tests of the six classes as committed in layer 0 and 1): 49 mutants besides the controls; 35 KILLED, 14 SURVIVED:
+M12 (a stream of exactly the cap is cut), M26 (a made-safe name is not lowercased), M30 (a leading hyphen is not made
+safe), M31 (a long plain-looking name is its own folder), M37 to M39 (a stored path may name any directory, need not
+start with the directory, need not be a kept file's name), M40 (a stored path that is a link is printed), M41 (a gate
+folder that is a link is counted), M42 (the on-disk line names the oldest across folders), M43 (a directory that is a
+link is scanned), M44 (the start time is taken when the file is written, not before the first gate), M48 (same-second
+files sort by name, not by their number), M50 (a failure to build the keeper is silent). None was equivalent: each is a
+behaviour the plan states and no test named.
+
+Each survivor was given a test (11 new tests; 4 existing tests widened: two more odd gate names, a lowercase-prefix
+assertion). A finding on the way: a test of seven runs inside one second read red, because pruning frees the plain
+name and the next run takes it back, so it sorts oldest. Runs take minutes, so more than five in one second is not a
+real case; the test was replaced by one that plants four files of one second and then runs twice, which is the ordering
+rule the mutant breaks.
+
+ROUND 2 (the 14 survivors and the two controls, against the 63 tests of the six classes after the additions): all 14 KILLED.
+
+--- round 1 output ---
+SURVIVED M00 CONTROL: nothing changed (must SURVIVE)  (19 s)
+KILLED   M01 CONTROL: run_gates never calls the keeper (must be KILLED)  (0 s)
+           by test_a_command_of_several_lines_keeps_the_header_one_line_per_field
+KILLED   M02 a timed-out command is kept  (1 s)
+           by test_a_command_that_outlived_its_budget_keeps_nothing
+KILLED   M03 a passing gate is kept  (1 s)
+           by test_a_green_run_after_a_red_one_deletes_nothing_and_adds_nothing
+KILLED   M04 a gate with no command reaches the keeper's body  (1 s)
+           by test_a_gate_with_no_command_keeps_nothing
+KILLED   M05 a shared command is written once per gate  (6 s)
+           by test_two_gates_over_one_command_share_one_file_in_the_first_gates_folder
+KILLED   M06 every failure warns  (17 s)
+           by test_however_many_gates_fail_to_keep_the_run_warns_once
+KILLED   M07 the folder is named by the LAST gate over a command  (2 s)
+           by test_a_shared_command_is_kept_when_only_the_second_gate_fails
+KILLED   M08 the .gitignore holds something else  (9 s)
+           by test_the_directory_is_invisible_to_git_and_the_projects_gitignore_is_not_touched
+KILLED   M09 the .gitignore is not written  (8 s)
+           by test_the_directory_is_invisible_to_git_and_the_projects_gitignore_is_not_touched
+KILLED   M10 a kept file may be overwritten (not exclusive)  (12 s)
+           by test_two_runs_with_one_start_and_commit_do_not_overwrite_each_other
+KILLED   M11 the second file of a second gets the wrong number  (10 s)
+           by test_two_runs_with_one_start_and_commit_do_not_overwrite_each_other
+SURVIVED M12 a stream of exactly the cap is cut  (10 s)
+KILLED   M13 the head is one byte longer  (7 s)
+           by test_a_cut_never_leaves_half_a_character
+KILLED   M14 the tail is one byte longer  (7 s)
+           by test_a_cut_never_leaves_half_a_character
+KILLED   M15 a split head character becomes U+FFFD  (8 s)
+           by test_a_cut_never_leaves_half_a_character
+KILLED   M16 a split tail character becomes U+FFFD  (7 s)
+           by test_a_cut_never_leaves_half_a_character
+KILLED   M17 the omitted count is one over  (11 s)
+           by test_a_cut_never_leaves_half_a_character
+KILLED   M18 the kept count is the caps, not what was kept  (8 s)
+           by test_a_cut_never_leaves_half_a_character
+KILLED   M19 pruning removes the newest  (3 s)
+           by test_a_future_dated_stray_file_cannot_make_the_file_just_written_the_oldest
+KILLED   M20 one file too many stays  (4 s)
+           by test_pruning_never_follows_a_link_and_never_removes_a_name_of_another_form
+KILLED   M21 the file just written is not protected  (2 s)
+           by test_a_future_dated_stray_file_cannot_make_the_file_just_written_the_oldest
+KILLED   M22 the protected file is kept on top of five  (2 s)
+           by test_a_future_dated_stray_file_cannot_make_the_file_just_written_the_oldest
+KILLED   M23 a link is counted and pruned as a kept file  (3 s)
+           by test_pruning_never_follows_a_link_and_never_removes_a_name_of_another_form
+KILLED   M24 a link is written through  (3 s)
+           by test_a_link_where_a_directory_should_be_is_not_written_through
+KILLED   M25 a missing parent is made (makedirs)  (8 s)
+           by test_a_results_folder_that_does_not_exist_fails_as_it_does_today_and_makes_nothing
+SURVIVED M26 a made-safe name is not lowercased  (10 s)
+KILLED   M27 the name hash is five digits  (5 s)
+           by test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes
+KILLED   M28 the readable part is not cut  (4 s)
+           by test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes
+KILLED   M29 a leading dot is not made safe  (4 s)
+           by test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes
+SURVIVED M30 a leading hyphen is not made safe  (8 s)
+SURVIVED M31 a long plain-looking name is its own folder  (8 s)
+KILLED   M32 do_run passes no keeper  (0 s)
+           by test_a_command_of_several_lines_keeps_the_header_one_line_per_field
+KILLED   M33 run_gates hands the keeper no raw output  (0 s)
+           by test_a_command_of_several_lines_keeps_the_header_one_line_per_field
+KILLED   M34 an empty kept map is stored  (1 s)
+           by test_a_command_that_outlived_its_budget_keeps_nothing
+KILLED   M35 --run prints nothing about kept output  (7 s)
+           by test_run_prints_the_on_disk_line_and_one_line_for_each_gate_kept
+KILLED   M36 --status prints nothing about kept output  (8 s)
+           by test_status_after_a_later_green_run_still_points_at_the_red_runs_file
+SURVIVED M37 a stored path may name any directory  (6 s)
+SURVIVED M38 a stored path need not start with the directory  (6 s)
+SURVIVED M39 a stored path need not be a kept file's name  (6 s)
+SURVIVED M40 a stored path that is a link is printed  (9 s)
+SURVIVED M41 a gate folder that is a link is counted  (8 s)
+SURVIVED M42 the on-disk line names the OLDEST across folders  (7 s)
+SURVIVED M43 a directory that is a link is scanned  (8 s)
+SURVIVED M44 the start time is taken when the file is written, not before the first gate  (10 s)
+KILLED   M45 no commit reads as an empty name  (0 s)
+           by test_a_command_of_several_lines_keeps_the_header_one_line_per_field
+KILLED   M46 only OSError is caught  (6 s)
+           by test_a_keeper_that_fails_with_something_other_than_an_oserror_is_a_warning_too
+KILLED   M47 the warning goes to stdout  (3 s)
+           by test_a_link_where_a_directory_should_be_is_not_written_through
+SURVIVED M48 same-second files sort by name, not by their number  (6 s)
+KILLED   M49 the on-disk count counts files twice  (6 s)
+           by test_run_prints_the_on_disk_line_and_one_line_for_each_gate_kept
+SURVIVED M50 a failure to build the keeper is silent  (9 s)
+
+--- round 2 output ---
+SURVIVED M00 CONTROL: nothing changed (must SURVIVE)  (13 s)
+KILLED   M01 CONTROL: run_gates never calls the keeper (must be KILLED)  (0 s)
+           by test_a_command_of_several_lines_keeps_the_header_one_line_per_field
+KILLED   M12 a stream of exactly the cap is cut  (8 s)
+           by test_a_stream_of_exactly_the_cap_is_kept_whole_and_one_byte_more_is_cut
+KILLED   M26 a made-safe name is not lowercased  (8 s)
+           by test_two_names_that_differ_only_in_case_get_two_folders
+KILLED   M30 a leading hyphen is not made safe  (6 s)
+           by test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes
+KILLED   M31 a long plain-looking name is its own folder  (5 s)
+           by test_a_gate_name_becomes_a_safe_folder_name_and_never_escapes
+KILLED   M37 a stored path may name any directory  (11 s)
+           by test_a_stored_path_that_climbs_out_of_the_directory_is_not_printed
+KILLED   M38 a stored path need not start with the directory  (9 s)
+           by test_a_stored_path_that_does_not_start_with_the_directory_is_not_printed
+KILLED   M39 a stored path need not be a kept file's name  (9 s)
+           by test_a_stored_path_that_is_not_a_kept_files_name_is_not_printed
+KILLED   M40 a stored path that is a link is printed  (13 s)
+           by test_a_stored_path_that_is_a_link_is_not_printed
+KILLED   M41 a gate folder that is a link is counted  (9 s)
+           by test_a_gate_folder_that_is_a_link_is_not_counted
+KILLED   M42 the on-disk line names the OLDEST across folders  (10 s)
+           by test_the_on_disk_line_names_the_newest_file_across_all_gate_folders
+KILLED   M43 a directory that is a link is scanned  (10 s)
+           by test_a_directory_that_is_a_link_is_not_scanned
+KILLED   M44 the start time is taken when the file is written, not before the first gate  (3 s)
+           by test_the_start_in_the_file_is_the_runs_not_the_moment_the_file_is_written
+KILLED   M48 same-second files sort by name, not by their number  (5 s)
+           by test_files_of_one_second_are_ordered_by_their_number_when_the_newest_five_are_kept
+KILLED   M50 a failure to build the keeper is silent  (8 s)
+           by test_a_keeper_that_cannot_be_built_is_a_warning_and_the_run_goes_on
