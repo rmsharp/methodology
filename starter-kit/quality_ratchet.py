@@ -41,6 +41,19 @@ chained ledger hook skips before the ratchet runs -- a manifest conflict resolve
 loosening during a merge is caught by the dashboard's read of the manifest's history,
 not by the hook.
 
+WHAT IT KEEPS
+-------------
+A gate that did not pass (`fail`, or `unmeasured` although its command ran to the end) keeps the output
+of that command, because the results file keeps only a number and the next run erases even that. `--run`
+saves it right after the gate is measured, under `.quality-gates-output/` beside the results file: one
+folder per gate, one file per run (`<UTC start>-<short commit>.txt`), the newest 5 per gate, each stream up
+to 256 KiB and cut in the middle past that. A run in which every gate passes writes nothing and deletes
+nothing, so a red run's output outlives the green runs after it. A command that outlived its budget
+measured nothing and keeps nothing. The directory is local and ignores itself (a `.gitignore` of `*`).
+Do not commit it, and copy it out before deleting a scratch clone. Keeping is best effort: a failure to
+write is one warning on stderr and never changes a status, the results file or the exit code. `--run` and
+`--status` print where the output is, from the directory itself.
+
 Python 3 stdlib only, cross-platform. Conventions follow context_budget.py.
 """
 import hashlib
@@ -54,7 +67,7 @@ import tempfile
 import time
 from datetime import datetime, timezone
 
-VERSION = "1.5.1"
+VERSION = "1.6.0"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
@@ -62,6 +75,10 @@ SAFEGUARDS = "SAFEGUARDS.md"  # layout: ok -- a document cited by bare name in a
 DIRECTIONS = ("min", "max")
 DEFAULT_TIMEOUT = 600   # seconds a gate's command may run unless the gate declares `timeout_seconds`
 HAS_PROCESS_GROUPS = os.name == "posix"   # a gate's command gets a session of its own, and is stopped with its whole group (BL-107)
+KEEP_DIR = ".quality-gates-output"   # a gate that did not pass keeps its output here, beside the results file
+KEEP_HEAD = 64 * 1024    # per stream: kept whole up to KEEP_HEAD + KEEP_TAIL bytes; past that the first KEEP_HEAD ...
+KEEP_TAIL = 192 * 1024   # ... and the last KEEP_TAIL, with a line saying how many bytes went between them
+KEEP_FILES = 5           # the newest files kept per gate folder
 
 R = "\033[0m"; B = "\033[1m"; D = "\033[2m"
 RED = "\033[31m"; YEL = "\033[33m"; GRN = "\033[32m"; CYN = "\033[36m"
@@ -521,7 +538,10 @@ def measure_gate(root, g, timeout, memo=None, budget=None):
     return res
 
 
-def run_gates(root, cfg, timeout=DEFAULT_TIMEOUT):
+def run_gates(root, cfg, timeout=DEFAULT_TIMEOUT, keep=None):
+    """Run every gate. `keep`, when given, is called as keep(result, raw) right after each gate is measured
+    (never while a command runs): `raw` is that command's (rc, out, err, timed_out, budget) from this run's
+    memo, or None for a gate with no command. The return value does not depend on it."""
     memo = {}
     gates = cfg.get("gates", [])
     # Gates over one command share one run (measure_gate), so that run gets the LARGEST budget any of
@@ -530,7 +550,11 @@ def run_gates(root, cfg, timeout=DEFAULT_TIMEOUT):
     for g in gates:
         if g.get("command"):
             budgets[g["command"]] = max(budgets.get(g["command"], 0), gate_budget(g, timeout))
-    results = [measure_gate(root, g, timeout, memo, budgets.get(g.get("command"))) for g in gates]
+    results = []
+    for g in gates:
+        results.append(measure_gate(root, g, timeout, memo, budgets.get(g.get("command"))))
+        if keep is not None:
+            keep(results[-1], memo.get(g.get("command")))
     summary = {s: sum(1 for r in results if r["status"] == s)
                for s in ("pass", "fail", "unmeasured")}
     snapshot = {"gates": results, "summary": summary,
@@ -539,6 +563,181 @@ def run_gates(root, cfg, timeout=DEFAULT_TIMEOUT):
     snapshot["ran_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     snapshot["version"] = VERSION
     return snapshot
+
+
+# === KEEPING OUTPUT (--run) ===
+
+_PLAIN_FOLDER = re.compile(r"^[a-z0-9_][a-z0-9._-]{0,63}$")
+_KEPT_NAME = re.compile(r"^(\d{8}T\d{6}Z)-([0-9a-z]+?)(?:-(\d+))?\.txt$")
+
+
+def gate_folder(name):
+    """The folder a gate's output goes in. A name that is already lowercase [a-z0-9._-], does not begin with
+    a dot or a hyphen and is at most 64 long is its own folder. Any other is lowercased, every other character
+    becomes `_` (so `a/b` and `..` cannot leave the directory), and `-` plus the first six hex digits of the
+    sha256 of the exact name is appended (so `Tests` and `tests` cannot share one folder on a case-folding
+    filesystem). `config_defects` accepts any non-empty string as a gate name."""
+    if _PLAIN_FOLDER.match(name):
+        return name
+    safe = re.sub(r"[^a-z0-9._-]", "_", name.lower())[:48]
+    if safe[:1] in (".", "-"):
+        safe = "_" + safe[1:]
+    return f"{safe}-{hashlib.sha256(name.encode('utf-8', 'replace')).hexdigest()[:6]}"
+
+
+def _kept_order(name):
+    """Sort key of a kept file's name: its UTC start, then its `-N` suffix (a second run in one second)."""
+    m = _KEPT_NAME.match(name)
+    return (m.group(1), int(m.group(3) or 1), name)
+
+
+def _ensure_dir(path):
+    """`path` is a real directory afterwards. Made with os.mkdir, never os.makedirs: a missing parent is the
+    results write's own failure to report, not this step's to repair. A link is never written through."""
+    if os.path.islink(path):
+        raise OSError(f"{path} is a link; kept output is never written through one")
+    if not os.path.isdir(path):
+        os.mkdir(path)
+
+
+def _kept_files(folder):
+    """The kept files of one gate folder: this module's own name form, regular files, never a link."""
+    return [n for n in os.listdir(folder) if _KEPT_NAME.match(n)
+            and os.path.isfile(os.path.join(folder, n)) and not os.path.islink(os.path.join(folder, n))]
+
+
+def _stream(text):
+    """(text to show, bytes in the stream, bytes kept) for one stream: whole up to KEEP_HEAD + KEEP_TAIL
+    bytes of UTF-8; past that the first KEEP_HEAD and the last KEEP_TAIL with a line between them saying how
+    many bytes went. A cut drops the character it split, so no half-character is written."""
+    b = text.encode("utf-8", "replace")
+    if len(b) <= KEEP_HEAD + KEEP_TAIL:
+        return text, len(b), len(b)
+    head = b[:KEEP_HEAD].decode("utf-8", "ignore")
+    tail = b[len(b) - KEEP_TAIL:].decode("utf-8", "ignore") if KEEP_TAIL > 0 else ""
+    kept = len(head.encode("utf-8")) + len(tail.encode("utf-8"))
+    return f"{head}\n... [{len(b) - kept} bytes omitted] ...\n{tail}", len(b), kept
+
+
+class Keeper:
+    """The `keep` callback of a --run. Built once per run, before the first gate, so the start time and the
+    commit are the run's. Saves the output of each gate that did not pass and whose command ran to the end;
+    gates over one command share one file. Everything it does is inside try/except Exception: a failure is
+    ONE warning on stderr and changes no status, no results file and no exit code."""
+
+    def __init__(self, root, cfg):
+        self.base = os.path.join(os.path.dirname(results_path(root, cfg)), KEEP_DIR)
+        self.started = datetime.now(timezone.utc)
+        self.commit = head_sha(root) or "nohead"
+        self.command_of = {g["name"]: g.get("command") for g in cfg.get("gates", [])}
+        self.gates_over = {}
+        for g in cfg.get("gates", []):
+            if g.get("command"):
+                self.gates_over.setdefault(g["command"], []).append(g["name"])
+        self.saved = {}      # command -> the file written for it in this run
+        self.kept = {}       # gate name -> that file, relative to the results file's directory
+        self.warned = False
+
+    def __call__(self, result, raw):
+        if result["status"] == "pass" or raw is None or raw[3]:   # passed, no command, or timed out
+            return
+        name = result["name"]
+        cmd = self.command_of.get(name)
+        try:
+            if cmd not in self.saved:
+                self.saved[cmd] = self._write(cmd, raw)
+            self.kept[name] = self.saved[cmd]
+        except Exception as e:   # not only OSError: an encoding error must not turn exit 2 into a traceback
+            if not self.warned:
+                self.warned = True
+                print(f"{YEL}quality-ratchet: could not keep the output of gate {name}: {e}{R}", file=sys.stderr)
+
+    def _write(self, cmd, raw):
+        rc, out, err, _timed_out, budget = raw
+        folder = gate_folder(self.gates_over[cmd][0])
+        _ensure_dir(self.base)
+        with open(os.path.join(self.base, ".gitignore"), "w", newline="\n") as f:   # every write: the directory stays invisible to git
+            f.write("*\n")
+        _ensure_dir(os.path.join(self.base, folder))
+        (shown_out, n_out, k_out), (shown_err, n_err, k_err) = _stream(out), _stream(err)
+        stem = f"{self.started.strftime('%Y%m%dT%H%M%SZ')}-{self.commit}"
+        one_line = re.sub(r"\r\n|\r|\n", lambda _m: "\\n", cmd)   # a command of several lines stays one header line
+        header = ("quality-ratchet kept output\n"
+                  f"gates: {', '.join(self.gates_over[cmd])}\n"
+                  f"command: {one_line}\n"
+                  f"exit: {rc}   budget: {budget:g} s\n"
+                  f"commit: {self.commit}   started: {self.started.strftime('%Y-%m-%dT%H:%M:%SZ')}\n"
+                  f"stdout: {n_out} bytes, kept {k_out}\n"
+                  f"stderr: {n_err} bytes, kept {k_err}\n")
+        body = (header + "=== stdout ===\n" + shown_out + ("" if shown_out.endswith("\n") or not shown_out else "\n")
+                + "=== stderr ===\n" + shown_err + ("" if shown_err.endswith("\n") or not shown_err else "\n"))
+        for n in range(1, 10000):   # exclusive creation: two runs in one second cannot overwrite each other
+            fname = f"{stem}.txt" if n == 1 else f"{stem}-{n}.txt"
+            try:
+                f = open(os.path.join(self.base, folder, fname), "x", encoding="utf-8", newline="\n")
+            except FileExistsError:
+                continue
+            with f:
+                f.write(body)
+            break
+        else:
+            raise OSError(f"no free file name for {stem} in {folder}")
+        self._prune(os.path.join(self.base, folder), fname)
+        return f"{KEEP_DIR}/{folder}/{fname}"
+
+    @staticmethod
+    def _prune(folder, just_written):
+        """Keep the newest KEEP_FILES files of this folder, and always the one just written (a clock set
+        backwards would otherwise sort it oldest). Never a link, never a name of another form."""
+        names = sorted(_kept_files(folder), key=_kept_order, reverse=True)
+        keep = names[:KEEP_FILES]
+        if just_written not in keep:
+            keep = keep[:max(KEEP_FILES - 1, 0)] + [just_written]
+        for n in names:
+            if n not in keep:
+                os.remove(os.path.join(folder, n))
+
+
+def kept_on_disk(base):
+    """(files, folders, newest file, its folder) over the gate folders under `base`, or None when there are
+    none. Read from the directory itself: the results file of a later green run no longer says."""
+    if not os.path.isdir(base) or os.path.islink(base):
+        return None
+    files, folders, newest = 0, 0, None
+    for folder in sorted(os.listdir(base)):
+        path = os.path.join(base, folder)
+        if os.path.islink(path) or not os.path.isdir(path):
+            continue
+        names = _kept_files(path)
+        if names:
+            files, folders = files + len(names), folders + 1
+            top = max(names, key=_kept_order)
+            if newest is None or _kept_order(top)[:2] > _kept_order(newest[0])[:2]:
+                newest = (top, folder)
+    return (files, folders, newest[0], newest[1]) if files else None
+
+
+def show_kept(root, cfg, snap):
+    """After the table: where the kept output is, and one line per gate the results file names whose file is
+    still there. A stored path is used only if it has the form this tool writes; it never leaves the directory."""
+    try:
+        base = os.path.abspath(os.path.join(os.path.dirname(results_path(root, cfg)), KEEP_DIR))
+        found = kept_on_disk(base)
+        if found:
+            print(f"  kept output on disk: {found[0]} file(s) in {found[1]} gate folder(s) under {base}; "
+                  f"newest {found[2]} ({found[3]})")
+        stored = snap.get("kept")
+        for name, rel in (stored.items() if isinstance(stored, dict) else ()):
+            parts = rel.split("/") if isinstance(rel, str) else []
+            if (len(parts) == 3 and parts[0] == KEEP_DIR and parts[1] not in ("", ".", "..")
+                    and _KEPT_NAME.match(parts[2])):
+                path = os.path.join(base, parts[1], parts[2])
+                if os.path.isfile(path) and not os.path.islink(path):
+                    print(f"  kept: {name}  {path}")
+        if found:
+            print()
+    except Exception as e:
+        print(f"{YEL}quality-ratchet: could not read the kept output: {e}{R}", file=sys.stderr)
 
 
 def summary_line(snap):
@@ -584,7 +783,14 @@ def load_results(root, cfg):
 
 
 def do_run(root, cfg, as_json=False):
-    snap = run_gates(root, cfg)
+    try:
+        keeper = Keeper(root, cfg)
+    except Exception as e:
+        keeper = None
+        print(f"{YEL}quality-ratchet: could not keep the output of this run: {e}{R}", file=sys.stderr)
+    snap = run_gates(root, cfg, keep=keeper)
+    if keeper is not None and keeper.kept:
+        snap["kept"] = dict(keeper.kept)   # after `results` is hashed: the citation does not change
     with open(results_path(root, cfg), "w") as f:
         json.dump(snap, f, indent=1, sort_keys=True)
         f.write("\n")
@@ -592,6 +798,7 @@ def do_run(root, cfg, as_json=False):
         print(json.dumps(snap, indent=1, sort_keys=True))
     else:
         render(snap, "quality gates — run")
+        show_kept(root, cfg, snap)
     if snap["summary"]["fail"]:
         return REFUSED
     return WARN if snap["summary"]["unmeasured"] else CLEAN
@@ -614,6 +821,7 @@ def do_status(root, cfg, as_json=False):
         if stale:
             print(f"{YEL}quality-ratchet: the manifest changed since that run — re-run before "
                   f"citing it{R}")
+        show_kept(root, cfg, snap)
     if stale:
         return WARN
     return REFUSED if snap["summary"]["fail"] else (WARN if snap["summary"]["unmeasured"] else CLEAN)
@@ -746,6 +954,18 @@ def selftest():
         json.dump(failing, open(os.path.join(d, CONFIG_NAME), "w"))
         rc, out, _ = run([py, TOOL, "--run"], cwd=d)
         check("--run exits 2 on a failed gate", rc == REFUSED and "1 fail" in out)
+        # the failing gate's output is kept, and a later run in which every gate passes leaves it alone (1.6.0)
+        kept_dir = os.path.join(d, KEEP_DIR, "three")
+        kept_files = sorted(os.listdir(kept_dir)) if os.path.isdir(kept_dir) else []
+        kept_before = open(os.path.join(kept_dir, kept_files[0])).read() if kept_files else None
+        check("a failing gate keeps its output", len(kept_files) == 1 and "\n3\n" in (kept_before or ""))
+        json.dump(base, open(os.path.join(d, CONFIG_NAME), "w"))
+        rc, _, _ = run([py, TOOL, "--run"], cwd=d)
+        kept_after = sorted(os.listdir(kept_dir)) if os.path.isdir(kept_dir) else []
+        check("a later passing run leaves it",
+              rc == CLEAN and kept_after == kept_files and kept_before is not None
+              and open(os.path.join(kept_dir, kept_after[0])).read() == kept_before)
+        json.dump(failing, open(os.path.join(d, CONFIG_NAME), "w"))
         unm = json.loads(json.dumps(base)); unm["gates"].append(
             {"name": "declared-only", "direction": "min", "threshold": 1})
         json.dump(unm, open(os.path.join(d, CONFIG_NAME), "w"))
@@ -882,6 +1102,10 @@ def print_usage():
     print("  -h, --help     Show this help and exit.")
     print("")
     print("Exit: 0 clean · 1 warn/unmeasured · 2 refused/failed · 3 config or usage")
+    print("")
+    print(f"A gate that did not pass keeps its command's output under {KEEP_DIR}/ beside the results")
+    print("file (the newest 5 runs per gate). It is local and ignores itself: do not commit it, and copy it")
+    print("out of a scratch clone before deleting the clone. A run in which every gate passes keeps nothing.")
     print("")
     print("There is deliberately no --force. Loosening a threshold is an edit to")
     print(f"{CONFIG_NAME} under plan-mode approval, committed with --no-verify — a recorded bypass.")
